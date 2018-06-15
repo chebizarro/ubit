@@ -59,14 +59,14 @@ const UStr& UObject::getClassName() const {
   }
 }
 
-void UObject::error(const char* funcname, const char* format, ...) const throw(UError) {
+void UObject::error(const char* funcname, const char* format, ...) const {
   va_list ap;
   va_start(ap, format);
   UAppli::raiseError(UError::ERROR, this, funcname, format, ap);
   va_end(ap);
 }
 
-void UObject::warning(const char* funcname, const char* format, ...) const throw(UError) {
+void UObject::warning(const char* funcname, const char* format, ...) const {
   va_list ap;
   va_start(ap, format);
   UAppli::raiseError(UError::WARNING, this, funcname, format, ap);

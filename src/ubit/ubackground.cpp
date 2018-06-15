@@ -73,7 +73,7 @@ UBackground UBackground::orange(UColor::orange, UCONST);
 UBackground::UBackground() 
 : alpha(1.), tiling(true) {}
 
-UBackground::UBackground(const UBackground& b) : 
+UBackground::UBackground(const UBackground& b) :
 pcolor(b.pcolor ? new UColor(*b.pcolor) : null), 
 //pima(new UIma(*b.pima)), 
 pima(b.pima),                                // !!! A REVOIR (dupliquer)

@@ -4,4 +4,7 @@ if (NOT MBGL_PLATFORM)
     else()
         set(MBGL_PLATFORM "linux")
     endif()
+    
+    add_definitions(-I/usr/include/freetype2/)
+
 endif()

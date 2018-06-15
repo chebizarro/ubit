@@ -175,7 +175,7 @@ namespace ubit {
     static  UViewStyle style;  // renderer
     virtual UViewStyle* getViewStyle() {return &style;}
     
-    U3DcanvasView(UBox* box, UView* parview, UHardwinImpl* hw) : UView(box, parview, hw) {}
+    U3DcanvasView(UBox* _box, UView* _parview, UHardwinImpl* hw) : UView(_box, _parview, hw) {}
     
     static UView* createView(UBox* box, UView* parv, UHardwinImpl* hw) {
       return new U3DcanvasView(box, parv, hw);

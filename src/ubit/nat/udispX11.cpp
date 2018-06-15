@@ -281,7 +281,7 @@ XVisualInfo* UDispX11::createGlvisual(int r, int g, int b, int a, int depth) {
   int dummy;
   if (!glXQueryExtension(sys_disp, &dummy, &dummy)) {
     UAppli::error("UDispX11::createGLVisual","X11 server has no OpenGL extension");
-    return false;
+    return vis; // false;
   }
   
   int glxmajor = 0, glxminor = 0;
@@ -301,7 +301,7 @@ XVisualInfo* UDispX11::createGlvisual(int r, int g, int b, int a, int depth) {
                       r,g,b,a,depth);
     else {
       UAppli::error("UDispX11::createGLVisual","could not get any OpenGL visual");
-      return false;
+      return vis;// false;
     }
   }
   

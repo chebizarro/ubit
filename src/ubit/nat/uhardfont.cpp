@@ -26,10 +26,11 @@
 #include <ubit/nat/uhardfont.hpp>
 
 #if UBIT_WITH_GL && UBIT_WITH_FREETYPE
-#    include <ftgl/FTFont.h>  // FTGL
-#    include <ftgl/FTGLTextureFont.h>
-#    include <ftgl/FTGLPolygonFont.h>
-#    include <ftgl/FTGLPixmapFont.h>
+#    include <FTGL/ftgl.h>  // FTGL
+#    include <FTGL/FTFont.h>
+#    include <FTGL/FTGLTextureFont.h>
+#    include <FTGL/FTGLPolygonFont.h>
+#    include <FTGL/FTGLPixmapFont.h>
 #endif
 
 #define NAMESPACE_UBIT namespace ubit {
@@ -327,7 +328,7 @@ void UHardFont::drawString(const char* s, int len, float x, float y) const { // 
     //EX: we cannot use glTranslate() because glClipPlane was called before
     //    => pen now contains absolute (x,y) coordinates
     //EX: glTranslatef(x, y, 0);
-    ftf->Render(s, len, x, y); // Note that this FTGL fct has been modified by ELC
+   // ftf->Render(s, len, x, y); // Note that this FTGL fct has been modified by ELC
     //glPopMatrix();
     
     glDisable(GL_TEXTURE_2D);
