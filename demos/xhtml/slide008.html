@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="iso-8859-1"?><html>
+<head>
+<title>The Ubit Toolkit (slide 8)</title>
+<link  href="css/dark-slide.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+
+<table class="navigbar" width="100%">
+<tr>
+<td class="navigbar" nowrap="">
+<a href="slide007.html"><img src="css/left-arrow.gif" border="none" alt=""/></a><a href="slide009.html"><img src="css/right-arrow.gif" border="none" alt=""/></a>
+</td>
+<td class="navigbar" nowrap="" width="95%">
+&nbsp;<a href=".">the ubit toolkit</a>
+&nbsp;<a href="http://www.infres.enst.fr/~elc/">eric lecolinet</a>
+&nbsp;<a href="http://www.infres.enst.fr/">enst</a>
+</td>
+<td class="navigbar" nowrap=""><a href="slide_index">&nbsp;8&nbsp;</a></td>
+</tr>
+</table>
+
+<h1>Local and inherited conditions</h1>
+
+<h2>Local conditions</h2>
+<h3> can be applied to any object</h3>
+
+<pre>
+  UBox& box = uhbox
+  (
+    UOn::enter      / UBgcolor::yellow
+    + UOn::select   / uima(minus.gif")
+    + UOn::unselect / uima(plus.gif")
+    + "my button"
+    + UOn::action   / ucall("abcd", obj, foo)
+  );
+</pre>
+
+<h2>Global conditions </h2>
+<h3> inherited in the instance graph</h3>
+
+
+<!-- slide -------------------------------------------------------- -->
+
+</body>
+</html>
+

@@ -1,0 +1,115 @@
+<xml>
+
+<head>
+<!-- <link href="map.css" rel="stylesheet" type="text/css"> -->
+<style>
+em        {color: red; font-weight: bold;}
+campus    {color: navy; font-size: 16pt; font-weight: bold;}
+building  {background-color: #e4e4e4;}
+building[id=toto]  {background-color: orange;}
+zbox      {color: black;}
+</style>
+</head>
+
+<body>
+<hbox geom="0 0 500 400" id="library" border="none">
+  
+  <zmore val="#1">
+  
+    <!-- col1 ...................................................... -->
+    
+    <vbox width="24%">    <!-- col1 -->
+    
+      <vbox height="80%" id="programming1">    <!-- col1, row1 -->
+        <zmore val="#2">
+          <classroom height="20%" id="1.1">
+            <zless val="#3"> Classroom 1.1 </zless>
+            <zleaf val="#3"> <img src="../images/madeleine.gif"/> </zleaf>
+          </classroom>
+        </zmore>
+        <!-- attention les objets sont affiches dans l'ordre -->
+        <zless val="#2"> <em>Programming 1</em> </zless>
+      </vbox>
+
+      <vbox height="20%" id="genie_logiciel">   <!-- col1, row2 -->
+        <zmore val="#2">
+          <classroom height="20%" id="1.1">
+            <zless val="#3"> Classroom 1.1 </zless>
+            <zleaf val="#3"> <img src="../images/madeleine.gif"/> </zleaf>
+          </classroom>
+        </zmore>
+        <zless val="#2"> <em>Software Engineering</em> </zless>
+      </vbox>
+
+    </vbox>    <!-- /col1 -->
+
+    <!-- col2&3 ...................................................... -->
+    
+    <hbox width="50" id="programming2">    <!-- col2&3 -->
+      <zmore val="#2">
+        
+        <vbox width="49%">     <!-- col2 -->
+          <zless val="#3"> Languages 1 </zless>
+          <zleaf val="#3"> <img src="../images/madeleine.gif"/> </zleaf>
+        </vbox>     <!-- /col2 -->
+        
+        <vbox width="49%">     <!-- col3 -->
+          <vbox id="LogicalProgramming">
+            <zless val="#3"> Logical Programming </zless>
+            <zleaf val="#3"> <img src="../images/madeleine.gif"/> </zleaf>
+          </vbox>
+          <vbox id="FunctionalProgramming">
+            <zless val="#3"> Functional Programming </zless>
+            <zleaf val="#3"> <img src="../images/madeleine.gif"/> </zleaf>
+          </vbox>
+          <vbox id="Languages2">
+            <zless val="#3"> Languages 2 </zless>
+            <zleaf val="#3"> <img src="../images/madeleine.gif"/> </zleaf>
+          </vbox>
+        </vbox>     <!-- /col3 -->
+          
+      </zmore>
+      <zless val="#2"> <em>Languages &amp; Programming</em> </zless>
+    </hbox>    <!-- /col2&3 -->
+
+    <!-- col4 ...................................................... -->
+    
+    <vbox width="24%">    <!-- col4 -->
+
+      <vbox height="20%" id="misc">    <!-- col4, row1 -->
+        <zmore val="#2">
+          <classroom height="20%" id="1.1">
+            <zless val="#3"> Misc </zless>
+            <zleaf val="#3"> <img src="../images/madeleine.gif"/> </zleaf>
+          </classroom>
+        </zmore>
+        <zless val="#2"> <em> Misc </em> </zless>
+      </vbox>
+    
+      <vbox height="79%" id="programming_3">   <!-- col4, row2,3,4... -->
+        <zmore val="#2">
+          <vbox height="48%" id="algorithmique">
+            <zless val="#3"> Algorithmique et structure des donn»es </zless>
+            <zleaf val="#3"> <img src="../images/madeleine.gif"/> </zleaf>
+          </vbox>
+          <vbox height="24%" id="theorie_langages">
+            <zless val="#3"> Th»orie des langages </zless>
+            <zleaf val="#3"> <img src="../images/madeleine.gif"/> </zleaf>
+          </vbox>
+          <vbox height="24%" id="programmation_objet">
+            <zless val="#3"> Programmation objet </zless>
+            <zleaf val="#3"> <img src="../images/madeleine.gif"/> </zleaf>
+          </vbox>
+        </zmore>
+        <zless val="#2"> <em>Programmation 3</em> </zless>
+      </vbox>
+
+  <!-- ............ -->
+
+  </zmore>  
+  <zless val="#1" style="color:orange"> <b> Library </b> </zless>
+</hbox>
+
+</body>
+</xml>
+          

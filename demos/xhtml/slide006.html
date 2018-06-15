@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="iso-8859-1"?><html>
+<head>
+<title>The Ubit Toolkit (slide 6)</title>
+<link  href="css/dark-slide.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+
+<table class="navigbar" width="100%">
+<tr>
+<td class="navigbar" nowrap="">
+<a href="slide005.html"><img src="css/left-arrow.gif" border="none" alt=""/></a><a href="slide007.html"><img src="css/right-arrow.gif" border="none" alt=""/></a>
+</td>
+<td class="navigbar" nowrap="" width="95%">
+&nbsp;<a href=".">the ubit toolkit</a>
+&nbsp;<a href="http://www.infres.enst.fr/~elc/">eric lecolinet</a>
+&nbsp;<a href="http://www.infres.enst.fr/">enst</a>
+</td>
+<td class="navigbar" nowrap=""><a href="slide_index">&nbsp;6&nbsp;</a></td>
+</tr>
+</table>
+
+<h1>Example</h1>
+
+<h2>Pseudo-declarative code in C++</h2>
+
+<p align=center>
+<img src="img/multi-text.gif"> 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="img/color-menu.gif" align="middle"></p>
+
+<pre>
+UColor col = UColor::black;
+UFont  fnt = UFont::italic;
+
+UBox& b1 = uhbox
+   ( "This is " 
+     + uima("colors.gif")
+     + UColor::red + UFont::bold + " multi-color text"
+     + col + fnt + " that contains a "
+     + ...
+   );
+
+UBox& b2 = ubutton
+   ( "Try!"
+     + ubutton( UColor::red   + " ") 
+     + ubutton( UColor::blue  + " ")
+     + ubutton( UColor::green + " ")
+     + ubutton( USymbol::down + umenu(...))
+   );
+
+b1.add(b2);      // classical "OO" API
+</pre>
+
+<!-- slide -------------------------------------------------------- -->
+
+</body>
+</html>
+

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="iso-8859-1"?><html>
+<head>
+<title>The Ubit Toolkit (slide 17)</title>
+<link  href="css/dark-slide.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+
+<table class="navigbar" width="100%">
+<tr>
+<td class="navigbar" nowrap="">
+<a href="slide016.html"><img src="css/left-arrow.gif" border="none" alt=""/></a><a href="slide018.html"><img src="css/right-arrow.gif" border="none" alt=""/></a>
+</td>
+<td class="navigbar" nowrap="" width="95%">
+&nbsp;<a href=".">the ubit toolkit</a>
+&nbsp;<a href="http://www.infres.enst.fr/~elc/">eric lecolinet</a>
+&nbsp;<a href="http://www.infres.enst.fr/">enst</a>
+</td>
+<td class="navigbar" nowrap=""><a href="slide_index">&nbsp;17&nbsp;</a></td>
+</tr>
+</table>
+
+<h1>Flags and Variants</h1>
+
+<h2>Inherited conditions : </h2>
+<h3> one specification => several variants </h3>
+
+<pre>
+  UFlag f1,f2,f3;
+
+  b = ubutton( f1 / ustr("abcde")
+               + f2 / uima("whatever.jpg")
+               + f3 / ufilebox( f4 /...)
+              );
+
+  x = udialog(  udefFlag(f1) + b);
+  y = umenu(    udefFlag(f2) + b);
+  z = utextbox( udefFlag(f3) + udefFlag(f4) + b);
+</pre>
+
+
+<!-- slide -------------------------------------------------------- -->
+
+</body>
+</html>
+

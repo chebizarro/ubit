@@ -1,0 +1,118 @@
+/* dark-slide.css - Aug 21 2004 */
+
+body {
+  color: white;
+  background: #333344; /* dark bg;*/
+  font-family: helvetica, arial, sans-serif; 
+}
+
+a {color: white;}
+a:link    {color:white;}
+a:visited {color:lightgrey;}
+a:active  {text-decoration:none;  color:yellow;}
+a:hover   {text-decoration:none;  background:#ee5e19;} /*orange*/
+
+td.navigbar {background: #555555;}
+td.navigbar a {color: white; text-decoration:none;}
+td.stitle {background: #555555;}
+td.stitle a {color: white; text-decoration:none;}
+/*a.stitle {color: white; text-decoration:none;}*/
+
+pre {
+ margin-left:    60px;
+ margin-top:     20px;
+ padding-top:    0px;
+ margin-bottom:  10px;
+ padding-bottom: 0px;
+ font-size:      12pt;
+ font-family: fixed, courier;
+ color: lightgrey;
+}
+
+h1 {
+ margin-top:     20px;
+ margin-bottom:  35px;
+ padding-bottom: 10px;
+ margin-left:    10px;
+ padding-left:   20px;
+ font-size:      24pt;
+ font-weight:    bold;;
+ font-family: helvetica, arial, sans-serif; 
+ border-bottom-style: solid; /* solid,double,etc. */
+ page-break-before: always;
+ color:  #fe5e00;  /* orange */
+}
+
+h2 {
+ margin-left:    10px;
+ padding-left:   20px;
+ margin-top:     35px;
+ padding-top:    0px;
+ margin-bottom:  15px;
+ padding-bottom: 0px;
+ font-size:      20pt;
+ font-weight:    normal;
+ font-family: helvetica, arial, sans-serif; 
+ color: #eeee88;
+}
+
+h3 {
+ display: list-item;
+ list-style-type: square;
+ list-style-position: inside;
+ margin-left:    70px;
+ margin-top:     16px;
+ padding-top:    0px;
+ margin-bottom:  10px;
+ padding-bottom: 0px;
+ font-size:      14pt;
+ font-weight:    normal;
+ font-family: helvetica, arial, sans-serif; 
+ color: white;
+}
+
+h4 {
+ display: list-item;
+ list-style-type: circle;
+ list-style-position: inside;
+ margin-left: 150px;
+ margin-top:  8px;
+ padding-top: 0px;
+ margin-bottom:  8px;
+ padding-bottom: 0px;
+ font-family: helvetica, arial, sans-serif; 
+ font-weight: normal;
+ font-size: 14pt;
+ color: lightgrey;
+}
+
+h5 {
+ display: list-item;
+ list-style-type: circle;
+ list-style-position: inside
+ margin-left: 100px;
+ margin-top:  0px;
+ padding-top: 0px;
+ margin-bottom:  0px;
+ padding-bottom: 0px;
+ font-family: helvetica, arial, sans-serif; 
+ font-weight: normal;
+ font-size: 12pt;
+}
+
+h6 {
+ margin-left: 150px;
+ margin-top:  0px;
+ padding-top: 0px;
+ margin-bottom:  0px;
+ padding-bottom: 0px;
+ font-family: helvetica, arial, sans-serif; 
+ font-weight: normal;
+ font-size: 12pt;
+}
+
+em {
+ font-style: normal;
+ color:  #fe5e00;  /* orange */
+}
+

@@ -1,0 +1,485 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>The Ubit Toolkit</title>
+<link href="css/dark-slide.css" rel="stylesheet" type="text/css">
+</head>
+
+<stitle>
+&nbsp;<a href=".">the ubit toolkit</a>
+&nbsp;<a href="http://www.infres.enst.fr/~elc/">eric lecolinet</a>
+&nbsp;<a href="http://www.infres.enst.fr/">enst</a>
+</stitle>
+
+<body>  
+
+<!-- slide -------------------------------------------------------- -->
+
+<h1>The Ubit GUI toolkit</h1>
+
+<h2>An "atomic" architecture for GUIs</h2>
+
+<h3>Eric Lecolinet / ENST INFRES - www.infres.enst.fr/~elc </h3>
+
+<p>
+&nbsp;
+<h3><a href="slide002.html">[first slide]</a></h3>
+<h3><a href="ubit.html">[only one file]</a></h3>
+<h3><a href=".">[index]</a></h3>
+</P>
+<br>
+<br>
+
+<!-- slide -------------------------------------------------------- -->
+
+<h1>Classical architecture: Widget model</h1>
+
+<h2>Widgets = complex objects with</h2>
+<h3> many attributes, many methods... -> complexity</h3>
+<h3> ...except the one I need... -> lack of flexibility</h3>
+
+<h2>Static architecture</h2>
+<h3> subclassing is often difficult (or impossible)</h3>
+<h3> hard to reuse features from one widget to another</h3>
+<h3> to many subclasses</h3>
+
+
+<!-- slide -------------------------------------------------------- -->
+
+<h1>Ubit Toolkit</h1>
+
+<h2>"Atomic" architecture</h2>
+<h3> small set of very lightweighted + specialized objects </h3>
+<h3> can be <em>dynamically</em> combined</h3>
+<h3> pseudo-declarative encoding with a procedural language (C++)</h3>
+
+<h2>-> Construction game</h2>
+
+<p align=center>
+<img src="img/menu-with-text.gif"> 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="img/text-with-scroll.gif" align="middle"></p>
+
+
+<!-- slide -------------------------------------------------------- -->
+
+<h1>Ubit "Bricks"</h1>
+
+<h3>Viewable elements:</h3>
+<h4> UStr, UIma, USymbol ...</h4>
+
+<h3>Graphical properties</h3>
+<h4> UColor, UBgcolor, UBackground, UBorder, UScale, UAlpha ... </h4>
+<h4> transparency, translucency, scaling, zooming ...</h4>
+
+<h3>View renderers</h3>
+
+<h3>Interaction modes</h3>
+
+<h3>Callback objects</h3>
+
+<h3>Generic containers</h3>
+
+<!-- slide -------------------------------------------------------- -->
+
+<h1>Ubit "Widgets"</h1>
+
+<h2>Dynamic model</h2>
+<h3> Widgets = dynamic combinations of Bricks </h3>
+<h3> containers = "glue" or "dorsal spin"</h3>
+
+<h2>Sharable model</h2>
+<h3> all objects can be shared (including "widgets")</h3>
+<h3> attributes are inherited in the instance graph (DAG)</h3>
+
+
+<!-- slide -------------------------------------------------------- -->
+
+<h1>Example</h1>
+
+<h2>Pseudo-declarative code in C++</h2>
+
+<p align=center>
+<img src="img/multi-text.gif"> 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="img/color-menu.gif" align="middle"></p>
+
+<pre>
+UColor col = UColor::black;
+UFont  fnt = UFont::italic;
+
+UBox& b1 = uhbox
+   ( "This is " 
+     + uima("colors.gif")
+     + UColor::red + UFont::bold + " multi-color text"
+     + col + fnt + " that contains a "
+     + ...
+   );
+
+UBox& b2 = ubutton
+   ( "Try!"
+     + ubutton( UColor::red   + " ") 
+     + ubutton( UColor::blue  + " ")
+     + ubutton( UColor::green + " ")
+     + ubutton( USymbol::down + umenu(...))
+   );
+
+b1.add(b2);      // classical "OO" API
+</pre>
+
+<!-- slide -------------------------------------------------------- -->
+
+<h1>Callback bricks</h1>
+
+<h2>Function and method call-backs</h2>
+<h3>C++ templates => arg. types checked by the compiler </h3>
+
+<pre>
+class MyClass {
+  void moo(int i) { ... }
+  ...
+};
+
+void foo(char* s, double d) { ... }
+
+
+main() {
+  MyClass* obj = new MyClass();
+
+  UBox& box = uhbox
+  (
+    "my button"
+    + UOn::mpress / ucall(obj, 5, &MyClass::moo) 
+    + UOn::action / ucall("abcd", 3.14, foo)
+  );
+}
+</pre>
+
+
+
+<!-- slide -------------------------------------------------------- -->
+
+<h1>Local and inherited conditions</h1>
+
+<h2>Local conditions</h2>
+<h3> can be applied to any object</h3>
+
+<pre>
+  UBox& box = uhbox
+  (
+    UOn::enter      / UBgcolor::yellow
+    + UOn::select   / uima(minus.gif")
+    + UOn::unselect / uima(plus.gif")
+    + "my button"
+    + UOn::action   / ucall("abcd", obj, foo)
+  );
+</pre>
+
+<h2>Global conditions </h2>
+<h3> inherited in the instance graph</h3>
+
+
+<!-- slide -------------------------------------------------------- -->
+
+<h1>Sharing (1)</h1>
+
+<h2>Bricks are "reactive" and can be shared</h2>
+<h3> -> synchronization: parents are automatically updated</h3>
+<h3> -> can also have callbacks</h3>
+
+<p align=center>
+<img src="img/shared-bricks.gif"> 
+</p>
+
+<pre> 
+  UStr str;
+  UColor col;
+
+  utextbox( uedit() + str );
+  ubutton( col + str )
+  udialog( col + uhbox( ...) )
+</pre>
+
+
+<h3>with declarative call-backs</h3>
+<pre>
+  ubutton( col + str
+          + UOn::select   / uset(&col, UColor::red) 
+          + UOn::unselect / uset(&col, ucolor("#aabbcc")) 
+         );
+</pre>
+
+
+<!-- slide -------------------------------------------------------- -->
+
+<h1>Sharing (2)</h1>
+
+<h2>Containers (= Widgets) can also be "shared"</h2>
+<h3> -> visually replicated in parents</h3>
+
+<p align=center>
+<img src="img/shared-gadgets.gif"> 
+</p>
+
+
+<!-- slide -------------------------------------------------------- -->
+
+<h1>Sharing (3)</h1>
+
+<h2>Recursive replication</h2>
+<h3> a graph of widgets can be visually replicated </h3>
+<h3> can be rendered in a different way </h3>
+
+<p align=center>
+<img src="img/amazon.jpg"> 
+</p>
+
+
+<!-- slide -------------------------------------------------------- -->
+
+<h1>Sharing and Multiple Displays</h1>
+
+<h2>Widgets can be shown on remote displays</h2>
+<h3> shared widgets -> automatic synchronization</h3>
+<h3> -> groupware</h3>
+
+<h2>Centralized architecture</h2>
+<h3> one application / several GUIs</h3>
+<h3> simple </h3>
+<h3> limitations: </h3>
+<h4> only a few users</h4>
+<h4> network with enough bandwith</h4>
+
+
+
+<!-- slide -------------------------------------------------------- -->
+
+<h1>Containers and Widgets</h1>
+
+<h2>3 types of generic containers </h2>
+
+<h3>UGroup : "local context":</h3>
+<h4> base class for mark-up tags</h4>
+
+<h3>UBox : UView management</h3>
+<h4> base class for "Widgets" : UButton, ULabel, UTextbox...</h4>
+
+<h3>UWin : separate windows</h3>
+<h4> base class for UFrame, UDialog, UMenu </h4>
+
+<!-- slide -------------------------------------------------------- -->
+
+<h1>Tags and Widgets</h1>
+
+<h2>Trivial derivations of the 3 generic containers</h2>
+<h3> can be dynamically changed one into another!</h3>
+
+<pre>
+&lt;b>... &lt;/b> == ugroup(UFont::bold + "abcd xyz" + ..)
+
+ubutton( xxx )  == ubox( UMode::CanArm + UBorder::shadowOut + xxx )
+
+utextbox( xxx ) == ubox( UMode::CanSelectText + UBorder::shadowIn + xxx )
+
+
+UStr str = "bla bla";
+ubutton( uedit() + UBorder::etchedIn + str + ubutton(...) ) 
+</pre>
+
+
+<!-- slide -------------------------------------------------------- -->
+
+<h1>Anatomy of a Widget (1)</h1>
+
+<p align=center>
+<img src="img/anatomy.gif"> 
+</p>
+
+<h3>DAG of objects</h3>
+<h3>multiple UView trees </h3>
+
+<!-- slide -------------------------------------------------------- -->
+
+<h1>Anatomy of a Widget (2)</h1>
+
+<h2>Widgets do not "have" attributes </h2>
+<h3>Attributes are either: </h3>
+<h4> default values defined in UStyle specifications</h4>
+<h4> inherited from the instance graph</h4>
+<h4> (dynamically) added as children </h4>
+
+<h2>Generic controller</h2>
+<h3> common to all Containers </h3>
+<h3> parameterized by widgets</h3>
+<h4>ex: UMode::CanArm,  UMode::CanSelectText</h4>
+<h3> can cooperate with sub-controllers</h3>
+<h4>ex: ubutton( uedit() + str + ... ) 
+</h4>
+
+<!-- slide -------------------------------------------------------- -->
+
+<h1>Flags and Variants</h1>
+
+<h2>Inherited conditions : </h2>
+<h3> one specification => several variants </h3>
+
+<pre>
+  UFlag f1,f2,f3;
+
+  b = ubutton( f1 / ustr("abcde")
+               + f2 / uima("whatever.jpg")
+               + f3 / ufilebox( f4 /...)
+              );
+
+  x = udialog(  udefFlag(f1) + b);
+  y = umenu(    udefFlag(f2) + b);
+  z = utextbox( udefFlag(f3) + udefFlag(f4) + b);
+</pre>
+
+
+<!-- slide -------------------------------------------------------- -->
+
+<h1>Magic Lenses</h1>
+
+<p align=center>
+<img src="img/ubit-lensmap.jpg"> 
+</p>
+
+<h2>Combination of two features : </h2>
+<h3> multiple views </h3>
+<h3> conditional specifications </h3>
+<h3> 1 specification => n different views </h3>
+
+
+<!-- slide -------------------------------------------------------- -->
+
+<h1>Zoomable interfaces</h1>
+
+<p align=center>
+<img src="img/ubit-persp1.jpg">
+</p>
+
+<h2>Combination of two features : </h2>
+<h3> recursive scaling factors</h3>
+<h3> conditional scaling ranges </h3>
+
+<pre>
+b = ubutton( usrange(-3,-1)   / ustr("abcde")
+             + usrange(0, 3)  / uima("whatever.jpg")
+             + usrange(4, 99) / ufilebox( uscale(-2) + ...)
+           );
+
+UScale sc = -1;
+x = udialog(sc + b);
+</pre>
+
+<!-- slide -------------------------------------------------------- -->
+
+<h1>Transparency and translucency</h1>
+
+<p align=center>
+<img src="img/transp-dialog.jpg"> &nbsp;&nbsp;&nbsp;
+<img src="img/transp-menu.gif"> &nbsp;&nbsp;&nbsp;
+<img src="img/transp-scroll.gif"> 
+</p>
+
+<h2>Widgets can be: </h2>
+<h3> fully transparent or alpha blended</h3>
+<h3> transparent dalogs, menus, scrollbars, Control menus  </h3>
+
+<pre>
+umenu( UBgcolor::grey + ualpha(0.5)
+       + ubutton(UBgcolor::orange + ualpha(0.3) 
+                 + "bla bla bla")
+       + ...
+     );
+</pre>
+
+<!-- slide -------------------------------------------------------- -->
+
+<h1>Transparent tools</h1>
+
+<p align=center>
+<img src="img/ubit-transptool.jpg"> 
+</p>
+
+<h2>Events can be:</h2>
+<h3> filtered and modified by widgets</h3>
+<h3> then sent to the widgets underneath </h3>
+
+<!-- slide -------------------------------------------------------- -->
+
+<h1>Bi-manual interaction</h1>
+
+<h2>Ubit applications can handle:</h2>
+<h3> several event flows </h3>
+<h3> alternate sources of input (files, sockets, timers) </h3>
+
+<h2>Each event flow:</h2>
+<h3> can be identified </h3>
+<h3> is controlled independently from others </h3>
+
+<!-- slide -------------------------------------------------------- -->
+
+<h1>Geometry management</h1>
+
+<h2>Automatical by default</h2>
+<h3>performed by the View Renderers</h3>
+<h3>HBox, VBox, FlowBox, Table, Pane, Scrollbar</h3> 
+<h3>HTML "compatible"</h3>
+
+<pre>
+udialog( uhflex()
+         + utop() + menubar + toolbar
+         + uvflex() + warea1 + warea2
+         + ubottom() + statusbar
+       )
+</pre>
+
+<!-- slide -------------------------------------------------------- -->
+
+<h1>Styles & "fancy" widgets</h1>
+
+<p align=center>
+<img src="img/vreng.jpg"> 
+</p>
+
+<!-- slide -------------------------------------------------------- -->
+
+<h1>Current Status</h1>
+
+<h2>The library is reasonably small</h2>
+<h3> 22 000 lines of C++ code </h3>
+<h2> (headers: 4 000 / implementation 18 000) </h2>
+<h3> binary: 1.5 Mo</h3>
+
+<h2>OS: Unix (Solaris / Linux / BSD / Mac...)</h2>
+<h3> ported on embbeded Linux on the Ipaq PDA </h3>
+
+<h2>Graphics implementation</h2>
+<h3> X Window </h3>
+<h3> Open GL (partial port)</h3>
+
+<h3>Open Source:</h3>
+<h3> www.infres.enst.fr/~elc</h3>
+
+<!-- slide -------------------------------------------------------- -->
+
+<h1>Open GL</h1>
+
+<h2>Advantages</h2>
+<h3>efficiency: alpha blending, scaling, etc.</h3>
+<h3>rotations, immersion in a 3D space</h3>
+
+<h2>Problems: 3D concepts noticeably differ</h2>
+<h3> single graphics context</h3>
+<h3> single window </h3>
+<h2> global rendering (rather than "damaged" rendering) </h2>
+<h3> clipping (-> stencils) </h3>
+
+<h2>Single window problem</h2>
+<h3> "soft" window mode managed by Ubit</h3>
+
+
+
+
+</body>
+</html>

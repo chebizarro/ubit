@@ -1,0 +1,462 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
+<title>Ubit Tutorial</title>
+<style>
+body {
+  font-family: helvetica, arial, sans-serif; 
+   font-size: 10pt;
+}
+pre {
+  color:navy; 
+  padding-left: 40px;  
+  font-family: courier, fixed;
+  }
+em {
+ font-style: normal;
+ color:  #fe5e00;  /* orange */
+}
+</style>
+</head>
+
+<!-- .................................................................... -->
+
+<body>
+<br>
+<center>
+<h1>
+<a href="http://www.infres.enst.fr/~elc/ubit/">
+<font color="orange">Ubit Toolkit:</font></a> Quick Tutorial
+</h1>
+
+<h3>
+<a href="http://www.infres.enst.fr/~elc/">Eric Lecolinet</a>
+-
+<a href="http://www.enst.fr/">ENST</a>
+</h3>
+
+<p>
+<a href="http://www.infres.enst.fr/~elc/ubit">Ubit Home Page</a>
+-
+<a href="http://www.infres.enst.fr/~elc/ubit/doc">Documentation Main Page</a>
+-
+<a href="http://www.infres.enst.fr/~elc/ubit/examples">Examples and Tutorial</a>
+</p>
+
+</center>
+<br>
+
+<!-- .................................................................... -->
+
+<p>
+The following steps show how to create a simple text editor.
+</p>
+
+<h3>Step 1: A Simple application: sedit1.cpp</h3>
+<p>
+This section  shows how to create a Ubit application. This application creates 
+a main window that contains a multiline text editing widget
+(source code in file: <a href="sedit1.cpp">sedit1.cpp</a>) 
+<p>
+<!--
+<i>Note: this source code uses some typical features of the C++ language. If you
+not very familiar with C++ you should have a look at [sedit1bis.cpp], an equivalent
+program written in a Java like style.</i>
+-->
+
+<pre>
+#include &lt;ubit/ubit.hpp>
+using namespace ubit;
+
+class SEdit : public UFrame {
+public:
+  SEdit();
+private:
+  UTextarea textbox;    // the text area widget
+  UStr      content;    // the string contained in the textbox
+};
+</pre>
+<p>
+The first thing to do is to include the <b>ubit header</b> and tell
+the compiler that we will use the <b>ubit namespace</b>.
+We can now define <em>SEdit</em>, the main class of our application. 
+It derives from <b>UFrame</b> which 
+is the class for <b>toplevel windows</b>. SEdit have two variables.
+<ul> 
+<li><em>UTextArea textbox</em> : a multiline text editing widget</li>
+<li><em>UStr content</em> : a Ubit string object that will contain the text edited in 'textbox'</li>
+</ul>
+<p>
+These variables are not pointers but C++ "plain" objects (which means
+that the variables contain the object instead of pointing to it). 
+These objects are automatically 
+created and initialized when an instance of SEdit is created. 
+This syntax is typical of C++ but does not exist in Java (we should use pointers 
+and the <b>new</b> primitive to create each object). We'll see how to use C++ pointers in
+a safe way at a later stage.
+</p>
+<pre>
+int main(int argc, char* argv[]) {
+  UAppli appli(argc, argv);
+ 
+  SEdit sedit;
+  appli.add(sedit);
+  sedit.show();
+ 
+  return appli.start();
+}
+</pre>
+The main() function performs the following actions:
+<ul>
+<li>
+<em>UAppli</em>, 
+the Application Context is created first. The UAppli must be created as soon
+as possible, typically at the beginning of the main() function. It parses 
+<b>argv</b>
+that contains the
+arguments of the command line that launched the program. 
+The UAppli retrieves Ubit and X window 
+options and removes them from argv (<b>argc</b> the argument count is decremented)
+</li>
+<p><li>
+<em>SEdit sedit</em> :
+creates a SEdit instance (and the nested instances of 'textbox' and 'content'
+as explained above). Again, 'sedit' and 'appli' are plain objects rather than pointers.
+</li>
+<p><li>
+<em>appli.add(sedit)</em> :  
+adds the 'sedit' instance to the application context. As SEdit derives from 
+<b>UFrame</b> it will be the <b>main frame</b> of the application. 
+</li>
+<p><li>
+<em>sedit.show()</em> : 
+computes the layout of 'sedit' and its children and makes them visible. Note that
+frames (and other windows) are not visible until their show() method is called.
+</li>
+<p><li>
+<em>return appli.start()</em> : starts the <b>main event loop</b>.
+The main loop will run until exit() or <em>UAppli::quit(status)</em>
+is called. 'status' is returned by start() when quit() is called.
+'status' is a positive or null int that serves as a termination status(a value
+of 0 means OK, a value that is > 0 indicates an error). 
+</li>
+</ul>
+We must now write the body of the SEdit constructor:
+<pre>
+SEdit::SEdit() {	
+  content = "Editable text";
+  textbox.add(content);
+  this->addlist( uwidth(400) + uheight(300) + textbox);
+}
+</pre>
+<ul>
+<li>
+<em>content = "Editable text"</em> : 
+assigns "Editable text" to the 'content' string (which is initially empty)
+</li>
+<p><li>
+<em>textbox.add(content)</em> : 
+adds the 'content' string to the 'textbox' widget. Ubit makes it possible 
+to add a string
+(or any other object that derive from UBrick) to any widget. The default behavior
+is to display the string inside the widget. However, because 'textbox' is
+a <b>UTextarea</b> widget it will also makes it possible to edit this string
+interactively.
+</li>
+<p><li>
+<em>addlist (uwidth(400) + uheight(300) + textbox)</em> : 
+adds 3 objects to 'this' (which is  the 'sedit' instance being built). 
+This syntax, which is typical of the Ubit toolkit,
+is equivalent to:
+<pre>
+add(uwidth(400)); add(uheight(300)); add(textbox);
+</pre>
+It's purpose is to make the source code more compact. Note how the <b><em>+ operator</em></b>
+is used to create the <b>argument list</b> that is given to <em>addlist()</em>.
+The only difference between add() and addlist() is that add() can only have one 
+object as an argument.
+</li>
+<br>
+
+<li>
+<em>uwidth()</em> and <em>uheight()</em> create <b>Property objects</b> that specify 
+the size (in pixels) of the widget they are added to. <em>uwidth(400)</em> is <b>shortcut</b> for <em>*new UWidth(400)</em>. 
+Again, this syntax is typical of the toolkit and
+it's purpose is to make the source code more compact. Most Ubit objects
+can be created in a similar way (by calling a shorcut function instead of
+the <b>new</b> primitive). Hence:
+
+<pre>addlist(uwidth(400) + uheight(300) + textbox);</pre>
+is just a shorter way to write:
+<pre>
+    add(*new UWidth(400)); 
+    add(*new UHeight(300)); 
+    add(textbox);
+</pre>
+
+<li>
+Finally 'textbox' is added to 'this' (the SEdit instance) as a child. The effect of this childhood relationship is that 'textbox' will appear inside 'sedit'. <b>Layout management</b> is performed automatically in Ubit interfaces (the sizes and the positions of the widgets are computed automatically). However, it is sometimes
+useful to specify the size or the position of a widget, as in this example where
+we want the SEdit frame to have a given size.
+</li>
+</ul>
+<nr>
+
+<!-- --------------------------------------------------------------------- -->
+
+<h3>Step 2: Properties: sedit2.cpp</h3>
+<p>
+This example shows how to define widget properties such as the size, the scale,
+the font, the background and foreground colors, etc.
+(source code in file: <a href="sedit2.cpp">sedit2.cpp</a>) 
+
+<p>
+We introduced the UWidth and UHeight properties in the previous section 
+to specify the size of the main frame:
+<pre>
+  addlist(uwidth(400) + uheight(300) + textbox);
+</pre>
+First, it is important to notice that we can add properties to widgets by using
+the add() and the addlist() methods. In fact, these methods can be used to add
+almost any Ubit object to a widget 
+<p>
+Second, a major feature of the Ubit toolkit is that <b>widgets don't have properties
+of their own</b>. This is very different from a toolkit such as Java Swing where most
+widgets have their own font, foreground and backround color, etc. Ubit widgets are
+just very ligthweithed "empty" containers. Their default appearence is specified
+by their <b>style</b> (each widget class is associated to a UStyle object that 
+defines its appearance). Besides, graphical properties, such as the font or the
+foreground color, are often inherited from the parents of the widget (styles
+also define which properties are inherited). 
+<p>
+<b>This model is very similar to XML or HTML</b>. For instance a &lt;p> 
+or a &lt;h1> nodes have default apperances in HTML. This can be modified by 
+changing their style or by adding attributes to them. Ubit widgets work exactly 
+in the same way: to change a widget appearance, one can modify its associated 
+UStyle or just <b>add properties</b> to it as in the following example:
+<pre>
+  textbox.addlist(UFont::bold + UColor::red + UBgcolor::yellow + content);
+</pre>
+This source code adds 3 properties to 'textbox'. They specify
+its font, its foreground color and its background color. <em>UFont::bold</em>,
+<em>UColor::red</em> and <em>UBgcolor::yellow</em> are predefined constants 
+of the <b>UFont</b>, <b>UColor</b> and <b>UBgcolor</b> classes. Of course,
+we could also use instances of these classes as we did before with <b>UWidth</b>
+and <b>UHeight</b>; for instance:
+<pre>
+  textbox.addlist(ucolor("pink") + uscale(2.5) + content);
+</pre>
+which is equivalent to:
+<pre>
+  textbox.addlist(*new UColor("pink") + *new UScale(2.5) + content);
+</pre>
+Colors can be specified from predefined constants, color names or RGB values
+(see class <b>UColor</b>). The <b>UBgcolor::none</b> constant specifies that the 
+widget is fully transparent. The <b>UAlpha</b> property controls its level of 
+transparency. The <b>UBackground</b> property associates a background image or
+a pattern to the widget.
+<p>
+<b>UScale</b> is another interesting property which specifies the scale of the
+widget. Its argument is the magnifying factor that is applied to the object.
+A value &lt; 1 reduces its size, a value > 1 increases it (note that this value
+should be positive).
+<p>
+Of course, properties can also be <b>variables</b>. This is what we are going to do now 
+so that we will be able to change the properties of the 'textbox' widget interactively
+(this will be done in the next section when we see callbacks). Here is the new
+definition od class SEdit:
+<pre>
+class SEdit : public UFrame {
+public:
+  SEdit();
+private:
+  UTextarea textbox;
+  UStr      content;
+  <em>UFont     font;
+  UColor    color;
+  UBgcolor  bgcolor;
+  UScale    scale;</em>
+};
+</pre>
+And the new version of its constructor:
+<pre>
+SEdit::SEdit() {	
+  content = "Editable text";
+  <em>font = UFont::bold;
+  color.set(255, 0, 0);   // RGB spec
+  bgcolor = UBgcolor::yellow;
+  scale = 2.5;
+  textbox.addlist(font + color + bgcolor + scale + content);</em>
+  addlist( uwidth(400) + uheight(300) + textbox);
+}
+</pre>
+<b>Final remarks</b>: Properties have many other interesting features:
+<ul>
+<li> they <b>can be shared by several widgets</b>. All of them will be 
+automatically updated when the property is changed.
+
+<p><li>  <b>order matters </b> because argument lists are evaluated in the 
+left-to-right order. This means that properties must usually be located
+<b>at the beginning</b> of arguments list as in:
+<pre>
+  textbox.addlist(<em>font + color + bgcolor + scale</em> + content);
+  addlist(<em>uwidth(400) + uheight(300)</em> + textbox);
+</pre>
+
+<p><li> As an exception to the previous rule, left-to-right evaluation can 
+be used to create <b>multi colored, multi font text</b> in a simple way:
+<pre>
+  textbox.addlist(<em>UFont::bold + UColor::red </em>+ "abcd" 
+                  + <em>UColor::blue + UFont::italic</em> + "xyz");
+</pre>
+The rule is quite simple: properties take effect on whatever follows them
+in the list. This example also shows that a widget can contain <b>several
+strings</b> (strings can either be <b>char*</b> C strings of Ubit 
+<b>UStr</b> strings). 
+</ul>
+
+Finally, the Ubit tookit also provides more sophisticated features such as
+<b>attribute lists</b> and the ability to create <b>multimedia and hypermedia
+documents</b> that combines images, multiformatted text and hyperlinks.
+These capabilities will be shown in another section.
+</p>
+<br>
+
+<!-- --------------------------------------------------------------------- -->
+
+<h3>Step 3: Callback functions and methods: sedit3.cpp</h3>
+<p>
+This example shows how to define callback functions and callback methods 
+Note that this example has an ugly layout. This problem
+will ne solved in the next section.
+(source code in file: <a href="sedit3.cpp">sedit3.cpp</a>) 
+
+<p>
+The declaration of the <em>SEdit</em> class contains what precedes plus:
+<pre>
+class SEdit : public UFrame {
+  ....                        // same as above
+  <em>void setFont(UFont*);</em>
+};
+
+<em>void showMsg(const char* msg)</em> {
+  cout << "message " << msg << endl;
+}
+</pre>
+<em>setFont()</em> ia a callback <b>method</b> that will change the font  
+of the 'textbox'. <em>showMsg()</em> is a callback <b>function</b> that will
+print some useful message on the terminal. Here is the beginning of
+the new definition of the SEdit constructor:
+<pre>
+SEdit::SEdit() {	
+  content = "Editable text";
+  textbox.addlist(font + color + bgcolor + scale + content);
+  
+  <em>UBox& font_box = uhbox 
+    (UPix::edit + "Font: "
+     + ubutton("Bold"   + ucall(this, &UFont::bold,   &SEdit::setFont))
+     + ubutton("Italic" + ucall(this, &UFont::italic, &SEdit::setFont))
+     + ubutton("Normal" + ucall(this, &UFont::normal, &SEdit::setFont))
+     );</em>
+</pre>
+First,  <em>UBox&amp; font_box = uhbox( ... )</em> creates a new <b>UHbox</b>
+object. UHbox is a horizontal box (<b>UVbox</b> is a vertical box). This expression
+is equivalent to:  <em>UBox&amp; font_box = *new UHbox( ... )</em>.
+<p>
+<em>UBox&amp; font_box</em> is not
+an instance variable of SEdit but a local variable of the constructor, because
+there is no need to keep track of it after initialisation time. As for the
+addlist() method, The <em>uhbox( )</em>
+shortcut function (and the <em>UHbox( )</em> constructor) can take a <b>+list</b>
+as an argument. This +list contains:
+<ul>
+<li>
+UPix::edit : a predefined pixmap image 
+<li>
+"Font: " : a character string
+<li>
+ubutton( ... ) : three push buttons (UButton is the class for push buttons)
+</ul>
+Each button contains;
+<ul>
+<li>
+a character string that will be the name of this button
+<li>
+a ucall( ... ) expression that specifies the callback method that is called
+when the button is activated and its arguments. For instance: 
+<pre>
+ucall(this, &UFont::bold, &SEdit::setFont)
+</pre>
+means that: <em>this->setFont (&amp;UFont::bold)</em> will be called when the button is activated.
+</ul>
+As <em>setFont</em> is a SEdit <b>method</b>, the first argument of the ucall 
+expression must be a SEdit instance.
+The second argument is given as a parameter to the setFont() method. A <b>callback 
+method</b>, such as setFont, can have 0 to 2 parameters (instead of 1 in this example).
+The number and the type of the arguments given to the ucall expression 
+must match with those of the called method, or the program won't compile.
+</ul>
+Here is the second part of the SEdit constructor:
+<pre>
+  UBox& color_box = uhbox
+    (UPix::colors + "Colors: "
+     + ubutton("Red"   + uset(&color, &UColor::red))
+     + ubutton("Blue"  + uset(&color, &UColor::blue))
+     + ubutton("Green" + uset(&color, &UColor::green))
+     );
+</pre>
+This piece of code is similar to the previous one except that we use
+the <em>uset( )</em> construct. uset( ) is shortcut that calls the <b>set( )</b>
+method of its argument. For instance:
+<pre>
+uset(&color, &UColor::red)
+</pre>
+means that: <em>color->set (&amp;UColor::red)</em> will be called when the button is activated. Obviously, this constructs will only work is the the first argument
+of uset() has a set() method. Note that we could also have use uset() in the
+previous case.
+<p>
+The last part of the SEdit constructor is:
+<pre>
+  UBox& event_box = uhbox 
+    (UPix::edit + "Font: " xxxxxxx
+     + ubutton("Event test"
+                + ucall(this, &UFont::bold,   &SEdit::setFont))
+     + ubutton("Italic" + ucall(this, &UFont::italic, &SEdit::setFont))
+     + ubutton("Normal" + ucall(this, &UFont::normal, &SEdit::setFont))
+     );
+
+  addlist
+    (uwidth(400) + uheight(300) 
+    + textbox + font_box + color_box + event_box
+  );
+  }
+</pre>
+(to be continued)
+<br>
+
+
+<!-- --------------------------------------------------------------------- -->
+
+<h3>Step 4: Layout</h3>
+<p>
+Examples <a href="sedit4.cpp">sedit4.cpp</a>
+and <a href="LayoutAndText.cpp">LayoutAndText.cpp</a> shows how to create
+editable text and how to specify simple layout constraints.
+<br>
+The main frame contains 3 parts: a tool bar, a text area contained in a scroll pane
+and status bar.
+These 3 elements are flexible in the horizontal direction. The scroll pane is
+also flexible in the vertical dimension. These behaviors are specified by inserting
+uhflex(), utop(), uvflex(), ubottom() in the child list of the UFrame.
+<p>
+The tool bar contains a text field with an editable string.
+This text is appended to the central text area when pressing the Return key
+or clicking the "Ok" button. 
+</p>
+<br>
+(to be continued)
+<br>
+<br>
+
+</body>
+</html>
+

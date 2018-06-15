@@ -1,0 +1,241 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
+<title>Ubit Examples and Tutorial</title>
+<style>
+body {
+  font-family: helvetica, arial, sans-serif; 
+   font-size: 10pt;
+}
+pre {
+  color:navy; 
+  padding-left: 40px;  
+  font-family: courier, fixed;
+  }
+em {
+ font-style: normal;
+ color:  #fe5e00;  /* orange */
+}
+</style>
+</head>
+
+<!-- .................................................................... -->
+
+<body>
+<br>
+<center>
+<h1>
+<a href="http://www.infres.enst.fr/~elc/ubit/">
+<font color="orange">Ubit Toolkit:</font></a> Examples and Tutorial
+</h1>
+
+<h3>
+<a href="http://www.infres.enst.fr/~elc/">Eric Lecolinet</a>
+-
+<a href="http://www.enst.fr/">ENST</a>
+</h3>
+
+<p>
+<a href="http://www.infres.enst.fr/~elc/ubit/">Ubit Home Page</a>
+-
+<a href="http://www.infres.enst.fr/~elc/ubit/doc/">Documentation Main Page</a>
+</p>
+
+</center>
+<br>
+
+<!-- .................................................................... -->
+
+<h2>1. Quick Tutorial</h2>
+<p>
+<a href="tutorial.html">This page</a>
+contains a quick tutorial that shows how to write a simple texte editor. 
+</p>
+
+<h2>2. Misc. examples</h2>
+<ul>
+<li><a href="LayoutAndText.cpp">LayoutAndText.cpp</a> : Layout management
+<li><a href="Lists.cpp">Lists.cpp</a> : List and exclusive items
+<li><a href="Drawing.cpp">Drawing.cpp</a> : Drawing
+<li><a href="Events.cpp">Events.cpp</a> : Events, TimeOuts, Inputs
+<li><a href="Tables.cpp">Tables.cpp</a> : Tables
+<li><a href="Text1.cpp">Text1.cpp</a> , <a href="Text2.cpp">Text2.cpp</a> : 
+Text: composition, callbacks, HTML-like layout
+</ul>
+
+<b>More Examples:</b> Dialogs, Menus, Shared Widgets, Remote Displays, etc. :
+go to the demo directory:
+<a href="http://www.infres.enst.fr/~elc/ubit/demos/">ubit/demos</a>
+
+<h2>3. Important doc pages</h2>
+<ul>
+<li><b>Ubit base class and recursive deletion</b> :
+<a href="http://www.infres.enst.fr/~elc/ubit/doc/classUBrick.html#_details">
+Description</a>,
+<a href="http://www.infres.enst.fr/~elc/ubit/doc/classUBrick.html">
+Doc Page<a>
+</li>
+
+<p></p>
+<li><b>Ubit smart pointers (the uptr&lt;> template)</b> :
+see the uptr<> doc at the end of file
+<a href="http://www.infres.enst.fr/~elc/ubit/doc/ubrick_8hpp-source.html">
+ubrick.hpp</a>
+
+<p></p>
+<li><b>UGroup, a generic "grouping" container</b> :
+<a href="http://www.infres.enst.fr/~elc/ubit/doc/classUGroup.html#_details">
+Description</a>,
+<a href="http://www.infres.enst.fr/~elc/ubit/doc/classUGroup.html">
+Doc Page<a>
+
+<p></p>
+<li><b>UBox, the base class for widgets</b> :
+<a href="http://www.infres.enst.fr/~elc/ubit/doc/classUBox.html#_details">
+Description</a>,
+<a href="http://www.infres.enst.fr/~elc/ubit/doc/classUBox.html">
+Doc Page<a>
+
+<p></p>
+<li><b>UWin, the base class for windows, frames and dialogs</b> :
+<a href="http://www.infres.enst.fr/~elc/ubit/doc/classUWin.html#_details">
+Description</a>,
+<a href="http://www.infres.enst.fr/~elc/ubit/doc/classUWin.html">
+Doc Page<a>
+
+<p></p>
+<li><b>UMenu, the base class menus, popup menus and control menus</b> :
+<a href="http://www.infres.enst.fr/~elc/ubit/doc/classUMenu.html#_details">
+Description</a>,
+<a href="http://www.infres.enst.fr/~elc/ubit/doc/classUMenu.html">
+Doc Page<a>
+
+<p></p>
+<li><b>UAppli, the Application Context</b> :
+<a href="http://www.infres.enst.fr/~elc/ubit/doc/classUAppli.html#_details"> Description</a>,
+<a href="http://www.infres.enst.fr/~elc/ubit/doc/classUAppli.html">
+Doc Page<a>
+
+<p></p>
+<li><b>UCond, UOn, UCall, UEvent : event management an callbacks</b> :
+<a href="http://www.infres.enst.fr/~elc/ubit/doc/classUCond.html">
+UCond<a>,
+<a href="http://www.infres.enst.fr/~elc/ubit/doc/classUOn.html">
+UOn<a>,
+<a href="http://www.infres.enst.fr/~elc/ubit/doc/classUCall.html">
+UCall<a> and
+<a href="http://www.infres.enst.fr/~elc/ubit/doc/classUEvent.html">
+UEvent</a> Doc Pages.
+
+<p></p>
+<li><b>Layout management</b>
+
+<p>
+The toolkit provides several view renderers that performs the lay out
+of the children of the widgets they are associated to. In the current
+version, these renderer make it possible to create:
+<ul>
+<li>horizontal and vertical boxes
+<li>tables (that are similar to HTML tables)
+<li>flows (that are similar to HTML pages)
+<li>viewports, scroll panes and scroll bars
+</ul>
+
+<p>
+The <i>box layout</i> model works as follows:
+
+<pre><tt>   uhbox( uleft() + a + b + uhflex() + x + y + uright() + c + d )  
+</tt></pre>
+
+<p>
+uleft(), uhflex(), uright() (and uhcenter()) specify how the following
+objects are displayed. Objects after uhflex() are "flexible" . This means
+that their size is automa</pre>tically adjusted to the size of the parent
+object.  These specifications can be combined with their vertical
+counterparts: utop(), uvflex(), uvcenter(), ubottom(). This mechanism
+makes possible to specify a large variety of layout behaviors in a 
+rather simple way.
+
+<p>
+The <i>size</i> of objects can be specified in the following way:
+
+<pre><tt>  uhbox( scale + uwidth(200) + uheight(300) + etc... )
+</tt></pre>
+
+<p>
+this size is relative and depends on the value of the scale object
+(sizes are nominal if the scale == 0, larger if the scale is > 0,
+smaller if it is < 0). The size of the "flexible" children is 
+automatically adjusted.
+
+<p>
+<i>Tables</i> can be used to specify more complex layouts:
+
+<pre><tt>  utable( utrow( a + b + c )
+          + utrow( x + y + z )
+          + utrow( utcell(2,1, w) + t)
+        )
+
+example:
+
+     **a**  *b* ***c***
+     **x**  *y* ***z***
+     *****w**** ***t***
+</tt></pre>
+
+<p>
+all objects are then adjusted inside a virtual grid. Widget "w" occupies
+2 columns (and 1 row).
+
+<p>
+The <i>flow</i> layout provides a simple way to create pages that contain
+arbitrary objects (textual elements can be combined with widgets, images,
+graphical symbols, etc.)
+
+<pre><tt>  uflowbox( UColor::blue + "abcd efg" + uima("whatever.gif") 
+            UColor::red + UFont::large + "xyz tuv" + any_widget )
+</tt></pre>
+
+<p>
+The <i>flow</i> layout (as other layout styles) can be applied to any widget:
+
+<pre><tt>  ubutton( UFlowView::style + etc... )
+</tt></pre>
+
+<p>
+In constrast with other layout styles, the Flow layout will automatically
+split strings into several subparts according to the size of the 
+corresponding widget. For instance, if the previous "button" has a
+very small width, the two strings it contains will be splitted into
+subparts shown on separate lines (while other children will be clipped)
+
+<p>
+All layout style support text editing, even in a flow:
+
+<pre><tt>   ubutton( uedit() + UFlowView::style + etc... )
+</tt></pre>
+
+<p>
+Widgets can also be located at arbitrary locations:
+
+<pre><tt>   uhbox( uleft() + a + uhflex() + x + SSS + uright() + d + WWW)
+</tt></pre>
+
+<p>
+SSS and WWW will not follow the previous layout specifications if
+they contain an upos() object:
+
+<pre><tt>   SSS = ubutton( upos(30, 50) + etc... )
+</tt></pre>
+
+<p>
+This <i>upos </i>object specify the relative location of SSS by reference
+to its parents (as SSS can possibily have several parents). The scale
+of the parents is taken into account when calculating the actual 
+locations of the children.
+<p>
+<br>
+
+
+</body>
+</html>
+

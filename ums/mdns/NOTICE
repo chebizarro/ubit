@@ -1,0 +1,17 @@
+
+LICENCE:
+This directory and its subdirectories contains APPLE source code.
+Please read the APPLE_LICENCE. You may not use these files except 
+in compliance with the License.
+
+MODIFICATIONS : 
+This directory does not contain all the files contained in the
+original APPLE distribution. You can obtain the full ditribution
+from: http://developer.apple.com/macosx/rendezvous/
+
+Certain files (mostly the Makefiles) have been modified.
+Changes in the C source code are indicated by " #ubit ".
+
+
+
+

@@ -1,0 +1,132 @@
+/* white-slide.css - Aug 23 2004 */
+
+body {
+  color: black;
+  background: white;
+  font-family: helvetica, arial, sans-serif; 
+}
+
+
+a {color: #555555;}
+a:link    {color:#555555;}
+a:visited {color:darkgrey;}
+a:active  {text-decoration:none; color:orange;}
+a:hover   {text-decoration:none; background:yellow;}
+
+td.navigbar {background: lightgrey;}
+td.navigbar a {color: #555555; text-decoration:none;}
+td.stitle {background: lightgrey;}
+td.stitle a {color: #555555; text-decoration:none;}
+
+
+em {
+ font-style: normal;
+ color:  #fe5e00;  /* orange */
+ /* color: #ee5e19 */
+}
+
+pre {
+ padding-left:   80px;
+ margin-left:     0px;
+ padding-top:    20px;
+ margin-top:      0px;
+ padding-bottom: 10px;
+ margin-bottom:   0px;
+ font-family: courier, fixed; 
+ font-size:      12pt;
+}
+
+
+h1 {
+ padding-left:   25px;
+ margin-left:     0px;
+ padding-top:    15px;
+ margin-top:      0px;
+ padding-bottom: 20px;
+ margin-bottom:  10px;
+ font-size:      24pt;
+ font-weight:    bold;;
+ font-family: helvetica, arial, sans-serif; 
+ border-bottom-style: solid; /* solid,double,etc. */
+ page-break-before: always;
+ color:  #fe5e00;  /* orange */
+}
+
+
+h2 {
+ padding-left:   25px;
+ margin-left:     0px;
+ padding-top:    20px;
+ margin-top:      0px;
+ padding-bottom:  8px;
+ margin-bottom:   0px;
+ font-size:      20pt;
+ font-weight:    normal;
+ font-family: helvetica, arial, sans-serif; 
+ color: navy;
+}
+
+
+h3 {
+ padding-left:   60px;
+ margin-left:     0px;
+ padding-top:     8px;
+ margin-top:      0px;
+ padding-bottom:  8px;
+ margin-bottom:   0px;
+ font-size:      14pt;
+ font-weight:    normal;
+ font-family: helvetica, arial, sans-serif; 
+ display: list-item;
+ list-style-type: square;
+ list-style-position: inside;
+ /* color: purple; */
+}
+
+
+h4 {
+ padding-left:  95px;
+ margin-left:    0px;
+ padding-top:    8px;
+ margin-top:     0px;
+ padding-bottom: 8px;
+ margin-bottom:  0px;
+ font-family: helvetica, arial, sans-serif; 
+ font-weight: normal;
+ font-size: 14pt;
+ display: list-item;
+ list-style-type: circle;
+ list-style-position: inside;
+ color: darkgrey;
+}
+
+
+h5 {
+ padding-left: 130px;
+ margin-left:    0px;
+ margin-top:     0px;
+ padding-top:    0px;
+ margin-bottom:  0px;
+ padding-bottom: 0px;
+ font-family: helvetica, arial, sans-serif; 
+ font-weight: normal;
+ font-size: 12pt;
+ display: list-item;
+ list-style-type: circle;
+ list-style-position: inside
+}
+
+
+h6 {
+ padding-left: 160px;
+ margin-left:    0px;
+ margin-top:     0px;
+ padding-top:    0px;
+ margin-bottom:  0px;
+ padding-bottom: 0px;
+ display: list-item;
+ font-family: helvetica, arial, sans-serif; 
+ font-weight: normal;
+ font-size: 12pt;
+}
+

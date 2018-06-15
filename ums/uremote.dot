@@ -1,0 +1,27 @@
+
+/* uremote config file: * rename as .uremote and move to home dir */ 
+
+finder {
+  files:  xhtml/slide001.html, ~/ph/campmob, ~/ph/cpp/index.html, ~/ph/vihm/doc/cri/toolkits, ~/Public, ~/Desktop/Campus, ~/CampusData/SYLVIE/K1_exemples/K1Dia45_001.jpg, ~/CampusData/2-whiteboard;
+}
+
+web {
+  urls: http://localhost/~campmob/, http://localhost/Public/, http://www.infres.enst.fr/~campmob/, http://www.infres.enst.fr/~elc/, http://www.infres.enst.fr/~elc/campmob/, http://www.infres.enst.fr/~dax/vreng/;
+}
+
+vreng {
+  worlds : Rendezvous, test, mythology, movies, android, campus, ubit;
+}
+
+firefox {
+  back: 17,37;
+  forward: 57,41;
+  reload: 97,37;
+  stop:  127,37;
+  home: 157,37;
+  previous_slide:24, 80;
+  next_slide:50, 80;
+  top_slide:80, 80;
+}
+
+/* uremote config file: * rename as .uremote and move to home dir */ 

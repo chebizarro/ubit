@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="iso-8859-1"?><html>
+<head>
+<title>The Ubit Toolkit (slide 19)</title>
+<link  href="css/dark-slide.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+
+<table class="navigbar" width="100%">
+<tr>
+<td class="navigbar" nowrap="">
+<a href="slide018.html"><img src="css/left-arrow.gif" border="none" alt=""/></a><a href="slide020.html"><img src="css/right-arrow.gif" border="none" alt=""/></a>
+</td>
+<td class="navigbar" nowrap="" width="95%">
+&nbsp;<a href=".">the ubit toolkit</a>
+&nbsp;<a href="http://www.infres.enst.fr/~elc/">eric lecolinet</a>
+&nbsp;<a href="http://www.infres.enst.fr/">enst</a>
+</td>
+<td class="navigbar" nowrap=""><a href="slide_index">&nbsp;19&nbsp;</a></td>
+</tr>
+</table>
+
+<h1>Zoomable interfaces</h1>
+
+<p align=center>
+<img src="img/ubit-persp1.jpg">
+</p>
+
+<h2>Combination of two features : </h2>
+<h3> recursive scaling factors</h3>
+<h3> conditional scaling ranges </h3>
+
+<pre>
+b = ubutton( usrange(-3,-1)   / ustr("abcde")
+             + usrange(0, 3)  / uima("whatever.jpg")
+             + usrange(4, 99) / ufilebox( uscale(-2) + ...)
+           );
+
+UScale sc = -1;
+x = udialog(sc + b);
+</pre>
+
+<!-- slide -------------------------------------------------------- -->
+
+</body>
+</html>
+
