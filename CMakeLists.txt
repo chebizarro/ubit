@@ -1,20 +1,18 @@
 cmake_minimum_required(VERSION 3.4)
 project(ubit LANGUAGES CXX C)
-set(CMAKE_CXX_STANDARD 14)
+#set(CMAKE_CXX_STANDARD 14)
 
 include(cmake/ubit.cmake)
 
-if(WITH_CXX11ABI)
-    set(MASON_CXXABI_SUFFIX -cxx11abi)
-    add_definitions(-D_GLIBCXX_USE_CXX11_ABI=1)
-else()
-    add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0)
-endif()
-
+#if(WITH_CXX11ABI)
+#    add_definitions(-D_GLIBCXX_USE_CXX11_ABI=1)
+#else()
+add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0)
+#endif()
 
 set(CMAKE_CONFIGURATION_TYPES Debug Release RelWithDebugInfo Sanitize)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-parameter -Wno-unused-variable -Wno-extra -Wno-shadow -std=c++98 -fPIC -fvisibility=hidden -Wall -Wnon-virtual-dtor -Wno-variadic-macros -Wno-unknown-pragmas")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -Wno-unused-parameter -Wno-unused-variable -Wno-extra -Wno-shadow")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC -fvisibility=hidden -Wall -Wextra -Wshadow -Wno-variadic-macros -Wno-unknown-pragmas")
 
 if (WITH_ERROR)
@@ -60,4 +58,6 @@ endif()
 include(cmake/config.cmake)
 include(cmake/core-files.cmake)
 include(cmake/core.cmake)
+
+include(cmake/demos.cmake)
 

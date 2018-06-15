@@ -1,5 +1,6 @@
 export BUILDTYPE ?= Debug
-export WITH_CXX11ABI ?= $(shell scripts/check-cxx11abi.sh)
+#export WITH_CXX11ABI ?= $(shell scripts/check-cxx11abi.sh)
+export WITH_CXX11ABI = 0
 
 ifeq ($(BUILDTYPE), Release)
 else ifeq ($(BUILDTYPE), RelWithDebInfo)
@@ -25,22 +26,6 @@ else
   $(error Cannot determine host platform)
 endif
 
-ifeq ($(MASON_PLATFORM),)
-  BUILD_PLATFORM = $(HOST_PLATFORM)
-else
-  BUILD_PLATFORM = $(MASON_PLATFORM)
-endif
-
-ifeq ($(MASON_PLATFORM_VERSION),)
-  BUILD_PLATFORM_VERSION = $(HOST_PLATFORM_VERSION)
-else
-  BUILD_PLATFORM_VERSION = $(MASON_PLATFORM_VERSION)
-endif
-
-ifeq ($(MASON_PLATFORM),macos)
-	MASON_PLATFORM=osx
-endif
-
 ifeq ($(V), 1)
   export XCPRETTY
   NINJA_ARGS ?= -v
@@ -50,7 +35,7 @@ else
 endif
 
 .PHONY: default
-default: ubit
+default: ubit demos
 
 BUILD_DEPS += Makefile
 BUILD_DEPS += CMakeLists.txt
@@ -68,14 +53,15 @@ $(LINUX_BUILD): $(BUILD_DEPS)
 	(cd $(LINUX_OUTPUT_PATH) && cmake -G Ninja ../../.. \
 		-DCMAKE_BUILD_TYPE=$(BUILDTYPE) \
 		-DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
-		-DWITH_CXX11ABI=${WITH_CXX11ABI} \
-		-DWITH_COVERAGE=${WITH_COVERAGE} \
-		-DWITH_OSMESA=${WITH_OSMESA} \
-		-DWITH_EGL=${WITH_EGL})
+		-DWITH_CXX11ABI=${WITH_CXX11ABI}
 
 .PHONY: ubit
 ubit: $(LINUX_BUILD)
 	$(NINJA) $(NINJA_ARGS) -j$(JOBS) -C $(LINUX_OUTPUT_PATH) ubit
+
+.PHONY: demos
+demos: $(LINUX_BUILD)
+	$(NINJA) $(NINJA_ARGS) -j$(JOBS) -C $(LINUX_OUTPUT_PATH) udemos
 
 endif
 
@@ -88,4 +74,3 @@ clean:
 
 .PHONY: distclean
 distclean: clean
-	-rm -rf ./mason_packages
