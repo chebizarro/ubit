@@ -60,7 +60,7 @@ public:
   };
   
   
-  UGraph(UPaintEvent&) throw (UError);
+  UGraph(UPaintEvent&);
   /**< constructor for drawing in a UOn::paint callback method.
    * Example:
    * <pre>
@@ -299,7 +299,7 @@ public:
   // === Impl. =================================================================
 #ifndef NO_DOC
 
-  UGraph(UView*) throw (UError);
+  UGraph(UView*);
   /**< constructor for drawing in a view.
    * see UGraph(UPaintEvent&) for details.
    * This constr. raises an exception if the UView is null

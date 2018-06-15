@@ -56,7 +56,7 @@ NAMESPACE_UBIT
 
 // ==================================================== [Ubit Toolkit] =========
 
-UGraph::UGraph(UView* v) throw (UError) {
+UGraph::UGraph(UView* v) {
   rc = null; // securite pour ~UGraph
   if (!v) {
     UAppli::fatalError("UGraph::UGraph(UView*)","null UView argument: cannot create a UGraph");
@@ -111,7 +111,7 @@ UGraph::UGraph(UView* v) throw (UError) {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-UGraph::UGraph(UPaintEvent& e) throw (UError) {
+UGraph::UGraph(UPaintEvent& e) {
   rc = null; // securite pour ~UGraph
   UUpdateContext* c = e.current_context;
   UGraph* g = c ? c->getGraph() : null;

@@ -115,7 +115,7 @@ namespace ubit {
     
     virtual ~UAppli();
     
-    static UAppli& appli() throw (UError);
+    static UAppli& appli();
     /**< returns a reference to the UAppli instance of the program.
      * There is *only one* UAppli for a given program.
      * Throws a UError exception if the UAppli has not yet been created.
@@ -220,18 +220,18 @@ namespace ubit {
     ///< changes the current error handler (see UErrorHandler).
         
     
-    static void error(const char* funcname, const char* format, ...) throw(UError);
+    static void error(const char* funcname, const char* format, ...);
     ///< raises an error; shortcut for raiseError(UError::ERROR ...).
     
-    static void warning(const char* funcname, const char* format, ...) throw (UError);
+    static void warning(const char* funcname, const char* format, ...);
     ///< raises a warning; shortcut for raiseError(UError::WARNING, ...).
     
-    static void fatalError(const char* funcname, const char* format, ...) throw (UError);
+    static void fatalError(const char* funcname, const char* format, ...);
     ///< raises a fatal error; shortcut for raiseError(UError::FATAL_ERROR, ...).
      
     
     static void raiseError(int errnum, const UObject*, 
-                           const char* funcname, const char* format, ...) throw (UError);
+                           const char* funcname, const char* format, ...);
     /**< raises an error: prints out a message and/or generate an exception.
      * this method:
      * - displays an error message (on std::cerr by default, see below)
@@ -248,7 +248,7 @@ namespace ubit {
      */
     
     static void raiseError(int errnum, const UObject*, 
-                           const char* funcname, const char* format, va_list) throw (UError);
+                           const char* funcname, const char* format, va_list);
     ///< raises an error; see raiseError().
 
     
@@ -391,7 +391,7 @@ namespace ubit {
     UStr& initConf(int& argc, char** argv, UOption*, const char* confile);
     ///< [impl] parses the config specs, inits the global data of the appli, returns the display name.
     
-    static void internalError(const char* fun, const char* format, ...) throw (UError);
+    static void internalError(const char* fun, const char* format, ...);
 
     static void deleteNotify(UDisp*);
     ///< [impl] notifies that a display is being destroyed.
@@ -430,23 +430,23 @@ namespace ubit {
     UStr& label() {return *plabel;}
     ///< returns the label property of this UErrorHandler.
     
-    virtual void warning(const char* funcname, const char* format, ...) const throw (UError);
+    virtual void warning(const char* funcname, const char* format, ...) const;
     ///< raises a warning; shortcut for raiseError(UError::WARNING, null, ...).
     
-    virtual void error(const char* funcname, const char* format, ...) const throw (UError);
+    virtual void error(const char* funcname, const char* format, ...) const;
     ///< raises an error; shortcut for raiseError(UError::ERROR, null, ...).
     
     virtual void error(int errnum, const UObject*, const char* funcname, 
-                       const char* format, ...) const throw (UError);
+                       const char* format, ...) const;
     ///< raises an error; shortcut for raiseError(UError::ERROR, ...).
     
     virtual void parserError(int errnum, const UChar* text_buffer,
                                   const char* msg_start, const UStr& name,
-                                  const char* msg_end, const UChar* line) const throw (UError);
+                                  const char* msg_end, const UChar* line) const;
     ///< used by XML and Style parsers to raise a formatted error.
     
     virtual void raiseError(int errnum, const UObject*, const char* funcname, 
-                            const char* format, va_list) const throw (UError);
+                            const char* format, va_list) const;
     /**< raises an error: prints out a message and/or generate an exception.
      * this method:
      * - displays an error message (on std::cerr by default, see below)
@@ -458,7 +458,7 @@ namespace ubit {
      * - '...' is a variadic list of arguments that correspond to 'format'.
      */
             
-    virtual void raiseError(int errnum, UStr* msg) const throw (UError);
+    virtual void raiseError(int errnum, UStr* msg) const;
 
     virtual const char* getErrorName(int errnum) const;
     virtual void formatMessage(UError&, const char* format, va_list) const;

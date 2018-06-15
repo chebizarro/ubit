@@ -147,7 +147,7 @@ namespace ubit {
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-    virtual void error(const char* function_name, const char* format, ...) const throw (UError);
+    virtual void error(const char* function_name, const char* format, ...) const;
     /**< prints out an error message.
      * this method displays an error message (on std::cerr by default) :
      * - 'function_name' = the name of the function where the error occured
@@ -156,7 +156,7 @@ namespace ubit {
      * @see also: warning() and UAppli::error().
      */
     
-    virtual void warning(const char* function_name, const char* format, ...) const throw (UError);
+    virtual void warning(const char* function_name, const char* format, ...) const;
     ///< prints out a warning message: @see error().
     
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
