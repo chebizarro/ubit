@@ -35,7 +35,7 @@ else
 endif
 
 .PHONY: default
-default: ubit demos
+default: ubit udemos table ufinder wspace xmlparser
 
 BUILD_DEPS += Makefile
 BUILD_DEPS += CMakeLists.txt
@@ -53,15 +53,35 @@ $(LINUX_BUILD): $(BUILD_DEPS)
 	(cd $(LINUX_OUTPUT_PATH) && cmake -G Ninja ../../.. \
 		-DCMAKE_BUILD_TYPE=$(BUILDTYPE) \
 		-DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
-		-DWITH_CXX11ABI=${WITH_CXX11ABI}
+		-DWITH_CXX11ABI=${WITH_CXX11ABI})
 
 .PHONY: ubit
 ubit: $(LINUX_BUILD)
 	$(NINJA) $(NINJA_ARGS) -j$(JOBS) -C $(LINUX_OUTPUT_PATH) ubit
 
-.PHONY: demos
-demos: $(LINUX_BUILD)
+.PHONY: udemos
+udemos: $(LINUX_BUILD)
 	$(NINJA) $(NINJA_ARGS) -j$(JOBS) -C $(LINUX_OUTPUT_PATH) udemos
+
+.PHONY: table
+table: $(LINUX_BUILD)
+	$(NINJA) $(NINJA_ARGS) -j$(JOBS) -C $(LINUX_OUTPUT_PATH) table
+
+.PHONY: umedia
+umedia: $(LINUX_BUILD)
+	$(NINJA) $(NINJA_ARGS) -j$(JOBS) -C $(LINUX_OUTPUT_PATH) umedia
+
+.PHONY: ufinder
+ufinder: $(LINUX_BUILD)
+	$(NINJA) $(NINJA_ARGS) -j$(JOBS) -C $(LINUX_OUTPUT_PATH) ufinder
+
+.PHONY: wspace
+wspace: $(LINUX_BUILD)
+	$(NINJA) $(NINJA_ARGS) -j$(JOBS) -C $(LINUX_OUTPUT_PATH) wspace
+
+.PHONY: xmlparser
+xmlparser: $(LINUX_BUILD)
+	$(NINJA) $(NINJA_ARGS) -j$(JOBS) -C $(LINUX_OUTPUT_PATH) xmlparser
 
 endif
 

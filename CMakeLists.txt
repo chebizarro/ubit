@@ -60,4 +60,9 @@ include(cmake/core-files.cmake)
 include(cmake/core.cmake)
 
 include(cmake/demos.cmake)
+include(cmake/table.cmake)
+#include(cmake/umedia.cmake)
+include(cmake/ufinder.cmake)
+include(cmake/wspace.cmake)
+include(cmake/xmlparser.cmake)
 
