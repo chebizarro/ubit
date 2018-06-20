@@ -35,8 +35,11 @@ else
 endif
 
 .PHONY: default
-default: ubit udemos table ufinder wspace xmlparser
+default: ubit udemos table ufinder wspace xmlparser examples
 
+.PHONY: check
+check: ubittests
+ 
 BUILD_DEPS += Makefile
 BUILD_DEPS += CMakeLists.txt
 
@@ -82,6 +85,14 @@ wspace: $(LINUX_BUILD)
 .PHONY: xmlparser
 xmlparser: $(LINUX_BUILD)
 	$(NINJA) $(NINJA_ARGS) -j$(JOBS) -C $(LINUX_OUTPUT_PATH) xmlparser
+
+.PHONY: examples
+examples: $(LINUX_BUILD)
+	$(NINJA) $(NINJA_ARGS) -j$(JOBS) -C $(LINUX_OUTPUT_PATH) example1 example2
+
+.PHONY: ubittests
+ubittests: $(LINUX_BUILD)
+	$(NINJA) $(NINJA_ARGS) -j$(JOBS) -C $(LINUX_OUTPUT_PATH) ubittests
 
 endif
 

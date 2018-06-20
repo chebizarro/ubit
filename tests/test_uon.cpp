@@ -1,17 +1,11 @@
-#include <cppunit/config/SourcePrefix.h>
-
-#include <ubit/Uon.hpp>
-
-CPPUNIT_TEST_SUITE_REGISTRATION( UonTest );
-
-void 
-UonTest::setUp() { }
-
-void 
-UonTest::tearDown() { }
-
-void 
-UonTest::testConstructor() {
+#include <ubit/uon.hpp>
+#include <gtest/gtest.h>
+ 
+TEST(UonTest, NewUon) { 
 
 }
-
+  
+int main(int argc, char **argv) {
+    testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+}

@@ -65,4 +65,6 @@ include(cmake/table.cmake)
 include(cmake/ufinder.cmake)
 include(cmake/wspace.cmake)
 include(cmake/xmlparser.cmake)
+include(cmake/examples.cmake)
+include(cmake/tests.cmake)
 
