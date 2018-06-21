@@ -8,10 +8,11 @@ namespace ubit {
 
 class MockUBox : public UBox {
  public:
-  MOCK_METHOD0(toBox,
-      UBox*());
-  MOCK_CONST_METHOD0(toBox,
-      const UBox*());
+
+  MOCK_METHOD0(toBox, UBox*());
+      
+  MOCK_CONST_METHOD0(toBox, const UBox*());
+
   MOCK_CONST_METHOD0(getDisplayType,
       int());
   MOCK_METHOD2(update,

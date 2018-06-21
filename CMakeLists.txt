@@ -55,6 +55,8 @@ else()
     message(STATUS "Can't find ccache — consider installing ccache to improve recompilation performance")
 endif()
 
+include(cmake/gtest.cmake)
+
 include(cmake/config.cmake)
 include(cmake/core-files.cmake)
 include(cmake/core.cmake)

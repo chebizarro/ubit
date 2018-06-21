@@ -12,9 +12,11 @@ add_executable(ubittests
 )
 
 target_link_libraries(ubittests
-	PUBLIC ${GTEST_LIBRARIES}
-	PUBLIC /usr/lib/libgmock_main.a
-	PUBLIC /usr/lib/libgmock.a
+	PUBLIC gtest_main
+	PUBLIC gmock_main
+	PUBLIC gmock
 )
 
 ubit_add_libraries(ubittests)
+
+add_test(NAME ubit_test COMMAND ubittests)
