@@ -6,18 +6,6 @@ add_executable(wspace
     demos/zoom.hpp
 )
 
-target_include_directories(wspace
-    PUBLIC src
-)
+ubit_add_include_dir(wspace)
 
-target_link_libraries(wspace
-    PRIVATE ubit
-	PUBLIC -lGL
-	PUBLIC -lX11
-	PUBLIC -lpthread
-	PUBLIC -lglut
-	PUBLIC -lGLU
-	PUBLIC -lXmu
-	PUBLIC -lfreetype
-	PUBLIC -lftgl
-)
+ubit_add_libraries(wspace)

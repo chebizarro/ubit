@@ -23,18 +23,6 @@ add_executable(udemos
     demos/magiclens.hpp
 )
 
-target_include_directories(udemos
-    PUBLIC src
-)
+ubit_add_include_dir(udemos)
 
-target_link_libraries(udemos
-    PRIVATE ubit
-	PUBLIC -lGL
-	PUBLIC -lX11
-	PUBLIC -lpthread
-	PUBLIC -lglut
-	PUBLIC -lGLU
-	PUBLIC -lXmu
-	PUBLIC -lfreetype
-	PUBLIC -lftgl
-)
+ubit_add_libraries(udemos)

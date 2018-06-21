@@ -2,42 +2,17 @@ add_executable(example1
     examples/example1.cpp
 )
 
-target_include_directories(example1
-    PUBLIC src
-)
+ubit_add_include_dir(example1)
 
-target_link_libraries(example1
-    PRIVATE ubit
-	PUBLIC -lGL
-	PUBLIC -lX11
-	PUBLIC -lpthread
-	PUBLIC -lglut
-	PUBLIC -lGLU
-	PUBLIC -lXmu
-	PUBLIC -lfreetype
-	PUBLIC -lftgl
-)
+ubit_add_libraries(example1)
 
 add_executable(example2
     examples/example2.cpp
 )
 
-target_include_directories(example2
-    PUBLIC src
-)
+ubit_add_include_dir(example2)
 
-target_link_libraries(example2
-    PRIVATE ubit
-	PUBLIC -lGL
-	PUBLIC -lX11
-	PUBLIC -lpthread
-	PUBLIC -lglut
-	PUBLIC -lGLU
-	PUBLIC -lXmu
-	PUBLIC -lfreetype
-	PUBLIC -lftgl
-)
-
+ubit_add_libraries(example2)
 
 
 ##example3_SOURCES = example3.cpp

@@ -12,15 +12,9 @@ add_executable(ubittests
 )
 
 target_link_libraries(ubittests
-    PRIVATE ubit
-	PRIVATE /usr/lib/gmock_main.a
 	PUBLIC ${GTEST_LIBRARIES}
-	PUBLIC -lGL
-	PUBLIC -lX11
-	PUBLIC -lpthread
-	PUBLIC -lglut
-	PUBLIC -lGLU
-	PUBLIC -lXmu
-	PUBLIC -lfreetype
-	PUBLIC -lftgl
+	PUBLIC /usr/lib/libgmock_main.a
+	PUBLIC /usr/lib/libgmock.a
 )
+
+ubit_add_libraries(ubittests)

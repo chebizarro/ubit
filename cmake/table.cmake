@@ -4,18 +4,6 @@ add_executable(table
     demos/viewer.hpp
 )
 
-target_include_directories(table
-    PUBLIC src
-)
+ubit_add_include_dir(table)
 
-target_link_libraries(table
-    PRIVATE ubit
-	PUBLIC -lGL
-	PUBLIC -lX11
-	PUBLIC -lpthread
-	PUBLIC -lglut
-	PUBLIC -lGLU
-	PUBLIC -lXmu
-	PUBLIC -lfreetype
-	PUBLIC -lftgl
-)
+ubit_add_libraries(table)
