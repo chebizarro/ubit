@@ -15,5 +15,6 @@
 #define	UBIT_WITH_X11 1
 #define	UBIT_WITH_GL 1
 #define	UBIT_WITH_FREETYPE 1
+#define	UBIT_WITH_JPEG 1
 
 #endif // UBIT_FEATURES_H
