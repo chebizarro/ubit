@@ -1,8 +1,8 @@
-find_package(GTest REQUIRED)
+#find_package(GTest REQUIRED)
 
 include_directories(
 	PRIVATE src
-	PUBLIC ${GTEST_INCLUDE_DIRS}
+#	PUBLIC ${GTEST_INCLUDE_DIRS}
 )
 
 add_executable(ubittests
