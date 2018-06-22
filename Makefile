@@ -88,7 +88,9 @@ xmlparser: $(LINUX_BUILD)
 
 .PHONY: examples
 examples: $(LINUX_BUILD)
-	$(NINJA) $(NINJA_ARGS) -j$(JOBS) -C $(LINUX_OUTPUT_PATH) example1 example2
+	$(NINJA) $(NINJA_ARGS) -j$(JOBS) -C $(LINUX_OUTPUT_PATH) \
+	example1 example2 example3 sedit4 events tables layout lists \
+	tree text1 text2 glcanvas
 
 .PHONY: ubittests
 ubittests: $(LINUX_BUILD)
