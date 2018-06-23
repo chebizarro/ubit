@@ -329,7 +329,7 @@ void UHardFont::drawString(const char* s, int len, float x, float y) const { // 
     //    => pen now contains absolute (x,y) coordinates
     //EX: glTranslatef(x, y, 0);
     // TODO
-    // ftf->Render(s, len, x, y); // Note that this FTGL fct has been modified by ELC
+    ftf->Render(s, len, FTPoint(x, y)); // Note that this FTGL fct has been modified by ELC
     
     //glPopMatrix();
     
