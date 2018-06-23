@@ -197,7 +197,8 @@ bool UElem::addImpl1(const UChild& c, UChildIter pos, UChildren& list) {
 
 UElem& UElem::removeImpl(UChildIter pos, int N, bool autodel, UChildren& list) {
   bool update = false;
-  
+  auto ccount = children().size();
+
   if (N == -1) {
     while (true) {
       if (list.begin() == list.end()) break;

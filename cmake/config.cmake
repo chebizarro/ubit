@@ -20,6 +20,8 @@ macro(ubit_add_libraries _PACKAGE)
 		PUBLIC -lXmu
 		PUBLIC -lfreetype
 		PUBLIC -lftgl
+		PUBLIC -lXpm
+		PUBLIC -ljpeg
 	)
 
 endmacro()
