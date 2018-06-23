@@ -328,8 +328,8 @@ void UHardFont::drawString(const char* s, int len, float x, float y) const { // 
     //EX: we cannot use glTranslate() because glClipPlane was called before
     //    => pen now contains absolute (x,y) coordinates
     //EX: glTranslatef(x, y, 0);
-    // TODO
-    ftf->Render(s, len, FTPoint(x, y)); // Note that this FTGL fct has been modified by ELC
+
+    ftf->Render(s, len, FTPoint(x, y));
     
     //glPopMatrix();
     
