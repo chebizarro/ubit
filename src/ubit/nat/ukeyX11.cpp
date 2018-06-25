@@ -18,7 +18,7 @@
 #if UBIT_WITH_X11
 
 #include <X11/keysym.h> 
-//#include <X11/XF86keysym.h>        // @@@!!!
+#include <X11/XKBlib.h>
 #include <ubit/nat/udispX11.hpp>
 #include <ubit/ukey.hpp>
 namespace ubit {
@@ -403,7 +403,8 @@ const int
     for (int c = 0; c < modmap->max_keypermod; c++) {
       KeyCode keycode = modmap->modifiermap[m * modmap->max_keypermod + c];
       if (keycode != 0) {
-        KeySym keysym = XKeycodeToKeysym(sysdisp, keycode, 0);
+		  // TODO: check if shift key is down
+        KeySym keysym = XkbKeycodeToKeysym(sysdisp, keycode, 0, 0);
         
         if (keysym == XK_Meta_L || keysym == XK_Meta_R)
           _MetaDown = (1 << m);
