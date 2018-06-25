@@ -30,6 +30,8 @@ macro(ubit_add_include_dir _PACKAGE)
 
 	target_include_directories(${_PACKAGE}
 		PRIVATE src
+		PUBLIC /usr/include/freetype2
 	)
+
 
 endmacro()

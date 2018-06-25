@@ -35,7 +35,7 @@ else
 endif
 
 .PHONY: default
-default: ubit udemos table ufinder wspace xmlparser examples
+default: ubit ums demos examples
 
 .PHONY: check
 check: ubittests
@@ -62,29 +62,14 @@ $(LINUX_BUILD): $(BUILD_DEPS)
 ubit: $(LINUX_BUILD)
 	$(NINJA) $(NINJA_ARGS) -j$(JOBS) -C $(LINUX_OUTPUT_PATH) ubit
 
-.PHONY: udemos
-udemos: $(LINUX_BUILD)
-	$(NINJA) $(NINJA_ARGS) -j$(JOBS) -C $(LINUX_OUTPUT_PATH) udemos
+.PHONY: ums
+ums: $(LINUX_BUILD)
+	$(NINJA) $(NINJA_ARGS) -j$(JOBS) -C $(LINUX_OUTPUT_PATH) ums
 
-.PHONY: table
-table: $(LINUX_BUILD)
-	$(NINJA) $(NINJA_ARGS) -j$(JOBS) -C $(LINUX_OUTPUT_PATH) table
-
-.PHONY: umedia
-umedia: $(LINUX_BUILD)
-	$(NINJA) $(NINJA_ARGS) -j$(JOBS) -C $(LINUX_OUTPUT_PATH) umedia
-
-.PHONY: ufinder
-ufinder: $(LINUX_BUILD)
-	$(NINJA) $(NINJA_ARGS) -j$(JOBS) -C $(LINUX_OUTPUT_PATH) ufinder
-
-.PHONY: wspace
-wspace: $(LINUX_BUILD)
-	$(NINJA) $(NINJA_ARGS) -j$(JOBS) -C $(LINUX_OUTPUT_PATH) wspace
-
-.PHONY: xmlparser
-xmlparser: $(LINUX_BUILD)
-	$(NINJA) $(NINJA_ARGS) -j$(JOBS) -C $(LINUX_OUTPUT_PATH) xmlparser
+.PHONY: demos
+demos: $(LINUX_BUILD)
+	$(NINJA) $(NINJA_ARGS) -j$(JOBS) -C $(LINUX_OUTPUT_PATH) \
+	udemos table ufinder wspace xmlparser
 
 .PHONY: examples
 examples: $(LINUX_BUILD)
