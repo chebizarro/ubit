@@ -624,16 +624,19 @@ void UView::doUpdate2(UViewUpdateImpl& vd, UElem& grp, UUpdateContext& ctx,
             
             if (vup.mode == UViewUpdate::FIND_DATA_POS) {
               if (vd.orient == UOrient::HORIZONTAL) {
-                /*if*/ (vd.view->findDataH(ctx, ch, mlist.end(), vd.chr, vup));
+                if (vd.view->findDataH(ctx, ch, mlist.end(), vd.chr, vup))
+				  ;
                 // goto END; FAUX: car on saute l'increment qui
                 // est necessaire si ubox( UElem(data1) + data2 ) 
               }
               else {
-                /*if*/ (vd.view->findDataV(ctx, ch, mlist.end(), vd.chr, vup));
+                if (vd.view->findDataV(ctx, ch, mlist.end(), vd.chr, vup));
+                ;
               }
             }
             else if (vup.mode == UViewUpdate::FIND_DATA_PTR) {
-              /*if*/ (vd.view->findDataPtr(ctx, ch, mlist.end(), vd.chr, vup));
+              if (vd.view->findDataPtr(ctx, ch, mlist.end(), vd.chr, vup));
+              ;
             }
           } 
           

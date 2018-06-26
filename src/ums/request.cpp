@@ -14,6 +14,7 @@
 * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
 * ***********************************************************************/
 
+#include <string.h>
 #include <cstdio>
 #include <cstdlib>       // getenv, atexit
 #include <unistd.h>      // darwin

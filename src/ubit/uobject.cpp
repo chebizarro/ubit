@@ -51,12 +51,7 @@ const char* UObject::getVersion() {
 }
 
 const UStr& UObject::getClassName() const {
-  if (this) return getClass().getName();
-  else {
-    UAppli::error("UObject::getClassName","null pointer");
-    static UStr& np = *new UStr("<Null Pointer>");
-    return np;
-  }
+  return getClass().getName();
 }
 
 void UObject::error(const char* funcname, const char* format, ...) const {

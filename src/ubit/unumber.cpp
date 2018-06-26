@@ -156,13 +156,13 @@ ostream& operator<<(ostream& s, const UFloat& v) {
 
 UFloat UFloat::operator++(int) {
   UFloat clone = *this;
-  ++value;
+  (*this)++;
   return clone;
 }
 
 UFloat UFloat::operator--(int) {
   UFloat clone = *this;
-  ++value;
+  (*this)++;
   return clone;
 }
 

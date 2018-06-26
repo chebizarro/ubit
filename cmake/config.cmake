@@ -22,6 +22,7 @@ macro(ubit_add_libraries _PACKAGE)
 		PUBLIC -lftgl
 		PUBLIC -lXpm
 		PUBLIC -ljpeg
+		PUBLIC -lgif
 	)
 
 endmacro()

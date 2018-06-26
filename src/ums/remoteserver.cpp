@@ -15,6 +15,7 @@
 * ***********************************************************************/
 
 #include <cstdio>
+#include <string.h>
 #include "umserver.hpp"
 #include "flow.hpp"
 #include "events.hpp"

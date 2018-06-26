@@ -35,10 +35,13 @@ else
 endif
 
 .PHONY: default
-default: ubit ums demos examples
+default: ubit demos examples
+
+.PHONY: ums
+ums: ums
 
 .PHONY: check
-check: ubittests
+check: tests
  
 BUILD_DEPS += Makefile
 BUILD_DEPS += CMakeLists.txt
@@ -78,8 +81,8 @@ examples: $(LINUX_BUILD)
 	tree text1 text2 glcanvas
 
 .PHONY: ubittests
-ubittests: $(LINUX_BUILD)
-	$(NINJA) $(NINJA_ARGS) -j$(JOBS) -C $(LINUX_OUTPUT_PATH) ubittests
+tests: $(LINUX_BUILD)
+	$(NINJA) $(NINJA_ARGS) -j$(JOBS) -C $(LINUX_OUTPUT_PATH) uappli_tests ubittests
 
 endif
 

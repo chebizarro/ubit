@@ -22,8 +22,7 @@
 #  include <CoreFoundation/CoreFoundation.h>
 #  include <DNSServiceDiscovery/DNSServiceDiscovery.h>
 #else
-#  include "mdns/mDNSCore/mDNSClientAPI.h" // API to the mDNS core code
-#  include "mdns/mDNSPosix/mDNSPosix.h"    // specific types to run mDNS on this platform
+#  include <avahi-client/client.h>
 #endif
 
 /* ==================================================== ======== ======= */
@@ -44,18 +43,18 @@ public:
 #ifdef MACOSX
   dns_service_discovery_ref browse_client;
 #else
-  mDNS mdns;
+  //mDNS mdns;
   bool ok;
   struct {
-    mDNS_PlatformSupport platform;  // Stores this platform's globals
-    CacheRecord cache[500];
+    //mDNS_PlatformSupport platform;  // Stores this platform's globals
+    //CacheRecord cache[500];
   } sto;
   struct {
-    DNSQuestion question;
+    //DNSQuestion question;
     bool ok;
   } brw;
   struct reg {
-    ServiceRecordSet record_set;
+    //ServiceRecordSet record_set;
     bool ok;
   } reg;
 #endif

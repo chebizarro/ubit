@@ -43,7 +43,8 @@ typedef unsigned long CursorID;
 typedef unsigned long TimeID;
 typedef union  _XEvent   XEvent;
 typedef struct _XDisplay XDisplay;
-typedef struct XScreen;
+//typedef struct XScreen;
+struct XScreen;
 
 enum {
   MouseLeftID   = (1<<8),

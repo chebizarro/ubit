@@ -96,8 +96,7 @@ void USubwin::resizeImpl(UResizeEvent& e) {
   if (hw) {
     // setSize first because pos depends on size for GLUT
     hw->setSize(v->getSize());
-    //UPoint p = hw->getPos();
-    //cerr << "resizeCB size: " << v->getSize() << " p= " << p<< endl; 
+    hw->getPos();
   }
 }
   

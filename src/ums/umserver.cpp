@@ -18,6 +18,7 @@
  * ***********************************************************************/
 
 #include <algorithm>
+#include <string.h>
 #include <cstdlib>       // getenv, atexit
 #include <cstdio>
 #include <unistd.h>       // darwin

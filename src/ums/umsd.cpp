@@ -22,6 +22,7 @@
 #include <string>
 #include <cstdlib>
 #include <cstdio>
+#include <string.h>
 #include <unistd.h>
 #include <signal.h>
 #include <sys/utsname.h>

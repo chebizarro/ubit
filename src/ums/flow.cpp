@@ -127,7 +127,7 @@ void MouseFlow::changePointer(const char* fgcolor_name, const char* bgcolor_name
   }
   
   static char mouse_bits[] = {
-    0x00, 0xfe, 0x7e, 0x3e, 0x3e, 0x7e, 0xe6, 0xc2   // 8x8
+    (char)0x00, (char)0xfe, (char)0x7e, (char)0x3e, (char)0x3e, (char)0x7e, (char)0xe6, (char)0xc2   // 8x8
   };
   
   Pixmap pix = XCreatePixmapFromBitmapData(disp,
