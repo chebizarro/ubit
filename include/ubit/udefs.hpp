@@ -36,7 +36,6 @@ namespace ubit {
   class UObject;     // base class of all objects
   class UNode;       // base class of all objects that can be added to the scene graph
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // elements (groups, boxes and widgets)
   
   class UElem;    // base class of element nodes (derives from UNode)
@@ -64,7 +63,6 @@ namespace ubit {
   class UDoc;
   class UGlcanvas;
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // windows and menus (derive from UBox)
   
   class UWin;
@@ -77,14 +75,12 @@ namespace ubit {
   class UCtlmenu;
   class USubwin;
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // 3D widgets (derive from UBox)
   
   class U3Dcanvas;
   class U3Dbox;
   class U3Dwin;
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // data (strings, images, pixmaps, symbols)
   
   class UData;     // base class of data nodes (derives from UNode)
@@ -93,7 +89,6 @@ namespace ubit {
   class UPix;
   class USymbol;
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // attributes
   
   class UAttr;  // base class of attributes nodes (derives from UNode)
@@ -121,7 +116,6 @@ namespace ubit {
   class UChoice;
   class UEdit;
 
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // application, display and global configuration
   
   class UAppli;
@@ -130,7 +124,6 @@ namespace ubit {
   class UOption;
   class USelection;
 
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // event conditions
   
   class UCond;
@@ -139,7 +132,6 @@ namespace ubit {
   class UFlagdef;
   class UPropdef;
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // events
 
   class UEvent;
@@ -161,7 +153,6 @@ namespace ubit {
   class UKey;  // key codes
   class UMod;  // modifier masks
    
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // geometry
   
   class UUnit;
@@ -175,7 +166,6 @@ namespace ubit {
   class UArc;
   class UPolygon;
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // graphics & rendering
   
   class UGraph;
@@ -184,25 +174,21 @@ namespace ubit {
   class URenderContext;
   class UGlcontext;
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // errors
   
   class UError;
   class UErrorHandler;
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // numbers
   
   class UInt;
   class UFloat;
   class UDouble;
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // metaclasses
   
   class UClass;
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // view and styles
   
   class UView;
@@ -210,14 +196,12 @@ namespace ubit {
   class UStyle;
   class UStyleSheet;
 
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // arglists
   
   class UArgs;
   class UChild;
   class UParent;
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // file and network
   
   class UFileInfo;
@@ -230,7 +214,6 @@ namespace ubit {
   class UMessagePortMap;
   class UMService;
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // implementation
   
   class UUpdateContext;
@@ -243,14 +226,6 @@ namespace ubit {
   class UHardPix;
   class UHardFont;
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  /* compatibility with Ubit5
-  
-   typedef UNode UBrick;
-   typedef UAttr UProp;
-   typedef UBackground UBgcolor;
-   
-   */
 }
 
 #endif
