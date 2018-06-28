@@ -176,7 +176,7 @@ default_background(*new UBackground(UColor::lightgrey))
    // - - - defaults - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   
   default_font = &UFont::sans_serif;     // CANT be null!
-  setDefaultBackground(UPix::metal);     // UPix::velin, UColor::lightgrey
+  setDefaultBackground(UColor::lightgrey);     // UPix::velin, UColor::lightgrey
   unknow_image = &UPix::question;  
   selection_color  = null;               // none if pointer is null
   selection_bgcolor= &UColor::lightblue; // idem
