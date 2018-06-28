@@ -20,7 +20,7 @@
 #include <ubit/udom.hpp>
 #include <ubit/uhtml.hpp>
 #include <ubit/ucss.hpp>
-#include <ubit/uappliImpl.hpp>
+#include <ubit/core/uappliImpl.hpp>
 using namespace std;
 #define NAMESPACE_UBIT namespace ubit {
 NAMESPACE_UBIT

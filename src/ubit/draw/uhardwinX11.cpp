@@ -26,7 +26,7 @@
 #include <ubit/ucursor.hpp>
 #include <ubit/uwin.hpp>
 //#include <ubit/umsproto.hpp>
-#include <ubit/nat/udispX11.hpp>
+#include <ubit/udispX11.hpp>
 using namespace std;
 #define NAMESPACE_UBIT namespace ubit {
 NAMESPACE_UBIT

@@ -24,11 +24,11 @@
 #include <ubit/uevent.hpp>
 #include <ubit/uupdate.hpp>
 #include <ubit/uupdatecontext.hpp>
-#include <ubit/uviewImpl.hpp>
+#include <ubit/ui/uviewImpl.hpp>
 #include <ubit/u3d.hpp>
 #include <ubit/u3dicon.hpp>
 #include <ubit/ustyle.hpp>
-#include <ubit/uappliImpl.hpp>
+#include <ubit/core/uappliImpl.hpp>
 #include <ubit/ugraph.hpp>
 using namespace std;
 #define NAMESPACE_UBIT namespace ubit {

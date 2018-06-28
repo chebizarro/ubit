@@ -35,7 +35,7 @@
 #include <ubit/utimer.hpp>
 #include <ubit/ufilebox.hpp>
 #include <ubit/ufinder.hpp>
-#include <ubit/ufinderImpl.hpp>
+#include <ubit/ui/ufinderImpl.hpp>
 using namespace std;
 #define NAMESPACE_UBIT namespace ubit {
 NAMESPACE_UBIT

@@ -23,11 +23,11 @@
 #include <ubit/ustr.hpp>
 #include <ubit/ukey.hpp>
 #include <ubit/uupdatecontext.hpp>
-#include <ubit/uviewImpl.hpp>
-#include <ubit/uwinImpl.hpp>
+#include <ubit/ui/uviewImpl.hpp>
+#include <ubit/ui/uwinImpl.hpp>
 #include <ubit/ucolor.hpp>
 #include <ubit/ugraph.hpp>
-#include <ubit/uappliImpl.hpp>
+#include <ubit/core/uappliImpl.hpp>
 #include <ubit/ueventflow.hpp>
 #include <ubit/umsproto.hpp>
 #include <ubit/umessage.hpp>

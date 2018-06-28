@@ -30,18 +30,18 @@
 #include <ubit/uappli.hpp>
 #include <ubit/uupdatecontext.hpp>
 #include <ubit/uglcanvas.hpp>     // !!!! DEPENDANCE A OPEN GL UTILISER SUBWIN !!!
-#include <ubit/nat/udispX11.hpp>
-#include <ubit/nat/udispGLUT.hpp>
-//#include <ubit/nat/udispGDK.hpp>
-#include <ubit/nat/uhardima.hpp>
-#include <ubit/nat/uhardfont.hpp>
+#include <ubit/udispX11.hpp>
+#include <ubit/udispGLUT.hpp>
+//#include <ubit/udispGDK.hpp>
+#include <ubit/uhardima.hpp>
+#include <ubit/uhardfont.hpp>
 #if UBIT_WITH_X11
-#  include <ubit/nat/ux11context.hpp>
+#  include <ubit/ux11context.hpp>
 //#elif UBIT_WITH_GDK
-//#  include <ubit/nat/urendercontextGDK.hpp>
+//#  include <ubit/urendercontextGDK.hpp>
 #endif
 #if UBIT_WITH_GL
-#  include <ubit/nat/uglcontext.hpp>
+#  include <ubit/uglcontext.hpp>
 #endif
 
 using namespace std;

@@ -19,15 +19,15 @@
 #include <algorithm>
 #include <ubit/ucall.hpp>
 #include <ubit/usubwin.hpp>
-#include <ubit/uwinImpl.hpp>
+#include <ubit/ui/uwinImpl.hpp>
 #include <ubit/uview.hpp>
 #include <ubit/ustyle.hpp>
 #include <ubit/uappli.hpp>
-#include <ubit/uappliImpl.hpp>
+#include <ubit/core/uappliImpl.hpp>
 #include <ubit/uon.hpp>
 #include <ubit/ucolor.hpp>
 
-#include <ubit/nat/udispX11.hpp>  // !!!@@@
+#include <ubit/udispX11.hpp>  // !!!@@@
 
 using namespace std;
 #define NAMESPACE_UBIT namespace ubit {

@@ -22,19 +22,19 @@
 #include <ubit/udefs.hpp>
 #include <ubit/ufont.hpp>
 #include <ubit/ufontmetrics.hpp>
-#include <ubit/ufontImpl.hpp>
+#include <ubit/draw/ufontImpl.hpp>
 #include <ubit/ucolor.hpp>
 #include <ubit/uima.hpp>
 #include <ubit/uappli.hpp>
 #include <ubit/ugl.hpp>
 #include <ubit/ugraph.hpp>
-#include <ubit/nat/uglcontext.hpp>
-#include <ubit/nat/uhardima.hpp>
-#include <ubit/nat/uhardfont.hpp>
+#include <ubit/uglcontext.hpp>
+#include <ubit/uhardima.hpp>
+#include <ubit/uhardfont.hpp>
 #if UBIT_WITH_X11
-#  include <ubit/nat/udispX11.hpp>
+#  include <ubit/udispX11.hpp>
 #elif UBIT_WITH_GLUT
-#  include <ubit/nat/udispGLUT.hpp>
+#  include <ubit/udispGLUT.hpp>
 #endif
 
 using namespace std;

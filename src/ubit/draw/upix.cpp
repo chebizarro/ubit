@@ -31,7 +31,7 @@
 #include <ubit/uwin.hpp>
 #include <ubit/uupdate.hpp>
 #include <ubit/uconf.hpp>
-#include <ubit/nat/uhardima.hpp>
+#include <ubit/uhardima.hpp>
 using namespace std;
 #define NAMESPACE_UBIT namespace ubit {
 NAMESPACE_UBIT

@@ -19,11 +19,11 @@
 #include <ubit/ucond.hpp>
 #include <ubit/ubox.hpp>
 #include <ubit/uview.hpp>
-#include <ubit/uviewImpl.hpp>
+#include <ubit/ui/uviewImpl.hpp>
 #include <ubit/uwin.hpp>
-#include <ubit/uwinImpl.hpp>
+#include <ubit/ui/uwinImpl.hpp>
 #include <ubit/uappli.hpp>
-#include <ubit/uappliImpl.hpp>
+#include <ubit/core/uappliImpl.hpp>
 #include <ubit/ugraph.hpp>
 #include <ubit/ufontmetrics.hpp>
 #include <ubit/uon.hpp>

@@ -22,12 +22,12 @@
 #include <ubit/ubackground.hpp>
 #include <ubit/uscrollbar.hpp>
 #include <ubit/uscrollpane.hpp>
-#include <ubit/uviewImpl.hpp>
+#include <ubit/ui/uviewImpl.hpp>
 #include <ubit/uupdatecontext.hpp>
 #include <ubit/upix.hpp>
 #include <ubit/usymbol.hpp>
 #include <ubit/uinteractors.hpp>
-#include <ubit/uappliImpl.hpp>
+#include <ubit/core/uappliImpl.hpp>
 using namespace std;
 #define NAMESPACE_UBIT namespace ubit {
 NAMESPACE_UBIT

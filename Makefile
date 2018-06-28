@@ -37,8 +37,8 @@ endif
 .PHONY: default
 default: ubit
 
-.PHONY: demos
-demos: demos examples
+.PHONY: demo
+demo: demos examples
 
 .PHONY: ums
 ums: ums

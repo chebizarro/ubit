@@ -21,7 +21,7 @@
 #include <ubit/uborder.hpp>
 #include <ubit/ugraph.hpp>
 #include <ubit/uview.hpp>
-#include <ubit/uviewImpl.hpp>
+#include <ubit/ui/uviewImpl.hpp>
 #include <ubit/uupdate.hpp>
 #include <ubit/uupdatecontext.hpp>
 #include <ubit/ubox.hpp>

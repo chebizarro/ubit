@@ -29,9 +29,9 @@
 #include <ubit/uappli.hpp>
 #include <ubit/uon.hpp>
 #include <ubit/ugraph.hpp>
-#include <ubit/nat/uglcontext.hpp>
+#include <ubit/uglcontext.hpp>
 #include <ubit/uglcanvas.hpp>
-#include <ubit/nat/udispX11.hpp>
+#include <ubit/udispX11.hpp>
 using namespace std;
 #define NAMESPACE_UBIT namespace ubit {
 NAMESPACE_UBIT

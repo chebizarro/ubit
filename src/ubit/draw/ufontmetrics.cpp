@@ -20,13 +20,13 @@
 #include <ubit/unode.hpp>
 #include <ubit/ufont.hpp>
 #include <ubit/ufontmetrics.hpp>
-#include <ubit/ufontImpl.hpp>
+#include <ubit/draw/ufontImpl.hpp>
 #include <ubit/ustr.hpp>
 #include <ubit/ugraph.hpp>
 #include <ubit/uwin.hpp>
 #include <ubit/uupdatecontext.hpp>
 #include <ubit/uappli.hpp>
-#include <ubit/nat/uhardfont.hpp>
+#include <ubit/uhardfont.hpp>
 #define NAMESPACE_UBIT namespace ubit {
 NAMESPACE_UBIT
 

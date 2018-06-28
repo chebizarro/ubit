@@ -24,7 +24,7 @@
 #include <ubit/ueventflow.hpp>
 #include <ubit/ucursor.hpp>
 #include <ubit/uboxgeom.hpp>
-#include <ubit/uappliImpl.hpp>
+#include <ubit/core/uappliImpl.hpp>
 using namespace std;
 #define NAMESPACE_UBIT namespace ubit {
 NAMESPACE_UBIT

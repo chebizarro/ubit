@@ -49,7 +49,7 @@ extern "C" {
 #include <ubit/ufile.hpp>
 #include <ubit/uima.hpp>
 #include <ubit/uappli.hpp>
-#include <ubit/nat/uhardima.hpp>
+#include <ubit/uhardima.hpp>
 using namespace std;
 namespace ubit {
 

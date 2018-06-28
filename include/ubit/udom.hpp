@@ -18,7 +18,7 @@
 #define _udom_hpp_ 1
 #include <map>
 #include <ubit/udoc.hpp>
-#include <ubit/uclassImpl.hpp>  //UStyleSheet
+#include <ubit/core/uclassImpl.hpp>  //UStyleSheet
 #include <ubit/ustr.hpp>
 #include <fstream>
 namespace ubit {

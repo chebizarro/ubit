@@ -22,7 +22,7 @@
 #include <ubit/uboxgeom.hpp>
 #include <ubit/uwin.hpp>
 #include <ubit/uview.hpp>
-#include <ubit/uviewImpl.hpp>
+#include <ubit/ui/uviewImpl.hpp>
 #include <ubit/ugraph.hpp>
 #include <ubit/ufontmetrics.hpp>
 #include <ubit/uappli.hpp>

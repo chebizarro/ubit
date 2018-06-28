@@ -19,13 +19,13 @@
 
 #include <iostream>
 #include <errno.h>
-#include <ubit/nat/udispX11.hpp>  // includes X11 headers
+#include <ubit/udispX11.hpp>  // includes X11 headers
 #include <X11/keysym.h> 
 #include <X11/cursorfont.h>
 #include <X11/Xmu/WinUtil.h>
 #include <ubit/uconf.hpp>
 #include <ubit/uappli.hpp>
-#include <ubit/uappliImpl.hpp>
+#include <ubit/core/uappliImpl.hpp>
 #include <ubit/ueventflow.hpp>
 #include <ubit/uselection.hpp>
 #include <ubit/utimer.hpp>
@@ -36,9 +36,9 @@
 #include <ubit/ucursor.hpp>
 #include <ubit/ucolor.hpp>
 #include <ubit/umsproto.hpp>
-#include <ubit/nat/urendercontext.hpp>
-#include <ubit/nat/ux11context.hpp>
-#include <ubit/nat/uglcontext.hpp>
+#include <ubit/urendercontext.hpp>
+#include <ubit/ux11context.hpp>
+#include <ubit/uglcontext.hpp>
 using namespace std;
 #define NAMESPACE_UBIT namespace ubit {
 NAMESPACE_UBIT

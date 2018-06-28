@@ -31,9 +31,9 @@
 #if WITH_2D_GRAPHICS
 # if UBIT_WITH_X11 && UBIT_WITH_XPM
 #  include <X11/xpm.h>
-#  include <ubit/nat/udispX11.hpp>
+#  include <ubit/udispX11.hpp>
 # elif UBIT_WITH_GDK
-#  include <ubit/nat/udispGDK.hpp>
+#  include <ubit/udispGDK.hpp>
 # endif
 #endif
 

@@ -19,7 +19,7 @@
 #ifndef _UGlcontext_hpp_
 #define	_UGlcontext_hpp_ 1
 #include <ubit/ugl.hpp>
-#include <ubit/nat/urendercontext.hpp>
+#include <ubit/urendercontext.hpp>
 namespace ubit {
 
 class UHardImaGL;

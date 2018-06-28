@@ -20,7 +20,7 @@
 #include <ubit/uupdate.hpp>
 #include <ubit/uupdatecontext.hpp>
 #include <ubit/ufont.hpp>
-#include <ubit/ufontImpl.hpp>
+#include <ubit/draw/ufontImpl.hpp>
 #include <ubit/uappli.hpp>
 #include <ubit/ubox.hpp>
 #include <ubit/uconf.hpp>

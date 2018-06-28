@@ -20,7 +20,7 @@
 #include <ubit/ulength.hpp>
 #include <ubit/ustr.hpp>
 #include <ubit/uappli.hpp>
-#include <ubit/ufontImpl.hpp>
+#include <ubit/draw/ufontImpl.hpp>
 using namespace std;
 #define NAMESPACE_UBIT namespace ubit {
 NAMESPACE_UBIT

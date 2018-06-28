@@ -26,8 +26,8 @@
 #include <X11/Xatom.h>
 #include <ubit/ugl.hpp>
 #include <ubit/udisp.hpp>
-#include <ubit/nat/uhardwinX11.hpp>
-#include <ubit/nat/uglcontext.hpp>
+#include <ubit/uhardwinX11.hpp>
+#include <ubit/uglcontext.hpp>
 namespace ubit {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

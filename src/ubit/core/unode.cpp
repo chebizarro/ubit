@@ -25,7 +25,7 @@
 #include <ubit/uevent.hpp>
 #include <ubit/uupdate.hpp>
 #include <ubit/uappli.hpp>
-#include <ubit/uappliImpl.hpp>
+#include <ubit/core/uappliImpl.hpp>
 using namespace std;
 #define NAMESPACE_UBIT namespace ubit {
 NAMESPACE_UBIT

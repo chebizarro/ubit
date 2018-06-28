@@ -27,10 +27,10 @@
 #include <ubit/uima.hpp>
 #include <ubit/ustr.hpp>
 #include <ubit/uappli.hpp>
-#include <ubit/nat/uhardima.hpp>
+#include <ubit/uhardima.hpp>
 
 #if UBIT_WITH_X11 
-#  include <ubit/nat/udispX11.hpp>
+#  include <ubit/udispX11.hpp>
 #  define DestroyImage(I) XDestroyImage(I)
 #  define DestroyPixmap(D,Pix) XFreePixmap(D,Pix)
 #  define CreatePixmap(D,Win,w,h,bpp) XCreatePixmap(D,Win,w,h,bpp)
@@ -52,7 +52,7 @@ typedef Colormap USysColormap;
 typedef XGCValues GCValues;
 
 //#elif UBIT_WITH_GDK
-//#  include <ubit/nat/udispGDK.hpp>
+//#  include <ubit/udispGDK.hpp>
 // etc...
 
 #endif

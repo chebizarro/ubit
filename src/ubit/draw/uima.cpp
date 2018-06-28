@@ -33,7 +33,7 @@
 #include <ubit/ubox.hpp>
 #include <ubit/uupdate.hpp>
 #include <ubit/uconf.hpp>
-#include <ubit/nat/uhardima.hpp>
+#include <ubit/uhardima.hpp>
 using namespace std;
 namespace ubit {
 

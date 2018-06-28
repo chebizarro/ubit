@@ -15,7 +15,7 @@
  * ***********************************************************************/
 
 #include <ubit/ubit_features.h>
-#include "config.h"	// LINUX
+#include "ubit/config.h"	// LINUX
 #include <locale.h>
 #include <iostream>
 #include <ubit/udefs.hpp>
@@ -25,7 +25,7 @@
 #include <ubit/upix.hpp>
 #include <ubit/ustyleparser.hpp>
 #include <ubit/uappli.hpp>
-#include <ubit/uclassImpl.hpp>  // for UStyleSheet (bizarrement)
+#include <ubit/core/uclassImpl.hpp>  // for UStyleSheet (bizarrement)
 #include <ubit/uevent.hpp>
 #include <ubit/uima.hpp>
 #include <ubit/ubackground.hpp>

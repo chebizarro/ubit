@@ -24,7 +24,7 @@
 #include <X11/Xlib.h>
 #include <ubit/ugl.hpp>
 #include <ubit/udisp.hpp>
-#include <ubit/uwinImpl.hpp>
+#include <ubit/ui/uwinImpl.hpp>
 namespace ubit {
 
 class UDispX11;

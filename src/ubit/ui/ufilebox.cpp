@@ -26,7 +26,7 @@
 #include <ctime>
 #include <ubit/ubit.hpp>
 #include <ubit/ufile.hpp>
-#include <ubit/uappliImpl.hpp>
+#include <ubit/core/uappliImpl.hpp>
 using namespace std;
 namespace ubit {
 

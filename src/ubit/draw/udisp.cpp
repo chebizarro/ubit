@@ -24,19 +24,19 @@
 #include <ubit/uselection.hpp>
 #include <ubit/uconf.hpp>
 #include <ubit/uappli.hpp>
-#include <ubit/uappliImpl.hpp>
+#include <ubit/core/uappliImpl.hpp>
 #include <ubit/ucursor.hpp>
 #include <ubit/ufont.hpp>
-#include <ubit/ufontImpl.hpp>
+#include <ubit/draw/ufontImpl.hpp>
 #include <ubit/uon.hpp>
 #include <ubit/utimer.hpp>
 #include <ubit/umsproto.hpp>
-#include <ubit/nat/udispX11.hpp>
-#include <ubit/nat/udispGLUT.hpp>
-//#include <ubit/nat/udispGDK.hpp>
-#include <ubit/nat/uhardfont.hpp>
-#include <ubit/nat/urendercontext.hpp>
-#include <ubit/nat/uglcontext.hpp>
+#include <ubit/udispX11.hpp>
+#include <ubit/udispGLUT.hpp>
+//#include <ubit/udispGDK.hpp>
+#include <ubit/uhardfont.hpp>
+#include <ubit/urendercontext.hpp>
+#include <ubit/uglcontext.hpp>
 using namespace std;
 #define NAMESPACE_UBIT namespace ubit {
 NAMESPACE_UBIT

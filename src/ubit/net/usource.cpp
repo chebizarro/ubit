@@ -19,7 +19,7 @@
 #include <unistd.h>       // darwin
 #include <sys/stat.h>
 #include <ubit/uappli.hpp>
-#include <ubit/uappliImpl.hpp>
+#include <ubit/core/uappliImpl.hpp>
 #include <ubit/uon.hpp>
 #include <ubit/usource.hpp>
 #include <ubit/ucall.hpp>

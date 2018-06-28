@@ -17,14 +17,14 @@
 #include <ubit/ubit_features.h>
 #include <iostream>
 #include <ubit/umenu.hpp>
-#include <ubit/uwinImpl.hpp>
+#include <ubit/ui/uwinImpl.hpp>
 #include <ubit/ucall.hpp>
 #include <ubit/ustr.hpp>
 #include <ubit/uon.hpp>
 #include <ubit/ubox.hpp>
 #include <ubit/uwin.hpp>
 #include <ubit/uview.hpp>
-#include <ubit/uviewImpl.hpp>
+#include <ubit/ui/uviewImpl.hpp>
 #include <ubit/uevent.hpp>
 #include <ubit/ustyle.hpp>
 #include <ubit/ucolor.hpp>
@@ -33,7 +33,7 @@
 #include <ubit/uappli.hpp>
 #include <ubit/uboxgeom.hpp>
 #include <ubit/ueventflow.hpp>
-#include <ubit/umenuImpl.hpp>
+#include <ubit/ui/umenuImpl.hpp>
 #include <ubit/uconf.hpp>
 #include <ubit/ubackground.hpp>
 #include <ubit/utimer.hpp>

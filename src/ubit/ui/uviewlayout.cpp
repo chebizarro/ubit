@@ -21,7 +21,7 @@
 #include <ubit/ubox.hpp>
 #include <ubit/uboxgeom.hpp>
 #include <ubit/uview.hpp>
-#include <ubit/uviewImpl.hpp>
+#include <ubit/ui/uviewImpl.hpp>
 #include <ubit/uappli.hpp>
 #include <ubit/uscrollpane.hpp>
 using namespace std;

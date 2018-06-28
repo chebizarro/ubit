@@ -19,7 +19,7 @@
 
 #include <X11/keysym.h> 
 #include <X11/XKBlib.h>
-#include <ubit/nat/udispX11.hpp>
+#include <ubit/udispX11.hpp>
 #include <ubit/ukey.hpp>
 namespace ubit {
   

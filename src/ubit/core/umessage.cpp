@@ -24,11 +24,11 @@
 #include <ubit/ubox.hpp>
 #include <ubit/uevent.hpp>
 #include <ubit/uappli.hpp>
-#include <ubit/uappliImpl.hpp>
+#include <ubit/core/uappliImpl.hpp>
 #include <ubit/umessage.hpp>
 #include <ubit/umservice.hpp>
 #include <ubit/umsproto.hpp>
-#include <ubit/nat/udispX11.hpp>
+#include <ubit/udispX11.hpp>
 using namespace std;
 namespace ubit {
 

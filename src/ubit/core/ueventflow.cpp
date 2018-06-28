@@ -19,10 +19,10 @@
 #include <ubit/uboxgeom.hpp>
 #include <ubit/uwin.hpp>
 #include <ubit/umenu.hpp>
-#include <ubit/umenuImpl.hpp>
-#include <ubit/uwinImpl.hpp>
+#include <ubit/ui/umenuImpl.hpp>
+#include <ubit/ui/uwinImpl.hpp>
 #include <ubit/uappli.hpp>
-#include <ubit/uappliImpl.hpp>
+#include <ubit/core/uappliImpl.hpp>
 #include <ubit/uevent.hpp>
 #include <ubit/ueventflow.hpp>
 #include <ubit/uselection.hpp>
@@ -32,7 +32,7 @@
 #include <ubit/ucolor.hpp>
 #include <ubit/ubackground.hpp>
 #include <ubit/uupdatecontext.hpp>
-#include <ubit/uviewImpl.hpp>
+#include <ubit/ui/uviewImpl.hpp>
 #include <ubit/u3d.hpp>
 using namespace std;
 #define NAMESPACE_UBIT namespace ubit {

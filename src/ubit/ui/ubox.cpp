@@ -19,9 +19,9 @@
 #include <ubit/uon.hpp>
 #include <ubit/uboxgeom.hpp>
 #include <ubit/uupdatecontext.hpp>
-#include <ubit/uviewImpl.hpp>
+#include <ubit/ui/uviewImpl.hpp>
 #include <ubit/ustyle.hpp>
-#include <ubit/uappliImpl.hpp>
+#include <ubit/core/uappliImpl.hpp>
 using namespace std;
 #define NAMESPACE_UBIT namespace ubit {
 NAMESPACE_UBIT

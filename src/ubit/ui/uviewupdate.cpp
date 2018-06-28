@@ -23,8 +23,8 @@
 #include <ubit/uedit.hpp>
 #include <ubit/uima.hpp>
 #include <ubit/ugraph.hpp>
-#include <ubit/uviewImpl.hpp>
-#include <ubit/uwinImpl.hpp>
+#include <ubit/ui/uviewImpl.hpp>
+#include <ubit/ui/uwinImpl.hpp>
 #include <ubit/utable.hpp>
 #include <ubit/uscrollpane.hpp>
 #include <ubit/uappli.hpp>

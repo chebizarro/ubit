@@ -16,7 +16,7 @@
 
 #ifndef _urendercontext_hpp_
 #define	_urendercontext_hpp_ 1
-#include <ubit/uwinImpl.hpp>
+#include <ubit/ui/uwinImpl.hpp>
 namespace ubit {
 
 class URenderContext {

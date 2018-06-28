@@ -18,7 +18,7 @@
 #include <ubit/ubit_features.h>
 #include <ubit/ucall.hpp>
 #include <ubit/udialogs.hpp>
-#include <ubit/uwinImpl.hpp>
+#include <ubit/ui/uwinImpl.hpp>
 #include <ubit/ustyle.hpp>
 #include <ubit/uboxgeom.hpp>
 #include <ubit/uboxes.hpp>

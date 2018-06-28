@@ -38,7 +38,7 @@
 #include <ubit/umessage.hpp>
 #include <ubit/udialogs.hpp>
 #include <ubit/ufinder.hpp>
-#include <ubit/ufinderImpl.hpp>
+#include <ubit/ui/ufinderImpl.hpp>
 #include <ubit/ucall.hpp>
 using namespace std;
 #define NAMESPACE_UBIT namespace ubit {

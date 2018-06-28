@@ -19,7 +19,7 @@
 #include <cmath>
 #include <ubit/uon.hpp>
 #include <ubit/uboxgeom.hpp>
-#include <ubit/uviewImpl.hpp>
+#include <ubit/ui/uviewImpl.hpp>
 #include <ubit/uupdatecontext.hpp>
 #include <ubit/uappli.hpp>
 #include <ubit/utable.hpp>

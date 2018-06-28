@@ -16,10 +16,10 @@
 
 #include <ubit/ubit_features.h>
 #include <iostream>
-#include <ubit/uwinImpl.hpp>
-#include <ubit/uviewImpl.hpp>
+#include <ubit/ui/uwinImpl.hpp>
+#include <ubit/ui/uviewImpl.hpp>
 #include <ubit/udisp.hpp>
-#include <ubit/nat/uglcontext.hpp>
+#include <ubit/uglcontext.hpp>
 using namespace std;
 #define NAMESPACE_UBIT namespace ubit {
 NAMESPACE_UBIT

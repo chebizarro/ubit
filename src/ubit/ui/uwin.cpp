@@ -21,9 +21,9 @@
 #include <ubit/uwin.hpp>
 #include <ubit/uboxes.hpp>
 #include <ubit/udialogs.hpp>
-#include <ubit/uwinImpl.hpp>
+#include <ubit/ui/uwinImpl.hpp>
 #include <ubit/uappli.hpp>
-#include <ubit/uappliImpl.hpp>
+#include <ubit/core/uappliImpl.hpp>
 #include <ubit/uinteractors.hpp>
 #include <ubit/ubackground.hpp>
 #include <ubit/ucolor.hpp>

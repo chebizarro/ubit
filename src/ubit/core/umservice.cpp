@@ -20,7 +20,7 @@
 #include <unistd.h>
 #include <ubit/ucall.hpp>
 #include <ubit/uappli.hpp>
-#include <ubit/uappliImpl.hpp>
+#include <ubit/core/uappliImpl.hpp>
 #include <ubit/usource.hpp>
 #include <ubit/usocket.hpp>
 #include <ubit/umessage.hpp>

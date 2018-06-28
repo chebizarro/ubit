@@ -19,11 +19,11 @@
 #include <ubit/ubit_features.h>
 #include <ubit/ustr.hpp>
 #include <ubit/ufont.hpp>
-#include <ubit/ufontImpl.hpp>
-#include <ubit/uappliImpl.hpp>
-#include <ubit/nat/udispX11.hpp>
-//#include <ubit/nat/udispGDK.hpp>
-#include <ubit/nat/uhardfont.hpp>
+#include <ubit/draw/ufontImpl.hpp>
+#include <ubit/core/uappliImpl.hpp>
+#include <ubit/udispX11.hpp>
+//#include <ubit/udispGDK.hpp>
+#include <ubit/uhardfont.hpp>
 
 #if UBIT_WITH_GL && UBIT_WITH_FREETYPE
 #    include <FTGL/ftgl.h>  // FTGL
