@@ -1,9 +1,9 @@
 add_executable(wspace
-    demos/3Dworkspace.cpp
-    demos/draw.cpp
-    demos/zoom.cpp
-    demos/draw.hpp
-    demos/zoom.hpp
+    examples/demos/3Dworkspace.cpp
+    examples/demos/draw.cpp
+    examples/demos/zoom.cpp
+    examples/demos/draw.hpp
+    examples/demos/zoom.hpp
 )
 
 ubit_add_include_dir(wspace)

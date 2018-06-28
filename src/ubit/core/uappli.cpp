@@ -26,9 +26,9 @@
 #include <ubit/uon.hpp>
 #include <ubit/ucall.hpp>
 #include <ubit/udialogs.hpp>
-#include <ubit/umenuImpl.hpp>
-#include <ubit/uwinImpl.hpp>
-#include <ubit/uappliImpl.hpp>
+#include <ubit/ui/umenuImpl.hpp>
+#include <ubit/ui/uwinImpl.hpp>
+#include <ubit/core/uappliImpl.hpp>
 #include <ubit/ueventflow.hpp>
 #include <ubit/uupdate.hpp>
 #include <ubit/uselection.hpp>

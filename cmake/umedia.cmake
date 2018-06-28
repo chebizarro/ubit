@@ -1,6 +1,6 @@
 add_executable(umedia
-    demos/umedia.cpp
-    demos/umedia.hpp
+    examples/demos/umedia.cpp
+    examples/demos/umedia.hpp
 )
 
 ubit_add_include_dir(umedia)

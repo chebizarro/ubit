@@ -26,7 +26,7 @@
 #include <ubit/ufont.hpp>
 #include <ubit/uappli.hpp>
 #include <ubit/uima.hpp>
-#include <ubit/nat/uhardima.hpp>
+#include <ubit/uhardima.hpp>
 
 #if WITH_2D_GRAPHICS
 # if UBIT_WITH_X11 && UBIT_WITH_XPM

@@ -1,7 +1,7 @@
 add_executable(xmlparser
-    demos/xmlparser.cpp
-    demos/zoom.cpp
-    demos/zoom.hpp
+    examples/demos/xmlparser.cpp
+    examples/demos/zoom.cpp
+    examples/demos/zoom.hpp
 )
 
 ubit_add_include_dir(xmlparser)

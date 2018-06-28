@@ -18,7 +18,7 @@
 #define	_uupdatecontext_hpp_ 1
 #include <ubit/udefs.hpp>
 #include <ubit/ustyle.hpp>
-#include <ubit/ufontImpl.hpp>
+#include <ubit/draw/ufontImpl.hpp>
 #include <ubit/uview.hpp>
 #include <vector>
 namespace ubit {

@@ -1,5 +1,5 @@
 add_executable(ufinder
-    demos/ufinder.cpp
+    examples/demos/ufinder.cpp
 )
 
 ubit_add_include_dir(ufinder)

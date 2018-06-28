@@ -35,7 +35,10 @@ else
 endif
 
 .PHONY: default
-default: ubit demos examples
+default: ubit
+
+.PHONY: demos
+demos: demos examples
 
 .PHONY: ums
 ums: ums

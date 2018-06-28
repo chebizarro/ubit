@@ -1,7 +1,7 @@
 add_executable(table
-    demos/table.cpp
-    demos/viewer.cpp
-    demos/viewer.hpp
+    examples/demos/table.cpp
+    examples/demos/viewer.cpp
+    examples/demos/viewer.hpp
 )
 
 ubit_add_include_dir(table)

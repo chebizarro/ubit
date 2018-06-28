@@ -19,8 +19,7 @@
 #include <vector>
 #include <sys/time.h>  // fd_set
 #include <ubit/uappli.hpp>
-#include <ubit/uappliImpl.hpp>
-#include <ubit/uclassImpl.hpp>
+#include <ubit/core/uclassImpl.hpp>
 #include <ubit/uwin.hpp>
 #include <ubit/uupdate.hpp>
 #include <ubit/ustyle.hpp>

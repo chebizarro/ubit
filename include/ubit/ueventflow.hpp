@@ -18,7 +18,7 @@
 #define	_ueventflow_hpp_  1
 #include <ubit/uappli.hpp>
 #include <ubit/uevent.hpp>
-#include <ubit/uviewImpl.hpp>
+#include <ubit/ui/uviewImpl.hpp>
 namespace ubit {
   
   class UMenuManager;

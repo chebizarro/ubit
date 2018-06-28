@@ -16,7 +16,7 @@
 
 #ifndef _uargs_hpp_
 #define	_uargs_hpp_  1
-#include <ubit/uargsImpl.hpp>
+#include <ubit/core/uargsImpl.hpp>
 namespace ubit {
   
   class UArgsImpl;
