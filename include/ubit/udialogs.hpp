@@ -14,12 +14,14 @@
  * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
  * ***********************************************************************/
 
-#ifndef _udialogs_hpp_
-#define	_udialogs_hpp_ 1
+#ifndef UBIT_UDIALOGS_HPP_
+#define	UBIT_UDIALOGS_HPP_
 #include <ubit/uwin.hpp>
 namespace ubit {
 
-  /** Dialog box.
+  /**
+   * Dialog box.
+   * 
    * Dialogs can't be iconified and are always located on the top of the
    * "Main Frame" (@see UFrame). Also, Dialogs are hidden when the Main Frame
    * is iconified
@@ -162,4 +164,4 @@ namespace ubit {
   };
   
 }
-#endif
+#endif // UBIT_UDIALOGS_HPP_
