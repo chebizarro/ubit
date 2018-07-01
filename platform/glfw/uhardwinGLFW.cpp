@@ -26,8 +26,8 @@
 #include <ubit/nat/udispGLFW.hpp>
 #include <ubit/nat/uglcontext.hpp>
 using namespace std;
-#define NAMESPACE_UBIT namespace ubit {
-NAMESPACE_UBIT
+
+namespace ubit {
 
 //void GLFWIconifyWindow(void);
 //void GLFWFullScreen(void)
@@ -255,7 +255,7 @@ void UHardwinGLFW::realize(WinType wtype, float w, float h) {
   }
   
   if (wtype != SUBWIN) {
-    sys_win = GLFWCreateWindow(" ");
+    sys_win = glfwCreateWindow(w, h, " ");
     GLFWReshapeWindow(int(w), int(h));
     getDispGLFW()->initWinCallbacks(sys_win);
   }
