@@ -256,7 +256,6 @@ void UHardwinGLFW::realize(WinType wtype, float w, float h) {
   
   if (wtype != SUBWIN) {
     sys_win = glfwCreateWindow(w, h, " ");
-    GLFWReshapeWindow(int(w), int(h));
     getDispGLFW()->initWinCallbacks(sys_win);
   }
   
