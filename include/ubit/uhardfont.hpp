@@ -14,16 +14,13 @@
  * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
  * ***********************************************************************/
 
-#ifndef _uhardfont_hpp_
-#define _uhardfont_hpp_ 1
+#ifndef UBIT_UHARDFONT_HPP
+#define UBIT_UHARDFONT_HPP
+
 #include <ubit/ubit_features.h>
 
-#if WITH_2D_GRAPHICS
 #if UBIT_WITH_X11
 #  include <X11/Xlib.h> 
-#elif UBIT_WITH_GDK
-#  include <gdk/gdk.h> 
-#endif
 #endif
 
 class FTFont;
@@ -62,20 +59,14 @@ private:
   FTFont* loadFTGLFont(UDisp*, const UFontDesc&);
   ///< loads a FTGL font; requires OpenGL and TrueType.
 #endif
-  
-#if WITH_2D_GRAPHICS
-# if UBIT_WITH_X11
+
+#if UBIT_WITH_X11
   friend class UX11context;
   XFontStruct* sysf;
   XFontStruct* loadSysFont(UDisp*, const UFontDesc&);
-# elif UBIT_WITH_GDK
-  friend class UGDKContext;
-  GdkFont* sysf;
-  GdkFont* loadSysFont(UDisp*, const UFontDesc&);
-# endif
 #endif
 };
 
 }
-#endif
+#endif // UBIT_UHARDFONT_HPP
 

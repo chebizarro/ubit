@@ -22,7 +22,6 @@
 #include <ubit/draw/ufontImpl.hpp>
 #include <ubit/core/uappliImpl.hpp>
 #include <ubit/udispX11.hpp>
-//#include <ubit/udispGDK.hpp>
 #include <ubit/uhardfont.hpp>
 
 #if UBIT_WITH_GL && UBIT_WITH_FREETYPE
@@ -33,9 +32,7 @@
 #    include <FTGL/FTGLPixmapFont.h>
 #endif
 
-#define NAMESPACE_UBIT namespace ubit {
-NAMESPACE_UBIT
-
+namespace ubit {
 
 UHardFont::UHardFont(UDisp* nd, const UFontDesc& fd)  // glcontext dependent!!!
 : status(NO_FONT), count(1)
@@ -61,9 +58,7 @@ UHardFont::UHardFont(UDisp* nd, const UFontDesc& fd)  // glcontext dependent!!!
   if (sysf) status = SYS_FONT;
   else return;
 
-#if UBIT_WITH_GDK
-  // N/A
-#elif UBIT_WITH_X11 && UBIT_WITH_GL
+#if UBIT_WITH_X11 && UBIT_WITH_GL
   if (UAppli::isUsingGL()) {
     //glf = glGenLists(256);
     //glXUseXFont(sysf->fid, 0, 255, glf);
@@ -86,13 +81,6 @@ UHardFont::~UHardFont() {     // glcontext dependent!!!
   if (status == FTGL_FONT) delete ftf;
   if (glf) glDeleteLists(glf, 256);
 #endif
-/*
-#if UBIT_WITH_GDK
-  // if (sysf) gdk_font_free(nd->getSysDisp(), sysf);   //!!!!@@@
-#else
-  //if (sysf) XFreeFont(nd->getSysDisp(), sysf);    !!!!!@@@@
-#endif
- */
 }
 
 /* ==================================================== ===== ======= */
@@ -175,9 +163,7 @@ float UHardFont::getWidth(char c) const {
 #endif
   
 #if WITH_2D_GRAPHICS
-# if UBIT_WITH_GDK
-  return gdk_char_width(sysf, c);
-# elif UBIT_WITH_X11
+# if UBIT_WITH_X11
   return CharWidth(sysf, c);
 # endif
 #endif
@@ -195,9 +181,7 @@ float UHardFont::getWidth(const char* s, int len) const {
 #endif
   
 #if WITH_2D_GRAPHICS
-# if UBIT_WITH_GDK
-  return gdk_text_width(sysf, s, len);
-# elif UBIT_WITH_X11
+#if UBIT_WITH_X11
   return XTextWidth(sysf, s, len);
 # endif
 #endif
@@ -248,9 +232,6 @@ XFontStruct* UHardFont::loadSysFont(UDisp* nd, const UFontDesc& fd) {
 #if UBIT_WITH_X11
         XFontStruct* fs = null;
         fs = XLoadQueryFont(((UDispX11*)nd)->getSysDisp(), font_name);
-#elif UBIT_WITH_GDK
-        GdkFont* fs = null;
-        fs = gdk_font_load_for_display(((UDispGDK*)nd)->getSysDisp(), font_name);
 #else
         UAppli::fatalError("UHardFont::loadSysFont","this function requires the Ubit toolkit to be compiled with X11 or GDK");
         fs = null; // !!!

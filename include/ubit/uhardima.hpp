@@ -14,8 +14,8 @@
  * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
  * ***********************************************************************/
 
-#ifndef _uhardima_hpp_
-#define	_uhardima_hpp_ 1
+#ifndef UBIT_UHARDIMA_HPP_
+#define	UBIT_UHARDIMA_HPP_
 #include <ubit/ubit_features.h>
 #include <ubit/udisp.hpp>
 #if UBIT_WITH_GL
@@ -35,19 +35,6 @@ typedef Pixmap         USysPixmap;
 typedef unsigned long  USysPixel;
 typedef XColor         USysColor;
 typedef XPoint         USysPoint;
-
-#elif UBIT_WITH_GDK
-#  include <gdk/gdk.h> 
-#define SysPutPixel(I,X,Y,P)  gdk_image_put_pixel(I,X,Y,P)
-#define SysGetPixel(I,X,Y)    gdk_image_get_pixel(I,X,Y)
-#define USysNull       NULL
-typedef GdkImage*      USysIma;
-typedef GdkPixmap*     USysPixmap;
-typedef guint32        USysPixel;
-typedef GdkColor       USysColor;
-typedef GdkPoint       USysPoint;
-#endif
-
 #endif
 
 namespace ubit {
@@ -201,10 +188,7 @@ namespace ubit {
     
     virtual UHardIma* createScaledClone(float xscale, float yscale, UDisp* = 0);
     
-#if UBIT_WITH_GDK
-    unsigned long getPixel(int x, int y) {return gdk_image_get_pixel(sys_ima, x, y);}
-    void setPixel(unsigned long p, int x, int y) {gdk_image_put_pixel(sys_ima, p, x, y);}
-#elif UBIT_WITH_X11
+#if UBIT_WITH_X11
     unsigned long getPixel(int x, int y) {return XGetPixel(sys_ima, x, y);}
     void setPixel(unsigned long p, int x, int y) {XPutPixel(sys_ima, p, x, y);}
 #endif
@@ -302,4 +286,4 @@ namespace ubit {
 #endif
   
 }
-#endif
+#endif // UBIT_UHARDIMA_HPP_

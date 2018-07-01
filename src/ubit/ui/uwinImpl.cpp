@@ -21,8 +21,8 @@
 #include <ubit/udisp.hpp>
 #include <ubit/uglcontext.hpp>
 using namespace std;
-#define NAMESPACE_UBIT namespace ubit {
-NAMESPACE_UBIT
+
+namespace ubit {
 
 UHardwinImpl::UHardwinImpl(UDisp* d, UWin* w) :
 wintype(NONE), must_update(false), 
