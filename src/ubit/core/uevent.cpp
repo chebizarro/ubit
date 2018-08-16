@@ -33,9 +33,8 @@
 #include <ubit/umessage.hpp>
 #include <ubit/uflag.hpp>
 using namespace std;
-using namespace std;
-#define NAMESPACE_UBIT namespace ubit {
-NAMESPACE_UBIT
+namespace ubit {
+
 
 static const int _BUTTONS = 
   UModifier::LeftButton | UModifier::MidButton | UModifier::RightButton;

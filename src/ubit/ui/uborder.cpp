@@ -28,8 +28,8 @@
 #include <ubit/uwin.hpp>
 #include <ubit/uon.hpp>
 using namespace std;
-#define NAMESPACE_UBIT namespace ubit {
-NAMESPACE_UBIT
+namespace ubit {
+
 
 #define DARK  UColor::darkgrey
 #define LIGHT UColor::lightgrey

@@ -38,8 +38,8 @@
 #include <ubit/ubackground.hpp>
 #include <ubit/utimer.hpp>
 using namespace std;
-#define NAMESPACE_UBIT namespace ubit {
-NAMESPACE_UBIT
+namespace ubit {
+
 
 UStyle* UPopmenu::createStyle() {
   return UMenu::createStyle();

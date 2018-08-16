@@ -38,8 +38,8 @@
 #include <ubit/urendercontext.hpp>
 #include <ubit/uglcontext.hpp>
 using namespace std;
-#define NAMESPACE_UBIT namespace ubit {
-NAMESPACE_UBIT
+namespace ubit {
+
 
 // ==================================================== [Ubit Toolkit] =========
 

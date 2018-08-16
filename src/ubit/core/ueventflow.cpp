@@ -35,8 +35,8 @@
 #include <ubit/ui/uviewImpl.hpp>
 #include <ubit/u3d.hpp>
 using namespace std;
-#define NAMESPACE_UBIT namespace ubit {
-NAMESPACE_UBIT
+namespace ubit {
+
 
 int UEventFlow::TIP_X_SHIFT = 20;
 

@@ -23,8 +23,8 @@
 #include <ubit/uappli.hpp>
 #include <ubit/core/uappliImpl.hpp>
 using namespace std;
-#define NAMESPACE_UBIT namespace ubit {
-NAMESPACE_UBIT
+namespace ubit {
+
 
 UError::UError(int _errnum, const UObject* obj, const char* funcname) :
 errnum(_errnum),

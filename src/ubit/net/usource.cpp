@@ -24,8 +24,8 @@
 #include <ubit/usource.hpp>
 #include <ubit/ucall.hpp>
 using namespace std;
-#define NAMESPACE_UBIT namespace ubit {
-NAMESPACE_UBIT
+namespace ubit {
+
 
 USource::USource(int _source) : is_opened(false), source(_source) {
 # ifdef UBIT_WITH_GDK

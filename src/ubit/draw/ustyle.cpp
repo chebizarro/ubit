@@ -28,8 +28,8 @@
 #include <ubit/core/uappliImpl.hpp>
 #include <ubit/uon.hpp>
 using namespace std;
-#define NAMESPACE_UBIT namespace ubit {
-NAMESPACE_UBIT
+namespace ubit {
+
 
 
 ULocalProps::ULocalProps() :

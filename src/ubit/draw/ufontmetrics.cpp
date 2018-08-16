@@ -27,8 +27,8 @@
 #include <ubit/uupdatecontext.hpp>
 #include <ubit/uappli.hpp>
 #include <ubit/uhardfont.hpp>
-#define NAMESPACE_UBIT namespace ubit {
-NAMESPACE_UBIT
+namespace ubit {
+
 
 // !!!CAUTION: disp->getFont() uses the default GC if it actually creates a new Font
 // in OpenGL mode, the corresponding glcontext becomes the current context

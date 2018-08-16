@@ -45,8 +45,8 @@
 #endif
 
 using namespace std;
-#define NAMESPACE_UBIT namespace ubit {
-NAMESPACE_UBIT
+namespace ubit {
+
 
 #if UBIT_WITH_GL 
   const int UGraph::LINE_STRIP = GL_LINE_STRIP, UGraph::LINE_LOOP = GL_LINE_LOOP, UGraph::FILLED = GL_POLYGON;

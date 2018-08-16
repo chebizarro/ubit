@@ -33,8 +33,8 @@
 #include <ubit/uconf.hpp>
 #include <ubit/uhardima.hpp>
 using namespace std;
-#define NAMESPACE_UBIT namespace ubit {
-NAMESPACE_UBIT
+namespace ubit {
+
 
 //NOTE: en mode OpenGL UPix == UIma (et de toute facon, asupprimer a terme)
 

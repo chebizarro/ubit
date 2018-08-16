@@ -30,8 +30,8 @@
 #include <ubit/uima.hpp>
 #include <ubit/ubackground.hpp>
 using namespace std;
-#define NAMESPACE_UBIT namespace ubit {
-NAMESPACE_UBIT
+namespace ubit {
+
 
 
 // TRUETYPE font dirs (in /usr/X11R6/ /usr/include/ /usr/openwin/include )

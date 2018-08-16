@@ -23,8 +23,8 @@
 #include <ubit/ustyle.hpp>
 #include <ubit/core/uappliImpl.hpp>
 using namespace std;
-#define NAMESPACE_UBIT namespace ubit {
-NAMESPACE_UBIT
+namespace ubit {
+
 
 UBox& uvbox(UArgs args) {
   //return *new UVbox(args);

@@ -38,8 +38,8 @@
 #endif
 
 using namespace std;
-#define NAMESPACE_UBIT namespace ubit {
-NAMESPACE_UBIT
+namespace ubit {
+
 
 
 #if UBIT_WITH_GL

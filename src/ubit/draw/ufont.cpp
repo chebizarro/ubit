@@ -25,8 +25,8 @@
 #include <ubit/ubox.hpp>
 #include <ubit/uconf.hpp>
 using namespace std;
-#define NAMESPACE_UBIT namespace ubit {
-NAMESPACE_UBIT
+namespace ubit {
+
 
 static const float MEDIUM_FONT_SIZE = 12;
 
