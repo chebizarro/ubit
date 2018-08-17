@@ -1,6 +1,5 @@
-/************************************************************************
- *
- *  uobject.cpp: Base Class for all Ubit Objects
+/*
+ *  object.cpp: Base Class for all Ubit Objects
  *  Ubit GUI Toolkit - Version 6
  *  (C) 2009 | Eric Lecolinet | ENST Paris | www.enst.fr/~elc/ubit
  *
@@ -18,7 +17,7 @@
 #include <iostream>
 #include <typeinfo>
 #include <cstdarg>
-#include <ubit/unode.hpp>
+#include <ubit/core/node.h>
 #include <ubit/ustr.hpp>
 #include <ubit/uappli.hpp>
 #include <ubit/core/uappliImpl.hpp>
@@ -50,35 +49,35 @@ const char* UObject::getVersion() {
   return UBIT_VERSION;
 }
 
-const UStr& UObject::getClassName() const {
+const String& UObject::getClassName() const {
   return getClass().getName();
 }
 
 void UObject::error(const char* funcname, const char* format, ...) const {
   va_list ap;
   va_start(ap, format);
-  UAppli::raiseError(UError::ERROR, this, funcname, format, ap);
+  Application::raiseError(UError::ERROR, this, funcname, format, ap);
   va_end(ap);
 }
 
 void UObject::warning(const char* funcname, const char* format, ...) const {
   va_list ap;
   va_start(ap, format);
-  UAppli::raiseError(UError::WARNING, this, funcname, format, ap);
+  Application::raiseError(UError::WARNING, this, funcname, format, ap);
   va_end(ap);
 }
 
 void uerror(const char* funcname, const char* format, ...) {
   va_list ap;
   va_start(ap, format);
-  UAppli::raiseError(UError::ERROR, null/*object*/, funcname, format, ap);
+  Application::raiseError(UError::ERROR, null/*object*/, funcname, format, ap);
   va_end(ap);
 }
 
 void uwarning(const char* funcname, const char* format, ...) {
   va_list ap;
   va_start(ap, format);
-  UAppli::raiseError(UError::WARNING, null/*object*/, funcname, format, ap);
+  Application::raiseError(UError::WARNING, null/*object*/, funcname, format, ap);
   va_end(ap);
 }
 
@@ -92,7 +91,6 @@ UObject& UObject::ignoreChangeCallbacks(bool state) {
   return *this;
 }
 
-/* ==================================================== ===== ======= */
 
 void* UObject::operator new(size_t sz) {
   UObject* obj = (UObject*) ::operator new(sz);
@@ -106,19 +104,19 @@ void UObject::operator delete(void* p) {
   UObject* obj = static_cast<UObject*>(p);
   
   if (!obj->omodes.IS_DYNAMIC) {
-    UAppli::error("delete UObject",
+    Application::error("delete UObject",
                   "%p: attempt to delete an object that was not created by new", p);
     return;
   }
   
-  if (UAppli::impl.isTerminated()) {
+  if (Application::impl.isTerminated()) {
     ::operator delete(p);
     return;
   }
   
   // NB: ptr_count<0 means that the object has already been destructed
   if (obj->ptr_count > 0) {
-    UAppli::error("delete UObject",
+    Application::error("delete UObject",
                   "%p: attempt to delete an object that is pointed by a 'uptr' (Ubit smart pointer)", p);
     // peut etre rellement detruit plus tard
     obj->omodes.IS_DESTRUCTING = false;
@@ -127,10 +125,9 @@ void UObject::operator delete(void* p) {
   }
   
   // this object will be deleted when this is safe to do so
-  UAppli::impl.addDeleteRequest(obj);
+  Application::impl.addDeleteRequest(obj);
 }
 
-/* ==================================================== ===== ======= */
 
 UObject::UObject() {
   memset(&omodes, 0, sizeof(omodes));
@@ -156,7 +153,6 @@ UObject::~UObject() {
   ptr_count = -1;  // ptr_count<0 means that this object has been destructed
 } 
 
-/* ==================================================== ===== ======= */
 
 UObject& UObject::setConst() {
   omodes.IS_CONST = true;
@@ -165,13 +161,13 @@ UObject& UObject::setConst() {
 
 bool UObject::checkConst() const {
   if (omodes.IS_CONST) {
-    error("UNode::checkConst","attempt to change the value of this constant object");
+    error("Node::checkConst","attempt to change the value of this constant object");
     return true;
   }
   else return false;
 }
 
-// PBM: addPtr() faux dans le cas des constantes types UColor::white, etc.
+// PBM: addPtr() faux dans le cas des constantes types Color::white, etc.
 // car l'ordre d'init des vars globales est aleatoire. ceci dit ca n'a aucune 
 // importance car ces vars ne sont jamais detruitre en cours d'exec (le ptr_count 
 // sera faux mais on n'en a cure)
@@ -191,7 +187,7 @@ void UObject::removePtr() const {
 }
 
 void UPtr::deferenceError() const {
-  UAppli::fatalError("uptr::operator * or ->",
+  Application::fatalError("uptr::operator * or ->",
                      "can't derefence a uptr that points to null; uptr address= %p",
                      this);
 }

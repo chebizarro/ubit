@@ -1,18 +1,25 @@
-/************************************************************************
- *
- *  uchoice.cpp: item chooser in a list
- *  Ubit GUI Toolkit - Version 6
+/*
+ *  choice.cpp: item chooser in a list
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE :
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION;
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
 
 #include <ubit/ubit_features.h>
 #include <iostream>
@@ -20,7 +27,7 @@
 #include <ubit/ucall.hpp>
 #include <ubit/uon.hpp>
 #include <ubit/ubox.hpp>
-#include <ubit/uevent.hpp>
+#include <ubit/core/event.h>
 #include <ubit/uchoice.hpp>
 #include <ubit/uupdate.hpp>
 #include <ubit/ueventflow.hpp>
@@ -30,14 +37,14 @@ using namespace std;
 NAMESPACE_UBIT
   
 static UChoice::IsSelectable is_selectable_by_default;
-bool UChoice::IsSelectable::operator()(const UBox* box) const {return box->isArmable();}
+bool UChoice::IsSelectable::operator()(const Box* box) const {return box->isArmable();}
 void UChoice::setSelectionRule(IsSelectable& v) {is_selectable = &v;}
 
 UChoice::UChoice() :
   callbacks(ucall(this, &UChoice::mouseCB)),
   container(null),
   last_browsing_group(null),
-  sel_items(new UElem()),
+  sel_items(new Element()),
   is_selectable(&is_selectable_by_default)
   //sel_mode(SINGLE_SELECTION), 
   // complement non standard : norlamement la selection se fait au release
@@ -49,12 +56,12 @@ UChoice::~UChoice() {
   destructs();
 }
 
-void UChoice::addingTo(UChild& c, UElem& parent) {
-  UAttr::addingTo(c, parent);
+void UChoice::addingTo(Child& c, Element& parent) {
+  Attribute::addingTo(c, parent);
   
   container = parent.toBox();
   if (!container) {
-    UAppli::warning("UChoice::addingTo","parent of this UChoice (%p) should be a UBox", this);
+    Application::warning("UChoice::addingTo","parent of this UChoice (%p) should be a Box", this);
     return;
   }
   // the parent can select its ARMable children
@@ -69,25 +76,25 @@ void UChoice::addingTo(UChild& c, UElem& parent) {
 }
 
 //NB: removingFrom() requires a destructor to be defined
-void UChoice::removingFrom(UChild& c, UElem& parent) {
+void UChoice::removingFrom(Child& c, Element& parent) {
   if (container) {
     // bug si plusieurs
     container->setBrowsable(false);
     // et enlever onChildCalls....
   }
-  UAttr::removingFrom(c, parent);
+  Attribute::removingFrom(c, parent);
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void UChoice::update() {
-  //if (container) container->update(UUpdate::paint, now);
+  //if (container) container->update(Update::paint, now);
 }
 
-void UChoice::putProp(UUpdateContext*, UElem&) {
+void UChoice::putProp(UpdateContext*, Element&) {
 }
 
-UBox* UChoice::setSelectedItem(UBox* obj) {
+Box* UChoice::setSelectedItem(Box* obj) {
   if (obj) return setSelectedItem(*obj);
   else {
     clearSelection();
@@ -96,7 +103,7 @@ UBox* UChoice::setSelectedItem(UBox* obj) {
 }
 
 void UChoice::mouseCB(UInputEvent& e) {
-  const UCond& cond = e.getCond();
+  const Condition& cond = e.getCond();
 
   // *** browsing 
   
@@ -113,7 +120,7 @@ void UChoice::mouseCB(UInputEvent& e) {
   // *** selection
 
   // on n'est pas cense selectionner le listbox lui-meme
-  UBox* source = e.getSource() ? e.getSource()->toBox() : null;
+  Box* source = e.getSource() ? e.getSource()->toBox() : null;
   if (!source || source == container) return;
   if (!(*is_selectable)(source)) return;
 
@@ -150,19 +157,19 @@ void UChoice::mouseCB(UInputEvent& e) {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // NB: actuellement il n'y a qu'une seule selection mais elle est stockee
-// dans un UElem de telle sorte qu'il n'y ait pas de probleme si elle
-// elle est detruite par ailleurs (elle sera auto enlevee du UElem)
+// dans un Element de telle sorte qu'il n'y ait pas de probleme si elle
+// elle est detruite par ailleurs (elle sera auto enlevee du Element)
 
-UBox* UChoice::getSelectedItemImpl() const {
-  UNode* b = null;
+Box* UChoice::getSelectedItemImpl() const {
+  Node* b = null;
   if (sel_items->cbegin() != sel_items->cend()) b = *sel_items->cbegin();
   return b ? b->toBox() : null;
 }
 
 // NB: item can be null
-UBox* UChoice::setSelectedItemImpl(UBox* item, UInputEvent* source_event) {
+Box* UChoice::setSelectedItemImpl(Box* item, UInputEvent* source_event) {
   if (!container) return null;
-  UBox* selected_item = getSelectedItemImpl();
+  Box* selected_item = getSelectedItemImpl();
   
   // verifier que l'item est bien dans la hierarchie
   if (item && !item->isChildOf(*container, true)) item = null;
@@ -193,13 +200,12 @@ UBox* UChoice::setSelectedItemImpl(UBox* item, UInputEvent* source_event) {
   return item;
 }
 
-/* ==================================================== ======== ======= */
 
-UBox* UChoice::setSelectedItem(UBox& item) {
+Box* UChoice::setSelectedItem(Box& item) {
   return setSelectedItemImpl(&item, null);
 }
 
-UBox* UChoice::setSelectedIndex(int index) {
+Box* UChoice::setSelectedIndex(int index) {
   return setSelectedItemImpl(getSelectableItem(index), null);
 }
 
@@ -207,24 +213,23 @@ void UChoice::clearSelection() {
   setSelectedItemImpl(null, null);
 }
 
-/* ==================================================== ======== ======= */
 
-UBox* UChoice::getSelectedItem() const {
+Box* UChoice::getSelectedItem() const {
   if (!container) return null;
 
   // att si detruit: verifier que selected_item est toujours dans la hierarchie
-  UBox* selected_item = getSelectedItemImpl();
+  Box* selected_item = getSelectedItemImpl();
   if (selected_item && selected_item->isChildOf(*container, true))
     return selected_item;
   else return null;
 }
 
 int UChoice::getSelectedIndex() const {
-  UBox* selected_item = getSelectedItemImpl();
+  Box* selected_item = getSelectedItemImpl();
   if (!container || !selected_item) return -1;
   int count = 0;
-  for (UChildIter i = container->cbegin(); i != container->cend(); ++i) {
-    UBox* box = (*i)->toBox();
+  for (ChildIter i = container->cbegin(); i != container->cend(); ++i) {
+    Box* box = (*i)->toBox();
     //if (box && box->isArmable()) {
     if (box && (*is_selectable)(box)) {
       if (box == selected_item) return count;
@@ -234,18 +239,17 @@ int UChoice::getSelectedIndex() const {
   return -1; // not found
 }
 
-//int UChoice::getSelectedIndex(UInt& index) const {
+//int UChoice::getSelectedIndex(Int& index) const {
 //  index = getSelectedIndex();
 //  return index.intValue();
 //}
 
-/* ==================================================== ======== ======= */
 
-UBox* UChoice::getSelectableItem(int index) const {
+Box* UChoice::getSelectableItem(int index) const {
   if (!container) return null;
   int count = 0;
-  for (UChildIter i = container->cbegin(); i != container->cend(); ++i) {
-    UBox* box = (*i)->toBox();
+  for (ChildIter i = container->cbegin(); i != container->cend(); ++i) {
+    Box* box = (*i)->toBox();
     //if (box && box->isArmable()) {
     if (box && (*is_selectable)(box)) {
       if (count == index) return box;
@@ -255,9 +259,9 @@ UBox* UChoice::getSelectableItem(int index) const {
   return null;
 }
 
-UBox* UChoice::getSelectableItem(const UStr& s, bool ignore_case) const {
-  UChildIter i = container->children().findBox(s, ignore_case);
-  return (i == container->cend()) ? null : dynamic_cast<UBox*>(*i);
+Box* UChoice::getSelectableItem(const String& s, bool ignore_case) const {
+  ChildIter i = container->children().findBox(s, ignore_case);
+  return (i == container->cend()) ? null : dynamic_cast<Box*>(*i);
 }
 
 /* ==================================================== [Elc:] ======= */
@@ -268,14 +272,14 @@ void UChoice::changed(bool update_now) {
 
 void UChoice::changeCB(UInputEvent* source_event) {
   //UEventFlow* flow = source_event ? source_event->getFlow() : null;
-  //UView* hardwv = source_event ? source_event->getWinView() : null;
+  //View* hardwv = source_event ? source_event->getWinView() : null;
   // manque la bonne view et les coords
   
-  UBox* selected_item = getSelectedItemImpl();
+  Box* selected_item = getSelectedItemImpl();
   
   //if (update_now && (bmodes & UMode::NO_AUTO_UPDATE) == 0) update();
   if (_abegin() != _aend()) {
-    UEvent e2(UOn::change, this, selected_item);  //UNodeEvent
+    Event e2(UOn::change, this, selected_item);  //UNodeEvent
     fire(e2);
   }
   
@@ -283,17 +287,16 @@ void UChoice::changeCB(UInputEvent* source_event) {
   fireParents(UOn::change, this);
 }
 
-/* ==================================================== ======== ======= */
 // a la difference de UOn::change, UOn::action est appele chaque fois
 // que l'on clique un item, meme s'il etait deja selectionne
 
 void UChoice::actionCB(UInputEvent* source_event) {
   //UEventFlow* flow = source_event ? source_event->getFlow() : null;
-  //UView* hardwv = source_event ? source_event->getWinView() : null;
-  UBox* selected_item = getSelectedItemImpl();
+  //View* hardwv = source_event ? source_event->getWinView() : null;
+  Box* selected_item = getSelectedItemImpl();
   
   // que les callbacks des parents
-  //UEvent e2(UOn::action, hardwv, flow);
+  //Event e2(UOn::action, hardwv, flow);
   //e2.setTarget(selected_item);
   //fireParents(e2);
   fireParents(UOn::action, selected_item);
@@ -303,12 +306,12 @@ void UChoice::actionCB(UInputEvent* source_event) {
 
 URadioSelect::URadioSelect() :
   can_unselect_mode(false),
-  pindex(new UInt(-1)),
+  pindex(new Int(-1)),
   pselect_callback(ucall(this, &URadioSelect::itemChanged)) {
   pindex->onChange(ucall(this, &URadioSelect::setIndexImpl));
 }
 
-URadioSelect::URadioSelect(UInt& idx) :
+URadioSelect::URadioSelect(Int& idx) :
   can_unselect_mode(false),
   pindex(idx),
   pselect_callback(ucall(this, &URadioSelect::itemChanged)) {
@@ -319,10 +322,9 @@ URadioSelect::~URadioSelect() {
   destructs();
 }
 
-/* ==================================================== ======== ======= */
 
-void URadioSelect::addingTo(UChild& c, UElem& parent) {
-  UAttr::addingTo(c, parent);
+void URadioSelect::addingTo(Child& c, Element& parent) {
+  Attribute::addingTo(c, parent);
   // ajouter handlers au parent
   // si on clique un item deja selectionne, il faut que
   // les callbacks du client soient appeles 2 fois et dans le bon ordre:
@@ -337,15 +339,14 @@ void URadioSelect::addingTo(UChild& c, UElem& parent) {
   parent.setSelectable(true);
 }
 
-/* ==================================================== ======== ======= */
 //NB: removingFrom() requires a destructor to be defined
 
-void URadioSelect::removingFrom(UChild& c, UElem& parent) {
+void URadioSelect::removingFrom(Child& c, Element& parent) {
   // enlever les callbacks (2 occurences!)
   // false -> ne PAS detruire les ucall (qui sont partages!)
   parent.removeAttr(*pselect_callback, false);
   parent.setSelectable(false);
-  UAttr::removingFrom(c, parent);
+  Attribute::removingFrom(c, parent);
 }
 
 void URadioSelect::setCanUnselectMode(bool state) {
@@ -359,35 +360,34 @@ bool URadioSelect::isCanUnselectMode() const {
 /* ==================================================== [Elc:] ======= */
 
 void URadioSelect::update() {
-  updateAutoParents(UUpdate::paint);
+  updateAutoParents(Update::paint);
 }
 
-void URadioSelect::putProp(UUpdateContext*, UElem&) {}
+void URadioSelect::putProp(UpdateContext*, Element&) {}
 
 void URadioSelect::changed(bool update_now) {
-  changed((UElem*)null);
+  changed((Element*)null);
 }
 
-void URadioSelect::changed(UElem* target) {
+void URadioSelect::changed(Element* target) {
   //if (update_now && (bmodes & UMode::NO_AUTO_UPDATE) == 0) update();
   if (_abegin() != _aend()) {
-    UEvent e(UOn::change, this, target);  //UNodeEvent
+    Event e(UOn::change, this, target);  //UNodeEvent
     fire(e);
   } 
   /* FAUX: agirait sur les parents du radioSelect !
-     UEvent e2(UEvent::change.., null, NULL);
+     Event e2(Event::change.., null, NULL);
      e2.setChildSource(getSelected());
      fireParents(e2, UOn::change);     // !! objet !!
   */
 }
 
-/* ==================================================== ======== ======= */
 
 void URadioSelect::itemChanged(UInputEvent& e) {
-  UElem* new_item = e.getSource();
+  Element* new_item = e.getSource();
   if (!new_item) return;
 
-  UElem* old_item = getSelectedItem();
+  Element* old_item = getSelectedItem();
 
   // distinguer cas on et cas off;
   // rien a faire dans cas off sauf si c'est celui qui etait selectionne
@@ -413,9 +413,8 @@ void URadioSelect::itemChanged(UInputEvent& e) {
 }
 
 /* ==================================================== [Elc:] ======= */
-/* ==================================================== ====== ======= */
 
-UElem* URadioSelect::getSelectedItem() const {
+Element* URadioSelect::getSelectedItem() const {
   if (pindex->intValue() < 0) return null;
   int k = 0;
   for (UParentIter p = pbegin(); p != pend(); ++p) {
@@ -425,9 +424,8 @@ UElem* URadioSelect::getSelectedItem() const {
   return null;	    // pas trouve
 }
 
-/* ==================================================== ======== ======= */
 
-void URadioSelect::_selectItem(UElem* selection) {
+void URadioSelect::_selectItem(Element* selection) {
   int k = 0;
    for (UParentIter p = pbegin(); p != pend(); ++p) {
     if (*p == selection) {
@@ -439,7 +437,7 @@ void URadioSelect::_selectItem(UElem* selection) {
   *pindex = -1; // not found
 }
 
-void URadioSelect::setSelectedItem(UElem& selection) {
+void URadioSelect::setSelectedItem(Element& selection) {
   _selectItem(&selection);
 }
 
@@ -447,7 +445,6 @@ void URadioSelect::clearSelection() {
   _selectItem(null);
 }
 
-/* ==================================================== ======== ======= */
 
 int URadioSelect::getSelectedIndex() const {
   return pindex->intValue();
@@ -459,7 +456,7 @@ void URadioSelect::setSelectedIndex(int new_index) {
   else *pindex = new_index;
 }
 
-void URadioSelect::setSelectedIndex(const UInt& new_index) {
+void URadioSelect::setSelectedIndex(const Int& new_index) {
   if (new_index.intValue() == -1)		// means last item
     *pindex = parents().size() - 1;
   else *pindex = new_index;
@@ -467,10 +464,10 @@ void URadioSelect::setSelectedIndex(const UInt& new_index) {
 
 void URadioSelect::setIndexImpl() {
   int k = 0;
-  UElem* found = null;
+  Element* found = null;
 
   for (UParentIter p = pbegin(); p != pend(); ++p) {
-    UElem* obj = *p;
+    Element* obj = *p;
     if (obj) { 
       if (k == pindex->intValue()) {
         if (!obj->isSelected()) obj->setSelected(true, true);

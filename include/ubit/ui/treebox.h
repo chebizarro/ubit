@@ -1,4 +1,4 @@
-/************************************************************************
+/*
 *
 *  utreebox.cpp
  *  Ubit GUI Toolkit - Version 6
@@ -16,7 +16,9 @@
 
 #ifndef _utreebox_hpp_
 #define	_utreebox_hpp_  1
+
 #include <ubit/ulistbox.hpp>
+
 namespace ubit {
 
 /** Tree widget.
@@ -26,7 +28,7 @@ class UTreebox : public UListbox {
 public:
   UCLASS(UTreebox)
   
-  UTreebox(const UArgs& = UArgs::none);
+  UTreebox(const Args& = Args::none);
   ///< creates a new tree widget (@see also shortcut utreebox()).
 
   virtual ~UTreebox();
@@ -49,21 +51,20 @@ private:
     friend class UTreenode;
 };
 
-UTreebox& utreebox(const UArgs& = UArgs::none);
+UTreebox& utreebox(const Args& = Args::none);
 ///< shortcut that returns *new UTreebox().
 
-/* ==================================================== ===== ======= */
 /** Node in a Tree widget.
 * @see also: UTreebox.
 */
-class UTreenode : public UBox {
+class UTreenode : public Box {
 public:
   UCLASS(UTreenode)
 
-  UTreenode(const UArgs& label = UArgs::none);
+  UTreenode(const Args& label = Args::none);
   ///< creates a new node in a UTreebox (@see also shortcut utreenode()).
 
-  UTreenode(const UArgs& label, const UArgs& subnode_list);
+  UTreenode(const Args& label, const Args& subnode_list);
   ///< creates a new node in a UTreebox (@see also shortcut utreenode()).
  
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -77,25 +78,25 @@ public:
 
   //virtual void setOffset(UHmargin&);
 
-  UBox& label() {return *plabel;}
-  const UBox& label() const {return *plabel;}
+  Box& label() {return *plabel;}
+  const Box& label() const {return *plabel;}
   ///< the box that contains the label of the treenode.
   
-  UBox& subnodes() {return *psubnodes;}
-  const UBox& subnodes() const {return *psubnodes;}
+  Box& subnodes() {return *psubnodes;}
+  const Box& subnodes() const {return *psubnodes;}
   ///< the box that contains the subnodes of the treenode.
   
 private:
   friend class UTreebox;
-  uptr<UBox> plabel, psubnodes;
-  uptr<UBox> pexpander;
-  void constructs(const UArgs& label, const UArgs& subnode_list);
+  uptr<Box> plabel, psubnodes;
+  uptr<Box> pexpander;
+  void constructs(const Args& label, const Args& subnode_list);
 };
 
-UTreenode& utreenode(const UArgs& label = UArgs::none);
+UTreenode& utreenode(const Args& label = Args::none);
 ///< shortcut that returns *new UTreenode().
 
-UTreenode& utreenode(const UArgs& label, const UArgs& subnode_list);
+UTreenode& utreenode(const Args& label, const Args& subnode_list);
 ///< shortcut that returns *new UTreenode().
 
 } 

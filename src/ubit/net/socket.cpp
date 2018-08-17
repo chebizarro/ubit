@@ -1,4 +1,4 @@
-/*************************************************************************
+/**
  *
  *  usocket.cpp: simple sockets
  *  Ubit GUI Toolkit - Version 6
@@ -42,7 +42,6 @@ namespace ubit {
 
 const int DEFAULT_BACKLOG = 20;
 
-/* ==================================================== ====== ======= */
 
 UServerSocket::UServerSocket() :
 listen_port(-1),
@@ -135,7 +134,7 @@ void UServerSocket::close() {
 }
 
 
-USocket* UServerSocket::accept() {
+Socket* UServerSocket::accept() {
   int sock_com = -1;
 
   // cf. man -s 3n accept, attention EINTR ou EWOULBLOCK ne sont pas geres!
@@ -149,38 +148,38 @@ USocket* UServerSocket::accept() {
   int tmp = 1;
   ::setsockopt(sock_com, IPPROTO_TCP, TCP_NODELAY, (char*)&tmp,sizeof(int));
 
-  USocket* s = createSocket();
+  Socket* s = createSocket();
   s->sock = sock_com;
   return s;
 }
 
 // ============================================================== ====== =======
 
-USocket::USocket()
+Socket::Socket()
 : remport(0), sock(-1), sin(null), input(null) {}
 
-USocket::USocket(const char* _host, int _port) :
+Socket::Socket(const char* _host, int _port) :
 remport(0), sock(-1), sin(null), input(null) {
   connect(_host, _port);
 }
 
-USocket::USocket(const UStr& _host, int _port) :
+Socket::Socket(const String& _host, int _port) :
 remport(0), sock(-1), sin(null), input(null) {
   connect(_host.c_str(), _port);
 }
 
-USocket::~USocket() {
+Socket::~Socket() {
   close();  // en fait close fait delete input !
   delete input;
 }
 
-void USocket::onInput(UCall& c) {
+void Socket::onInput(UCall& c) {
   if (!input) input = new USource();
   input->onInput(c);
   if (sock >= 0) input->open(sock);  
 }
   
-void USocket::close() {
+void Socket::close() {
   if (sock >= 0) {
     ::shutdown(sock, 2);
     ::close(sock);
@@ -190,7 +189,7 @@ void USocket::close() {
   delete input; input = null;  //9aug05: = null etait oublie !
 }
   
-int USocket::connect(const char* host, int port) {
+int Socket::connect(const char* host, int port) {
   close();
   if (!host) host = "localhost";
   remport = port;
@@ -216,7 +215,7 @@ int USocket::connect(const char* host, int port) {
 
   // connection with the remote host
   if (::connect(sock, (struct sockaddr*)sin, sizeof(*sin)) < 0){
-    //UAppli::error("UMSclient::openComSocket",
+    //Application::error("UMSclient::openComSocket",
     //	   "Can't connect port %d of remote host %s", remote_port, remote_server);
     return (sock = -1);
   }
@@ -225,7 +224,7 @@ int USocket::connect(const char* host, int port) {
   return sock;
 }
 
-bool USocket::sendBytes(const char* data, unsigned int size) {
+bool Socket::sendBytes(const char* data, unsigned int size) {
   if (sock < 0) return false;
   
   // !!! ici il faut une boucle car il se peut qu'il faille plusieurs write !!! A REVOIR
@@ -238,7 +237,7 @@ bool USocket::sendBytes(const char* data, unsigned int size) {
   return true;
 }
 
-bool USocket::sendBlock(const char* data, unsigned short size) {
+bool Socket::sendBlock(const char* data, unsigned short size) {
   if (sock < 0) return false;
 
   uint16_t net_size = htons(size); // sends the size of the packet first
@@ -249,7 +248,7 @@ bool USocket::sendBlock(const char* data, unsigned short size) {
   return sendBytes(data, size);
 }
 
-bool USocket::sendBlock(UOutbuf& ob) {
+bool Socket::sendBlock(UOutbuf& ob) {
   if (sock < 0) return false;
 
   uint16_t net_size = htons(ob.outpos);
@@ -258,7 +257,7 @@ bool USocket::sendBlock(UOutbuf& ob) {
   return sendBytes(ob.buffer, ob.outpos+2);  // +2 for the size
 }
 
-bool USocket::receiveBytes(char* data, unsigned int size) {
+bool Socket::receiveBytes(char* data, unsigned int size) {
   if (sock < 0) return false;
   unsigned int received = 0;
 
@@ -282,7 +281,7 @@ bool USocket::receiveBytes(char* data, unsigned int size) {
 }
 
 /*
-bool USocket::receiveBlock(char*& data, unsigned short& size) {
+bool Socket::receiveBlock(char*& data, unsigned short& size) {
   if (sock < 0) return false;
 
   uint16_t net_size = 0;   // get block size
@@ -298,7 +297,7 @@ bool USocket::receiveBlock(char*& data, unsigned short& size) {
 // NB: UInbuf contient egalement 2 bytes de size au debut, ce qui n'est
 // pas indispensable mais permet un traitement symetrique
 
-bool USocket::receiveBlock(UInbuf& buf) {
+bool Socket::receiveBlock(UInbuf& buf) {
   if (sock < 0) return false;
 
   uint16_t net_size = 0;   // get block size
@@ -312,7 +311,6 @@ bool USocket::receiveBlock(UInbuf& buf) {
   return receiveBytes(buf.buffer+2, size);
 }
 
-/* ==================================================== ====== ======= */
 
 UIObuf::UIObuf() {
   buffer  = default_buffer;
@@ -380,7 +378,6 @@ bool UIObuf::augment(unsigned short sz) {
   return (buffer && bufsize-2 <= sizeof(short));
 }
 
-/* ==================================================== ====== ======= */
 
 void UOutbuf::writeChar(char x) {
   if (outpos >= bufsize) augment(1);
@@ -418,7 +415,7 @@ void UOutbuf::writeString(const char* s) {
   if (s) writeString(s, strlen(s));
 }
 
-void UOutbuf::writeString(const UStr& s) {
+void UOutbuf::writeString(const String& s) {
   writeString(s.c_str(), s.length());
 }
 
@@ -446,7 +443,7 @@ void UInbuf::readLong(long& x) {
   x = long(htonl(netl));
 }
 
-void UInbuf::readString(UStr& s) {
+void UInbuf::readString(String& s) {
   s = "";
   // 12jan05: c'est seulement le 0 qui sert de separateur, plus space!
   int ll = 0;
@@ -456,7 +453,6 @@ void UInbuf::readString(UStr& s) {
   inpos += ll+1;
 }
 
-/* ==================================================== ====== ======= */
 
 void UOutbuf::writeEvent(unsigned char event_type, unsigned char event_flow,
                          long x, long y, unsigned long detail) {

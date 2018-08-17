@@ -1,22 +1,32 @@
-/* ***********************************************************************
- *
- *  udata.hpp: all viewable objects that can be inserted in an element
- *  Ubit GUI Toolkit - Version 6
+/*
+ *  udata.h: all viewable objects that can be inserted in an element
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE : 
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE 
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. 
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU 
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION; 
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
 
-#ifndef _udata_hpp_
-#define	_udata_hpp_ 1
-#include <ubit/unode.hpp>
+
+#ifndef UBIT_CORE_DATA_H_
+#define	UBIT_CORE_DATA_H_
+
+#include <ubit/core/node.h>
+
 namespace ubit {
 
 /** Base class for Viewable Objects.
@@ -25,27 +35,27 @@ namespace ubit {
   * changed. Data parents can also be notified when data value are modified
   * by using the UOn::dataChange condition (see below).
   *
-  * see an example in class UStr. The only difference is that UOn::dataChange
+  * see an example in class String. The only difference is that UOn::dataChange
   * must be used instead of UOn::strChange for specifing callbacks in parents. 
  */
-class UData: public UNode {
+class Data: public Node {
 public:
-  //UCLASS("#data", UData, null);
-  UABSTRACT_CLASS(UData);
+  //UCLASS("#data", Data, null);
+  UABSTRACT_CLASS(Data);
 
-  UData() {}
-  UData(UConst) {omodes.IS_CONST = true;}
+  Data() {}
+  Data(UConst) {omodes.IS_CONST = true;}
 
   virtual int getDisplayType() const {return DATA;}
 
-  virtual UData* toData() {return this;}
-  virtual const UData* toData() const {return this;}
+  virtual Data* toData() {return this;}
+  virtual const Data* toData() const {return this;}
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  virtual UData& onChange(UCall&);
+  virtual Data& onChange(UCall&);
   /**< adds a callback that is fired when the value is modified.
-    * @see UData doc.
+    * @see Data doc.
     */
   
   virtual void changed(bool update = true);
@@ -57,13 +67,10 @@ public:
   virtual void update() = 0;
   ///< updates graphics.
 
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#ifndef NO_DOC
-  friend class UArgs;
-  friend class UBox;
-  virtual void getSize(UUpdateContext&, UDimension&) const = 0;
-  virtual void paint(UGraph&, UUpdateContext&, const URect&) const = 0;
-#endif
+  friend class Args;
+  friend class Box;
+  virtual void getSize(UpdateContext&, Dimension&) const = 0;
+  virtual void paint(Graph&, UpdateContext&, const Rectangle&) const = 0;
 };
 }
-#endif
+#endif // UBIT_CORE_DATA_H_

@@ -1,26 +1,34 @@
-/************************************************************************
- *
- *  uctlmenu.hpp : Control menus (see upiemenu.hpp)
- *  Ubit GUI Toolkit - Version 6
+/*
+ *  ctlmenu.hpp : Control menus (see upiemenu.hpp)
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE :
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION;
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
 
 #ifndef _uctlmenu_hpp_
 #define _uctlmenu_hpp_ 1
+
 #include <ubit/upiemenu.hpp>
 #include <ubit/ucall.hpp>
+
 namespace ubit {
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   /** Control menu.
    * a control menu makes it possible to select an operation then to control one
    * or two continous values in a single gesture. Control menus have to modes:
@@ -83,7 +91,6 @@ namespace ubit {
   ///< shortcut function that creates a new control menu.
   
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   /** Callback object for UCtlmenu items (base class).
    * This class is intended to be subclassed by implementation classes that
    * redefine the mdrag() method.
@@ -106,50 +113,47 @@ namespace ubit {
      * true at the beginning of a drag sequence. @see: UCtlmenu::item() for details,
      */
     
-    virtual void operator()(UEvent&);
+    virtual void operator()(Event&);
     ///< [impl] calls mdrag() with appropriate arguments (no need to redefine this method).
     
-    virtual void addingTo(UChild&, UElem& parent);
+    virtual void addingTo(Child&, Element& parent);
     ///< [impl] adds the UOn::mdrag event condition  (no need to redefine this method).
     
     float xmag, ymag;
   };
   
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   /** Centred zoom (Callback object for UCtlmenu items).
    */
   class UZoomAction : public UCtlAction {
   public:
-    UZoomAction(UBox& zoomed_box, float gain = 0.5);
+    UZoomAction(Box& zoomed_box, float gain = 0.5);
   protected:
-    uptr<UBox> zbox;     // zoomed box
+    uptr<Box> zbox;     // zoomed box
     uptr<UPos> posAttr; // box pos attribute (NB: its value is scale independent)
     uptr<UScale> scaleAttr; // box scale attribute
     float  zbox_scale0;    // initial scale of box 
-    UPoint zbox_pos0;     // initial (scale indep) pos of box in its container
-    UPoint mouse_in_zbox0;
+    Point zbox_pos0;     // initial (scale indep) pos of box in its container
+    Point mouse_in_zbox0;
     float mouse_delta;
     virtual void mdrag(UMouseEvent&, UCtlmenu&);
   };
   
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   /** Panning (Callback object for UCtlmenu items).
    */
   class UPanAction : public UCtlAction {
   public:
-    UPanAction(UBox& panned_box, float gain = 1.);
+    UPanAction(Box& panned_box, float gain = 1.);
   protected:
-    uptr<UBox> box;     // panned box
+    uptr<Box> box;     // panned box
     uptr<UPos> posAttr; // box pos attribute (NB: its value is scale independent)
-    UPoint pos0;        // initial (scale indep) pos of box in its container
+    Point pos0;        // initial (scale indep) pos of box in its container
     //float container_scale;
     virtual void mdrag(UMouseEvent&, UCtlmenu&);
   };
 
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   /** Scrolling (Callback object for UCtlmenu items).
    */
   class UScrollAction : public UCtlAction {

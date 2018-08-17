@@ -1,6 +1,5 @@
-/************************************************************************
- *
- *  upalette.cpp: movable palette box (internal frame)
+/*
+ *  palette.cpp: movable palette box (internal frame)
  *  Ubit GUI Toolkit - Version 6.0
  *  (C) 2009 | Eric Lecolinet | ENST Paris | www.enst.fr/~elc/ubit
  *
@@ -23,7 +22,7 @@
 #include <ubit/ufont.hpp>
 #include <ubit/uon.hpp>
 #include <ubit/ucall.hpp>
-#include <ubit/uevent.hpp>
+#include <ubit/core/event.h>
 #include <ubit/uborder.hpp>
 #include <ubit/usymbol.hpp>
 #include <ubit/ustyle.hpp>
@@ -32,21 +31,21 @@ using namespace std;
 #define NAMESPACE_UBIT namespace ubit {
 NAMESPACE_UBIT
 
-UPalette::UPalette(UArgs a) :
+UPalette::UPalette(Args a) :
 ppos(new UPos),
 ppos_ctrl((new UPosControl)->setModel(ppos)),
 psize(new USize),
 psize_ctrl((new USizeControl)->setModel(psize)),
 pcontent_scale(new UScale),
-pcontent(new UBox(a)),
-ptitle(new UElem),
-pcontrols(new UElem),
-//pminmaxbtn(new UBox),
-ptitle_bar(new UBox),
-presize_btn(new UBox)
+pcontent(new Box(a)),
+ptitle(new Element),
+pcontrols(new Element),
+//pminmaxbtn(new Box),
+ptitle_bar(new Box),
+presize_btn(new Box)
 {
   /*
-  pminmaxbtn->addAttr(UColor::navy + UFont::bold 
+  pminmaxbtn->addAttr(Color::navy + UFont::bold 
                      + ucall(this, &UPalette::minmaxCB));
   pminmaxbtn->add(UOn::select / ustr(" - ") + UOn::deselect / ustr(" + "));
   + UOn::doubleClick / ucall(this, &UPalette::minmaxCB));
@@ -54,9 +53,9 @@ presize_btn(new UBox)
   
   ptitle->ignoreEvents();
  
-  presize_btn->addAttr(*psize_ctrl //+ UBackground::metal
+  presize_btn->addAttr(*psize_ctrl //+ Background::metal
                        + uhcenter() + uvcenter()
-                       + upos(ULength(0,UPX,UPos::RIGHT), ULength(0,UPX,UPos::BOTTOM)));
+                       + upos(Length(0,UPX,UPos::RIGHT), Length(0,UPX,UPos::BOTTOM)));
   presize_btn->add(USymbol::circle); //square
   presize_btn->show(false);
   
@@ -78,8 +77,8 @@ presize_btn(new UBox)
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 UStyle* UPalette::createStyle() {
-  UStyle* s = UBox::createStyle();
-  static UBorder* b = new URoundBorder(UBorder::LINE,UColor::navy,UColor::white,2,2,15,15);
+  UStyle* s = Box::createStyle();
+  static Border* b = new URoundBorder(Border::LINE,Color::navy,Color::white,2,2,15,15);
   s->local.border = b;
   return s;
 }

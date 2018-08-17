@@ -1,23 +1,33 @@
-/************************************************************************
- *
- *  ulistbox.hpp
- *  Ubit GUI Toolkit - Version 6
+/*
+ *  listbox.hpp
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE : 
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE 
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. 
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU 
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION; 
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
+
 
 #ifndef _ulistbox_hpp_
 #define	_ulistbox_hpp_ 1
+
 #include <ubit/uinteractors.hpp>
 #include <ubit/uchoice.hpp>
+
 namespace ubit {
   
   /** Radiobox container: makes buttons (and items, checkboxes, etc) contained in 
@@ -25,29 +35,29 @@ namespace ubit {
    * A Radiobox is horizontal by default, add attribute UOrient::vertical to make
    * it vertical. 
    */
-  class URadiobox: public UBox {
+  class URadiobox: public Box {
   public:
     UCLASS(URadiobox)
     
-    URadiobox(const UArgs& args = UArgs::none);
+    URadiobox(const Args& args = Args::none);
     ///< creates a new Radiobox widget (see also shortcut function uradiobox()).
     
-    virtual UBox* getSelectedItem() const;
+    virtual Box* getSelectedItem() const;
     ///< returns the selected item; null if there is no selected item.
     
     virtual int getSelectedIndex() const;
     ///< returns the index of the selected item; -1 if there is no selected item.
     
-    virtual URadiobox& setSelectedItem(UBox& item);
+    virtual URadiobox& setSelectedItem(Box& item);
     ///< selects this item.
     
-    virtual URadiobox& setSelectedItem(UBox* item);
+    virtual URadiobox& setSelectedItem(Box* item);
     ///< selects this item or clear the selection if this item is null.
 
     virtual URadiobox& setSelectedIndex(int n);
     ///< selects the Nth item; selects the last selectable item if n = -1.
     
-    URadiobox& select(UBox& item) {return setSelectedItem(item);}
+    URadiobox& select(Box& item) {return setSelectedItem(item);}
     ///< selects this item (synonym for setSelectedItem()).
 
     URadiobox& select(int n) {return setSelectedIndex(n);}
@@ -63,11 +73,10 @@ namespace ubit {
     uptr<UChoice> pchoice;
   };
   
-  inline URadiobox& uradiobox(UArgs args = UArgs::none) {return *new URadiobox(args);}
+  inline URadiobox& uradiobox(Args args = Args::none) {return *new URadiobox(args);}
   ///< shortcut function that returns *new URadiobox(args).
   
   
-  /* ==================================================== ===== ======= */
   /** List widget: enforces a list layout and makes buttons (and items, checkboxes, etc)
    * contained in this box exclusive
    *
@@ -94,7 +103,7 @@ namespace ubit {
    *
    * <pre>
    * class Example {
-   *    void changeCB(UEvent&);
+   *    void changeCB(Event&);
    * };
    *
    * Example* ex = new Example;
@@ -107,9 +116,9 @@ namespace ubit {
    *    + uitem(destroy_image + "Destroy") 
    *   );
    *
-   * void GUI::changeCB(UEvent& e) {
+   * void GUI::changeCB(Event& e) {
    *    // retreives the selected item
-   *    UBox* item = e.getTarget() ? e.getTarget()->toBox() : null;
+   *    Box* item = e.getTarget() ? e.getTarget()->toBox() : null;
    *    ...etc...
    * }
    * </pre>
@@ -118,7 +127,7 @@ namespace ubit {
   public:
     UCLASS(UListbox)
     
-    UListbox(const UArgs& args = UArgs::none);
+    UListbox(const Args& args = Args::none);
     ///< creates a new List widget (see also shortcut function ulistbox()).
     
     static UStyle* createStyle();
@@ -127,64 +136,63 @@ namespace ubit {
     UListbox& setTransparent(bool s = true) {transp_style = s; return *this;}
     
     
-    UListbox& setSelectedItem(UBox& item);
+    UListbox& setSelectedItem(Box& item);
     ///< selects this item.
     
     UListbox& setSelectedIndex(int n);
     ///< selects the Nth item; selects the last selectable item if n = -1.
          
-    UListbox& select(UBox& item) {return setSelectedItem(item);}
+    UListbox& select(Box& item) {return setSelectedItem(item);}
     ///< selects this item (synonym for setSelectedItem()).
     
     UListbox& select(int n) {return setSelectedIndex(n);}
     ///< selects the Nth item (synonym for setSelectedIndex()).
 
         
-    virtual UListbox& addItem(const UStr& string);
-    virtual UListbox& addItem(UStr& string, bool duplicate);
+    virtual UListbox& addItem(const String& string);
+    virtual UListbox& addItem(String& string, bool duplicate);
     /**< adds an item to the listbox.
      * the string argument is duplicated except if 'duplicate' if false
      * (in which case it is shared and directly added to the scene graph)
      *
      * Objects can also be be added/removed to the UListbox by using
-     * the add()/remove() methods that are inherited from UElem
+     * the add()/remove() methods that are inherited from Element
      *
      * addItem() is equivalent to: 
      * - add(uitem(ustr(s)))   if duplicate is true (or not provided)
      * - add(uitem(s))         if duplicate is false
      */
     
-    virtual UListbox& addItems(const UStr& strings, const UStr& separ = ",");
-    virtual UListbox& addItems(const UArgs& prefix, const UStr& strings, const UStr& separ = ",");
+    virtual UListbox& addItems(const String& strings, const String& separ = ",");
+    virtual UListbox& addItems(const Args& prefix, const String& strings, const String& separ = ",");
     /**< adds a list of items to the listbox.
      * - parses a string containing the item names separated by a character
      *   in 'separ' (the , char by default) and adds each item to the list
      *   by calling addItem().
      * - in addition addItems(prefix...) adds this prefix (typically a small
-     *   image or a pixmap, see UIma and UPix) before each item
+     *   image or a pixmap, see Image and UPix) before each item
      * - see addItem() for more details.
      */
     
     virtual UListbox& addItems(const char* items[]);
-    virtual UListbox& addItems(const std::vector<UStr*>& items, bool duplicate = true);
-    virtual UListbox& addItems(const UArgs& prefix, const char* items[]);
-    virtual UListbox& addItems(const UArgs& prefix, const std::vector<UStr*>& items, 
+    virtual UListbox& addItems(const std::vector<String*>& items, bool duplicate = true);
+    virtual UListbox& addItems(const Args& prefix, const char* items[]);
+    virtual UListbox& addItems(const Args& prefix, const std::vector<String*>& items, 
                                bool duplicate = true);
     /**< adds a list of items to the listbox.
      * - performs addItem() for each string in the 'items' vector
      * - in addition addItems(prefix...) adds this prefix (typically a small
-     *   image or a pixmap, see UIma and UPix) before each item
+     *   image or a pixmap, see Image and UPix) before each item
      */
     
   protected:
     bool transp_style;
   };
   
-  inline UListbox& ulistbox(UArgs args = UArgs::none) {return *new UListbox(args);}
+  inline UListbox& ulistbox(Args args = Args::none) {return *new UListbox(args);}
   ///< shortcut function that returns *new UListbox(args).
   
   
-  /* ==================================================== ===== ======= */
   /** Combo box gadget.
    *
    *  Geometry:
@@ -216,7 +224,7 @@ namespace ubit {
     
     UCombobox();
     
-    UCombobox(UListbox&, const UArgs& = UArgs::none);
+    UCombobox(UListbox&, const Args& = Args::none);
     /* creates a new Combo Box widget (see also shortcut function ucombobox()).
      * arguments:
      * - 1st arg: the UListbox that is displayed in the menu
@@ -229,30 +237,30 @@ namespace ubit {
     
     UListbox& list() {return *plist;}
     class UChoice& choice();
-    UElem& entry() {return *pentry;}
+    Element& entry() {return *pentry;}
     UMenu&  menu()  {return *pmenu;}
     ///< gives access to combobox subcomponents.
     
     static UStyle* createStyle();
     
   protected:
-    virtual void changedCB(UEvent&);  //UElemEvent
-    virtual void actionCB(UEvent&);   //UElemEvent
+    virtual void changedCB(Event&);  //UElemEvent
+    virtual void actionCB(Event&);   //UElemEvent
     virtual void openMenuCB(UInputEvent&);
     virtual void syncText();
     
   private:
     uptr<UListbox> plist;
-    uptr<UElem> pentry;
+    uptr<Element> pentry;
     uptr<class UMenu> pmenu;
     bool text_only;
     
-    //UCombobox(const UArgs& = UArgs::none);
-    void constructs(const UArgs&);
+    //UCombobox(const Args& = Args::none);
+    void constructs(const Args&);
   };
   
   
-  inline UCombobox& ucombobox(UListbox& l, UArgs a = UArgs::none) {return *new UCombobox(l,a);}
+  inline UCombobox& ucombobox(UListbox& l, Args a = Args::none) {return *new UCombobox(l,a);}
   ///< shortcut function that returns *new UCombobox(l,a).
   
 } 

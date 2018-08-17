@@ -1,5 +1,4 @@
-/************************************************************************
- *
+/*
  *  UDispGDK.cpp: GDK implementation
  *  Ubit GUI Toolkit - Version 6.0
  *  (C) 2008 | Eric Lecolinet | ENST Paris | www.enst.fr/~elc/ubit
@@ -51,7 +50,7 @@ UCursor UCursor::dnd(GDK_GUMBY, UCONST);
 
 // ==================================================== [Ubit Toolkit] =========
 
-void UGraph::createRenderContext(XXXX* _nd) {
+void Graph::createRenderContext(XXXX* _nd) {
   UNatDispGDK* nd = (UNatDispGDK*)_nd;  // !!!@@@@
 
   xor_mode = false;
@@ -63,7 +62,7 @@ void UGraph::createRenderContext(XXXX* _nd) {
   gc = null;
 #if UBIT_WITH_GL
   initGL();
-  if (UAppli::isUsingGL()) {width = 1.; return;}  
+  if (Application::isUsingGL()) {width = 1.; return;}  
 #endif
   width = 0.;
   gc = gdk_gc_new(nd.getFrameWin());  // gc = gdk_gc_new_with_values()
@@ -93,7 +92,7 @@ void UGraph::createRenderContext(XXXX* _nd) {
 #ifdef UBIT_WITH_GL
    color_rgba[0] = color_rgba[1] = color_rgba[2] = 0; color_rgba[3] = 255;
    bgcolor_rgba[0] = bgcolor_rgba[1] = bgcolor_rgba[2] = 255; bgcolor_rgba[3] = 255;
-   if (UAppli::isUsingGL()) {
+   if (Application::isUsingGL()) {
      width = 1.;
      return;
    }  
@@ -114,7 +113,7 @@ void UGraph::createRenderContext(XXXX* _nd) {
    // graphics_exposures = true means that events are generated when
    // XCopyArea or XCopyPlanes is called and a part of the view is obscured
    // This is useless here except when scrolling data (the last argument 
-   // of the UGraph::copyArea function can be used to change this
+   // of the Graph::copyArea function can be used to change this
    // behavior (see fct. copyArea() in ugraph.hpp for details)
    gcval.graphics_exposures = false;
    
@@ -128,22 +127,22 @@ void UGraph::createRenderContext(XXXX* _nd) {
 */
 // ==================================================== [Ubit Toolkit] =========
 
-UDispGDK::UDispGDK(const UStr& _dname) : UDisp(_dname),
+UDispGDK::UDispGDK(const String& _dname) : Display(_dname),
 sys_disp(null),
 sys_screen(null),
 sys_visual(null),
 sys_cmap(null),
 main_gimpl(None), client_gimpl(None)
 {
-  if (UAppli::isUsingGL()) {
-    UAppli::error("UDispGDK","GDK implementation does not support OpenGL mode");
+  if (Application::isUsingGL()) {
+    Application::error("UDispGDK","GDK implementation does not support OpenGL mode");
   }
   
   sys_disp = gdk_display_open(getDisplayName());
   const char* dname = d->getDisplayName().empty() ? "''" : d->getDisplayName().c_str();
 
   if (!sys_disp || !(sys_screen = gdk_display_get_default_screen(sys_disp))) {
-    UAppli::error("UDispGDK","could not open display '%s' (is the X11 server running ?)",dname);
+    Application::error("UDispGDK","could not open display '%s' (is the X11 server running ?)",dname);
     return;
   }
   //if (nd->xsync) XSynchronize(sys_disp, True);
@@ -152,11 +151,11 @@ main_gimpl(None), client_gimpl(None)
   screen_height = gdk_screen_get_height(sys_screen);
 
   if (XWidthMMOfScreen(sys_screen) == 0)
-    UAppli::error("UDispX11","the horizontal resolution is unknow (display %s)",dname);
+    Application::error("UDispX11","the horizontal resolution is unknow (display %s)",dname);
   else w_mm_to_px = double(screen_width) / XWidthMMOfScreen(sys_screen);
   
   //if (XHeightMMOfScreen(sys_screen) == 0)
-  //  UAppli::error("UDispX11","the vertical resolution is unknow (display %s)",dname);
+  //  Application::error("UDispX11","the vertical resolution is unknow (display %s)",dname);
   //else h_mm_to_px = double(screen_height) / XHeightMMOfScreen(sys_screen);
   
   MM_TO_PX = w_mm_to_px;
@@ -169,15 +168,15 @@ main_gimpl(None), client_gimpl(None)
   sys_cmap = gdk_screen_get_rgb_colormap(sys_screen);
 
   if (sys_cmap == 0 || sys_visual == 0) {
-    UAppli::warning("UDispGDK","GDK: could not find visual; searching for default visual on display '%s'", dname);
+    Application::warning("UDispGDK","GDK: could not find visual; searching for default visual on display '%s'", dname);
     sys_visual = gdk_screen_get_system_visual(sys_screen);
     sys_cmap = gdk_screen_get_system_colormap(sys_screen);
   }
   // ATT: prend TJRS la valeur par defaut de bpp sans tenir compte du nd->bpp demande
   if (sys_visual) bpp = sys_visual->depth;
 
-  if (!(default_rc = UGraph::createRC(this))) {
-    UAppli::error("UDispGDK","could not create Graphics Context on display '%s'", dname);
+  if (!(default_rc = Graph::createRC(this))) {
+    Application::error("UDispGDK","could not create Graphics Context on display '%s'", dname);
     return;
   }
   
@@ -200,12 +199,12 @@ main_gimpl(None), client_gimpl(None)
   atoms.WM_TAKE_FOCUS   = GetAtom(sys_disp, "WM_TAKE_FOCUS");
   atoms.UMS_WINDOW      = GetAtom(sys_disp, UMS_WINDOW_PROPERTY);
   atoms.UMS_MESSAGE     = GetAtom(sys_disp, UMS_MESSAGE_PROPERTY);
-  //atoms.USELECTION    = GetAtom(sys_disp, _USELECTION);
+  //atoms.Selection    = GetAtom(sys_disp, _Selection);
 
   // NB: requires: sys_visual, default_pixmap, atoms, and possibly, white/black pixels
   mainframe = new UNatWin(this, 10, 10, UNatWin::MAINFRAME);  
   if (mainframe->sys_win == null) {
-    UAppli::error("UDispGDK","could not create the main frame window for display '%s'", dname);
+    Application::error("UDispGDK","could not create the main frame window for display '%s'", dname);
     return;
   }
   natgraph = new UNatGraph(this);
@@ -247,7 +246,7 @@ unsigned long UDispGDK::createColor(const unsigned char rgba[4]) {
     return c.pixel;    // the color was allocated in the colormap
   }
   else { // the appropriate color could be allocated => warning + use black or white
-    UAppli::warning("UDispGDK::createColor","can't allocate color (colormap is full?)");
+    Application::warning("UDispGDK::createColor","can't allocate color (colormap is full?)");
     // white if color > 65535, black otherwise
     if (c.red + c.blue + c.green > 65535*2) return getWhitePixel();
     else return getBlackPixel();
@@ -257,22 +256,22 @@ unsigned long UDispGDK::createColor(const unsigned char rgba[4]) {
 void UDispGDK::flush() {
 #if UBIT_WITH_GL 
   //if (disp.getConf().using_gl) glFlush();
-  if (UAppli::isUsingGL()) glFlush();
+  if (Application::isUsingGL()) glFlush();
 #endif
   Flush(sys_disp);
 }
 
 void UDispGDK::setPointerPos(int x, int y) {
-  UAppli::error("UDisp::setPointerPos","Not available with GDK");
+  Application::error("Display::setPointerPos","Not available with GDK");
 }
 
 void UDispGDK::getPointerPos(int& x, int& y) const {
   x = y = 0;
-  UAppli::error("UDisp::getPointerPos","Not available with GDK");
+  Application::error("Display::getPointerPos","Not available with GDK");
 }
 
 int UDispGDK::getPointerState() const {
-  UAppli::error("UDisp::getPointerState","Not available with GDK");
+  Application::error("Display::getPointerState","Not available with GDK");
   return 0;
 }
 
@@ -293,7 +292,7 @@ void UDispGDK::ungrabPointer() {
 }
 
 bool UDispGDK::pickWindow(UNatWin& nw, int& x, int& y, UCall* call, UCursor* curs) {
-  UAppli::error("UDisp::pickWindow","Not available with GDK");
+  Application::error("Display::pickWindow","Not available with GDK");
   return false;
 }
 */
@@ -314,7 +313,7 @@ void UDispGDK::eventHandler(GdkEvent* e, gpointer appli) {
 static void destroyHandler(gpointer) {}
 
 void UDispGDK::startAppli() {
-  UAppliImpl& a = UAppli::impl;
+  UAppliImpl& a = Application::impl;
   gdk_error_trap_push();    // supprimer les XErrors
   gdk_rgb_init();
   gdk_event_handler_set(eventHandler, &a, destroyHandler);
@@ -326,7 +325,7 @@ void UDispGDK::quitAppli() {
 }
 
 void UDispGDK::startLoop(bool main) {
-  UAppliImpl& a = UAppli::impl;
+  UAppliImpl& a = Application::impl;
   if (main) {
     a.mainloop_running = true;
     g_main_loop_run(gmainloop);
@@ -338,7 +337,7 @@ void UDispGDK::startLoop(bool main) {
 }
 
 void UDispGDK::quitLoop(bool main) {
-  UAppliImpl& a = UAppli::impl;
+  UAppliImpl& a = Application::impl;
   if (main) {
     a.mainloop_running = a.subloop_running = false;
     g_main_loop_quit(gmainloop);
@@ -357,9 +356,9 @@ void UDispGDK::quitLoop(bool main) {
 
 static int getButton(GdkEvent* sev) {
   switch (sev->button.button) {
-    case 1: return UEvent::LeftButton;
-    case 2: return UEvent::MidButton;
-    case 3: return UEvent::RightButton;
+    case 1: return Event::LeftButton;
+    case 2: return Event::MidButton;
+    case 3: return Event::RightButton;
   }
   return 0;
 }
@@ -372,7 +371,7 @@ static void getKey(GdkEvent* sev, unsigned int& keycode, unsigned short& keychar
 }
 
 /*
-static void onSelection(UDisp* nd, UWin* win, UView* winview, GdkEvent* sev) {
+static void onSelection(Display* nd, Window* win, View* winview, GdkEvent* sev) {
   // NB: no time, no state!
   UEventFlow* f = nd->obtainFlow(0,0);   // ????  
   switch (sev->type) {
@@ -398,9 +397,9 @@ static void onSelection(UDisp* nd, UWin* win, UView* winview, GdkEvent* sev) {
 
 void UDispGDK::dispatchEvent(GdkEvent* sev) {
   USysWin event_win = sev->any.window;
-  UWin* win = retrieveWin(event_win);
+  Window* win = retrieveWin(event_win);
   if (!win) return;
-  UView* v = win->getWinView(&disp);  
+  View* v = win->getWinView(&disp);  
   
   switch(sev->type) {
     
@@ -527,10 +526,10 @@ void UDispGDK::dispatchEvent(GdkEvent* sev) {
     
   case GDK_CLIENT_EVENT:{
     UEventFlow* f = obtainFlow(0,0);
-    UMessagePortMap* messmap = UAppli::getMessagePortMap();
+    MessagePortMap* messmap = Application::getMessagePortMap();
     
     if (messmap && sev->client.message_type == atoms.UMS_MESSAGE) {
-      UMessageEvent e(v, f, sev);
+      MessageEvent e(v, f, sev);
       messmap->fireMessagePort(e);
     }
     else if (win->hasCallback(UMode::SYSWM_CB)) {
@@ -541,10 +540,10 @@ void UDispGDK::dispatchEvent(GdkEvent* sev) {
     
   case GDK_PROPERTY_NOTIFY:{
     UEventFlow* f = obtainFlow(0,0);
-    UMessagePortMap* messmap = UAppli::getMessagePortMap();
+    MessagePortMap* messmap = Application::getMessagePortMap();
     
     if (messmap && sev->property.atom == atoms.UMS_MESSAGE) {
-      UMessageEvent e(v, f, sev);
+      MessageEvent e(v, f, sev);
       messmap->fireMessagePort(e);
     }
     else if (win->hasCallback(UMode::SYSWM_CB)) {
@@ -573,6 +572,4 @@ void UDispGDK::dispatchEvent(GdkEvent* sev) {
 
 }
 #endif  // UBIT_WITH_GDK
-/* ==================================================== [TheEnd] ======= */
-/* ==================================================== [(c)Elc] ======= */
 

@@ -1,49 +1,60 @@
-/*************************************************************************
+/**
  *
  *  udisp.cpp: Graphical Display (may be remotely located)
- *  Ubit GUI Toolkit - Version 6
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE : 
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE 
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. 
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU 
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION; 
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
+
 
 #ifndef _udisp_hpp_
 #define	_udisp_hpp_ 1
+
 #include <list>
 #include <ubit/udefs.hpp>
 #include <ubit/ustr.hpp>
 #include <ubit/uelem.hpp>
 #include <ubit/ugeom.hpp>
+
 namespace ubit {
   
 class UGraphImpl;
 class UCursorImpl;
   
 /** Display Context.
-  * A UAppli can open windows on several displays, which can be on remote machines
-  * when X11 is used as a windowing systems. A UDisp contains the data related to 
+  * A Application can open windows on several displays, which can be on remote machines
+  * when X11 is used as a windowing systems. A Display contains the data related to 
   * a given display (or to a specific screen of a given display when screens are
   * logically separated, ie. when a window cannot move freely from one screen
   * to another one).
   *
-  * UWin objects (and UFrame, UDialog, UMenu subclasses) can be attached to a
-  * specific UDisp by using UDisp::add(). Widgets that are contained in several 
-  * UWin objects ("contained" meaning they are a child of them) are AUTOMATICCALY
+  * Window objects (and UFrame, UDialog, UMenu subclasses) can be attached to a
+  * specific Display by using Display::add(). Widgets that are contained in several 
+  * Window objects ("contained" meaning they are a child of them) are AUTOMATICCALY
   * REPLICATED and synchronized on all these windows.
   *
-  * UAppli derives from UDisp. The UAppli object (which must be unique) represents
+  * Application derives from Display. The Application object (which must be unique) represents
   * the default display.
   */
-class UDisp {
+class Display {
 public:
-  static UDisp* create(const UStr& display_name);
+  static Display* create(const String& display_name);
   /**< creates and opens a new Display.
   * 'display_name' is the name of the X Window server, it must be specified as follows:
   * - hostname:screen_no
@@ -51,37 +62,37 @@ public:
   * - hostname  (screen 0 is taken in this case)
   *
   * NOTES:
-  * - the UAppli is the default UDisp, its ID number is 0.
+  * - the Application is the default Display, its ID number is 0.
   * - the default BPP (number of bits per pixel) is 24, this can be changed globally
-  *   for the whole application in UConf or for a given display by calling UDisp(UConf&)
+  *   for the whole application in UConf or for a given display by calling Display(UConf&)
   */
     
-  virtual ~UDisp();
+  virtual ~Display();
 
   bool isOpened() const {return is_opened;}
   ///< returns true if the Display was sucessufully opened.
   
   int getID() const {return id;}
   /**< returns the ID of this Display.
-   * the ID of the default Display is 0 (the default Display is the UAppli).
+   * the ID of the default Display is 0 (the default Display is the Application).
    */
   
   const UConf& getConf() const {return conf;}
   ///< returns the configuration of this Display.
 
   int getBpp() const {return bpp;}
-  /**< returns the number of bit per pixel of this UDisp.
+  /**< returns the number of bit per pixel of this Display.
    * when X11 is used, this bpp may differ from the default BPP of the X11 display.
    */
   
-  const UStr& getDisplayName() const {return display_name;}
-  ///< returns the name of the UDisp's X11 server (when X11 is used).
+  const String& getDisplayName() const {return display_name;}
+  ///< returns the name of the Display's X11 server (when X11 is used).
     
   int getScreenWidth() const {return screen_width;}
-  ///< returns the width of the UDisp's screen.
+  ///< returns the width of the Display's screen.
   
   int getScreenHeight() const {return screen_height;}
-  ///< returns the height of the UDisp's screen.
+  ///< returns the height of the Display's screen.
   
   void setPixelPerInch(double pixel_per_inch);
   ///< changes the pixel density (number of pixels per inch).
@@ -91,31 +102,31 @@ public:
        
   // - - - windows - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  virtual void add(UWin&);
+  virtual void add(Window&);
   /**< add a window (UFrame, UDialog, etc) to this display.
    * Note that windows are initially hidden, their show() method must be called
    * to make them visible. Moreover, as show() calculates the window size, it should
-   * called after adding the window children (see also: UWin::adjustSize()).
-   * @see: UAppli::add() and classes UWin, UFrame, UDialog, UMenu.
+   * called after adding the window children (see also: Window::adjustSize()).
+   * @see: Application::add() and classes Window, UFrame, UDialog, UMenu.
    */ 
   
-  void add(UWin*);
-  ///< see add(UWin&).
+  void add(Window*);
+  ///< see add(Window&).
     
-  virtual void remove(UWin&, bool auto_delete);
+  virtual void remove(Window&, bool auto_delete);
   /**< remove a window from this display.
-   * for explanations on 'auto_delete' see: UElem::remove()
+   * for explanations on 'auto_delete' see: Element::remove()
    */ 
     
-  void remove(UWin*, bool auto_delete);
-  ///< see remove(UWin&, bool auto_delete).
+  void remove(Window*, bool auto_delete);
+  ///< see remove(Window&, bool auto_delete).
   
   // - - - pointer - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  virtual void setPointerPos(const UPoint& screen_pos) = 0;
+  virtual void setPointerPos(const Point& screen_pos) = 0;
   ///< move the pointer to this position on the screen.
 
-  virtual UPoint getPointerPos() const = 0;
+  virtual Point getPointerPos() const = 0;
   ///< returns the position of the pointer on the screen.
 
   virtual int getPointerState() const = 0;
@@ -155,10 +166,10 @@ public:
   /**< returns the Event Flow for this channel on this display (null if not found).
     * 0 is the channel of the native Event Flow on this display. Don't confuse
     * channels with event flow IDs: channels depend on displays, while IDs are
-    * unique for the whole UAppli. For instance, if an appli is displayed on 2
+    * unique for the whole Application. For instance, if an appli is displayed on 2
     * displays, it will have (at least) 2 event flows, 1 on disp1 and 1 on disp2.
     * The channel of both event flow will be 0, but their IDs will differ.
-    * @see: UAppli class and UAppli::getFlow()
+    * @see: Application class and Application::getFlow()
     */
   
   UEventFlow* obtainChannelFlow(int channel);
@@ -167,29 +178,29 @@ public:
     * @see getDispFlow() for details.
     */
   
-  USelection* getChannelSelection(int channel);
+  Selection* getChannelSelection(int channel);
   /**< returns the text selection of a given event flow on this display.
     * @see getDispFlow() for details.
     */
   
   // - - - cut & paste - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  
-  const UStr& getCopyBuffer() const {return copy_buffer;}
+  const String& getCopyBuffer() const {return copy_buffer;}
   ///< returns the copy buffer.
 
-  UStr* getPasteTarget(int& pos) const;
+  String* getPasteTarget(int& pos) const;
   ///< [impl] returns the string (and the pos in this string) where the paste will take place.
     
   void clearPasteTarget();
   ///< [impl] clears the paste target.
 
-  virtual void copySelection(UMouseEvent&, USelection&);
+  virtual void copySelection(UMouseEvent&, Selection&);
   /**< [impl] copies the content of the selection in the copy buffer and tells the X server we own the X selection.
-  * note: there is 1 selection per UEventFlow but only 1 copy_buffer per UDisp
+  * note: there is 1 selection per UEventFlow but only 1 copy_buffer per Display
   */
   
-  virtual void pasteSelection(UMouseEvent&, UStr* paste_str, int paste_pos);
-  /**< [impl] pastes the X selection into this UStr at this pos.
+  virtual void pasteSelection(UMouseEvent&, String* paste_str, int paste_pos);
+  /**< [impl] pastes the X selection into this String at this pos.
     * ATTENTION: c'est lie a *chaque* disp et c'est ASYNCHRONE: le paste
     * n'est pas fait immediatement mais par appel ulterieur d'un callback
     */
@@ -201,11 +212,11 @@ public:
   URenderContext* getDefaultContext();  
   void makeDefaultContextCurrentIfNeeded();
   
-  void addHardwin(UWin*);
-  void removeHardwin(UWin*);
+  void addHardwin(Window*);
+  void removeHardwin(Window*);
   
   virtual unsigned long createColorPixel(const URgba&) = 0;  // for 2D_GRAPHICS
-  virtual UHardwinImpl* createWinImpl(UWin*) = 0;
+  virtual UHardwinImpl* createWinImpl(Window*) = 0;
   virtual UCursorImpl*  createCursorImpl(int curtype) = 0;
   virtual void          deleteCursorImpl(UCursorImpl*) = 0;
   
@@ -214,7 +225,7 @@ public:
    * IMPORTANT NOTES: 
    * - 1. fonts depends on the default Graphics Context (@see getDefaultGC()).
    *   Hence, when OpenGL is used, fonts can only be drawn by using this GC or by
-   *   a GC that shares the displaylists with this GC (@see UGraph::createGC)
+   *   a GC that shares the displaylists with this GC (@see Graph::createGC)
    * - 2. this function may change the current GC: the default GC will then become
    *   the current GC (by calling getDefaultGC()->makeCurrent()). Programs that use
    *   multiple GC may need to change the current GC after calling getFont().
@@ -246,9 +257,9 @@ public:
   UEventFlow* obtainFlow(unsigned int ev_state, int channel);
   ///< returns the corresponding Event Flow (creates it if does not already exist).
   
-  virtual void onPaint(UView* winview, float x, float y, float w, float h);
-  virtual void onResize(UView* winview, const UDimension& size);
-  void onResizeCB(UView* winview);
+  virtual void onPaint(View* winview, float x, float y, float w, float h);
+  virtual void onResize(View* winview, const Dimension& size);
+  void onResizeCB(View* winview);
 
   virtual bool setSelectionOwner(UMouseEvent&) {return false;}
   ///< [X11 only] tells the X-server the appli owns the X selection.
@@ -257,7 +268,7 @@ public:
   /**< [X11 only] asks the X selection.
     * cette fct ne recupere PAS tout de suite le contenu de la selection
     * mais entrainera un appel ulterieur de pasteSelectionCallback().
-    * the UEvent must be a button event. 
+    * the Event must be a button event. 
     */
   
   virtual void copySelectionCB(void* system_event) {}
@@ -274,24 +285,24 @@ public:
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 private:
-  friend class UAppli;
+  friend class Application;
   friend class UAppliImpl;
-  friend class UWin;
+  friend class Window;
   friend class UHardwinImpl;
-  friend class UView;
-  friend class UGraph;
-  friend class UEvent;
+  friend class View;
+  friend class Graph;
+  friend class Event;
   friend class UFontFamily;
   friend class UFontMetrics;
   friend class UGlcontext;
   friend class UGlcanvas;
-  friend class ULength;
+  friend class Length;
   friend class UFont;
-  UDisp(const UDisp&);
-  UDisp& operator=(const UDisp&); 
+  Display(const Display&);
+  Display& operator=(const Display&); 
   
 protected:
-  UDisp(const UStr& display_name);
+  Display(const String& display_name);
 
   virtual void startAppli() = 0;
   virtual void quitAppli() = 0;
@@ -302,8 +313,8 @@ protected:
   // detruit en premier ca ca entraine des destructions qui font reference
   // a flowlist => winlist doit etre declare en DERNIER
   int id;
-  UConf& conf;             // configuration data (may be shared with the UAppli)
-  UStr display_name;       // name of the X Display
+  UConf& conf;             // configuration data (may be shared with the Application)
+  String display_name;       // name of the X Display
   int bpp;                   // bit per pixel
   int depth_size, stencil_size;
   int screen_width, screen_height;
@@ -321,22 +332,22 @@ protected:
   HardwinList hardwin_list;  // list of hardwins that are event managed
 
   // copySelection() copies the content of the selection in this buffer
-  // note: there is 1 selection per UEventFlow but only 1 copy_buffer per UDisp
-  UStr copy_buffer;
+  // note: there is 1 selection per UEventFlow but only 1 copy_buffer per Display
+  String copy_buffer;
 
-  // pasteSelection() specifies that the selection will be pasted in this UStr
+  // pasteSelection() specifies that the selection will be pasted in this String
   // at this pos (uptr<> to avoid deletion)
-  uptr<UStr> paste_str;
+  uptr<String> paste_str;
   int paste_pos;
 
   // attention: winlist doit etre detruit en premier!
-  UElem winlist;  // list of windows belonging to this display
+  Element winlist;  // list of windows belonging to this display
     
   struct LastResize {
     LastResize() : count(0), winview(null) {}
     int count;
-    UView* winview;
-    UDimension newsize;
+    View* winview;
+    Dimension newsize;
   } last_resize;
   
 #endif // NO_DOC

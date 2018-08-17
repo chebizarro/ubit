@@ -1,6 +1,5 @@
-/************************************************************************
- *
- *  uflowview.cpp
+/*
+ *  flowview.cpp
  *  Ubit GUI Toolkit - Version 6.0
  *  (C) 2008 | Eric Lecolinet | ENST Paris | www.enst.fr/~elc/ubit
  *
@@ -37,7 +36,7 @@ namespace ubit {
 
 class UFlowCell {
 public:
-  UChild* link;
+  Child* link;
   int line;
   int offset, len;
   float w, h;
@@ -54,8 +53,8 @@ public:
 
 UViewStyle UFlowView::style(&UFlowView::createView, UObject::UCONST);
 
-UFlowView::UFlowView(UBox* box, UView* par_view, UHardwinImpl* wgraph) 
-: UView(box, par_view, wgraph) {
+UFlowView::UFlowView(Box* box, View* par_view, UHardwinImpl* wgraph) 
+: View(box, par_view, wgraph) {
   lines = null;
   cells = null;
   line_count = cell_count = 0;
@@ -63,7 +62,7 @@ UFlowView::UFlowView(UBox* box, UView* par_view, UHardwinImpl* wgraph)
 }
 
 // "static" constructor used by UViewStyle to make a new view
-UView* UFlowView::createView(UBox* box, UView* parview, UHardwinImpl* wgraph){
+View* UFlowView::createView(Box* box, View* parview, UHardwinImpl* wgraph){
   return new UFlowView(box, parview, wgraph);
 }
 
@@ -134,7 +133,6 @@ bool UFlowView::xyToCaretPos(int _x, int _y, long& _pos) const {
   return false;
 }
 
-/* ==================================================== ===== ======= */
 
 class UFlowLayoutImpl : public UViewLayoutImpl {
 public:
@@ -145,11 +143,10 @@ public:
   UFlowView* flowview;
 
   UFlowLayoutImpl(UFlowView *v);
-  void addLine(UUpdateContext* ctx);
-  void addCell(UUpdateContext* ctx, UChild*, float w, float h, int offset, int len);
+  void addLine(UpdateContext* ctx);
+  void addCell(UpdateContext* ctx, Child*, float w, float h, int offset, int len);
 };
 
-/* ==================================================== ======== ======= */
 
 UFlowLayoutImpl::UFlowLayoutImpl(UFlowView *v) : UViewLayoutImpl(v) {
   flowview = v;
@@ -162,9 +159,8 @@ UFlowLayoutImpl::UFlowLayoutImpl(UFlowView *v) : UViewLayoutImpl(v) {
   //!! faudra rajouter au addLine a la fin
 }
 
-/* ==================================================== ======== ======= */
 
-void UFlowLayoutImpl::addLine(UUpdateContext*ctx) {
+void UFlowLayoutImpl::addLine(UpdateContext*ctx) {
   // NB: pas forcement null : peut avoir ete alloue lors d'un precedent 
   // appel de Layout()
   if (!flowview->lines) {
@@ -195,9 +191,8 @@ void UFlowLayoutImpl::addLine(UUpdateContext*ctx) {
   line[l].hflexChildCount = 0;
 }
 
-/* ==================================================== ======== ======= */
 
-void UFlowLayoutImpl::addCell(UUpdateContext*ctx, UChild* _link, 
+void UFlowLayoutImpl::addCell(UpdateContext*ctx, Child* _link, 
                               float _w, float _h, int _offset, int _len) {
   if (!flowview->cells) {
     flowview->alloc_cell_count = CELL_QUANTUM;
@@ -224,7 +219,7 @@ void UFlowLayoutImpl::addCell(UUpdateContext*ctx, UChild* _link,
   cell[c].line = l;  
 
   // number of horizontally "flex"ible child objects
-  if (ctx->halign == UHalign::FLEX) line[l].hflexChildCount++;
+  if (ctx->halign == Halign::FLEX) line[l].hflexChildCount++;
 
   // line height is the max of all cell heights
   if (cell[c].h > line[l].h)  line[l].h = cell[c].h;
@@ -240,17 +235,17 @@ void UFlowLayoutImpl::addCell(UUpdateContext*ctx, UChild* _link,
 /* ==================================================== [Elc] ======= */
 // att: arg = parctx = PARENT context !
 
-bool UFlowView::doLayout(UUpdateContext& parctx, UViewLayout& vl) {
+bool UFlowView::doLayout(UpdateContext& parctx, UViewLayout& vl) {
   UFlowLayoutImpl vd(this);
-  UBox* box = getBox();
-  if (!box) {UAppli::internalError("UFlowView::doLayout","null box!");return false;}
+  Box* box = getBox();
+  if (!box) {Application::internalError("UFlowView::doLayout","null box!");return false;}
   
-  UUpdateContext ctx(parctx, box, this, null);
+  UpdateContext ctx(parctx, box, this, null);
   UMultiList mlist(ctx, *box);
   if (ctx.xyscale != 1.) ctx.rescale();
   scale = ctx.xyscale;
 
-  UPaddingSpec pad(0, 0);   // Border and Box size
+  PaddingSpec pad(0, 0);   // Border and Box size
 
   if (ctx.local.border) {                     // !! A COMPLETER !!
     ctx.local.border->getSize(ctx, pad);
@@ -297,7 +292,7 @@ bool UFlowView::doLayout(UUpdateContext& parctx, UViewLayout& vl) {
   if (vd.line[vd.l].empty && vd.c >= 0 
       && vd.cell[vd.c].link && (**vd.cell[vd.c].link)->toStr()) {
 
-    UStr*s = (**vd.cell[vd.c].link)->toStr();
+    String*s = (**vd.cell[vd.c].link)->toStr();
     int len = s ? s->length() : 0;
     vd.addCell(&ctx, vd.cell[vd.c].link, 
                2, // width: assez pour afficher le caret 
@@ -336,17 +331,16 @@ bool UFlowView::doLayout(UUpdateContext& parctx, UViewLayout& vl) {
   return vd.mustLayoutAgain;  // true if must lay out again
 }
 
-/* ==================================================== ===== ======= */
 //!! ctx pas parctx!
 
-void UFlowView::flowDoLayout(UFlowLayoutImpl&vd, UElem& grp, 
-                             UUpdateContext& ctx, UMultiList& mlist) {
+void UFlowView::flowDoLayout(UFlowLayoutImpl&vd, Element& grp, 
+                             UpdateContext& ctx, UMultiList& mlist) {
   // if this group is not null (which generally is the case) the object
   // it contains are added to children for normal display
   // (can for instance be used for adding list-item markers, checkboxes...
 
   if (ctx.local.content) {
-    UElem* content = ctx.local.content;     // pas de ctx, meme vd
+    Element* content = ctx.local.content;     // pas de ctx, meme vd
     ctx.local.content = null;	// avoid infinite recursion
     UMultiList mlist2(ctx, *content);
     //nb: dont rescale: deja a la bonne taille !!
@@ -355,13 +349,13 @@ void UFlowView::flowDoLayout(UFlowLayoutImpl&vd, UElem& grp,
 
   bool no_str_found = true;
 
-  for (UChildIter ch = mlist.begin(); ch != mlist.end(); mlist.next(ch))
+  for (ChildIter ch = mlist.begin(); ch != mlist.end(); mlist.next(ch))
     if (!ch.getCond() || ch.getCond()->verifies(ctx, grp)) {
-      UNode* b = (*ch);
-      UData* data = null;
-      UElem* chgrp = null;
-      UBox* chbox = null; 
-      UView* chview = null;
+      Node* b = (*ch);
+      Data* data = null;
+      Element* chgrp = null;
+      Box* chbox = null; 
+      View* chview = null;
       UViewLayout chvl; //att: reinit par constr.
       
       if (b->toAttr()) {
@@ -370,7 +364,7 @@ void UFlowView::flowDoLayout(UFlowLayoutImpl&vd, UElem& grp,
       
       else if ((chgrp = b->toElem()) && !chgrp->toBox()) {
         if (chgrp->isShowable()) {
-          UUpdateContext chcurp(ctx, chgrp, vd.view, null);   // own ctx, same vd
+          UpdateContext chcurp(ctx, chgrp, vd.view, null);   // own ctx, same vd
           UMultiList chmlist(chcurp, *chgrp);
           chcurp.rescale();
           flowDoLayout(vd, *chgrp, chcurp, chmlist);
@@ -381,16 +375,16 @@ void UFlowView::flowDoLayout(UFlowLayoutImpl&vd, UElem& grp,
       else if ((data = b->toData()) 
                ||
                (chgrp && (chbox = chgrp->toBox()) && chgrp->isShowable() 
-                && chbox->getDisplayType() == UElem::BLOCK
+                && chbox->getDisplayType() == Element::BLOCK
                 && (chview = chbox->getViewInImpl(vd.view /*,&ch.child()*/)))
                ) {
 
-        UStr* str = (data ? data->toStr() : null);
+        String* str = (data ? data->toStr() : null);
         if (str) {
           int offset = 0;
           do {
             //int subw, subh;
-            UDimension subdim(0,0);
+            Dimension subdim(0,0);
             int sublen = 0;
             int change_line = 0;
 
@@ -421,7 +415,7 @@ void UFlowView::flowDoLayout(UFlowLayoutImpl&vd, UElem& grp,
         } // endif(str)
 	
 	
-        // cas des enfants autre que UStr : sous-cas a)
+        // cas des enfants autre que String : sous-cas a)
         // -a- cas des floating
 	
         else if (chbox && chbox->isFloating()) {
@@ -432,12 +426,12 @@ void UFlowView::flowDoLayout(UFlowLayoutImpl&vd, UElem& grp,
           if (chvl.dim.height > vd.chheight) vd.chheight = chvl.dim.height;  
         }
 	
-        // cas des enfants autre que UStr: sous-cas b)
+        // cas des enfants autre que String: sous-cas b)
         // -b- tout le reste excepte les floating
 	
         else {
           //int ww=0, hh=0;
-          UDimension dim(0,0);
+          Dimension dim(0,0);
           
           if (data) data->getSize(ctx, dim);
           else {
@@ -454,7 +448,7 @@ void UFlowView::flowDoLayout(UFlowLayoutImpl&vd, UElem& grp,
               if (vd.line[vd.l].w >0) vd.addLine(&ctx);
               
               chview->width = vd.wlimit;     // chview->w modifie!
-              // pour que UView::computeWidth() fonctionne correctement
+              // pour que View::computeWidth() fonctionne correctement
               chvl.strategy = UViewLayout::NESTED;
             }
             
@@ -497,7 +491,7 @@ public:
   bool newline;
   UFlowView* flowview;
 
-  UFlowUpdateImpl(UFlowView* v, const URect& r, UViewUpdate& vup, 
+  UFlowUpdateImpl(UFlowView* v, const Rectangle& r, UViewUpdate& vup, 
                   UFlowLine* _lines, UFlowCell* _cells)
     : UViewUpdateImpl(v, r, vup) {
     flowview = v;
@@ -509,20 +503,19 @@ public:
   }
 };
 
-/* ==================================================== ======== ======= */
 //NB: mode SearchData: juste recuperer l'data et sa position sans redessiner
 //!ATT il faut IMPERATIVEMENT datactx != null dans le mode SearchData !
 //NB: clip est passe en valeur, pas r
 // parctx = parent context
 
-void UFlowView::doUpdate(UUpdateContext& parctx, URect r, URect clip, UViewUpdate& vup) {
-  if (!getBox()) {UAppli::internalError("UFlowView::doUpdate","null box!"); return;}
-  UBox& box = *getBox();
+void UFlowView::doUpdate(UpdateContext& parctx, Rectangle r, Rectangle clip, UViewUpdate& vup) {
+  if (!getBox()) {Application::internalError("UFlowView::doUpdate","null box!"); return;}
+  Box& box = *getBox();
 
   // test pas valable pour les FLOATING car leurs coords dependent de ctx
   // et sont donc changees apres creation et parsing de ce dernier
 
-  //if (!hasVMode(UView::FORCE_POS)) {  // cf. UView::doUpdate
+  //if (!hasVMode(View::FORCE_POS)) {  // cf. View::doUpdate
   if (!box.isFloating()) {
     this->setRect(r);
     if (clip.doIntersection(r) == 0) return;
@@ -535,21 +528,21 @@ void UFlowView::doUpdate(UUpdateContext& parctx, URect r, URect clip, UViewUpdat
 
   {
     UFlowUpdateImpl vd(this, r, vup, lines, cells);
-    UUpdateContext ctx(parctx, &box, this, &vd);
+    UpdateContext ctx(parctx, &box, this, &vd);
     UMultiList mlist(ctx, box);
-    UGraph* g = ctx.getGraph();  // g can be null !
+    Graph* g = ctx.getGraph();  // g can be null !
     //bool g_end = false;
     vd.edit = ctx.edit;
 
     if (ctx.xyscale != 1.) ctx.rescale();
     scale = ctx.xyscale;
 
-    //if (hasVMode(UView::FORCE_POS)) {
+    //if (hasVMode(View::FORCE_POS)) {
     if (box.isFloating()) {
       if (!updatePos(vd, box, ctx, r, clip, vup)) return;
     }
     
-    const USizeSpec& size = ctx.local.size;
+    const SizeSpec& size = ctx.local.size;
     if (size.width.unit==UPERCENT || size.width.unit==UPERCENT_CTR)
       width = vd.width = 
       size.width.toPixels(ctx.getDisp(), ctx.fontdesc, vd.view->width, 
@@ -565,7 +558,7 @@ void UFlowView::doUpdate(UUpdateContext& parctx, URect r, URect clip, UViewUpdat
       // subwindows must NOT be painted recursively:
       // - if the paint request is on a 1st level window, dont repaint its subwindows
       // - if the paint request is on a subwindow, it is repainted as hw==g->hardwin
-      UHardwinImpl* hw = ((UWin*)&box)->getHardwin(g->getDisp());
+      UHardwinImpl* hw = ((Window*)&box)->getHardwin(g->getDisp());
       if (!hw || hw != g->getHardwin()) vd.can_paint = false;
     }
     //else
@@ -592,7 +585,7 @@ void UFlowView::doUpdate(UUpdateContext& parctx, URect r, URect clip, UViewUpdat
     //		  r.width - vd.pad.right, r.height - vd.pad.bottom);
 
     // (mars06) paint & resize callbacks must be called after the painting of
-    // the background and before the painting of the children (ATT: que pour les UBox!)
+    // the background and before the painting of the children (ATT: que pour les Box!)
 
     // 02aug06: att: les resizeCB doivent etre appeles quand vd.can_paint = false
     if (box.hasCallback(UOn::VIEW_CHANGE_CB)) 
@@ -614,10 +607,10 @@ void UFlowView::doUpdate(UUpdateContext& parctx, URect r, URect clip, UViewUpdat
 
 /* ==================================================== [Elc] ======= */
 
-void UFlowView::flowDoUpdate(UFlowUpdateImpl& vd, UUpdateContext& ctx, 
-                             UElem& grp, UMultiList& mlist, 
-                             const URect& r, URect& clip, UViewUpdate&vup) {
-  UGraph& g = *ctx.getGraph();
+void UFlowView::flowDoUpdate(UFlowUpdateImpl& vd, UpdateContext& ctx, 
+                             Element& grp, UMultiList& mlist, 
+                             const Rectangle& r, Rectangle& clip, UViewUpdate&vup) {
+  Graph& g = *ctx.getGraph();
   vd.hflex_space = 0;
   vd.vflex_space = 0;
   
@@ -626,21 +619,21 @@ void UFlowView::flowDoUpdate(UFlowUpdateImpl& vd, UUpdateContext& ctx,
   // (can for instance be used for adding list-item markers, checkboxes...
   
   if (ctx.local.content) {
-    UElem* content = ctx.local.content;     // same ctx, same vd
+    Element* content = ctx.local.content;     // same ctx, same vd
     ctx.local.content = null;	// avoid infinite recursion
     UMultiList mlist2(ctx, *content);
     //nb: dont rescale() : deja fait !!
     flowDoUpdate(vd, ctx, *content, mlist2, r, clip, vup);
   }
   
-  for (UChildIter ch = mlist.begin(); ch != mlist.end(); mlist.next(ch))
+  for (ChildIter ch = mlist.begin(); ch != mlist.end(); mlist.next(ch))
     if (!ch.getCond() || ch.getCond()->verifies(ctx, grp)) {
 
-      UNode* b = (*ch);
-      UData* data = null; 
-      UElem* chgrp = null;
-      UBox* chbox = null;
-      UView* chview = null;
+      Node* b = (*ch);
+      Data* data = null; 
+      Element* chgrp = null;
+      Box* chbox = null;
+      View* chview = null;
 
       if (b->toAttr()) {
         b->toAttr()->putProp(&ctx, grp);
@@ -650,7 +643,7 @@ void UFlowView::flowDoUpdate(UFlowUpdateImpl& vd, UUpdateContext& ctx,
       
       else if ((chgrp = b->toElem()) && !chgrp->toBox()) {
         if (chgrp->isShowable()) {
-          UUpdateContext chctx(ctx, chgrp, vd.view, &vd);    // own ctx, same vd
+          UpdateContext chctx(ctx, chgrp, vd.view, &vd);    // own ctx, same vd
           UMultiList chmlist(chctx, *chgrp);
           chctx.rescale();
           flowDoUpdate(vd, chctx, *chgrp, chmlist, r, clip, vup);
@@ -663,20 +656,20 @@ void UFlowView::flowDoUpdate(UFlowUpdateImpl& vd, UUpdateContext& ctx,
       else if ((data = b->toData())
                ||
                (chgrp && (chbox = chgrp->toBox()) && chgrp->isShowable() 
-                && chbox->getDisplayType() == UElem::BLOCK
+                && chbox->getDisplayType() == Element::BLOCK
                 && (chview = chbox->getViewInImpl(vd.view /*,&ch.child()*/)))
                ) {
         
         // 1::cas des Floating
-        //if (chbox && chview->hasVMode(UView::FORCE_POS)) {
+        //if (chbox && chview->hasVMode(View::FORCE_POS)) {
         if (chbox && chbox->isFloating()) {
-          UDimension size = chview->getSize();
+          Dimension size = chview->getSize();
                     
           // !!!!!!  A COMPLETER !!! prendre en compte les Units du padding !!!!!!!
 
           //!att: on rajoute la MARGE: les coords sont locales 
           // % a l'INTERIEUR du CADRE et non % a l'origine de la Box.
-          URect fl_chr(r.x + vd.pad.left.val, r.y + vd.pad.top.val, 
+          Rectangle fl_chr(r.x + vd.pad.left.val, r.y + vd.pad.top.val, 
                        size.width, size.height);
                          
           // coords relatives rajoutees ensuite dans updateFloating
@@ -698,18 +691,18 @@ void UFlowView::flowDoUpdate(UFlowUpdateImpl& vd, UUpdateContext& ctx,
               vd.hflex_space = 0; // HALIGN
               
               switch (ctx.halign) {
-                case UHalign::LEFT:
+                case Halign::LEFT:
                   vd.chr.x = r.x + vd.pad.left.val;
                   break;
                   
-                case UHalign::CENTER:
+                case Halign::CENTER:
                   vd.chr.x = (r.width - vd.line[vd.l].w) / 2;
                   // box smaller than child ==> impose left pad
                   if (vd.chr.x < vd.pad.left.val)  vd.chr.x = vd.pad.left.val;
                     vd.chr.x += r.x;
                   break;
                   
-                case UHalign::RIGHT: 
+                case Halign::RIGHT: 
                   vd.chr.x = r.width - vd.line[vd.l].w - vd.pad.right.val;
                   // box smaller than child ==> impose left pad
                   if (vd.chr.x < vd.pad.left.val)  vd.chr.x = vd.pad.left.val;
@@ -734,7 +727,7 @@ void UFlowView::flowDoUpdate(UFlowUpdateImpl& vd, UUpdateContext& ctx,
             
             // !NOTE: pour les Datas FLEX == CENTER
             // Cas BOX et FLEX
-            if (!data && ctx.valign == UValign::FLEX) {
+            if (!data && ctx.valign == Valign::FLEX) {
               vd.chr.height = vd.line[vd.l].h;
               vd.chr.y = vd.line_y;
             }
@@ -744,7 +737,7 @@ void UFlowView::flowDoUpdate(UFlowUpdateImpl& vd, UUpdateContext& ctx,
             }
             
             // flexible horizontal object => add flexible width space
-            if (ctx.halign == UHalign::FLEX)
+            if (ctx.halign == Halign::FLEX)
               vd.chr.width = vd.cell[vd.c].w + vd.hflex_space;
             else vd.chr.width = vd.cell[vd.c].w;
             
@@ -761,7 +754,7 @@ void UFlowView::flowDoUpdate(UFlowUpdateImpl& vd, UUpdateContext& ctx,
                     && vd.chr.y < vd.chclip.y + vd.chclip.height) {
                   
                   g.setHardwinClip(vd.chclip);
-                  UStr* str = (data ? data->toStr() : null);
+                  String* str = (data ? data->toStr() : null);
                   
                   if (!str) data->paint(g, ctx, vd.chr);
                   else {
@@ -770,15 +763,15 @@ void UFlowView::flowDoUpdate(UFlowUpdateImpl& vd, UUpdateContext& ctx,
                     
                     //pbm subtil: 2 cas differents
                     //-1- newline (explicite par \n ou implicite par taille)
-                    //    au milieu d'une UStr --> test pos_in_string <strict
+                    //    au milieu d'une String --> test pos_in_string <strict
                     //    sinon le caret s'affiche 2 fois (debut+fin de ligne)
-                    //-2- newline implicite juste a la fin physique de la UStr
+                    //-2- newline implicite juste a la fin physique de la String
                     //    --> test >= sinon le caret va disparaitre
                     
                     int strpos = 0;
                     UFlowCell& cell = vd.cell[vd.c];
                     if (vd.edit
-                        && vd.edit->getCaretStr(strpos) == (const UStr*)str
+                        && vd.edit->getCaretStr(strpos) == (const String*)str
                         && strpos >= cell.offset
                         && (strpos < cell.offset + cell.len
                             || (vd.flowview->lastline_strcell > 0
@@ -854,19 +847,19 @@ void UFlowView::flowDoUpdate(UFlowUpdateImpl& vd, UUpdateContext& ctx,
 //                pas trouve' mais on peut encore trouver 
 //
 
-bool UFlowView::flowFindDataPos(UUpdateContext& ctx, UChildIter data_iter, UChildIter end_iter, 
-				UFlowCell* cell, const URect& r, UViewUpdate& vup) 
+bool UFlowView::flowFindDataPos(UpdateContext& ctx, ChildIter data_iter, ChildIter end_iter, 
+				UFlowCell* cell, const Rectangle& r, UViewUpdate& vup) 
 {
   if (!vup.datactx) {
-    UAppli::internalError("UFlowView::flowFindDataPos","null event or wrong type");
+    Application::internalError("UFlowView::flowFindDataPos","null event or wrong type");
     return false;
   }
-  const UPoint& evpos = vup.datactx->win_eventpos;
+  const Point& evpos = vup.datactx->win_eventpos;
   
   if (r.y > evpos.y) return true;  // plus rien a chercher (not found)
   
-  UData *data;
-  UStr *str;
+  Data *data;
+  String *str;
   
   if (evpos.y >= r.y && evpos.y <= r.y + r.height
       && ((data = (*data_iter)->toData()))) {
@@ -897,16 +890,16 @@ bool UFlowView::flowFindDataPos(UUpdateContext& ctx, UChildIter data_iter, UChil
 }
 
 
-bool UFlowView::flowFindDataPtr(UUpdateContext& ctx, 
-                                UChildIter data_iter, UChildIter end_iter, 
-                                UFlowCell*cell, const URect&r, UViewUpdate&vup) {  
-  UData *data;
+bool UFlowView::flowFindDataPtr(UpdateContext& ctx, 
+                                ChildIter data_iter, ChildIter end_iter, 
+                                UFlowCell*cell, const Rectangle&r, UViewUpdate&vup) {  
+  Data *data;
   if ((vup.datactx->it == data_iter || vup.datactx->data == *data_iter)
       && ((data = (*data_iter)->toData()))
       ) {
     
     if (!data->toStr()) {
-      // not an UStr: positions don't matter
+      // not an String: positions don't matter
       vup.datactx->set(ctx, data, data_iter, end_iter, r, vup.datactx->strpos, true);
       return true;
     }

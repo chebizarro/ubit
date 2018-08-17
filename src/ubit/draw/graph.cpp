@@ -1,18 +1,26 @@
-/* ***********************************************************************
- *
- *  ugraph.hpp: Graphics Layer
- *  Ubit GUI Toolkit - Version 6.0
- *  (C) 2008 Eric Lecolinet | ENST Paris | www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE : 
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE 
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. 
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU 
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION; 
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+/*
+ *  ugraph.h: Graphics Layer
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
+ *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
+
 
 #include <ubit/ubit_features.h> 
 #include <vector>
@@ -49,21 +57,21 @@ namespace ubit {
 
 
 #if UBIT_WITH_GL 
-  const int UGraph::LINE_STRIP = GL_LINE_STRIP, UGraph::LINE_LOOP = GL_LINE_LOOP, UGraph::FILLED = GL_POLYGON;
+  const int Graph::LINE_STRIP = GL_LINE_STRIP, Graph::LINE_LOOP = GL_LINE_LOOP, Graph::FILLED = GL_POLYGON;
 #else
-  const int UGraph::LINE_STRIP = 0x0003, UGraph::LINE_LOOP = 0x0002, UGraph::FILLED = 0x0009;
+  const int Graph::LINE_STRIP = 0x0003, Graph::LINE_LOOP = 0x0002, Graph::FILLED = 0x0009;
 #endif
 
 // ==================================================== [Ubit Toolkit] =========
 
-UGraph::UGraph(UView* v) {
-  rc = null; // securite pour ~UGraph
+Graph::Graph(View* v) {
+  rc = null; // securite pour ~Graph
   if (!v) {
-    UAppli::fatalError("UGraph::UGraph(UView*)","null UView argument: cannot create a UGraph");
+    Application::fatalError("Graph::Graph(View*)","null View argument: cannot create a Graph");
     return;
   }
   if (!(hardwin = v->getHardwin())) {
-    UAppli::fatalError("UGraph:UGraph(UView*)","null window: cannot create UGraph");
+    Application::fatalError("Graph:Graph(View*)","null window: cannot create Graph");
     return;
   }
   
@@ -72,7 +80,7 @@ UGraph::UGraph(UView* v) {
   font = null;
   font_styles = 0;
   //alpha = 1.;
-  if (UAppli::isUsingGL()) width = 1; else width = 0.;   // !!!
+  if (Application::isUsingGL()) width = 1; else width = 0.;   // !!!
   color = disp->getBlackPixel();
   bgcolor = disp->getWhitePixel();
   //color_rgba.set(0); color_rgba.components[3] = 255;
@@ -84,7 +92,7 @@ UGraph::UGraph(UView* v) {
 
   // cas ou on voudrait creer un rc reutilisable
   // rc_mode = OWN_rc;
-  // rc = UGraph::createRenderContext(disp, null/*sharelists*/);  sharelists???
+  // rc = Graph::createRenderContext(disp, null/*sharelists*/);  sharelists???
   
 #if UBIT_WITH_GLUT
   if (hardwin->glcontext) rc = hardwin->glcontext;
@@ -96,7 +104,7 @@ UGraph::UGraph(UView* v) {
   
   UGlcanvas* glcanvas = dynamic_cast<UGlcanvas*>(hardwin->win);
   if (glcanvas) {
-    UPoint pt = hardwin->getPos();
+    Point pt = hardwin->getPos();
     rc->setDest(hardwin, -pt.x, -pt.y);
   }
   else rc->setDest(hardwin, 0, 0);
@@ -111,15 +119,15 @@ UGraph::UGraph(UView* v) {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-UGraph::UGraph(UPaintEvent& e) {
-  rc = null; // securite pour ~UGraph
-  UUpdateContext* c = e.current_context;
-  UGraph* g = c ? c->getGraph() : null;
+Graph::Graph(UPaintEvent& e) {
+  rc = null; // securite pour ~Graph
+  UpdateContext* c = e.current_context;
+  Graph* g = c ? c->getGraph() : null;
   if (g == null || g->rc == null) {
-    UAppli::fatalError("UGraph::UGraph(UPaintEvent&)","null graphics context: cannot create UGraph");
+    Application::fatalError("Graph::Graph(UPaintEvent&)","null graphics context: cannot create Graph");
     return;
   }
-  UView* v = e.getView();  
+  View* v = e.getView();  
   boxview = v;
   disp = g->disp;
   hardwin = g->hardwin;
@@ -156,7 +164,7 @@ UGraph::UGraph(UPaintEvent& e) {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-UGraph::~UGraph() {
+Graph::~Graph() {
   if (rc == null) return;
   
   if (is_client) {
@@ -176,32 +184,32 @@ UGraph::~UGraph() {
 
 // ==================================================== [Ubit Toolkit] =========
 
-int UGraph::Glpaint::count = 0;
+int Graph::Glpaint::count = 0;
 
-UGraph::Glpaint::Glpaint(UPaintEvent& e, bool _push_attrib) {
+Graph::Glpaint::Glpaint(UPaintEvent& e, bool _push_attrib) {
   begin(e.getView(), _push_attrib);
 }
 
-UGraph::Glpaint::Glpaint(UView* v, bool _push_attrib) {
+Graph::Glpaint::Glpaint(View* v, bool _push_attrib) {
   begin(v, _push_attrib);
 }
 
-UGraph::Glpaint:: ~ Glpaint() {   
+Graph::Glpaint:: ~ Glpaint() {   
   end();
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UGraph::Glpaint::begin(UView* v, bool _push_attrib) {
+void Graph::Glpaint::begin(View* v, bool _push_attrib) {
   no = ++count;
   push_attrib = _push_attrib;
   hardwin = null;
 
-  UView* winview = null;
+  View* winview = null;
   if (!v 
       || !(winview = v->getWinView())
       || !(hardwin = v->getHardwin())) {
-    UAppli::error("UGraph::GLpaint","null or invalid view");
+    Application::error("Graph::GLpaint","null or invalid view");
     return;
   }
   
@@ -225,16 +233,16 @@ void UGraph::Glpaint::begin(UView* v, bool _push_attrib) {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UGraph::Glpaint::end() {   
+void Graph::Glpaint::end() {   
   if (!hardwin) return;  
   //cerr << "< GLSection " << no << " : " <<hardwin <<endl;
   
   if (push_attrib) glPopAttrib();
   
   // reset to normal GUI rendering 
-  UGraph::setViewportOrtho(hardwin);
+  Graph::setViewportOrtho(hardwin);
   
-  //UDimension size = hardwin->getSize();
+  //Dimension size = hardwin->getSize();
   glEnable(GL_CLIP_PLANE0);
   glEnable(GL_CLIP_PLANE1);
   glEnable(GL_CLIP_PLANE2);
@@ -247,14 +255,14 @@ void UGraph::Glpaint::end() {
 /*
 void UPaintEvent::beginGL() {
 #if UBIT_WITH_GL
-  UView* winview = null;
+  View* winview = null;
   UHardwinImpl* hardwin = null;
   
   if (!source_view 
       || !(winview = source_view->getWinView())
       || !(hardwin = source_view->getHardwin())
       ) {
-    UAppli::internalError("UPaintEvent::beginGL","Null window view, function failed");
+    Application::internalError("UPaintEvent::beginGL","Null window view, function failed");
     return;
   }
   
@@ -277,13 +285,13 @@ void UPaintEvent::beginGL() {
 
 void UPaintEvent::endGL() {
 #if UBIT_WITH_GL
-  UView* winview = null;
+  View* winview = null;
   UHardwinImpl* hardwin = null;
   
   if (!source_view || !(winview = source_view->getWinView())
       || !(hardwin = source_view->getHardwin())
       ) {
-    UAppli::internalError("UPaintEvent::endGL","Null window view, function failed");
+    Application::internalError("UPaintEvent::endGL","Null window view, function failed");
     return;
   }
   
@@ -292,7 +300,7 @@ void UPaintEvent::endGL() {
   // reset to normal viewport rendering (does nothing if this hardwin is a subwin)
   //cerr << "endGL: "<<source_view<< " " << hardwin<<endl;
   
-  UGraph::setViewportOrtho(hardwin);
+  Graph::setViewportOrtho(hardwin);
   glEnable(GL_CLIP_PLANE0);
   glEnable(GL_CLIP_PLANE1);
   glEnable(GL_CLIP_PLANE2);
@@ -301,15 +309,15 @@ void UPaintEvent::endGL() {
 }
 */
 /*
- void UGraph::beginBlend(const URect& clip, float _alpha) {
+ void Graph::beginBlend(const Rectangle& clip, float _alpha) {
    blend_mode = TRUE_BLEND;
    alpha = _alpha;
  }
-void UGraph::endBlend() {
+void Graph::endBlend() {
    alpha = 1.;
  }
 
-void UGraph::fillBackground(const URect& clip, const UColor& c, float _alpha) {
+void Graph::fillBackground(const Rectangle& clip, const Color& c, float _alpha) {
   if (_alpha == 1.) {
     setColor(c);
     fillRect(clip.x, clip.y, clip.width, clip.height);
@@ -320,7 +328,7 @@ void UGraph::fillBackground(const URect& clip, const UColor& c, float _alpha) {
   }
 }
 
- void UGraph::setGLDefaults() {
+ void Graph::setGLDefaults() {
  glShadeModel(GL_FLAT);
  glDisable(GL_COLOR_MATERIAL);
  glClearDepth(1.0f);
@@ -329,22 +337,22 @@ void UGraph::fillBackground(const URect& clip, const UColor& c, float _alpha) {
  */
 // ==================================================== [Ubit Toolkit] =========
 
-void UGraph::set3Dmode(bool state) {
+void Graph::set3Dmode(bool state) {
   in_3d_mode = state;
   rc->set3Dmode(state);
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UGraph::setViewportOrtho(UHardwinImpl* hw) {
+void Graph::setViewportOrtho(UHardwinImpl* hw) {
 # if UBIT_WITH_GL
-  if (! UAppli::isUsingGL()) return;
+  if (! Application::isUsingGL()) return;
     
   // NB SDL: il faudrait rappeler SDL_SetVideoMode mais cette fct detruit le contexte OpenGL!
   // mainframe.sys_win = SDL_SetVideoMode(w,h, sys_visual->BitsPerPixel, SDL_OPENGL|SDL_RESIZABLE);
-  UDimension size = hw->getSize();
+  Dimension size = hw->getSize();
   
-  //cerr << "UGraph::setViewportOrtho: syswin "  << ((UHardwinImplX11*)hw)->sys_win
+  //cerr << "Graph::setViewportOrtho: syswin "  << ((UHardwinImplX11*)hw)->sys_win
   //  << " size " << int(size.width)<< " " << int(size.height) << endl;
   
   glViewport(0, 0, int(size.width), int(size.height));
@@ -358,12 +366,12 @@ void UGraph::setViewportOrtho(UHardwinImpl* hw) {
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// UGraph: noter que le Clip est relatif a la View attachee
+// Graph: noter que le Clip est relatif a la View attachee
 // - NB: verifier que le Clip est bien inclus dans la View et prendre le min
 // - !ATT: on ne tient pas compte dy cas ou r.x ou r.y  < 0  !!!
 
-void UGraph::setClip(const URect& r) {
-  URect clip;
+void Graph::setClip(const Rectangle& r) {
+  Rectangle clip;
   if (r.x >= boxview->getWidth() || r.y >= boxview->getHeight()) {
     clip.width = 0; clip.height = 0;
   }
@@ -380,91 +388,91 @@ void UGraph::setClip(const URect& r) {
   rc->setClip(boxview->x + r.x, boxview->y + r.y, clip.width, clip.height);
 }
 
-void UGraph::setHardwinClip(const URect& r) {
+void Graph::setHardwinClip(const Rectangle& r) {
   rc->setClip(r.x + rc->xwin, r.y + rc->ywin, r.width, r.height);
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UGraph::getClip(URect& r) const {
+void Graph::getClip(Rectangle& r) const {
   r.x = rc->clip.x - rc->xwin - boxview->x;
   r.y = rc->clip.y - rc->ywin - boxview->y;
   r.width  = rc->clip.width;
   r.height = rc->clip.height;
 }
 
-void UGraph::getHardwinClip(URect& r) const {
+void Graph::getHardwinClip(Rectangle& r) const {
   r.x = rc->clip.x - rc->xwin;
   r.y = rc->clip.y - rc->ywin;
   r.width  = rc->clip.width;
   r.height = rc->clip.height;
 }
 
-void UGraph::getWinOffset(float& x, float& y) const {
+void Graph::getWinOffset(float& x, float& y) const {
   x = rc->xwin;
   y = rc->ywin;
 }
 
-void UGraph::setWinOffset(float x, float y) const {
+void Graph::setWinOffset(float x, float y) const {
   rc->setOffset(x, y);
 }
 
 // ============================================================ [Ubit] =========
 
-UBox* UGraph::getBox() const {return boxview ? boxview->getBox() : null;}
+Box* Graph::getBox() const {return boxview ? boxview->getBox() : null;}
 
-void UGraph::setPaintMode() {
+void Graph::setPaintMode() {
   in_xor_mode = false;
   if (rc) rc->setPaintMode(*this);
 }
 
-void UGraph::setXORMode(const UColor& bg) {
+void Graph::setXORMode(const Color& bg) {
   in_xor_mode = true;
   if (rc) rc->setXORMode(*this, bg);
 }
 
-//void UGraph::setAlpha(float a) {alpha = a;}
+//void Graph::setAlpha(float a) {alpha = a;}
 
-void UGraph::setColor(const UColor& c) {
+void Graph::setColor(const Color& c) {
   if (rc) rc->setColor(*this, c);
 }
 
-void UGraph::setColor(const UColor& c, float a) {
-  UColor c2(c, a);
+void Graph::setColor(const Color& c, float a) {
+  Color c2(c, a);
   if (rc) rc->setColor(*this, c2);
 }
 
-void UGraph::setColor(const UColor& c, unsigned int a) {
-  UColor c2(c, a);
+void Graph::setColor(const Color& c, unsigned int a) {
+  Color c2(c, a);
   if (rc) rc->setColor(*this, c2);
 }
 
-void UGraph::setBackground(const UColor& c) {
+void Graph::setBackground(const Color& c) {
   if (rc) rc->setBackground(*this, c);
 }
 
 // for X11 the default value is 0, which sets thickness to 1 pixel
 // and optimizes drawing routines
-float UGraph::getWidth() const {return width;}
+float Graph::getWidth() const {return width;}
 
-void UGraph::setWidth(float w) {
+void Graph::setWidth(float w) {
   width = w;
   if (rc) rc->setWidth(*this, w);
 }
 
-void UGraph::getFontMetrics(const UFont& f, UFontMetrics& fm) const {
+void Graph::getFontMetrics(const UFont& f, UFontMetrics& fm) const {
   fm.set(f, disp);
 }
 
-void UGraph::setFont(const UFont& f) {
+void Graph::setFont(const UFont& f) {
   UFontDesc fd(f);
   setFont(fd);
 }
 
-void UGraph::setFont(const UFontDesc& fd) {
+void Graph::setFont(const UFontDesc& fd) {
   UHardFont* f = disp->getFont(&fd);
   if (!f) {
-    UAppli::error("UGraph::setFont","null font");
+    Application::error("Graph::setFont","null font");
     return;
   }
   font = f;
@@ -474,80 +482,80 @@ void UGraph::setFont(const UFontDesc& fd) {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UGraph::flush() const {
+void Graph::flush() const {
   rc->flush();
 }
 
 // ============================================================ [Ubit] =========
 // drawing
 
-void UGraph::draw(const UShape& s) const {
+void Graph::draw(const Shape& s) const {
   s.draw(*this);
 }
 
-void UGraph::fill(const UShape& s) const {
+void Graph::fill(const Shape& s) const {
   s.fill(*this);
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UGraph::drawArc(double x, double y, double w, double h, double start, double ext) const {
+void Graph::drawArc(double x, double y, double w, double h, double start, double ext) const {
   rc->drawArc(x, y, w, h, start, ext, false); // not filled
 }
 
-void UGraph::fillArc(double x, double y, double w, double h, double start, double ext) const {
+void Graph::fillArc(double x, double y, double w, double h, double start, double ext) const {
   rc->drawArc(x, y, w, h, start, ext, true); // filled
 }
 
-void UGraph::drawEllipse(double x, double y, double w, double h) const {
+void Graph::drawEllipse(double x, double y, double w, double h) const {
   rc->drawArc(x, y, w, h, 0., 360., false);
 }
 
-void UGraph::fillEllipse(double x, double y, double w, double h) const {
+void Graph::fillEllipse(double x, double y, double w, double h) const {
   rc->drawArc(x, y, w, h, 0., 360., true); // filled
 }
 
-void UGraph::drawIma(const UIma& ima, double x, double y, double scale) const {
+void Graph::drawIma(const Image& ima, double x, double y, double scale) const {
   if (ima.getNatImas().empty()) ima.realize(0,0, getDisp(), true);  // creer l'original
   rc->drawIma(*this, ima, x, y, scale);
 }
 
-void UGraph::drawLine(double x1, double y1, double x2, double y2) const {
+void Graph::drawLine(double x1, double y1, double x2, double y2) const {
   rc->drawLine(x1, y1, x2, y2);
 }
 
-void UGraph::drawLine(const UPoint& p1, const UPoint& p2) const {
+void Graph::drawLine(const Point& p1, const Point& p2) const {
   rc->drawLine(p1.x, p1.y, p2.x, p2.y);
 }
 
 // type is one of LINE_STRIP (polyline), LINE_LOOP (polygon), FILLED (filled polygon).
-void UGraph::drawPolygon(const std::vector<UPoint>& points, int polytype) const {
+void Graph::drawPolygon(const std::vector<Point>& points, int polytype) const {
   rc->drawPolygon(points, polytype);
 }
 
-void UGraph::drawPolygon(const float* coords2d, int card, int polytype) const {
+void Graph::drawPolygon(const float* coords2d, int card, int polytype) const {
   rc->drawPolygon(coords2d, card, polytype);
 }
 
-void UGraph::drawRect(double x, double y, double w, double h) const {
+void Graph::drawRect(double x, double y, double w, double h) const {
   rc->drawRect(x, y, w, h, false);
 }
 
-void UGraph::fillRect(double x, double y, double w, double h) const {
+void Graph::fillRect(double x, double y, double w, double h) const {
   rc->drawRect(x, y, w, h, true); // filled
 }
 
-void UGraph::drawRoundRect(double x, double y, double w, double h, 
+void Graph::drawRoundRect(double x, double y, double w, double h, 
                            double arc_w, double arc_h) const { 
   rc->drawRoundRect(x, y, w, h, arc_w, arc_h, false);
 }
 
-void UGraph::fillRoundRect(double x, double y, double w, double h, 
+void Graph::fillRoundRect(double x, double y, double w, double h, 
                            double arc_w, double arc_h) const { 
   rc->drawRoundRect(x, y, w, h, arc_w, arc_h, true);
 }
 
-void UGraph::copyArea(double x, double y, double w, double h, 
+void Graph::copyArea(double x, double y, double w, double h, 
                       double delta_x, double delta_y,
                       bool generate_refresh_events_when_obscured) const
 {
@@ -557,11 +565,11 @@ void UGraph::copyArea(double x, double y, double w, double h,
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // strings
 
-void UGraph::drawString(const UStr& s, double x, double y) const {
+void Graph::drawString(const String& s, double x, double y) const {
   drawString(s.c_str(), s.length(), x, y);
 }
 
-void UGraph::drawString(const char* str, int str_len, double x, double y) const {
+void Graph::drawString(const char* str, int str_len, double x, double y) const {
   if (!str || str_len <= 0) return;
 
   if (str[str_len-1] == '\n') {  // ne pas afficher le \n final
@@ -571,11 +579,11 @@ void UGraph::drawString(const char* str, int str_len, double x, double y) const 
   
   UHardFont* nf = font;     // NB: pourrait etre dans le constructeur
   if (!nf) {
-    UGraph* g = const_cast<UGraph*>(this);
-    g->setFont(*UAppli::conf.default_font);
+    Graph* g = const_cast<Graph*>(this);
+    g->setFont(*Application::conf.default_font);
     nf = font;
     if (!nf) {
-      UAppli::error("UGraph::drawString","null font");
+      Application::error("Graph::drawString","null font");
       return;
     }
   }
@@ -588,10 +596,10 @@ void UGraph::drawString(const char* str, int str_len, double x, double y) const 
   if (font_styles > UFont::BOLD+UFont::ITALIC) {
     
     if (font_styles & UFont::FILL) {
-      ((UGraph*)this)->setColor(UColor::lightblue);    // !!!!!!!!!!!&&& TEST @@@@
+      ((Graph*)this)->setColor(Color::lightblue);    // !!!!!!!!!!!&&& TEST @@@@
       float h = fontAscent + fontDescent;
       rc->drawRect(x, y, textWidth, h, true); // filled
-      ((UGraph*)this)->setColor(UColor::navy);     // !!!!!!!!!!!!!&&&!!!!!!!!
+      ((Graph*)this)->setColor(Color::navy);     // !!!!!!!!!!!!!&&&!!!!!!!!
     }
     
     if (font_styles & UFont::UNDERLINE) {

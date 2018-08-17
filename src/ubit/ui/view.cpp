@@ -1,18 +1,25 @@
-/************************************************************************
- *
- *  uview.cpp
- *  Ubit GUI Toolkit - Version 6
+/*
+ *  view.cpp
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE :
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION;
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
 
 #include <ubit/ubit_features.h>
 #include <iostream>
@@ -27,37 +34,37 @@
 #include <ubit/ugraph.hpp>
 #include <ubit/ufontmetrics.hpp>
 #include <ubit/uon.hpp>
-#include <ubit/uevent.hpp>
+#include <ubit/core/event.h>
 using namespace std;
 namespace ubit {
 
 
 
-UViewStyle::UViewStyle(UView*(*make_view)(UBox*, UView*, UHardwinImpl*), UConst c) 
-: UAttr(c), createView(make_view) {}
+UViewStyle::UViewStyle(View*(*make_view)(Box*, View*, UHardwinImpl*), UConst c) 
+: Attribute(c), createView(make_view) {}
 
-void UViewStyle::addingTo(UChild& c, UElem& parent) {
-  UNode::addingTo(c, parent);
+void UViewStyle::addingTo(Child& c, Element& parent) {
+  Node::addingTo(c, parent);
   if (parent.emodes.HAS_LAYOUT) {
-    UAppli::warning("UViewStyle::addingTo","This UViewStyle object (%p) has a parent (%s %p) that contains another UViewStyle object", this, &parent.getClassName(), &parent);
+    Application::warning("UViewStyle::addingTo","This UViewStyle object (%p) has a parent (%s %p) that contains another UViewStyle object", this, &parent.getClassName(), &parent);
   }
   parent.emodes.HAS_LAYOUT = true;
 }
 
-void UViewStyle::removingFrom(UChild& c, UElem& parent) {
+void UViewStyle::removingFrom(Child& c, Element& parent) {
   parent.emodes.HAS_LAYOUT = false;
-  UNode::removingFrom(c, parent);
+  Node::removingFrom(c, parent);
 }
 
 // ==================================================== [ELC] ==================
 
-UViewStyle UView::style(&UView::createView, UViewStyle::UCONST);
+UViewStyle View::style(&View::createView, UViewStyle::UCONST);
 
-UView* UView::createView(UBox* box, UView* parview, UHardwinImpl* w) {
-  return new UView(box, parview, w);
+View* View::createView(Box* box, View* parview, UHardwinImpl* w) {
+  return new View(box, parview, w);
 }
 
-UView::UView(UBox*_box, UView*_parview, UHardwinImpl* w) :
+View::View(Box*_box, View*_parview, UHardwinImpl* w) :
 vmodes(0),
 scale(1.),
 chwidth(0.), chheight(0.),
@@ -67,50 +74,50 @@ parview(_parview), box(_box), hardwin(w),
 next(null) {
 }
 
-UView::~UView() {
+View::~View() {
   addVModes(DESTRUCTED);  // this view has been destructed
   for (UViewProps::iterator i = props.begin(); i != props.end(); ++i) delete (*i);  
   next = null;
-  UAppli::deleteNotify(this); // notifies the Appli that this view has been destructed
+  Application::deleteNotify(this); // notifies the Appli that this view has been destructed
 }
 
-void UView::operator delete(void* p) {
+void View::operator delete(void* p) {
   if (!p) return;
-  if (UAppli::impl.isTerminated()) ::operator delete(p);
-  else UAppli::impl.addDeleteRequest(static_cast<UView*>(p));
+  if (Application::impl.isTerminated()) ::operator delete(p);
+  else Application::impl.addDeleteRequest(static_cast<View*>(p));
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-bool   UView::isRealized() const {return hardwin && hardwin->isRealized();}
-UDisp* UView::getDisp()    const {return hardwin ? hardwin->disp : null;}
-UWin*  UView::getWin()     const {return hardwin ? hardwin->win : null;}
+bool   View::isRealized() const {return hardwin && hardwin->isRealized();}
+Display* View::getDisp()    const {return hardwin ? hardwin->disp : null;}
+Window*  View::getWin()     const {return hardwin ? hardwin->win : null;}
 
-UView* UView::getWinView() const {
+View* View::getWinView() const {
   if (!hardwin || !hardwin->win) return null; 
   else return hardwin->win->views;      // OPTIMISATION: suppose une seule Hardwin par disp !!
 }
 
-void UView::setParentView(UView* pv) {
+void View::setParentView(View* pv) {
   parview = pv;
   hardwin = pv->hardwin;
 }
 
-UBox* UView::getBoxParent() const {
+Box* View::getBoxParent() const {
   return parview ? parview->getBox() : null;
 }
 
-bool UView::isChildOf(const vector<UView*>& parent_views) {
+bool View::isChildOf(const vector<View*>& parent_views) {
   for (unsigned int k = 0; k < parent_views.size(); k++) {
     if (parview == parent_views[k]) return true;
   }
   return false;
 }
 
-bool UView::isShown() const {                 // devrait etre optimise !!!
+bool View::isShown() const {                 // devrait etre optimise !!!
   // ex: 4nov06: plantage dans destructeurs: getBox() peut alors etre nul
   // if (!getBox()->isShowable()) return false;
-  UBox* b = getBox();
+  Box* b = getBox();
   if (!b || !b->isShowable()) return false;
   if (!parview)              // cas hardwin, parent_view is null !!
     return b->isShown();
@@ -120,7 +127,7 @@ bool UView::isShown() const {                 // devrait etre optimise !!!
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /*
- //void setPos(const UPoint&);
+ //void setPos(const Point&);
  * changes the position of the view (see details).
  * Note that most box views are layed out automatically. Calling setPos()
  * on such views won't have the expected effect because their position is
@@ -129,17 +136,17 @@ bool UView::isShown() const {                 // devrait etre optimise !!!
  //void setAutoPositioning(bool);
  // speficies update policy when the object is modified.
  
- UBox* UView::getBox() const {
- UBox* b = null;
+ Box* View::getBox() const {
+ Box* b = null;
  if (!childnode || !(b = (**childnode)->toBox())) {
  //ne pas faire car peut arriver dans etape de destruction
- //UAppli::internalError("UView::getBox","this UView has no corresponding UBox");
+ //Application::internalError("View::getBox","this View has no corresponding Box");
  return null;
  }
  else return b;
  }
 
-void UView::setPos(const UPoint& p) {
+void View::setPos(const Point& p) {
   if (hasVMode(FORCE_POS)) {
     UViewForcePosProp* sp = null;
     obtainProp(sp);
@@ -151,7 +158,7 @@ void UView::setPos(const UPoint& p) {
   }
 }
 
-void UView::setAutoPositioning(bool autopos) {
+void View::setAutoPositioning(bool autopos) {
   if (autopos) removeVModes(FORCE_POS);
   else {
     addVModes(FORCE_POS);
@@ -161,49 +168,49 @@ void UView::setAutoPositioning(bool autopos) {
 }
 */
 /* EX:
-UPoint UView::getTopWinPos() const {
-  return UPoint(x, y);
+Point View::getTopWinPos() const {
+  return Point(x, y);
 }
 
-UPoint UView::getWinPos() const {
-  UView* winview = getWinView();
+Point View::getWinPos() const {
+  View* winview = getWinView();
   // must return (0,0) for a subwindow's view
-  if (!winview || this == winview) return UPoint(0,0);
-  else return UPoint(x, y);
+  if (!winview || this == winview) return Point(0,0);
+  else return Point(x, y);
 }
 */
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-UDimension UView::getSize() const {return UDimension(width, height);}
-void UView::setSize(const UDimension& s) {width = s.width; height = s.height;}
+Dimension View::getSize() const {return Dimension(width, height);}
+void View::setSize(const Dimension& s) {width = s.width; height = s.height;}
 
-float UView::getX() const {if (parview) return x - parview->x; else return x;}
-float UView::getY() const {if (parview) return y - parview->y; else return y;}
+float View::getX() const {if (parview) return x - parview->x; else return x;}
+float View::getY() const {if (parview) return y - parview->y; else return y;}
 
-UPoint UView::getPos() const {
-  if (parview) return UPoint(x - parview->x, y - parview->y);
-  else return UPoint(x, y);
+Point View::getPos() const {
+  if (parview) return Point(x - parview->x, y - parview->y);
+  else return Point(x, y);
 }
 
-UPoint UView::getHardwinPos() const {
-  return UPoint(x, y);
+Point View::getHardwinPos() const {
+  return Point(x, y);
 }
 
-UPoint UView::getGLPos() const {
-  UView* winview = getWinView();
+Point View::getGLPos() const {
+  View* winview = getWinView();
   // must return (0,0) for a subwindow's view
-  if (!winview || this == winview) return UPoint(0,0);
-  else return UPoint(x, winview->height - height - y);
+  if (!winview || this == winview) return Point(0,0);
+  else return Point(x, winview->height - height - y);
 }
 
-UPoint UView::getScreenPos() const {
-  UWin* w = getWin();
-  if (!w) return UPoint(0,0);
+Point View::getScreenPos() const {
+  Window* w = getWin();
+  if (!w) return Point(0,0);
   else {
-    UPoint p = w->getScreenPos(getDisp());
+    Point p = w->getScreenPos(getDisp());
     // dans le cas des hardwin et softwin il n'y a rien a ajouter
     // (et dans le cas des softwins on ajouterait 2 fois x et y)
-    UBox* b = getBox();
+    Box* b = getBox();
     if (!b || !b->toWin()) {
       p.x += x;
       p.y += y;
@@ -212,72 +219,72 @@ UPoint UView::getScreenPos() const {
   }
 }
 
-UPoint UView::getPosIn(UView& ref_view) const {
-  return convertPosTo(ref_view, *this, UPoint(0,0));
+Point View::getPosIn(View& ref_view) const {
+  return convertPosTo(ref_view, *this, Point(0,0));
 }
 
-UPoint UView::convertPosTo(const UView& to, const UView& from, const UPoint& from_pos) {
+Point View::convertPosTo(const View& to, const View& from, const Point& from_pos) {
   // marche que si both view in same win
   if (to.hardwin == from.hardwin) {
-    return UPoint(from_pos.x + from.x - to.x, from_pos.y + from.y - to.y);
+    return Point(from_pos.x + from.x - to.x, from_pos.y + from.y - to.y);
   }
 
   // on devrait plutot comparer les Screens !!!
   if (to.getDisp() == from.getDisp()) {
-    UPoint frompos = from.getScreenPos();
-    UPoint topos = to.getScreenPos();
-    return UPoint(from_pos.x + frompos.x - topos.x, from_pos.y + frompos.y - topos.y);
+    Point frompos = from.getScreenPos();
+    Point topos = to.getScreenPos();
+    return Point(from_pos.x + frompos.x - topos.x, from_pos.y + frompos.y - topos.y);
   }
   
-  return UPoint(0,0);
+  return Point(0,0);
 }
 
-bool UView::caretPosToXY(long _pos, int& _x, int& _y) const {
+bool View::caretPosToXY(long _pos, int& _x, int& _y) const {
   _y = 0;
   _x = _pos;
   return true;
 }
 
-bool UView::xyToCaretPos(int _x, int _y, long& _pos) const {
+bool View::xyToCaretPos(int _x, int _y, long& _pos) const {
   _pos = _x;
   return (_y == 0);
 }
 
 // =========================================================== [Elc] ===========
 
-void UView::updatePaintData(const URect* winrect) {     // window coordinates
-  UView* winview = getWinView();
+void View::updatePaintData(const Rectangle* winrect) {     // window coordinates
+  View* winview = getWinView();
   if (!winview) return;
   if (!winrect) winrect = this;
   
   UWinUpdateContext winctx(winview, null);
   UViewUpdate vup(UViewUpdate::UPDATE_DATA);
-  addVModes(UView::DAMAGED);
+  addVModes(View::DAMAGED);
   winview->doUpdate(winctx, *winview, *winrect, vup);
-  //inutile: setVmodes(UView::DAMAGED, false);
+  //inutile: setVmodes(View::DAMAGED, false);
   //return vup.above_damaged_count;
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UView::updatePaint(const URect* winrect) {     // window coordinates
-  UView* winview = getWinView();
+void View::updatePaint(const Rectangle* winrect) {     // window coordinates
+  View* winview = getWinView();
   if (!winview) return;
   if (!winrect) winrect = this;
 
   // !ATT: paint impossible sur winrect vide: peut poser probleme pour maj des donnees
   if (winrect->width == 0 || winrect->height == 0) return;
   
-  //cerr << endl <<">>> UView::paintImpl: PAINT win: " << winview->getWin() << endl; 
+  //cerr << endl <<">>> View::paintImpl: PAINT win: " << winview->getWin() << endl; 
   
-  if (UAppli::impl.isProcessingLayoutUpdateRequests()) {
+  if (Application::impl.isProcessingLayoutUpdateRequests()) {
     // UAppliImpl::processUpdateRequests() is processing the layout requests
     // so that nothing should be drawn at this stage (normally the next line
     // should never be executed except in exotic cases)
     updatePaintData(winrect);
   }
   else {
-    UGraph g(winview);
+    Graph g(winview);
     UViewUpdate vup(UViewUpdate::PAINT_ALL);
     UWinUpdateContext winctx(winview, &g);
     
@@ -287,13 +294,13 @@ void UView::updatePaint(const URect* winrect) {     // window coordinates
     winview->doUpdate(winctx, *winview, *winview, vup);
   }
   
-  //cerr << "<<< UView::paintImpl: PAINT win: " << winview->getWin() << endl; 
+  //cerr << "<<< View::paintImpl: PAINT win: " << winview->getWin() << endl; 
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UView::updateLayout(const UDimension* size, bool upd_paint_data) {
-  UView* winview = getWinView();
+void View::updateLayout(const Dimension* size, bool upd_paint_data) {
+  View* winview = getWinView();
   if (!winview) return;
   
   UViewLayout vl;
@@ -329,37 +336,37 @@ AGAIN:
 
 // ==================================================== [ELC] ==================
 
-UView* UView::findInChildren(UElem* grp, const UPoint& winpos,
-                             const UUpdateContext& ctx, UViewFind& vf) 
+View* View::findInChildren(Element* grp, const Point& winpos,
+                             const UpdateContext& ctx, UViewFind& vf) 
 {
   if (!grp->isShowable() || grp->isIgnoringEvents()) return null;
-  bool in_softwin_list = grp->getDisplayType() == UElem::WINLIST;
+  bool in_softwin_list = grp->getDisplayType() == Element::WINLIST;
 
   for (UChildReverseIter ch = grp->crbegin(); ch != grp->crend(); ++ch) {
     if (!ch.getCond() || ch.getCond()->verifies(ctx, *grp)) {
       
-      UElem* chgrp = (*ch)->toElem();
-      UView* chview = null;
+      Element* chgrp = (*ch)->toElem();
+      View* chview = null;
         
       if (!chgrp || !chgrp->isShowable() || chgrp->isIgnoringEvents())
         continue;
       
       if (!chgrp->toBox()) {   // group but not box
-        UView* v = findInGroup(chgrp, winpos, ctx, vf);
+        View* v = findInGroup(chgrp, winpos, ctx, vf);
         if (v) return v; 
       }
       
-      else if (chgrp->getDisplayType() == UElem::BLOCK   // elimine les UWin
-               && (chview = ((UBox*)chgrp)->getViewInImpl(this /*,&ch.child()*/))) {
+      else if (chgrp->getDisplayType() == Element::BLOCK   // elimine les Window
+               && (chview = ((Box*)chgrp)->getViewInImpl(this /*,&ch.child()*/))) {
         // !!! faudrait tester chview->isShown() !!!
-        UView* v = chview->findInBox((UBox*)chgrp, winpos, ctx, vf);
+        View* v = chview->findInBox((Box*)chgrp, winpos, ctx, vf);
         if (v) return v; 
       }
       
-      else if (in_softwin_list && chgrp->getDisplayType() == UElem::SOFTWIN
-               && (chview = ((UBox*)chgrp)->getViewInImpl(this /*, null*/))) {//pas de ch
+      else if (in_softwin_list && chgrp->getDisplayType() == Element::SOFTWIN
+               && (chview = ((Box*)chgrp)->getViewInImpl(this /*, null*/))) {//pas de ch
         // !!! faudrait tester chview->isShown() !!!
-        UView* v = chview->findInBox((UBox*)chgrp, winpos, ctx, vf);
+        View* v = chview->findInBox((Box*)chgrp, winpos, ctx, vf);
         if (v) return v; 
       }
     }
@@ -370,10 +377,10 @@ UView* UView::findInChildren(UElem* grp, const UPoint& winpos,
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-UView* UView::findInGroup(UElem* grp, const UPoint& winpos, 
-                          const UUpdateContext& par_ctx, UViewFind& vf)
+View* View::findInGroup(Element* grp, const Point& winpos, 
+                          const UpdateContext& par_ctx, UViewFind& vf)
 {
-  UUpdateContext ctx(par_ctx, grp, this, null);
+  UpdateContext ctx(par_ctx, grp, this, null);
   UMultiList mlist(ctx, *grp);   // necessaire pour parser ctx
   return findInChildren(grp, winpos, ctx, vf);
 }
@@ -381,29 +388,29 @@ UView* UView::findInGroup(UElem* grp, const UPoint& winpos,
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // wpos = pos in hard window or in 3D window
 
-bool UView::containsWC(const UPoint& pos_in_win) {     // CF SHAPE & HIDE   !!!@@@!!!!
+bool View::containsWC(const Point& pos_in_win) {     // CF SHAPE & HIDE   !!!@@@!!!!
   return (pos_in_win.x >= x && pos_in_win.y >= y 
           && pos_in_win.x < x + width && pos_in_win.y < y + height);
 }
 
-UView* UView::findInBox(UBox* box, const UPoint& wpos, 
-                        const UUpdateContext& par_ctx, UViewFind& vf) 
+View* View::findInBox(Box* box, const Point& wpos, 
+                        const UpdateContext& par_ctx, UViewFind& vf) 
 {
   if (!box->isShowable() || box->isIgnoringEvents() || !containsWC(wpos))
     return null;
 
-  UUpdateContext ctx(par_ctx, box, this, null);
+  UpdateContext ctx(par_ctx, box, this, null);
   UMultiList mlist(ctx, *box);   // necessaire pour parser ctx
   vf.updateProps(this, box, ctx);  // !ATT evprops n'est plus recopie
   
   // si c'est une hardwin, chercher si l'event est dans ses softwins
-  //BUG: if (box->getDisplayType() == UElem::HARDWIN) {
-  UWin* w = box->toWin();
+  //BUG: if (box->getDisplayType() == Element::HARDWIN) {
+  Window* w = box->toWin();
   if (w && w->isHardwin()) {   // all hardwins, including subwins
     UHardwinImpl* hw = w->hardImpl(/*ctx.getDisp()*/);
     UWinList* softwins = null;
     if (hw && (softwins = hw->getSoftwins())) {
-      UView* v = findInGroup(softwins, wpos, ctx, vf);
+      View* v = findInGroup(softwins, wpos, ctx, vf);
       if (v) return v;
     }
   }
@@ -419,13 +426,13 @@ UView* UView::findInBox(UBox* box, const UPoint& wpos,
   }
   
   { // chercher si l'event est dans les borders
-    UElem* chgrp = null;
+    Element* chgrp = null;
     UViewBorderProp* vb = null;
     if (getProp(vb) && ctx.local.border && (chgrp = ctx.local.border->getSubGroup())) {
-      UView* v = findInGroup(chgrp, wpos, ctx, vf);
+      View* v = findInGroup(chgrp, wpos, ctx, vf);
       if (v) return v;
       else {
-        UPaddingSpec padding(0, 0);
+        PaddingSpec padding(0, 0);
         ctx.local.border->getSize(ctx, padding);
         padding.add(*vb);
         //clip.set(clip.x + padding.left, clip.y + padding.top,
@@ -436,7 +443,7 @@ UView* UView::findInBox(UBox* box, const UPoint& wpos,
   }
   
   {// sinon chercher si l'event est dans les enfants
-    UView* v = findInChildren(box, wpos, ctx, vf);
+    View* v = findInChildren(box, wpos, ctx, vf);
     if (v) return v;
   }
   
@@ -449,9 +456,9 @@ FOUND:
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-UView* UView::findSource(UViewFind& vf, UPoint& source_pos) {
+View* View::findSource(UViewFind& vf, Point& source_pos) {
   // vf.ref_pos = pos in refview
-  UView* source_view = findInBox(getBox(), vf.ref_pos, vf.win_ctx, vf);
+  View* source_view = findInBox(getBox(), vf.ref_pos, vf.win_ctx, vf);
   if (source_view) {
     // refview is either the window view or the 3Dwidget view
     // pos in source = pos in refview - pos of sourceview in refview
@@ -461,12 +468,12 @@ UView* UView::findSource(UViewFind& vf, UPoint& source_pos) {
   return source_view;
 }
 
-UView* UView::findSourceNext(UViewFind& vf, UPoint& source_pos) {
-  UBox* box = getBox();
+View* View::findSourceNext(UViewFind& vf, Point& source_pos) {
+  Box* box = getBox();
   vf.catched = null;
   vf.uncatchable = box;  // this box cannot be catched by findInBox()
   
-  UView* source_view = findInBox(box, vf.ref_pos, vf.found_ctx, vf);
+  View* source_view = findInBox(box, vf.ref_pos, vf.found_ctx, vf);
   if (source_view) {
     source_pos.x = vf.ref_pos.x - source_view->x;
     source_pos.y = vf.ref_pos.y - source_view->y;
@@ -476,7 +483,7 @@ UView* UView::findSourceNext(UViewFind& vf, UPoint& source_pos) {
   
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     
-UViewFind::UViewFind(UView* win_view, const UPoint win_pos, 
+UViewFind::UViewFind(View* win_view, const Point win_pos, 
                      UBehavior::InputType intype, unsigned char catch_mask) :
   ref_view(win_view),   // window or 3Dwidget view (may be changed later)
   ref_pos(win_pos),     // pos in refview
@@ -489,14 +496,14 @@ UViewFind::UViewFind(UView* win_view, const UPoint win_pos,
   bp(intype) {
 }
 
-void UViewFind::updateProps(UView* v, UElem* grp, const UUpdateContext& ctx) {  
+void UViewFind::updateProps(View* v, Element* grp, const UpdateContext& ctx) {  
   // cursor herite mais ecrase si defini au niveau local
   if (ctx.cursor) bp.cursor = ctx.cursor;
   
   if (grp->toMenu()) bp.SOURCE_IN_MENU = true;
   else if (grp->toWin()) bp.SOURCE_IN_MENU = false;
   // EX: louche, SUBWIN oublies
-  //else if (grp->getDisplayType()==UElem::HARDWIN || grp->getDisplayType()==UElem::SOFTWIN) bp.SOURCE_IN_MENU = false;
+  //else if (grp->getDisplayType()==Element::HARDWIN || grp->getDisplayType()==Element::SOFTWIN) bp.SOURCE_IN_MENU = false;
     
   if (grp->isMenuClosingDisabled()) bp.DONT_CLOSE_MENU = true;
   
@@ -518,37 +525,37 @@ UViewContext::~UViewContext() {
 namespace impl {
 
 struct UViewLink {
-  UView* view;
+  View* view;
   UViewLink* prev;
-  UViewLink(UView* v, UViewLink* l) : view(v), prev(l) {}
+  UViewLink(View* v, UViewLink* l) : view(v), prev(l) {}
 };
 
 
-static bool setCtx(UViewLink* l, const UUpdateContext& parctx, URect clip, UViewContext& vc) 
+static bool setCtx(UViewLink* l, const UpdateContext& parctx, Rectangle clip, UViewContext& vc) 
 {
   if (!clip.doIntersection(*l->view)) return false;
 
-  UBox* box = l->view->getBox();
-  if (!box) {UAppli::internalError("uview::setCtx", "Null box!"); return false;}
+  Box* box = l->view->getBox();
+  if (!box) {Application::internalError("uview::setCtx", "Null box!"); return false;}
   
-  UUpdateContext ctx(parctx, box, l->view, null);
+  UpdateContext ctx(parctx, box, l->view, null);
   UMultiList mlist(ctx, *box);   // necessaire pour parser ctx
   
   //if (!box.isEnabled()) vc.IS_SOURCE_ENABLED = false;
   if (box->isFloating()
-      || (l->view->hasVMode(UView::FIXED_WIDTH) && l->view->hasVMode(UView::FIXED_HEIGHT)))
+      || (l->view->hasVMode(View::FIXED_WIDTH) && l->view->hasVMode(View::FIXED_HEIGHT)))
     vc.layout_view = l->view;
   
-  UElem* chgrp = null;
+  Element* chgrp = null;
   UViewBorderProp* vb = null;
 
   if (l->view->getProp(vb) && ctx.local.border 
       && (chgrp = ctx.local.border->getSubGroup())) 
   {
-    //UView* v = findInGroup(chgrp, ctx, clip, e, searchedView, ep);
+    //View* v = findInGroup(chgrp, ctx, clip, e, searchedView, ep);
     //if (v) return v;
     //else {
-      UPaddingSpec padding(0, 0);
+      PaddingSpec padding(0, 0);
       ctx.local.border->getSize(ctx, padding);
       padding.add(*vb);
     
@@ -564,17 +571,17 @@ static bool setCtx(UViewLink* l, const UUpdateContext& parctx, URect clip, UView
   else {
     vc.is_clip_set = true;
     vc.clip = clip;
-    if (vc.find_mode == UView::FIND_VIEW_CONTEXT) 
-      vc.upd_context = new UUpdateContext(ctx);
-    else if (vc.find_mode == UView::FIND_PARENT_CONTEXT) 
-      vc.upd_context = new UUpdateContext(parctx);
+    if (vc.find_mode == View::FIND_VIEW_CONTEXT) 
+      vc.upd_context = new UpdateContext(ctx);
+    else if (vc.find_mode == View::FIND_PARENT_CONTEXT) 
+      vc.upd_context = new UpdateContext(parctx);
     return true;
   }
 }
 
 
 static bool findView(UViewLink* l, UViewContext& vc) {
-  UView* parv = l->view->getParentView();
+  View* parv = l->view->getParentView();
   if (parv) {
     UViewLink parl(parv, l);
     return findView(&parl, vc);
@@ -589,7 +596,7 @@ static bool findView(UViewLink* l, UViewContext& vc) {
 }  //endof namespace impl
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-bool UView::findContext(UViewContext& vc, FindMode fmode) {
+bool View::findContext(UViewContext& vc, FindMode fmode) {
   delete vc.upd_context; vc.upd_context = null; // faudrait un uptr<> !!!
   vc.find_mode = fmode;
   vc.is_clip_set = false;
@@ -601,8 +608,8 @@ bool UView::findContext(UViewContext& vc, FindMode fmode) {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-UData* UView::findData(UDataContext& dc, const UPoint& pos,
-                       const UData* searched_data, int strpos1, int strpos2) {
+Data* View::findData(UDataContext& dc, const Point& pos,
+                       const Data* searched_data, int strpos1, int strpos2) {
   UViewContext vc;
   bool stat = findContext(vc, FIND_PARENT_CONTEXT);
   
@@ -610,8 +617,8 @@ UData* UView::findData(UDataContext& dc, const UPoint& pos,
 
   UViewUpdate vup(searched_data? UViewUpdate::FIND_DATA_PTR: UViewUpdate::FIND_DATA_POS);  
   vup.datactx = &dc;
-  dc.it = dc.it2 = UChildIter();
-  dc.data = (UData*)searched_data;
+  dc.it = dc.it2 = ChildIter();
+  dc.data = (Data*)searched_data;
   dc.strpos = strpos1;
   dc.strpos2 = strpos2;
   dc.exact_match = false;  // !! 
@@ -619,7 +626,7 @@ UData* UView::findData(UDataContext& dc, const UPoint& pos,
   dc.win_eventpos.set(pos.x + this->x, pos.y + this->y);
   //delete dp.dataContext; dp.dataContext = null;
   
-  URect clip = *this;
+  Rectangle clip = *this;
   doUpdate(*vc.upd_context, clip, clip, vup);
   
   if (dc.it != dc.it2) return dc.data; else return null;
@@ -627,11 +634,11 @@ UData* UView::findData(UDataContext& dc, const UPoint& pos,
 
 // ==================================================== [ELC] ==================
 
-static void saveDataProps(UUpdateContext& ctx, UChildIter it, UChildIter end,
-                          const URect& r, UViewUpdate& vup, bool exact_match) {
+static void saveDataProps(UpdateContext& ctx, ChildIter it, ChildIter end,
+                          const Rectangle& r, UViewUpdate& vup, bool exact_match) {
   int strpos = -1;
-  UData* data = (*it)->toData();
-  UStr* str;
+  Data* data = (*it)->toData();
+  String* str;
   if (data && (str = data->toStr())) {   // search the strpos
     strpos = UFontMetrics(ctx).
     getCharPos(str->c_str(), str->length(), vup.datactx->win_eventpos.x - r.x);
@@ -648,13 +655,13 @@ static void saveDataProps(UUpdateContext& ctx, UChildIter it, UChildIter end,
 // - return==false signifie: continuer a chercher car:
 //                pas trouve' mais on peut encore trouver 
 
-bool UView::findDataH(UUpdateContext& ctx, UChildIter data_iter, UChildIter end_iter, 
-                      const URect& r, UViewUpdate& vup) {
+bool View::findDataH(UpdateContext& ctx, ChildIter data_iter, ChildIter end_iter, 
+                      const Rectangle& r, UViewUpdate& vup) {
   if (!vup.datactx) {
-    UAppli::internalError("UView::findDataH","null event or wrong type");
+    Application::internalError("View::findDataH","null event or wrong type");
     return false;
   }
-  const UPoint& evpos = vup.datactx->win_eventpos;
+  const Point& evpos = vup.datactx->win_eventpos;
   
   if (r.x > evpos.x) return true;  // plus rien a chercher (not found)
 
@@ -673,13 +680,13 @@ bool UView::findDataH(UUpdateContext& ctx, UChildIter data_iter, UChildIter end_
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-bool UView::findDataV(UUpdateContext& ctx, UChildIter data_iter, UChildIter end_iter, 
-                      const URect& r, UViewUpdate& vup) {
+bool View::findDataV(UpdateContext& ctx, ChildIter data_iter, ChildIter end_iter, 
+                      const Rectangle& r, UViewUpdate& vup) {
   if (!vup.datactx) {
-    UAppli::internalError("UView::findDataV","null event or wrong type");
+    Application::internalError("View::findDataV","null event or wrong type");
     return false;
   }
-  const UPoint& evpos = vup.datactx->win_eventpos;
+  const Point& evpos = vup.datactx->win_eventpos;
 
   if (r.y > evpos.y) return true;  // plus rien a chercher (not found)
 
@@ -696,14 +703,14 @@ bool UView::findDataV(UUpdateContext& ctx, UChildIter data_iter, UChildIter end_
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-bool UView::findDataPtr(UUpdateContext& ctx, UChildIter data_iter, UChildIter end_iter, 
-                        const URect& r, UViewUpdate& vup) {
+bool View::findDataPtr(UpdateContext& ctx, ChildIter data_iter, ChildIter end_iter, 
+                        const Rectangle& r, UViewUpdate& vup) {
   if (!vup.datactx) {
-    UAppli::internalError("UView::findDataPtr","null event or wrong type");
+    Application::internalError("View::findDataPtr","null event or wrong type");
     return false;
   }
   
-  UData* data = null;
+  Data* data = null;
   // retrieves info from Data link or Data ptr
   if ((vup.datactx->it == data_iter || vup.datactx->data==(*data_iter))
       && ((data = (*data_iter)->toData()))) {
@@ -719,15 +726,15 @@ bool UView::findDataPtr(UUpdateContext& ctx, UChildIter data_iter, UChildIter en
 // elements (and groups) as a sublist
 // also takes into account the softwin list when applicable
 
-UMultiList::UMultiList(UUpdateContext& curp, UElem& grp) 
+UMultiList::UMultiList(UpdateContext& curp, Element& grp) 
 : card(0), current(0) {
   //for (int k = 0; k < MAXCOUNT; k++) clists[k] = null;
-  sublists[0].begin = sublists[0].end = UChildIter(); //securite
+  sublists[0].begin = sublists[0].end = ChildIter(); //securite
   
   // put ALL the properties of the AttrList
   // does not take into account other elements
-  UAttr* prop = null;
-  for (UChildIter c = grp.abegin(); c != grp.aend(); ++c) {
+  Attribute* prop = null;
+  for (ChildIter c = grp.abegin(); c != grp.aend(); ++c) {
     if ((prop = (*c)->toAttr())) {
       // NB: null cond means always
       if (!c.getCond() || c.getCond()->verifies(curp, grp))  
@@ -735,7 +742,7 @@ UMultiList::UMultiList(UUpdateContext& curp, UElem& grp)
     }
   }
   
-  for (UChildIter c = grp.cbegin(); c != grp.cend(); ++c) {
+  for (ChildIter c = grp.cbegin(); c != grp.cend(); ++c) {
     // put the properties of the childlist that are BEFORE the first elem
     if ((prop = (*c)->toAttr())) {
       // NB: null cond means always
@@ -749,35 +756,35 @@ UMultiList::UMultiList(UUpdateContext& curp, UElem& grp)
     }
   }
   
-  //BUG: if (grp.getDisplayType() == UElem::HARDWIN) {
-  UWin* w = grp.toWin();
+  //BUG: if (grp.getDisplayType() == Element::HARDWIN) {
+  Window* w = grp.toWin();
   if (w && w->isHardwin()) {   // all hardwins, including subwins
     UHardwinImpl* hw = w->hardImpl(/*curp.getDisp()*/);
-    UChildren* softwin_list = null;    
+    Children* softwin_list = null;    
     if (hw && (softwin_list = hw->getSoftwinList())) {
       addChildList(softwin_list->begin(), softwin_list->end());
     }
     //cerr << "****** softwin " <<w <<" " << hw << " " <<  softwin_list << endl;
   }
   
-  in_softwin_list = grp.getDisplayType() == UElem::WINLIST;
+  in_softwin_list = grp.getDisplayType() == Element::WINLIST;
 }
 
-void UMultiList::next(UChildIter& c) {
+void UMultiList::next(ChildIter& c) {
   ++c;
   if (c == sublists[current].end) {
     if (current+1 < card) c = sublists[++current].begin;
   }
 }
 
-void UMultiList::addChildList(UChildIter begin, UChildIter end) {
+void UMultiList::addChildList(ChildIter begin, ChildIter end) {
   if (begin == end) return;  // nop (nb: test important: sauter listes nulles)
   else if (card < MAXCOUNT) {
     sublists[card].begin = begin;
     sublists[card].end = end;
     card++;
   }
-  else UAppli::internalError("MultiList::addChildList","Too many elements: %d", card);
+  else Application::internalError("MultiList::addChildList","Too many elements: %d", card);
 }
 
 }

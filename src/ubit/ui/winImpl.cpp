@@ -1,5 +1,4 @@
-/************************************************************************
- *
+/*
  *  winImpl.cpp: window implementation
  *  Ubit GUI Toolkit - Version 6.0
  *  (C) 2008 | Eric Lecolinet | ENST Paris | www.enst.fr/~elc/ubit
@@ -24,7 +23,7 @@ using namespace std;
 
 namespace ubit {
 
-UHardwinImpl::UHardwinImpl(UDisp* d, UWin* w) :
+UHardwinImpl::UHardwinImpl(Display* d, Window* w) :
 wintype(NONE), must_update(false), 
 disp(d), win(w), softwin_list(null), glcontext(null) {
 }
@@ -42,7 +41,7 @@ UHardwinImpl::~UHardwinImpl() {
 }
 
 
-UChildren* UHardwinImpl::getSoftwinList() {return softwin_list;}
+Children* UHardwinImpl::getSoftwinList() {return softwin_list;}
   
 UWinList* UHardwinImpl::getSoftwins() {
   if (softwin_list && softwin_list->begin() != softwin_list->end()) 
@@ -55,7 +54,7 @@ UWinList* UHardwinImpl::obtainSoftwins() {
   UWinList* softwins = getSoftwins();
   // recuperer ou creer la softlist de la hardwin
   if (!softwins) {
-    if (!softwin_list) softwin_list = new UChildren();
+    if (!softwin_list) softwin_list = new Children();
     // UWinList elements are not counted has parents when auto deleting children
     // they are considered as genuine lists, not viewable elements when managing views
     softwins = new UWinList();
@@ -65,13 +64,13 @@ UWinList* UHardwinImpl::obtainSoftwins() {
   return softwins;
 }
 
-void UHardwinImpl::addSoftwin(UWin* softwin, UWin* hardwin, UDisp* d, bool add_to_the_end) {
+void UHardwinImpl::addSoftwin(Window* softwin, Window* hardwin, Display* d, bool add_to_the_end) {
   if (!softwin || !hardwin) return;
   
   // s'il ya  une vue courante l'enlever (ca devrait etre fait uniquement si meme disp !!!)
-  //UView* softwin_view = softwin->getActualSoftwinView();
+  //View* softwin_view = softwin->getActualSoftwinView();
   USoftwinImpl* softw = softwin->softImpl();
-  UView* softwin_view = softw ? softw->getActualView(softwin->views) : null;
+  View* softwin_view = softw ? softw->getActualView(softwin->views) : null;
   
   if (softwin_view) {
     UHardwinImpl* old_hardwin_impl = softwin_view->getHardwin();
@@ -84,7 +83,7 @@ void UHardwinImpl::addSoftwin(UWin* softwin, UWin* hardwin, UDisp* d, bool add_t
 }
 
 // seul addSoftWin() doit appeller cette fonction, de maniere a enlever de la liste cournate
-void UHardwinImpl::removeSoftwin(UWin* softwin) {
+void UHardwinImpl::removeSoftwin(Window* softwin) {
   if (!softwin) return;
   USoftwinImpl* swi = softwin->softImpl();
   if (swi) swi->setActualView(null);

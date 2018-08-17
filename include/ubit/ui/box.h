@@ -41,7 +41,7 @@ namespace ubit {
    * IMPORTANT NOTE ON RECURSIVE DESTRUCTION AND SMART POINTERS:
    * When a Box is destroyed, its direct and indirect children are ALSO destroyed
    * EXCEPT if they have other parents OR if they are pointed by a uptr<> Smart Pointer.
-   * @see class UNode for details.
+   * @see class Node for details.
    *
    * Multiple parents and multiple views:
    * - Box objects can have several parents (that can also have multiple parents).
@@ -52,7 +52,7 @@ namespace ubit {
    *
    * Transparency:
    *  - boxes (and their subclasses) can be made fully transparent by adding
-   *    the UBackground::none property, or partially transparent by adding a 
+   *    the Background::none property, or partially transparent by adding a 
    *    UAlpha property to them.
    *
    *  Layout:
@@ -90,7 +90,7 @@ namespace ubit {
     /**
      * recursive destructor.
      * children are automatically destroyed if not pointed elsewhere
-     * (in the instance graph or by a uptr<>). see class UNode for details.
+     * (in the instance graph or by a uptr<>). see class Node for details.
      */
     virtual ~Box() {destructs();}
     
@@ -106,10 +106,9 @@ namespace ubit {
     
     void repaint() {update(Update::paint);}           // redefined    
     void update() {update(Update::layoutAndPaint);}   // redefined
-    virtual void update(const Update& update_options, UDisp* = null);  // redefined
-    virtual void doUpdate(const Update&, UDisp* = null);  // redefined
+    virtual void update(const Update& update_options, Display* = null);  // redefined
+    virtual void doUpdate(const Update&, Display* = null);  // redefined
     
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
     virtual int getViewCount() const;
     ///< returns the number of views of this box.
@@ -140,7 +139,7 @@ namespace ubit {
     virtual View* getView(const UInputEvent&) const;
     ///< returns the view of this box that contains the event location.
       
-    virtual View* getView(Window&, const UPoint& pos_in_win, UDisp* = null) const;
+    virtual View* getView(Window&, const Point& pos_in_win, Display* = null) const;
     ///< returns the view of this box that contains this point in this window.
 
     virtual View* getViewContaining(const View& child_view) const;
@@ -170,7 +169,7 @@ namespace ubit {
     
     virtual View* getViewInImpl(View* parent_view);
     
-    virtual View* getViewInImpl(View* parent_view, UDimension&);
+    virtual View* getViewInImpl(View* parent_view, Dimension&);
     /* returns the object's view that is contained in this DIRECT parent view.
      * 'parent_view' will contain several views of this object if it has been added
      * several times to this parent.

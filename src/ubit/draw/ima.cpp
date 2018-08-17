@@ -1,18 +1,26 @@
-/* ***********************************************************************
- *
+/*
  *  uima.cpp: images
- *  Ubit GUI Toolkit - Version 6.0
- *  (C) 2008 Eric Lecolinet | ENST Paris | www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE : 
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE 
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. 
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU 
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION; 
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
+ *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
+
 
 #include <ubit/ubit_features.h>
 #include <list>
@@ -28,7 +36,7 @@
 #include <ubit/ustr.hpp>
 #include <ubit/uima.hpp>
 #include <ubit/upix.hpp>
-#include <ubit/uevent.hpp>
+#include <ubit/core/event.h>
 #include <ubit/uappli.hpp>
 #include <ubit/ubox.hpp>
 #include <ubit/uupdate.hpp>
@@ -37,47 +45,46 @@
 using namespace std;
 namespace ubit {
 
-/* ==================================================== ===== ======= */
 
-UIma::UIma(const char* file_name, bool load_now) {
+Image::Image(const char* file_name, bool load_now) {
   name = null;
   show_unknown_ima = false;
   setImpl(file_name);
   if (load_now) loadNow();
 }
 
-UIma::UIma(const UStr& _filename, bool load_now) {
+Image::Image(const String& _filename, bool load_now) {
   name = null;
   show_unknown_ima = false;
   setImpl(_filename.c_str());
   if (load_now) loadNow();
 }
 
-UIma::UIma(const char** xpm_data, bool load_now) {
+Image::Image(const char** xpm_data, bool load_now) {
   name = null;
   show_unknown_ima = false;
   setImpl(xpm_data);
   if (load_now) loadNow();
 }
 
-UIma::UIma(const char** xpm_data, UConst m) : UData(m) {
+Image::Image(const char** xpm_data, UConst m) : Data(m) {
   name = null;
   show_unknown_ima = false;
   setImpl(xpm_data);
 }
 
-UIma::UIma(int w, int h) {
+Image::Image(int w, int h) {
   name = null;
   show_unknown_ima = false;
   setImpl(w, h);
 }
 
-UIma::~UIma() {
+Image::~Image() {
   if (name) free(name);
   cleanCache();
 }
 
-void UIma::cleanCache() {
+void Image::cleanCache() {
   // NB: on ne detruit pas data (data n'est pas copie et 
   // pointe donc sur l'original)
   for (list<UHardIma*>::iterator p = natimas.begin(); p != natimas.end(); p++) {
@@ -88,44 +95,44 @@ void UIma::cleanCache() {
 
 /* ==================================================== [Elc] ======= */
 
-void UIma::update() {
-  _parents.updateAutoParents(UUpdate::LAYOUT_PAINT);
+void Image::update() {
+  _parents.updateAutoParents(Update::LAYOUT_PAINT);
 }
 
-//const char* UIma::getNameChars() const {return name;}
+//const char* Image::getNameChars() const {return name;}
 
-bool UIma::isRealized() const {
+bool Image::isRealized() const {
   return (natimas.empty() ? false : (*natimas.begin())->isRealized());
 }
 
-int UIma::getHeight() const {
+int Image::getHeight() const {
   return (natimas.empty() ? 0 : (*natimas.begin())->getHeight());
 }
 
-int UIma::getWidth() const {
+int Image::getWidth() const {
   return (natimas.empty() ? 0 : (*natimas.begin())->getWidth());
 }
 
-int UIma::getBpp() const {
+int Image::getBpp() const {
   return (natimas.empty() ? 0 : (*natimas.begin())->getBpp());
 }
 
-int UIma::getTransparency() const {
+int Image::getTransparency() const {
   return (natimas.empty() ? 0 : (*natimas.begin())->getTransparency());
 }
 
 /*
-unsigned long UIma::getPixel(int x, int y) {
+unsigned long Image::getPixel(int x, int y) {
   return natimas.empty() ? 0 : (*natimas.begin())->getPixel(x, y);
 }
 
-void UIma::setPixel(unsigned long p, int x, int y) {
+void Image::setPixel(unsigned long p, int x, int y) {
   if (!natimas.empty()) (*natimas.begin())->setPixel(p, x, y);
 }
 */
 /* ==================================================== [Elc] ======= */
 
-UIma& UIma::operator=(const UIma& ima2) {
+Image& Image::operator=(const Image& ima2) {
   if (checkConst()) return *this;
   if (&ima2 == this) return *this;
   
@@ -143,9 +150,8 @@ UIma& UIma::operator=(const UIma& ima2) {
   return *this;
 }
 
-/* ==================================================== ===== ======= */
 
-void UIma::resize(int max_width, int max_height, bool preserve_ratio, bool dont_magnify) {
+void Image::resize(int max_width, int max_height, bool preserve_ratio, bool dont_magnify) {
   if (checkConst()) return;// false;
   if (natimas.empty()) {
     if (stat==0) loadNow();
@@ -170,9 +176,8 @@ void UIma::resize(int max_width, int max_height, bool preserve_ratio, bool dont_
   //return true;
 }
 
-/* ==================================================== ===== ======= */
 
-bool UIma::rescale(float xscale, float yscale) {
+bool Image::rescale(float xscale, float yscale) {
   if (checkConst()) return false;
   if (natimas.empty()) {
     if (stat==0) loadNow();
@@ -186,9 +191,8 @@ bool UIma::rescale(float xscale, float yscale) {
   return true;
 }
 
-/* ==================================================== ===== ======= */
 
-int UIma::read(const UStr& fname, int max_w, int max_h) {
+int Image::read(const String& fname, int max_w, int max_h) {
   setImpl(fname.c_str());
   realize(max_w, max_h);
   // ne fait rien si UHardwin::read() tient compte du max pour ce fichier
@@ -197,7 +201,7 @@ int UIma::read(const UStr& fname, int max_w, int max_h) {
   return stat;
 }
 
-int UIma::read(const char* fname, int max_w, int max_h) {
+int Image::read(const char* fname, int max_w, int max_h) {
   setImpl(fname);
   realize(max_w, max_h);
   // ne fait rien si natima::read() tient compte du max pour ce fichier
@@ -206,43 +210,41 @@ int UIma::read(const char* fname, int max_w, int max_h) {
   return stat;
 }
 
-int UIma::loadNow() {
+int Image::loadNow() {
   if (!name && !data) return stat = UFilestat::CannotOpen;
   realize(0,0);
   changed(true);  // *apres* le realize
   return stat;
 }
 
-int UIma::loadFromData(const char** xpm_data) {
+int Image::loadFromData(const char** xpm_data) {
   setImpl(xpm_data);
   realize(0,0);
   changed(true); // *apres* le realize
   return stat;
 }
 
-/* ==================================================== ======== ======= */
 
-void UIma::set(const UStr& fname) {
+void Image::set(const String& fname) {
   if (checkConst()) return;
   setImpl(fname.c_str());
   changed(true);
 }
 
-void UIma::set(const char* fname) {
+void Image::set(const char* fname) {
   if (checkConst()) return;
   setImpl(fname);
   changed(true);
 }
 
-void UIma::set(const char** xpm_data) {
+void Image::set(const char** xpm_data) {
   if (checkConst()) return;
   setImpl(xpm_data);
   changed(true);
 }
 
-/* ==================================================== ======== ======= */
 
-void UIma::setImpl(const char* fname) {
+void Image::setImpl(const char* fname) {
   cleanCache();
   if (name) free(name);
   name = fname ? UCstr::dup(fname) : null;
@@ -251,7 +253,7 @@ void UIma::setImpl(const char* fname) {
   mode = READ_FROM_FILE;
 }
 
-void UIma::setImpl(const char** xpm_data) {
+void Image::setImpl(const char** xpm_data) {
   cleanCache();
   if (name) free(name);
   name = null;
@@ -261,7 +263,7 @@ void UIma::setImpl(const char** xpm_data) {
 }
 
 // ATT: pas pret pour OpenGL!! (a cause de createImage)
-void UIma::setImpl(int w, int h) {
+void Image::setImpl(int w, int h) {
   cleanCache();
   if (name) free(name);
   name = null;
@@ -272,13 +274,13 @@ void UIma::setImpl(int w, int h) {
   
   if (w > 0 && h > 0) {
 #if UBIT_WITH_GL
-    if (UAppli::isUsingGL()) {
-      ni = new UHardImaGL(UAppli::getDisp(), w, h);
+    if (Application::isUsingGL()) {
+      ni = new UHardImaGL(Application::getDisp(), w, h);
       goto DONE;
     }
 #endif
 #if WITH_2D_GRAPHICS
-    ni = new UHardIma2D(UAppli::getDisp(), w, h);
+    ni = new UHardIma2D(Application::getDisp(), w, h);
     goto DONE;   // just to avoid a compiler warning
 #endif
   }
@@ -291,8 +293,8 @@ void UIma::setImpl(int w, int h) {
 
 /* ==================================================== [Elc] ======= */
 
-void UIma::getSize(UUpdateContext& ctx, UDimension& dim) const {
-  UDisp* d = ctx.getDisp();
+void Image::getSize(UpdateContext& ctx, Dimension& dim) const {
+  Display* d = ctx.getDisp();
 
   if (stat == UFilestat::NotOpened && natimas.empty()) {
     realize(0 ,0, d, false);
@@ -327,7 +329,7 @@ void UIma::getSize(UUpdateContext& ctx, UDimension& dim) const {
 
 /* ==================================================== [Elc] ======= */
 
-void UIma::paint(UGraph& g, UUpdateContext& props, const URect& r) const {
+void Image::paint(Graph& g, UpdateContext& props, const Rectangle& r) const {
   if (natimas.empty()) {
     if (show_unknown_ima) {                //empecher recursion infinie
       if (this != g.getDisp()->getConf().unknow_image) 
@@ -341,7 +343,7 @@ void UIma::paint(UGraph& g, UUpdateContext& props, const URect& r) const {
 
 /*
 #if UBIT_WITH_GL
-  if (UAppli::isUsingGL()) {
+  if (Application::isUsingGL()) {
     // une seule natima dans ce cas (la premiere)
     // ATT: on ne gere pas les multidisp             !!!!!!!
     if (!natimas.empty()) {
@@ -361,13 +363,13 @@ void UIma::paint(UGraph& g, UUpdateContext& props, const URect& r) const {
 /* ==================================================== [Elc] ======= */
 #if WITH_2D_GRAPHICS
 
-UHardIma* UIma::getOrCreateIma(UDisp* d, float xyscale) const {
+UHardIma* Image::getOrCreateIma(Display* d, float xyscale) const {
   UHardIma* ni = findImaInCache(d, xyscale);
   if (!ni) ni = addImaInCache(d, xyscale);
   return ni;
 }
 
-UHardIma* UIma::findImaInCache(UDisp* d, float xyscale) const {
+UHardIma* Image::findImaInCache(Display* d, float xyscale) const {
   // search in the cache if this image was already created with the same size
   // AND THE SAME DISPLAY !!
   for (list<UHardIma*>::iterator p = natimas.begin(); p != natimas.end(); ++p) {
@@ -380,7 +382,7 @@ UHardIma* UIma::findImaInCache(UDisp* d, float xyscale) const {
 // we destroy all copies except the 1st one which is the original image
 // and the last one as it is likely to be used again soon
 
-UHardIma* UIma::addImaInCache(UDisp* d, float xyscale) const {
+UHardIma* Image::addImaInCache(Display* d, float xyscale) const {
   if (natimas.empty()) return null;
   
   list<UHardIma*>::iterator p = natimas.begin();
@@ -401,8 +403,8 @@ UHardIma* UIma::addImaInCache(UDisp* d, float xyscale) const {
   // NB image depth must be <= to the NatDisp depth
   UHardIma* ni = (*natimas.begin())->createScaledClone(xyscale, xyscale, d);
   if (ni) {
-    if (UAppli::isUsingGL()) {
-      UAppli::internalError("UIma::addImaInCache","invalid when using OpenGL");
+    if (Application::isUsingGL()) {
+      Application::internalError("Image::addImaInCache","invalid when using OpenGL");
       return null;
     }
     ((UHardIma2D*)ni)->scale = xyscale;   // !! att au cast !
@@ -415,24 +417,24 @@ UHardIma* UIma::addImaInCache(UDisp* d, float xyscale) const {
 #endif
 /* ==================================================== [Elc] ======= */
 
-void UIma::getFullPath(UStr& path, const char* name) {
+void Image::getFullPath(String& path, const char* name) {
   if (!name || name[0] == '\0')
     path = "";
   else if (name[0] == '.' || name[0] == '/')
     path = name;
   else       // no prefix ==> add imap_path
-    path = UAppli::getImaPath() & name;
+    path = Application::getImaPath() & name;
 }
 
-int UIma::realize(int max_w, int max_h, UDisp* disp, bool force_reload) const {
-  if (!disp) disp = UAppli::getDisp();
+int Image::realize(int max_w, int max_h, Display* disp, bool force_reload) const {
+  if (!disp) disp = Application::getDisp();
   // ne pas essayer de recharger une seconde fois quelque soit
   // le resultat de cet essai (pour ne pas boucler sur le load)
   if (force_reload || (stat == UFilestat::NotOpened && natimas.empty())) {
     UHardIma* ni = null;
     
 #if UBIT_WITH_GL
-    if (UAppli::isUsingGL()) {
+    if (Application::isUsingGL()) {
       ni = new UHardImaGL(disp, 0, 0);
       goto DONE;
     }
@@ -452,7 +454,7 @@ int UIma::realize(int max_w, int max_h, UDisp* disp, bool force_reload) const {
     }
     
     else if (mode == READ_FROM_FILE) {
-      UStr fpath;
+      String fpath;
       getFullPath(fpath, name);
       stat = ni->read(fpath, null, max_w, max_h);
       if (stat <= 0) delete ni; else natimas.push_back(ni);

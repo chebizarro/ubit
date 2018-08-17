@@ -1,21 +1,29 @@
-/* ==================================================== ======== ======= *
- *
+/*
  *  uappliImpl.hpp
- *  Ubit GUI Toolkit - Version 6
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE :
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION;
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
 
 #ifndef _uappliImpl_hpp_
 #define	_uappliImpl_hpp_ 1
+
 #include <vector>
 #include <sys/time.h>  // fd_set
 #include <ubit/uappli.hpp>
@@ -25,14 +33,15 @@
 #include <ubit/ustyle.hpp>
 #include <ubit/umessage.hpp>
 #include <ubit/utimer.hpp>
+
 namespace ubit {
   
   class UpdateRequest {
   public:
-    UBox* obj;
-    UUpdate upd;
-    UpdateRequest(UBox* _obj, const UUpdate& _upd, bool remove_paint) 
-    : obj(_obj), upd(_upd) {if (remove_paint) upd.modes &= ~UUpdate::PAINT;}
+    Box* obj;
+    Update upd;
+    UpdateRequest(Box* _obj, const Update& _upd, bool remove_paint) 
+    : obj(_obj), upd(_upd) {if (remove_paint) upd.modes &= ~Update::PAINT;}
   };
   
   
@@ -49,57 +58,56 @@ namespace ubit {
     ///< process all requests (process update then delete then paint requests).
     
     void addDeleteRequest(UObject*);
-    void addDeleteRequest(UView*);
+    void addDeleteRequest(View*);
     void processDeleteRequests();
     
-    void addUpdateRequest(UBox*, const UUpdate&);
-    void removeUpdateRequests(UBox*);
+    void addUpdateRequest(Box*, const Update&);
+    void removeUpdateRequests(Box*);
     void processUpdateRequests();
     bool isProcessingUpdateRequests() const {return is_processing_update_requests;}
     bool isProcessingLayoutUpdateRequests() const {return is_processing_layout_update_requests;}
     
-    int  startModalWinLoop(UWin&);
-    void addModalWin(UWin&);
-    void removeModalWin(UWin&);
+    int  startModalWinLoop(Window&);
+    void addModalWin(Window&);
+    void removeModalWin(Window&);
     void setModalStatus(int);
     
-    void resetSources(UElem* sources, fd_set& read_set, int& maxfd);
-    void cleanSources(UElem* sources);
-    void fireSources(UElem* sources, fd_set& read_set);
+    void resetSources(Element* sources, fd_set& read_set, int& maxfd);
+    void cleanSources(Element* sources);
+    void fireSources(Element* sources, fd_set& read_set);
     
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   //private:
-    friend class UAppli;
-    friend class UDisp;
-    friend class UView;
+    friend class Application;
+    friend class Display;
+    friend class View;
     friend class UEventFlow;
     friend class UTimer;
     friend class USource;
-    friend class UMService;
+    friend class MessageService;
     
     typedef std::vector<UpdateRequest> UpdateRequests;
     typedef std::vector<UObject*> DeletedObjects;
-    typedef std::vector<UView*> DeletedViews;
+    typedef std::vector<View*> DeletedViews;
     
-    UAppli* appli;        // only ONE UAppli object should be created
-    UDisp* disp;
-    UStr *app_name;
-    bool is_terminated;   // true if the UAppli has been terminated
+    Application* appli;        // only ONE Application object should be created
+    Display* disp;
+    String *app_name;
+    bool is_terminated;   // true if the Application has been terminated
     uptr<UErrorHandler> error_handler;
-    UFrame* main_frame;   // the main frame of the UAppli
-    // Note: the display list must be static to avoid seg faults if the UAppli
+    UFrame* main_frame;   // the main frame of the Application
+    // Note: the display list must be static to avoid seg faults if the Application
     // is distroyed before the widgets by the client program 
     UDispList displist;
     UFlowList flowlist;    // list of event flows
-    UStyleSheet stylesheet;
-    UStr imapath;
-    UElem* sources;
+    StyleSheet stylesheet;
+    String imapath;
+    Element* sources;
     UTimerImpl timer_impl;
     class UWinList *modalwins;         // modal windows
-    UMessagePortMap* messmap;    // the message port of the UAppli
+    MessagePortMap* messmap;    // the message port of the Application
     unsigned long app_motion_lag, nat_motion_lag;
     
-    int main_status;       // status of the event loop of the UAppli
+    int main_status;       // status of the event loop of the Application
     int modal_status;      // status of the inner loop the current modal dialog
     bool mainloop_running, subloop_running;
     

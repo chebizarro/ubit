@@ -1,18 +1,25 @@
-/************************************************************************
- *
- *  uattr.cpp: Attributes of the Scene Graph
- *  Ubit GUI Toolkit - Version 6
+/*
+ *  attr.cpp: Attributes of the Scene Graph
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE :
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION;
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
 
 #include <iostream>
 #include <ubit/ubit_features.h>
@@ -27,35 +34,35 @@ using namespace std;
 #define NAMESPACE_UBIT namespace ubit {
 NAMESPACE_UBIT
 
-//bool UAttr::isSpecified() const {return getClass().isSpecified();}
+//bool Attribute::isSpecified() const {return getClass().isSpecified();}
 
 // defini dans impl sinon pbms compil (a cause du uptr<>) avce gcc2
-UAttr::UAttr() {}
-UAttr::UAttr(UConst) {omodes.IS_CONST = true;}
+Attribute::Attribute() {}
+Attribute::Attribute(UConst) {omodes.IS_CONST = true;}
 
 // defini dans impl sinon pbms compil
-UAttr::~UAttr() {destructs();}
+Attribute::~Attribute() {destructs();}
   
-UStr UAttr::getNodeValue() const {
-  UStr val; getValue(val); return val;
+String Attribute::getNodeValue() const {
+  String val; getValue(val); return val;
 }
 
-bool UAttr::getValue(UStr& val) const {
+bool Attribute::getValue(String& val) const {
   val.clear();
   return false;
 }
 
-UAttr& UAttr::onChange(UCall& c) {
+Attribute& Attribute::onChange(UCall& c) {
   addChangeCall(c);
   return *this;
 }
 
-void UAttr::changed(bool _update) {
+void Attribute::changed(bool _update) {
   if (_update && !omodes.DONT_AUTO_UPDATE) update();
   
   if (!omodes.IGNORE_CHANGE_CALLBACKS) {
     if (_abegin() != _aend()) {
-      UEvent e(UOn::change, this);  //UNodeEvent
+      Event e(UOn::change, this);  //UNodeEvent
       fire(e);
     }
     // ensuite on lance les callbacks des parents
@@ -63,39 +70,38 @@ void UAttr::changed(bool _update) {
   }
 }
 
-/* ==================================================== ===== ======= */
 
-struct UNamedValue: public UAttr {
-  UNamedValue(const UStr& _name, const UStr& _value) 
-  : pname(new UStr(_name)), pvalue(new UStr(_value)) {}
+struct UNamedValue: public Attribute {
+  UNamedValue(const String& _name, const String& _value) 
+  : pname(new String(_name)), pvalue(new String(_value)) {}
     
-  virtual const UStr& getName() const {return *pname;}   //attention herite!!!
-  virtual bool getValue(UStr& val) const {val = *pvalue; return true;}  //attention herite!!!  
+  virtual const String& getName() const {return *pname;}   //attention herite!!!
+  virtual bool getValue(String& val) const {val = *pvalue; return true;}  //attention herite!!!  
   
-  uptr<UStr> pname, pvalue;
+  uptr<String> pname, pvalue;
 };
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
-void UAttrList::addAttr(UAttr& c) {
+void AttributeList::addAttr(Attribute& c) {
   _addAttr(c);
 }
 
-void UAttrList::addAttr(const UStr& name, const UStr& value) {
+void AttributeList::addAttr(const String& name, const String& value) {
   if (name.empty()) return;
-  UAttrList::addAttr(*new UNamedValue(name, value));
+  AttributeList::addAttr(*new UNamedValue(name, value));
 }
 
-void UAttrList::update() {
-  updateAutoParents(UUpdate::LAYOUT_PAINT);   // !! simplification  qui fait eventuellement des choses en trop...
+void AttributeList::update() {
+  updateAutoParents(Update::LAYOUT_PAINT);   // !! simplification  qui fait eventuellement des choses en trop...
 }
 
-UStr* UAttrList::getAttr(const UStr& name, bool ignore_case) {
+String* AttributeList::getAttr(const String& name, bool ignore_case) {
   if (_abegin() == _aend()) return null;
  
-  UStr* res = null;         // renvoie le dernier trouve!
+  String* res = null;         // renvoie le dernier trouve!
   UNamedValue* p;
-   for (UChildIter a = _abegin(); a != _aend(); ++a) {
+   for (ChildIter a = _abegin(); a != _aend(); ++a) {
      if ((p = dynamic_cast<UNamedValue*>(*a)) && p->getName().equals(name,ignore_case)) {
        res = p->pvalue;
     }
@@ -103,33 +109,33 @@ UStr* UAttrList::getAttr(const UStr& name, bool ignore_case) {
   return res;
 }
 
-void UAttrList::putProp(UUpdateContext *props, UElem& par) {
+void AttributeList::putProp(UpdateContext *props, Element& par) {
   if (_abegin() == _aend()) return;
-   UAttr* p;
-   for (UChildIter a = _abegin(); a != _aend(); ++a) {
-    if ((p = dynamic_cast<UAttr*>(*a))) p->putProp(props, par);
+   Attribute* p;
+   for (ChildIter a = _abegin(); a != _aend(); ++a) {
+    if ((p = dynamic_cast<Attribute*>(*a))) p->putProp(props, par);
   }
 }
 
 /* ==================================================== [Elc] ======= */
 
 UTip::UTip(const char* label) {set(label);}
-UTip::UTip(const UArgs& a) {set(a);}
+UTip::UTip(const Args& a) {set(a);}
 
 UTip::~UTip() {destructs();}  // removingFrom() impose un destructeur
 
 UTip& UTip::set(const char* label) {
-  content = label ? new UStr(label) : null;
+  content = label ? new String(label) : null;
   return *this;
 }
 
-UTip& UTip::set(const UArgs& a) {
-  content = new UElem(a);
+UTip& UTip::set(const Args& a) {
+  content = new Element(a);
   return *this;
 }
 
-void UTip::addingTo(UChild& c, UElem& parent) {
-  UAttr::addingTo(c, parent);
+void UTip::addingTo(Child& c, Element& parent) {
+  Attribute::addingTo(c, parent);
   //if (parent.emodes.HAS_TIP) {
   //  warning("UTip::addingTo","This UTip has a parent (%s %p) that contains another UTip object", this, &parent.getClassName(), &parent);
   //}
@@ -137,34 +143,34 @@ void UTip::addingTo(UChild& c, UElem& parent) {
   parent.emodes.HAS_TIP = true;
 }
 
-void UTip::removingFrom(UChild& c, UElem& parent) {
+void UTip::removingFrom(Child& c, Element& parent) {
   parent.emodes.HAS_TIP = false;
-  UAttr::removingFrom(c, parent);
+  Attribute::removingFrom(c, parent);
 }
 
 // ==================================================== Ubit Toolkit =========
 
-UTitle::UTitle(const char* _s) {
-  pstring = new UStr(_s);     // EX: pvalue!!!
-  pstring->onChange(ucall(this, true, &UAttr::changed));
+Title::Title(const char* _s) {
+  pstring = new String(_s);     // EX: pvalue!!!
+  pstring->onChange(ucall(this, true, &Attribute::changed));
 }
 
-UTitle::UTitle(const UStr& _s) {
-  pstring = new UStr(_s);     // EX: pvalue!!!
-  pstring->onChange(ucall(this, true, &UAttr::changed));
+Title::Title(const String& _s) {
+  pstring = new String(_s);     // EX: pvalue!!!
+  pstring->onChange(ucall(this, true, &Attribute::changed));
 }
 
-void UTitle::update() {
+void Title::update() {
   for (UParentIter p = pbegin(); p != pend(); ++p) {
-    UElem* grp = *p;
-    UWin* win = grp ? grp->toWin() : null;
+    Element* grp = *p;
+    Window* win = grp ? grp->toWin() : null;
     if (win) win->setTitle(*pstring);     // EX: pvalue!!!
   } 
 }
 
 /*
-UComment::UComment(const char* _s) : pvalue(new UStr(_s)) {}
-UComment::UComment(const UStr& _s) : pvalue(new UStr(_s)) {}
+Comment::Comment(const char* _s) : pvalue(new String(_s)) {}
+Comment::Comment(const String& _s) : pvalue(new String(_s)) {}
 */
 
 }

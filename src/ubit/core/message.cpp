@@ -1,6 +1,5 @@
-/************************************************************************
- *
- *  umessage.cpp: Ubit Inter-Client Messages: see umservice.hpp 
+/*
+ *  message.cpp: Ubit Inter-Client Messages: see umservice.hpp 
  *  Ubit GUI Toolkit - Version 6.0
  *  (C) 2008 | Eric Lecolinet | ENST Paris | www.enst.fr/~elc/ubit
  *
@@ -22,7 +21,7 @@
 #include <ubit/uon.hpp>
 #include <ubit/ucall.hpp>
 #include <ubit/ubox.hpp>
-#include <ubit/uevent.hpp>
+#include <ubit/core/event.h>
 #include <ubit/uappli.hpp>
 #include <ubit/core/uappliImpl.hpp>
 #include <ubit/umessage.hpp>
@@ -32,30 +31,28 @@
 using namespace std;
 namespace ubit {
 
-/* ==================================================== ====== ======= */
 
-UMessagePort::UMessagePort(const UStr& _name) : name(_name) {}
+MessagePort::MessagePort(const String& _name) : name(_name) {}
 
-UMessagePort* UMessagePortMap::findMessagePort(const UStr& name) {
+MessagePort* MessagePortMap::findMessagePort(const String& name) {
   MessMap::iterator k = mess_map.find(&name);
   if (k != mess_map.end()) return k->second;
   else return null;
 }
 
-UMessagePort& UMessagePortMap::getMessagePort(const UStr& name) {
-  UMessagePort* msg = findMessagePort(name);
+MessagePort& MessagePortMap::getMessagePort(const String& name) {
+  MessagePort* msg = findMessagePort(name);
   if (!msg) {
-    msg = new UMessagePort(name);
+    msg = new MessagePort(name);
     mess_map[&msg->getName()] = msg;
   }
   return *msg;
 }
 
-/* ==================================================== ======== ======= */
 
-void UMessagePortMap::fireMessagePort(const char* buf) {
+void MessagePortMap::fireMessagePort(const char* buf) {
   if (buf) {
-    UStr name;
+    String name;
     const char* p = strchr(buf,' ');
     //if (p) {*p = 0; p++;}
     //name.append(buf);
@@ -65,25 +62,24 @@ void UMessagePortMap::fireMessagePort(const char* buf) {
       p++;
     }
 
-    UMessagePort* port = findMessagePort(name);
+    MessagePort* port = findMessagePort(name);
     if (port) {
       if (p) port->value = p;  // A REVOIR: marche pas si multistrings ou binaires
       else port->value = "";
 
-      //UMessageEvent e(UOn::message, null, null, null);  // a quoi sert message ?
+      //MessageEvent e(UOn::message, null, null, null);  // a quoi sert message ?
       //e.setCond(UOn::action);
       //e.setSource(port);
-      UMessageEvent e(UOn::action, port);
+      MessageEvent e(UOn::action, port);
       port->fire(e);
     }
   }
 }
   
-/* ==================================================== ====== ======= */
 #if !UBIT_WITH_X11
 
-void UMessage::send(UHardwinImpl&, const char* message) {
-  cerr << "UMessage::send not implemented " << endl;
+void Message::send(UHardwinImpl&, const char* message) {
+  cerr << "Message::send not implemented " << endl;
 }
 
 #else  // - - - UBIT_WITH_X11 - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -138,10 +134,10 @@ static void sendLongMessage(UDispX11* nd, UHardwinX11* nw,
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UMessage::send(UHardwinImpl& nw, const char* message) {
+void Message::send(UHardwinImpl& nw, const char* message) {
   if (!message) return;
   unsigned int len = strlen(message);
-  UDisp* nd = UAppli::impl.disp;
+  Display* nd = Application::impl.disp;
   
   ClientEvent e;
   if (len < sizeof(e.data.b)) 
@@ -149,10 +145,10 @@ void UMessage::send(UHardwinImpl& nw, const char* message) {
   else sendLongMessage((UDispX11*)nd,(UHardwinX11*)&nw, message, len);
 }
 
-void UMessage::send(UHardwinImpl& nw, const UStr& message) {
+void Message::send(UHardwinImpl& nw, const String& message) {
   if (message.empty()) return;
   unsigned int len = message.length();
-  UDisp* nd = UAppli::impl.disp;
+  Display* nd = Application::impl.disp;
 
   ClientEvent e;
   if (len < sizeof(e.data.b)) 
@@ -164,5 +160,4 @@ void UMessage::send(UHardwinImpl& nw, const UStr& message) {
 
 
 }
-/* ==================================================== [TheEnd] ======= */
 

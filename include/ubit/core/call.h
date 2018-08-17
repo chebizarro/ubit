@@ -1,29 +1,38 @@
-/************************************************************************
- *
- *  ucall.hpp: Callback objects
- *  Ubit GUI Toolkit - Version 6
+/*
+ *  call.h: Callback objects
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE :
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION;
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
 
 #ifndef _ucall_hpp_
 #define	_ucall_hpp_ 1
-#include <ubit/unode.hpp>
-#include <ubit/uevent.hpp>
+
+#include <ubit/core/node.h>
+#include <ubit/core/event.h>
 #include <typeinfo>
+
 namespace ubit {
   
   /** base class of callback objects for firing functions or methods.
    *
-   * UClass is the base class for a family of template subclasses that make it possible
+   * Class is the base class for a family of template subclasses that make it possible
    * to fire functions or methods when a certain condition occurs. These conditions
    * are specified by UOn objects as shown in the examples below:
    *
@@ -83,17 +92,17 @@ namespace ubit {
    *
    *
    * <b>Optional EVENT parameter</b>
-   * - callback functions and methods can have an optional UEvent& parameter which
+   * - callback functions and methods can have an optional Event& parameter which
    *   refers to the event that provoked the call
    * - the actual event type that can be used as a parameter depends on the callback
    *   condition (see the corresponding UOn condition for details). For instance,
    *   doit() can have UMouseEvent as a parameter because it is fired by UOn::mdrag.
    * - event parameters can be superclasses of the event class specified by the UOn
    *   condition, but they cannot be sublasses (this will generate an execution error).
-   *   For instance, UEvent& would be a valid parameter for doit() but UMouseEvent&
+   *   For instance, Event& would be a valid parameter for doit() but UMouseEvent&
    *   would not be a valid parameter for foo().
    * <pre>
-   *   void foo(UEvent& e, double value) {...}
+   *   void foo(Event& e, double value) {...}
    *
    *   class Test {
    *   public:
@@ -108,8 +117,8 @@ namespace ubit {
    *   if the callback condition is verified for that object:
    * <pre>
    *   ucheckbox("Red or White"
-   *             + UOn::select / UColor::red 
-   *             + UOn::deselect / UColor::white
+   *             + UOn::select / Color::red 
+   *             + UOn::deselect / Color::white
    *             )
    * </pre>
    * In this case, the color will be red if the checkbox is seledcted and white otherwise.
@@ -117,7 +126,7 @@ namespace ubit {
    *
    * <b>Adding and removing callbacks after widget creation</b>
    * callback objects can be added and removed by using the add(), addAttr(),
-   * remove() and removeAttr() methods of the UElem class.
+   * remove() and removeAttr() methods of the Element class.
    *
    * <b>Predefined callback objects</b>
    * - uset(a,b)         performs:  a.set(b)  // a,b are passed by reference
@@ -141,23 +150,23 @@ namespace ubit {
    *
    * @see also: UOn callback conditions.
    */
-  class UCall: public UNode {
+  class UCall: public Node {
   public:
     //UCLASS("#call", UCall, null)
     UABSTRACT_CLASS(UCall)
     
     virtual ~UCall() {destructs();}
 
-    virtual void operator()(UEvent&) = 0;
+    virtual void operator()(Event&) = 0;
     ///< the method that fires callbacks; must be redefined by subclasses.
     
   protected:
     virtual UCall* toCall() {return this;}
     virtual const UCall* toCall() const {return this;}
-    virtual void addingTo(UChild&, UElem& parent);
+    virtual void addingTo(Child&, Element& parent);
     
     template <class E> 
-    E* checkType(UEvent& e) {
+    E* checkType(Event& e) {
       E* actual_e = dynamic_cast<E*>(&e);
       if (actual_e) return actual_e;
       else {
@@ -171,13 +180,11 @@ namespace ubit {
   };
   
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   
   /// Callback object that closes the first window (UDialog, UMenu...) that contains this element.
   UCall& ucloseWin(int stat = 0);
   
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   // uopen()
   
   template <class CC>
@@ -185,7 +192,7 @@ namespace ubit {
     CC obj;
   public:
     UCall_open(CC _o) : obj(_o) {}
-    void operator()(UEvent& e) {
+    void operator()(Event& e) {
       UMouseEvent*_e = checkType<UMouseEvent>(e); if (_e) obj.open(*_e);
     }
   };
@@ -200,7 +207,6 @@ namespace ubit {
   UCall& uopen(CC* obj) {return *new UCall_open<CC&>(*obj);}
   
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   // ushow()
   
   template <class CC, class VAL>
@@ -208,7 +214,7 @@ namespace ubit {
     CC obj; VAL val;
   public:
     UCall_show(CC _o, VAL _v) : obj(_o), val(_v) {}
-    void operator()(UEvent&) {obj.show(val);}
+    void operator()(Event&) {obj.show(val);}
   };
   
   
@@ -231,7 +237,6 @@ namespace ubit {
   UCall& ushow(CC* obj, VAL state) {return *new UCall_show<CC&,VAL>(*obj,state);}
    
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // uset(x, y)
   
   template <class CC, class VAL>
@@ -239,7 +244,7 @@ namespace ubit {
     CC obj; VAL val;
   public:
     UCall_set(CC _o, VAL _v) : obj(_o), val(_v) {}
-    void operator()(UEvent&) {obj.set(val);}
+    void operator()(Event&) {obj.set(val);}
   };
   
   /** Callback object that calls the set() method when fired.
@@ -251,7 +256,6 @@ namespace ubit {
   UCall& uset(CC& _o, VAL& _v) {return *new UCall_set<CC&,VAL&>(_o,_v);}
   
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // uassign(x, y)
   
   template <class CC, class VAL>
@@ -259,7 +263,7 @@ namespace ubit {
     CC obj; VAL val;
   public:
     UCall_assign(CC _o, VAL _v) : obj(_o), val(_v) {}
-    void operator()(UEvent&) {obj = val;}
+    void operator()(Event&) {obj = val;}
   };
   
   /** Callback object that calls the = operator when fired.
@@ -286,7 +290,7 @@ namespace ubit {
     R (M::*fun)();
   public:
     UCall_M0(O o, R(M::*m)()) : obj(o), fun(m) {}
-    void operator()(UEvent&) {(obj.*fun)();}
+    void operator()(Event&) {(obj.*fun)();}
   };
   
   template <class O, class R,  class M, class E> 
@@ -295,7 +299,7 @@ namespace ubit {
     R (M::*fun)(E&);
   public:
     UCall_M0E(O o, R(M::*m)(E&)) : obj(o), fun(m) {}
-    void operator()(UEvent& e) {E*_e = checkType<E>(e); if(_e) (obj.*fun)(*_e);}
+    void operator()(Event& e) {E*_e = checkType<E>(e); if(_e) (obj.*fun)(*_e);}
   };
   
   
@@ -305,7 +309,7 @@ namespace ubit {
   
   template <class O, class R, class M, class E> 
   UCall& ucall(O& o, R(M::*m)(E&)) {return *new UCall_M0E<O&, R,M,E>(o,m);}
-  ///< callback object that calls obj.foo(UEvent&); syntax: ucall(obj, &Obj::foo).
+  ///< callback object that calls obj.foo(Event&); syntax: ucall(obj, &Obj::foo).
   
   template <class O, class R, class M> 
   UCall& ucall(O* o, R(M::*m)()) {return *new UCall_M0<O&, R,M>(*o,m);}
@@ -313,10 +317,9 @@ namespace ubit {
    
   template <class O, class R, class M, class E> 
   UCall& ucall(O* o, R(M::*m)(E&)) {return *new UCall_M0E<O&, R,M,E>(*o,m);}
-  ///< callback object that calls obj->foo(UEvent&); syntax: ucall(obj, &Obj::foo).
+  ///< callback object that calls obj->foo(Event&); syntax: ucall(obj, &Obj::foo).
 
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // ucall(obj, arg1, &Obj::method)
   
   template <class O, class A, class R, class M> 
@@ -326,7 +329,7 @@ namespace ubit {
     A arg;
   public:
     UCall_M1(O o, R(M::*m)(A), A a) : obj(o), fun(m), arg(a) {}
-    void operator()(UEvent&) {(obj.*fun)(arg);}
+    void operator()(Event&) {(obj.*fun)(arg);}
   };
   
   template <class O, class A, class R, class M, class E> 
@@ -336,7 +339,7 @@ namespace ubit {
     A arg1;
   public:
     UCall_M1E(O o, R(M::*m)(E&,A), A a) : obj(o), fun(m), arg1(a) {}
-    void operator()(UEvent& e) {E*_e = checkType<E>(e); if(_e) (obj.*fun)(*_e,arg1);}
+    void operator()(Event& e) {E*_e = checkType<E>(e); if(_e) (obj.*fun)(*_e,arg1);}
   };
   
   
@@ -350,11 +353,11 @@ namespace ubit {
   
   template <class O, class A, class R, class M, class E> 
   UCall& ucall(O& o, A a, R(M::*m)(E&,A)) {return *new UCall_M1E<O&, A,R,M,E>(o,m,a);}
-  ///< callback object that calls obj.foo(UEvent&, arg); syntax: ucall(obj, arg, &Obj::foo).
+  ///< callback object that calls obj.foo(Event&, arg); syntax: ucall(obj, arg, &Obj::foo).
   
   template <class O, class A, class R, class M, class E> 
   UCall& ucall(O& o, A& a, R(M::*m)(E&,A&)) {return *new UCall_M1E<O&, A&,R,M,E>(o,m,a);}
-  ///< callback object that calls obj.foo(UEvent&, arg&); syntax: ucall(obj, arg, &Obj::foo).
+  ///< callback object that calls obj.foo(Event&, arg&); syntax: ucall(obj, arg, &Obj::foo).
   
   
   template <class O, class A, class R, class M>
@@ -367,14 +370,13 @@ namespace ubit {
   
   template <class O, class A, class R, class M, class E> 
   UCall& ucall(O* o, A a, R(M::*m)(E&,A)) {return *new UCall_M1E<O&, A,R,M,E>(*o,m,a);}
-  ///< callback object that calls obj->foo(UEvent&, Arg); syntax: ucall(obj, arg, &Obj::foo).
+  ///< callback object that calls obj->foo(Event&, Arg); syntax: ucall(obj, arg, &Obj::foo).
   
   template <class O, class A, class R, class M, class E> 
   UCall& ucall(O* o, A& a, R(M::*m)(E&,A&)) {return *new UCall_M1E<O&, A&,R,M,E>(*o,m,a);}
-  ///< callback object that calls obj->foo(UEvent&, Arg&); syntax: ucall(obj, arg, &Obj::foo).
+  ///< callback object that calls obj->foo(Event&, Arg&); syntax: ucall(obj, arg, &Obj::foo).
   
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // ucall(obj, arg1, args2, &Obj::method)
   
   template <class O, class A1, class A2, class R, class M> 
@@ -385,7 +387,7 @@ namespace ubit {
     A2 arg2;
   public:
     UCall_M2(O o, R(M::*m)(A1,A2), A1 a1, A2 a2) : obj(o), fun(m), arg1(a1), arg2(a2) {} 
-    void operator()(UEvent&) {(obj.*fun)(arg1, arg2);}
+    void operator()(Event&) {(obj.*fun)(arg1, arg2);}
   };
   
   template <class O, class A1, class A2, class R, class M, class E> 
@@ -396,7 +398,7 @@ namespace ubit {
     A2 arg2;
   public:
     UCall_M2E(O o, R(M::*m)(E&,A1,A2), A1 a1, A2 a2): obj(o),fun(m),arg1(a1),arg2(a2) {} 
-    void operator()(UEvent& e) {E*_e = checkType<E>(e); if(_e) (obj.*fun)(*_e,arg1,arg2);}
+    void operator()(Event& e) {E*_e = checkType<E>(e); if(_e) (obj.*fun)(*_e,arg1,arg2);}
   };
   
   template <class O, class A1, class A2, class R, class M> 
@@ -407,7 +409,7 @@ namespace ubit {
   template <class O, class A1, class A2, class R, class M, class E> 
   UCall& ucall(O& o, A1 a1, A2 a2, R(M::*m)(E&,A1,A2)) 
   {return *new UCall_M2E<O&,A1,A2,R,M,E>(o, m, a1, a2);}
-  ///< callback object that calls obj.foo(UEvent&, arg1, arg2); syntax: ucall(obj, arg1, arg2, &Obj::foo).
+  ///< callback object that calls obj.foo(Event&, arg1, arg2); syntax: ucall(obj, arg1, arg2, &Obj::foo).
   
   template <class O, class A1, class A2, class R, class M> 
   UCall& ucall(O* o, A1 a1, A2 a2, R(M::*m)(A1,A2)) 
@@ -417,7 +419,7 @@ namespace ubit {
   template <class O, class A1, class A2, class R, class M, class E> 
   UCall& ucall(O* o, A1 a1, A2 a2, R(M::*m)(E&,A1,A2)) 
   {return *new UCall_M2E<O&,A1,A2,R,M,E>(*o, m, a1, a2);}
-  ///< callback object that calls obj->foo(UEvent&, arg1, arg2); syntax: ucall(obj, arg1, arg2, &Obj::foo).
+  ///< callback object that calls obj->foo(Event&, arg1, arg2); syntax: ucall(obj, arg1, arg2, &Obj::foo).
   
   
   // ============================================================ [Elc] ======== 
@@ -430,7 +432,7 @@ namespace ubit {
     R (*fun)();
   public:
     UCall_F0( R(*f)()) : fun(f) {}
-    void operator()(UEvent&) {(*fun)();}
+    void operator()(Event&) {(*fun)();}
   };
   
   template <class R, class E> 
@@ -438,7 +440,7 @@ namespace ubit {
     R (*fun)(E&);
   public:
     UCall_F0E( R(*f)(E&)) : fun(f) {}
-    void operator()(UEvent& e) {E*_e = checkType<E>(e); if(_e) (*fun)(*_e);}
+    void operator()(Event& e) {E*_e = checkType<E>(e); if(_e) (*fun)(*_e);}
   };
   
   
@@ -448,10 +450,9 @@ namespace ubit {
     
   template <class R, class E> 
   UCall& ucall(R(*f)(E&)) {return *new UCall_F0E<R,E>(f);}
-  ///< creates a callback object that calls foo(UEvent&); syntax: ucall(foo).
+  ///< creates a callback object that calls foo(Event&); syntax: ucall(foo).
   
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // ucall(arg, function)
   
   template <class A, class R> 
@@ -460,7 +461,7 @@ namespace ubit {
     A arg;
   public:
     UCall_F1( R(*f)(A), A a) : fun(f), arg(a) {}
-    void operator()(UEvent&) {(*fun)(arg);}
+    void operator()(Event&) {(*fun)(arg);}
   };
   
   template <class A, class R, class E> 
@@ -469,7 +470,7 @@ namespace ubit {
     A arg1;
   public:
     UCall_F1E( R(*f)(E&,A), A a) : fun(f), arg1(a) {}
-    void operator()(UEvent& e) {E*_e = checkType<E>(e); if(_e) (*fun)(*_e,arg1);}
+    void operator()(Event& e) {E*_e = checkType<E>(e); if(_e) (*fun)(*_e,arg1);}
   };
   
   
@@ -483,14 +484,13 @@ namespace ubit {
   
   template <class A, class R, class E> 
   UCall& ucall(A a, R(*f)(E&,A)) {return *new UCall_F1E<A,R,E>(f,a);}
-  ///< creates a callback object that calls foo(UEvent&, arg); syntax: ucall(arg, foo).
+  ///< creates a callback object that calls foo(Event&, arg); syntax: ucall(arg, foo).
   
   template <class A, class R, class E> 
   UCall& ucall(A& a, R(*f)(E&,A&)) {return *new UCall_F1E<A&,R,E>(f,a);}
-  ///< creates a callback object that calls foo(UEvent&, arg); syntax: ucall(arg, foo).
+  ///< creates a callback object that calls foo(Event&, arg); syntax: ucall(arg, foo).
   
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // ucall(arg1, arg2, function)
   
   template <class A1, class A2, class R> 
@@ -499,7 +499,7 @@ namespace ubit {
     A1 arg1; A2 arg2;
   public:
     UCall_F2( R(*f)(A1,A2), A1 a1, A2 a2) : fun(f), arg1(a1), arg2(a2) {}
-    void operator()(UEvent&) {(*fun)(arg1,arg2);}
+    void operator()(Event&) {(*fun)(arg1,arg2);}
   };
   
   template <class A1, class A2, class R, class E> 
@@ -509,7 +509,7 @@ namespace ubit {
     A2 arg2;
   public:
     UCall_F2E( R(*f)(E&,A1,A2), A1 a1, A2 a2) : fun(f), arg1(a1), arg2(a2) {}
-    void operator()(UEvent& e) {E*_e = checkType<E>(e); if(_e) (*fun)(*_e,arg1,arg2);}
+    void operator()(Event& e) {E*_e = checkType<E>(e); if(_e) (*fun)(*_e,arg1,arg2);}
   };
   
   template <class A1, class A2, class R> 
@@ -518,7 +518,7 @@ namespace ubit {
   
   template <class A1, class A2, class R, class E> 
   UCall& ucall(A1 a1, A2 a2, R(*f)(E&,A1,A2)) {return *new UCall_F2E<A1,A2,R,E>(f,a1,a2);}
-  ///< creates a callback object that calls foo(UEvent&, args1, arg2); syntax: ucall(arg1, arg2, foo).
+  ///< creates a callback object that calls foo(Event&, args1, arg2); syntax: ucall(arg1, arg2, foo).
   
 }
 #endif

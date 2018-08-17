@@ -1,6 +1,5 @@
-/************************************************************************
- *
- *  ufont.cpp: Font Attribute
+/*
+ *  font.cpp: Font Attribute
  *  Ubit GUI Toolkit - Version 6.0
  *  (C) 2008 | Eric Lecolinet | ENST Paris | www.enst.fr/~elc/ubit
  *
@@ -64,7 +63,6 @@ static const FontSize FONT_SIZES[] = {
   {72,"72"}       // word
 };
 */
-/* ==================================================== ===== ======= */
 //NB: UFontFamily created in uconf.cpp to avoid init dependency problems 
 
 UFont UFont::plain(null, -BOLD|-ITALIC, 0, UCONST); // NOT bold nor Italic
@@ -90,7 +88,6 @@ UFont UFont::serif(&UFontFamily::serif, 0,0, UCONST);
 UFont UFont::monospace(&UFontFamily::monospace, 0,0, UCONST);
 //UFont UFont::fixed(&UFontFamily::fixed, 0,0, UCONST);
 
-/* ==================================================== ===== ======= */
  
 int UFontFamily::family_count = 0;
 
@@ -101,7 +98,7 @@ UFontFamily::UFontFamily(const char* _name, UConst) {     // constr PRIVE
   name = _name;
 }
 
-UFontFamily::UFontFamily(const UStr& _name) {   // constr PUBLIC
+UFontFamily::UFontFamily(const String& _name) {   // constr PUBLIC
   defs = defaults.defs;  // recopier les defaults !
   ffindex = -1;
   ready = false;
@@ -172,7 +169,6 @@ void UFontFamily::initSizes() const {
   }
 }
 
-/* ==================================================== ===== ======= */
 //ATT: faut retourner la plus proche QUI EST PLUS PETITE !
 // (si on retourne une taille plus grande le texte va etre clippe
 //  ou ca va entrainer des passages a la ligne
@@ -195,10 +191,9 @@ int UFontFamily::sizeToIndex(float size) const {
   return smaller;
 }
 
-/* ==================================================== ===== ======= */
 
 //private constr
-UFont::UFont(const UFontFamily* ff, int _styles, float pixsize, UConst m) : UAttr(m) {
+UFont::UFont(const UFontFamily* ff, int _styles, float pixsize, UConst m) : Attribute(m) {
   family = ff;
   if (pixsize <= 0) fsize = 0; else fsize = pixsize;
   if (_styles > 0) {on_styles = _styles; off_styles = 0;}
@@ -227,14 +222,13 @@ UFont::UFont(const UFont& f) {
 }
 
 UFont::UFont() {
-  UFont& f = *UAppli::conf.default_font;
+  UFont& f = *Application::conf.default_font;
   family = f.family;
   fsize = f.fsize;
   on_styles = f.on_styles;
   off_styles = f.off_styles;
 }
 
-/* ==================================================== ======== ======= */
 
 void UFont::set(const UFont& f) {
   if (checkConst()) return;
@@ -294,15 +288,15 @@ UFont& UFont::setFamily(const UFontFamily& ff) {
   return *this;
 }
 
-UFont& UFont::setFamily(const UStr& font_families) {
+UFont& UFont::setFamily(const String& font_families) {
   if (checkConst()) return *this;
   //family = ...;
   changed(true);
   return *this;
 }
 /*
- void UStyleProps::setFontFamily(UFont& f, const UStr& _val) {
- UStr v;
+ void UStyleProps::setFontFamily(UFont& f, const String& _val) {
+ String v;
  int pos = _val.find(',');
  if (pos > 0) v = _val.substring(0, pos);
  else v = _val;
@@ -322,7 +316,7 @@ UFont& UFont::setFamily(const UStr& font_families) {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-UFont& UFont::setSize(const UStr& size) {
+UFont& UFont::setSize(const String& size) {
   if (checkConst()) return *this;
   float val = 0;
   const char* unit = null;
@@ -351,8 +345,8 @@ UFont& UFont::setPixelSize(float s) {
 UFont& UFont::setPointSize(float s) {
   if (checkConst()) return *this;
   if (s <= 0) fsize = 0;
-  else fsize = s * UAppli::getDisp()->PT_TO_PX;  // !!! devrait etre adapté au UDisp
-  //cerr << "fsize " << fsize << " " << UAppli::getDisp()->PT_TO_PX<<endl;
+  else fsize = s * Application::getDisp()->PT_TO_PX;  // !!! devrait etre adapté au Display
+  //cerr << "fsize " << fsize << " " << Application::getDisp()->PT_TO_PX<<endl;
   // Point: A unit of measure used by printers, equal to 1/72 inch.
   // EX: static const double POINT_TO_PIXEL = 1.33;  // conventionnel, a la louche
   changed(true);
@@ -360,7 +354,7 @@ UFont& UFont::setPointSize(float s) {
 }
 
 float UFont::getPointSize() const {
-  return fsize / UAppli::getDisp()->PT_TO_PX;
+  return fsize / Application::getDisp()->PT_TO_PX;
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -424,27 +418,25 @@ UFont& UFont::setStrikethrough(bool state) {
   return changeStyles(UFont::STRIKETHROUGH, state);
 }
 
-/* ==================================================== ===== ======= */
 
 void UFont::update() {
-  updateAutoParents(UUpdate::LAYOUT_PAINT);  // size changed in both directions
+  updateAutoParents(Update::LAYOUT_PAINT);  // size changed in both directions
 }
 
-// This method initializes a UFont for a given UDisplay (or UAppli)
+// This method initializes a UFont for a given UDisplay (or Application)
 // It returns true if the font could be found and false otherwise
 // (a default font will be used in this case)
 // NOTE: it is not necessary to call this function explicitely since
 // version 99.10 (it will automatically be called the first time 
 // this UFont is used for drawing a string on the screen)
 //
-void UFont::realize(UDisp* d) {
-  if (!d) d = UAppli::getDisp();
+void UFont::realize(Display* d) {
+  if (!d) d = Application::getDisp();
   d->realizeFont(*this);
 }
 
-/* ==================================================== ======== ======= */
 
-void UFont::putProp(UUpdateContext* props, UElem&) {
+void UFont::putProp(UpdateContext* props, Element&) {
   UFontDesc& fd = props->fontdesc;
   if (family) fd.family = family;
   
@@ -456,7 +448,6 @@ void UFont::putProp(UUpdateContext* props, UElem&) {
   fd.setScale(props->xyscale);
 }
 
-/* ==================================================== ======== ======= */
 
 UFontDesc::UFontDesc(const UFont& f) {
   set(f);
@@ -484,8 +475,8 @@ void UFontDesc::setScale(float xyscale) {
   if (def_size == 0) def_size = UFont::medium.getPixelSize();
   scaled_size = def_size * xyscale;     // scaled pixel size
   if (!family) {
-    UAppli::internalError("UFontDesc::setScale","null font family; UFontDef: %p", this);
-    family = UAppli::conf.default_font->family;
+    Application::internalError("UFontDesc::setScale","null font family; UFontDef: %p", this);
+    family = Application::conf.default_font->family;
   }
   // find font index from scaled pixel size
   findex = family->sizeToIndex(scaled_size);

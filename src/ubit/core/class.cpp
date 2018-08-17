@@ -1,18 +1,25 @@
-/************************************************************************
- *
- *  uclass.cpp: Ubit MetaClasses
- *  Ubit GUI Toolkit - Version 6
+/*
+ *  class.cpp: Ubit MetaClasses
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE :
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION;
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
 
 #include <ubit/ubit_features.h>
 #include <iostream>
@@ -26,39 +33,39 @@ namespace ubit {
 
 
 
-unsigned int UClass::count = 0;
+unsigned int Class::count = 0;
   
-UClass::UClass(const char* n) : 
-no(++count), name(new UStr(n)), style(null), attributes(null) {
+Class::Class(const char* n) : 
+no(++count), name(new String(n)), style(null), attributes(null) {
 }
 
-UClass::UClass(const UStr& n) : 
-no(++count), name(new UStr(n)), style(null), attributes(null) {
+Class::Class(const String& n) : 
+no(++count), name(new String(n)), style(null), attributes(null) {
 }
 
-UClass::~UClass() {
+Class::~Class() {
   delete name;
   delete style;
 }
 
 /*
 //#define UBIT_CLASS(CC) \
-//static  const UClass& Class() {static UClass& c = *new USubclass<CC>(#CC); return c;} \
-//virtual const UClass& getClass() const {return Class();}    
+//static  const Class& Class() {static Class& c = *new USubclass<CC>(#CC); return c;} \
+//virtual const Class& getClass() const {return Class();}    
 
 template <class CC>
-struct USubclass : public UClass {
-  USubclass(const char* name): UClass(name) {}
+struct USubclass : public Class {
+  USubclass(const char* name): Class(name) {}
   virtual bool isInstance(UObject& obj) const {return dynamic_cast<CC*>(&obj);}
   virtual UStyle* newStyle() const {return CC::createStyle();}
 };
 
 template <class CC>
-inline const UClass& MetaClass(const char*cc_name) {static UClass& c = *new USubclass<CC>(cc_name); return c;}
+inline const Class& MetaClass(const char*cc_name) {static Class& c = *new USubclass<CC>(cc_name); return c;}
 */
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-UStyleSheet::~UStyleSheet() {
+StyleSheet::~StyleSheet() {
   for (Map::iterator k = map.begin(); k != map.end(); k++) {
     delete k->second; // deletes the nodes
   }
@@ -66,23 +73,23 @@ UStyleSheet::~UStyleSheet() {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-UElemClassMap::~UElemClassMap() {}
+ElementClassMap::~ElementClassMap() {}
 
-const UClass* UElemClassMap::findClass(const UStr& classname) const {
+const Class* ElementClassMap::findClass(const String& classname) const {
   Map::const_iterator k = map.find(&classname);
   if (k == map.end()) return null;
   else return k->second;
 }
 
 // add or replace
-void UElemClassMap::addClass(const UClass& c) {
+void ElementClassMap::addClass(const Class& c) {
   Map::iterator k = map.find(&c.getName());
   if (k != map.end()) map.erase(k);
   map[&c.getName()] = &c;
 }
 
-const UClass* UElemClassMap::obtainClass(const UStr& classname) {
-  const UClass* c = findClass(classname);
+const Class* ElementClassMap::obtainClass(const String& classname) {
+  const Class* c = findClass(classname);
   if (c) return c;
   else {
     c = new UDefaultInlineElement::MetaClass(classname);   // !!! A REVOIR !!!
@@ -93,27 +100,27 @@ const UClass* UElemClassMap::obtainClass(const UStr& classname) {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-UAttrClassMap::~UAttrClassMap() {
+AttributeClassMap::~AttributeClassMap() {
   //for (Map::iterator k = map.begin(); k != map.end(); k++) {
-  //  delete k->second; // deletes the UClass
+  //  delete k->second; // deletes the Class
   //}
 }
 
-const UClass* UAttrClassMap::findClass(const UStr& classname) const {
+const Class* AttributeClassMap::findClass(const String& classname) const {
   Map::const_iterator k = map.find(&classname);
   if (k == map.end()) return null;
   else return k->second;
 }
 
 // add or replace
-void UAttrClassMap::addClass(const UClass& c) {
+void AttributeClassMap::addClass(const Class& c) {
   Map::iterator k = map.find(&c.getName());
   if (k != map.end()) map.erase(k);
   map[&c.getName()] = &c;
 }
 
-const UClass* UAttrClassMap::obtainClass(const UStr& classname) {
-  const UClass* c = findClass(classname);
+const Class* AttributeClassMap::obtainClass(const String& classname) {
+  const Class* c = findClass(classname);
   if (c) return c;
   else {
     c = new UDefaultAttribute::MetaClass(classname);   // !!! A REVOIR !!!

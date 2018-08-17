@@ -1,18 +1,25 @@
-/************************************************************************
- *
- *  uctlmenu.cpp : Control menus (see upiemenu.hpp)
- *  Ubit GUI Toolkit - Version 6
+/*
+ *  ctlmenu.cpp : Control menus (see upiemenu.hpp)
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE :
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION;
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
 
 #include <ubit/ubit_features.h>
 #include <vector>
@@ -33,7 +40,7 @@ UStyle* UCtlmenu::createStyle() {
   style->local.border = null;
   style->local.padding.set(1, 1);
   style->local.background = null;
-  style->setBgcolors(UColor::none);
+  style->setBgcolors(Color::none);
   return style;
 }
 
@@ -44,17 +51,17 @@ UCtlmenu::UCtlmenu() {
 
 // ==================================================== [Ubit Toolkit] =========
 
-void UCtlAction::operator()(UEvent& e) {
+void UCtlAction::operator()(Event& e) {
   // NB: getSource() renvoie le menu
   UCtlmenu* m = dynamic_cast<UCtlmenu*>(e.getSource());
   if (m && e.getCond() == UOn::mdrag) mdrag((UMouseEvent&)e, *m);
 }
 
-void UCtlAction::addingTo(UChild& child, UElem& parent) {
+void UCtlAction::addingTo(Child& child, Element& parent) {
   /*
-   static UMultiCond* mc = null;
+   static MultiCondition* mc = null;
    if (!mc) {
-     mc = new UMultiCond;
+     mc = new MultiCondition;
      mc->add(UOn::mdrag);
      mc->add(UOn::arm);
      mc->add(UOn::disarm);
@@ -64,9 +71,9 @@ void UCtlAction::addingTo(UChild& child, UElem& parent) {
   // sert a specifier les conditions par defaut
   if (!child.getCond()) child.setCond(UOn::mdrag);
   
-  // NB: c'est bien UNode::addingTo qu'il faut appeler sinon la cond par
+  // NB: c'est bien Node::addingTo qu'il faut appeler sinon la cond par
   // defaut serait UOn::action
-  UNode::addingTo(child, parent);
+  Node::addingTo(child, parent);
 }
 
 // ==================================================== [Ubit Toolkit] =========
@@ -74,7 +81,7 @@ void UCtlAction::addingTo(UChild& child, UElem& parent) {
 //UZoomAction::UZoomAction(UZoompane& zbox) 
 //: pscale(&zbox.scale()), ppos(&zbox.pos()), pbox(&zbox) {}
 
-UZoomAction::UZoomAction(UBox& zoomed_box, float _gain) : 
+UZoomAction::UZoomAction(Box& zoomed_box, float _gain) : 
 UCtlAction(_gain), 
 zbox(zoomed_box),
 posAttr(zoomed_box.obtainAttr<UPos>()),
@@ -82,7 +89,7 @@ scaleAttr(zoomed_box.obtainAttr<UScale>()) {
 }
 
 void UZoomAction::mdrag(UMouseEvent& e, UCtlmenu& m) {
-  UView* menuview = e.getView();
+  View* menuview = e.getView();
   if (!menuview) return;
   
   if (e.isFirstDrag()) {
@@ -93,7 +100,7 @@ void UZoomAction::mdrag(UMouseEvent& e, UCtlmenu& m) {
     zbox_pos0.set(posAttr->getX().val, posAttr->getY().val);
     zbox_scale0 = *scaleAttr;
     
-    UView* zbox_view = zbox->getView(e);
+    View* zbox_view = zbox->getView(e);
     if (!zbox_view) {
       zbox_view = zbox->getView(0);
       //cerr << "UZoomAction: null box view"<<endl;
@@ -103,8 +110,8 @@ void UZoomAction::mdrag(UMouseEvent& e, UCtlmenu& m) {
     
     //cerr <<"PRESS: "<< mouse_in_zbox0.x <<" / : "<< (zbox_pos0.x * zbox_scale0)<< endl;
     /*
-    UPoint view_scrpos = box_view->getScreenPos();
-    UPoint mouse_scrpos = e.getScreenPos();
+    Point view_scrpos = box_view->getScreenPos();
+    Point mouse_scrpos = e.getScreenPos();
     mousepos.x = (mouse_scrpos.x - view_scrpos.x);
     mousepos.y = (mouse_scrpos.y - view_scrpos.y);
      */
@@ -133,7 +140,7 @@ void UZoomAction::mdrag(UMouseEvent& e, UCtlmenu& m) {
 
 // ==================================================== [Ubit Toolkit] =========
 
-UPanAction::UPanAction(UBox& panned_box, float _gain) : 
+UPanAction::UPanAction(Box& panned_box, float _gain) : 
 UCtlAction(_gain), 
 box(panned_box),
 posAttr(panned_box.obtainAttr<UPos>()) {
@@ -144,13 +151,13 @@ void UPanAction::mdrag(UMouseEvent& e, UCtlmenu& m) {
     // Unit ignoré : peut poser probleme !!!
     pos0.set(posAttr->getX().val, posAttr->getY().val);   // !!! convesrion afaire
 
-    UView* box_view = box->getView(e);
+    View* box_view = box->getView(e);
     if (!box_view) return;
     // fait le contraire de ce qu'on veut
     //container_scale = box_view->getParentView()->getScale();
   }
   else {
-    UPoint newpos;
+    Point newpos;
     newpos.x = pos0.x + m.getMouseMovement().x * xmag; // / container_scale;
     newpos.y = pos0.y + m.getMouseMovement().y * ymag; // / container_scale;
     if (*posAttr == newpos) return;
@@ -188,7 +195,7 @@ void UScrollAction::mdrag(UMouseEvent& e, UCtlmenu& m) {
     ypos = ys;
     pane->setScrollImpl(xpos, ypos);  //cf. UPane::setScroll()
    // update paint (dont update geometry): necessaire dans ce cas
-    pane->update(UUpdate::paint);
+    pane->update(Update::paint);
   }
 }
 

@@ -1,6 +1,5 @@
-/************************************************************************
- *
- *  unatwinGDK.cpp: GDK Windows
+/*
+ *  natwinGDK.cpp: GDK Windows
  *  Ubit GUI Toolkit - Version 6.0
  *  (C) 2008 | Eric Lecolinet | ENST Paris | www.enst.fr/~elc/ubit
  *
@@ -36,16 +35,16 @@ void UNatWin::swapBuffers() {
   cerr << "UNatWin::swapBuffers: not implemented" << endl; //!!!! @@@@ to be completed
 }
 
-//NB: move fait par programme (PAS par l'utilisateur: cf UDisp::on_configure())
+//NB: move fait par programme (PAS par l'utilisateur: cf Display::on_configure())
 void UNatWin::setPos(int x, int y) {
   if (sys_win != 0) gdk_window_move(sys_win, x, y);
 }
 
-//NB: resize fait par programme (PAS par l'utilisateur: cf UDisp::on_configure())
-void UHardWinGDK::setSize(const UDimension& size) {
+//NB: resize fait par programme (PAS par l'utilisateur: cf Display::on_configure())
+void UHardWinGDK::setSize(const Dimension& size) {
   if (sys_win != 0) {
     gdk_window_resize(sys_win, int(size.width), int(size.height));
-    //if (UAppli::isUsingGL()) UAppli::getDisp()->setGLViewportOrtho(size); fait dans UGraph
+    //if (Application::isUsingGL()) Application::getDisp()->setGLViewportOrtho(size); fait dans Graph
   }
 }
 
@@ -77,11 +76,11 @@ void UNatWin::toBack() {
   if (sys_win != 0) gdk_window_lower(sys_win); 
 }
 
-void UNatWin::setTitle(const UStr& s) {
+void UNatWin::setTitle(const String& s) {
   if (sys_win != null && s.c_str()) gdk_window_set_title(sys_win, s.c_str());  // UTF-8 !!!
 }
 
-void UNatWin::getTitle(UStr& s) const {
+void UNatWin::getTitle(String& s) const {
   if (sys_win != null) {                                          // !!!!!! A_COMPLETER !!!
     s = "";  // existe ??????????????
   }
@@ -92,8 +91,8 @@ void UNatWin::setCursor(const UCursor* curs) {
   XDefineCursor(SYS_DISP, sys_win, xc);
 }
 
-void UNatWin::setNames(const UStr& res_class, const UStr& res_name, 
-                       const UStr& win_name, const UStr& icon_name) { 
+void UNatWin::setNames(const String& res_class, const String& res_name, 
+                       const String& win_name, const String& icon_name) { 
   // A IMPLEMENTER !!!
 }
 
@@ -104,7 +103,7 @@ void UHardWinGDK::realize(WinType wtype, float w, float h) {
   wintype = wtype;
   
   if (wtype == NONE || wtype == SOFTWIN || wtype == EXTWIN) {
-    UAppli::error("UHardWinGDK","wrong type for this function: %d", wtype);
+    Application::error("UHardWinGDK","wrong type for this function: %d", wtype);
     return;
   }
   
@@ -204,5 +203,3 @@ void UNatWin::destroyWin() {
 
 }
 #endif
-/* ==================================================== [TheEnd] ======= */
-/* ==================================================== [(c)Elc] ======= */

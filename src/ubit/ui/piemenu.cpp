@@ -1,18 +1,25 @@
-/************************************************************************
- *
- *  upiemenu.cpp : Pie and Control menus
- *  Ubit GUI Toolkit - Version 6
+/*
+ *  piemenu.cpp : Pie and Control menus
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE :
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION;
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
 
 #include <ubit/ubit_features.h>
 #include <vector>
@@ -29,14 +36,13 @@ UStyle* UPiemenu::createStyle() {
   style->local.background = null;    // !! alpha et background sont lies !!!!
   style->local.border = null;
   style->local.padding.set(1, 1);
-  style->setBgcolors(UColor::none);
-  //style->setColors(UColor::white, UColor::yellow);
-  style->setColors(UColor::white, UColor::white);
-  //style->setColor(UOn::ARMED, UColor::yellow);
+  style->setBgcolors(Color::none);
+  //style->setColors(Color::white, Color::yellow);
+  style->setColors(Color::white, Color::white);
+  //style->setColor(UOn::ARMED, Color::yellow);
   return style;
 }
 
-/* ==================================================== ===== ======= */
 
 UPiemenu::UPiemenu() :
 menu_style(COMPOUND), 
@@ -52,15 +58,15 @@ pie_radius(-1),   // -1 means auto
 center_radius(7),
 item_radius(7)
 {
-  // A REVOIR AVEC STYLES ET UBackground avance !!!!!@@@@@@
+  // A REVOIR AVEC STYLES ET Background avance !!!!!@@@@@@
   // de plus c'est le backround et le alpha du Piemenu qui devraient etre utilise !
-  static uptr<UColor> default_pie_color = new UColor(UColor::black, 100u);
-  static uptr<UColor> default_pie_border_color = new UColor(UColor::black, 100u);
-  //static uptr<UColor> default_slice_color = new UColor(UColor::black, 75u);  
-  static uptr<UColor> default_slice_color = new UColor(UColor::blue);  
-  //static uptr<UColor> default_center_color = new UColor(UColor::white, 255u);
-  static uptr<UColor> default_center_color = new UColor(UColor::white);
-  static uptr<UColor> default_center_border_color = new UColor(UColor::red, 255u);
+  static uptr<Color> default_pie_color = new Color(Color::black, 100u);
+  static uptr<Color> default_pie_border_color = new Color(Color::black, 100u);
+  //static uptr<Color> default_slice_color = new Color(Color::black, 75u);  
+  static uptr<Color> default_slice_color = new Color(Color::blue);  
+  //static uptr<Color> default_center_color = new Color(Color::white, 255u);
+  static uptr<Color> default_center_color = new Color(Color::white);
+  static uptr<Color> default_center_border_color = new Color(Color::red, 255u);
   
   ppie_color = default_pie_color; 
   ppie_border_color = default_pie_border_color;
@@ -114,7 +120,7 @@ UPiemenu::~UPiemenu() {
 
 void UPiemenu::setMenuType(int type) {
   menu_style = type;
-  for (UChildIter it = cbegin(); it != cend(); ++it) {
+  for (ChildIter it = cbegin(); it != cend(); ++it) {
     UPiemenu* ch = dynamic_cast<UPiemenu*>(*it);
     if (ch) ch->setMenuType(type);
   }
@@ -132,21 +138,21 @@ float UPiemenu::getScaleValue() {  // !!!
   return s ? float(*s) : 1.;
 }
 
-UBox* UPiemenu::createItem() {
-  UBox* b = new UButton();
-  b->addAttr(UBackground::none); // + UOn::arm/UColor::yellow);
+Box* UPiemenu::createItem() {
+  Box* b = new UButton();
+  b->addAttr(Background::none); // + UOn::arm/Color::yellow);
   return b;
 }
 
-UBox* UPiemenu::getItem(int n) const {
+Box* UPiemenu::getItem(int n) const {
   if (n < 0 || n >= 7) return null;
-  UNode* i = gitems.getChild(n);
-  return i ? dynamic_cast<UBox*>(i) : null;
+  Node* i = gitems.getChild(n);
+  return i ? dynamic_cast<Box*>(i) : null;
 }
 
-UBox& UPiemenu::item(int n) {
+Box& UPiemenu::item(int n) {
   if (n < 0 || n >= 7) n = 7;  // take the last one
-  UBox* i = getItem(n);
+  Box* i = getItem(n);
   if (!i) {
     gitems.remove(n);
     i = createItem();
@@ -155,20 +161,19 @@ UBox& UPiemenu::item(int n) {
   return *i;
 }
 
-UBox* UPiemenu::getSelectedItem() const {return parmed;}
+Box* UPiemenu::getSelectedItem() const {return parmed;}
 int UPiemenu::getSelectedIndex() const {return curitem >= 0 ? curitem : -1;}
 
 /*
- UBox* UPiemenu::setItem(int n, UBox& child, bool auto_del) {
+ Box* UPiemenu::setItem(int n, Box& child, bool auto_del) {
  if (n < 0 || n >= 8) return null;
  gitems.remove(gitems.child(n), auto_del);
  gitems.add(child, n);
  return &child;
  }
  */
-/* ==================================================== ===== ======= */
 
-void UPiemenu::show(bool state, UDisp* disp) {
+void UPiemenu::show(bool state, Display* disp) {
   if (state) {
     novice_mode = true;
     gitems.show(novice_mode);
@@ -178,7 +183,6 @@ void UPiemenu::show(bool state, UDisp* disp) {
   UPopmenu::show(state, disp);
 }
 
-/* ==================================================== ===== ======= */
 
 void UPiemenu::open(UMouseEvent& e) {
   // we have a pbm here because of f->boxMousePress(): this may generate an
@@ -212,7 +216,6 @@ void UPiemenu::open(UMouseEvent& e) {
   in_show_function = false;
 }
 
-/* ==================================================== ===== ======= */
 
 void UPiemenu::reset(UMouseEvent* e) {
   curitem = -2;  
@@ -222,9 +225,9 @@ void UPiemenu::reset(UMouseEvent* e) {
   // - le 2e update() calcule la taille du menu
   // HIDDEN_OBJECTS est necessaire car le menu n'est pas encore affiche
   // NO_DELAY calcule immediatement (par defaut les update() sont bufferises)
-  //UUpdate upd(UUpdate::LAYOUT | UUpdate::HIDDEN_OBJECTS | UUpdate::NO_DELAY);
+  //Update upd(Update::LAYOUT | Update::HIDDEN_OBJECTS | Update::NO_DELAY);
   //update(upd);
-  doUpdate(UUpdate::LAYOUT | UUpdate::HIDDEN_OBJECTS);
+  doUpdate(Update::LAYOUT | Update::HIDDEN_OBJECTS);
   parmed = null;
   armpos.x = armpos.y = 0;
   mousepos.x = mousepos.y = 0;
@@ -246,13 +249,13 @@ void UPiemenu::resizeCB(UResizeEvent& e) {
   }
   else {
     float max_iw = 0, max_ih = 0;  // max item width & height
-    UChildIter i = gitems.cbegin();
+    ChildIter i = gitems.cbegin();
     
     for (int k = 0; i != gitems.cend(); ++i, ++k) {
       
-      UBox* b = (*i)->toBox();
+      Box* b = (*i)->toBox();
       if (!b) continue;
-      UView* v = b->getView();
+      View* v = b->getView();
       if (!v) continue;
       
       switch(k) {
@@ -279,19 +282,19 @@ void UPiemenu::resizeCB(UResizeEvent& e) {
   pie_size.set(diam, diam);
   
   {
-    UChildIter i = gitems.cbegin();
+    ChildIter i = gitems.cbegin();
     for (int k = 0; i != gitems.cend(); ++i, ++k) {
       
-      UBox* b = dynamic_cast<UBox*>(*i);
+      Box* b = dynamic_cast<Box*>(*i);
       if (!b) continue;
-      UView* v = b->getView();
+      View* v = b->getView();
       if (!v) continue;
       
       float iw = v->getWidth() / scale;  // normalized item width
       float ih = v->getHeight()/ scale;  // normalized item height
       float a = k * M_PI / 4.;
       float ring = rad - item_radius;
-      UPoint p;
+      Point p;
       
       switch(k) {
         case 0: // right   
@@ -342,25 +345,24 @@ void UPiemenu::resizeCB(UResizeEvent& e) {
   }
 }
 
-/* ==================================================== ===== ======= */
 
 void UPiemenu::paintCB(UPaintEvent& e) {
-  UView* v = e.getView();
+  View* v = e.getView();
   if (!v || !novice_mode) return;
-  UGraph g(e);
+  Graph g(e);
   
-  if (ppie_color && *ppie_color != UColor::none) {
+  if (ppie_color && *ppie_color != Color::none) {
     //if (pie_alpha) g.setAlpha(*pie_alpha);
     g.setColor(*ppie_color);
     g.fillEllipse(0, 0, v->getWidth(), v->getHeight());
   }
   
-  if (curitem >= 0 && pslice_color && *pslice_color != UColor::none) {
+  if (curitem >= 0 && pslice_color && *pslice_color != Color::none) {
     g.setColor(*pslice_color);
     g.fillArc(0, 0, v->getWidth(), v->getHeight(), curitem*45-22, 45);
   }
   
-  if (curitem < 0 && pcenter_color && *pcenter_color != UColor::none) {
+  if (curitem < 0 && pcenter_color && *pcenter_color != Color::none) {
     g.setColor(*pcenter_color);
     g.fillEllipse(v->getWidth()/2 - center_radius, v->getHeight()/2 - center_radius, 
                   center_radius*2, center_radius*2);
@@ -408,7 +410,7 @@ void UPiemenu::unlinkFromAndToMenus() {
 }  
 
 void UPiemenu::addSubMenu(int N, UPiemenu* submenu) {
-  UBox& btn = item(N);
+  Box& btn = item(N);
   if (!submenu) return;
   submenu->setShowDelay(0);
   
@@ -422,9 +424,9 @@ void UPiemenu::addSubMenu(int N, UPiemenu* submenu) {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-float UPiemenu::getCentredCoords(UMouseEvent& e, UPoint& p, bool& must_forward) {
-  UView* v = getView();
-  UPoint c = getCenterInContainingWin();
+float UPiemenu::getCentredCoords(UMouseEvent& e, Point& p, bool& must_forward) {
+  View* v = getView();
+  Point c = getCenterInContainingWin();
   p.x = e.getScreenPos().x - e.getWinView()->getScreenPos().x - c.x;
   p.y = e.getScreenPos().y - e.getWinView()->getScreenPos().y - c.y;
   
@@ -449,7 +451,7 @@ float UPiemenu::getCentredCoords(UMouseEvent& e, UPoint& p, bool& must_forward) 
   return d;
 }
 
-short UPiemenu::getItemFromPos(const UPoint& p) const {
+short UPiemenu::getItemFromPos(const Point& p) const {
   float ang;     // value in [-PI/2, +PI/2]
   if (p.x == 0) ang = p.y > 0 ? -M_PI/2 : M_PI/2;
   else ang = ::atan(double(-p.y / p.x));
@@ -481,18 +483,18 @@ short UPiemenu::getItemFromPos(const UPoint& p) const {
 }
 
 // !!! PBM: rend parentWin pour softwins, mais this pour hardwin !!!
-// !!! DE MEME: meme pbm pour UView::getWin() : comportement different
+// !!! DE MEME: meme pbm pour View::getWin() : comportement different
 //     pour hardwin et softwin!
 
-UWin* UPiemenu::getContainingWin(UDisp* disp) const {   // !!BUGGY si hardwin!!
-  UView* v = getWinView(disp);
+Window* UPiemenu::getContainingWin(Display* disp) const {   // !!BUGGY si hardwin!!
+  View* v = getWinView(disp);
   return v ? v->getWin() : null;
 }
 
-UPoint UPiemenu::getCenterInContainingWin(UDisp* disp) const {
-  UWin* w = getContainingWin(disp);
-  UDimension dim = getSize(disp);
-  UPoint p = w ? getPos(*w, disp) : UPoint(0,0);
+Point UPiemenu::getCenterInContainingWin(Display* disp) const {
+  Window* w = getContainingWin(disp);
+  Dimension dim = getSize(disp);
+  Point p = w ? getPos(*w, disp) : Point(0,0);
   p.x += dim.width / 2;
   p.y += dim.height / 2;
   return p; 
@@ -513,10 +515,10 @@ void UPiemenu::armItemCB(UMouseEvent& e, UPiemenu* m2) {
   }
   
   // sinon le 1er getWidth est pas a jour (a cause de UPiemenu::resizeCB)
-  m2->doUpdate(UUpdate::LAYOUT | UUpdate::HIDDEN_OBJECTS);
+  m2->doUpdate(Update::LAYOUT | Update::HIDDEN_OBJECTS);
   
-  UPoint c = getCenterInContainingWin();
-  UPoint p;
+  Point c = getCenterInContainingWin();
+  Point p;
   
   switch (menu_style) {
     case CONCENTRIC:
@@ -537,8 +539,8 @@ void UPiemenu::armItemCB(UMouseEvent& e, UPiemenu* m2) {
       break;
   }
   
-  UWin* win = getContainingWin(null/*DISP!!*/);
-  //m2->setPosOnScreen(UPoint(m1->getPosOnScreen().x + p.x,  not impl!!
+  Window* win = getContainingWin(null/*DISP!!*/);
+  //m2->setPosOnScreen(Point(m1->getPosOnScreen().x + p.x,  not impl!!
   //                   m1->getPosOnScreen().y + p.y));
   
   // positionner et afficher le submenu
@@ -577,7 +579,7 @@ void UPiemenu::motionCB(UMouseEvent& e) {
   // dont do anything if no mouse button is pressed
   if (e.getButtons() == 0 && e.getButton() == 0) return;
   
-  UPoint p;
+  Point p;
   bool must_forward;
   float d = getCentredCoords(e, p, must_forward);
   if (must_forward) {
@@ -622,7 +624,7 @@ void UPiemenu::motionCB(UMouseEvent& e) {
     mousepos.x = mousepos.y = 0;
     
     {  // arm new item
-      UBox* b = getItem(curitem);
+      Box* b = getItem(curitem);
       // !!! IL FAUT TROUVER UN MOYEN DE VIRER LES ITEMS NULLS !!!!
       if (b && b->cbegin() != b->cend()) parmed = b;
     }
@@ -651,10 +653,9 @@ DRAG:    // send mdrag whatever the mmode
   }
 }
 
-/* ==================================================== ===== ======= */
 
 void UPiemenu::pressCB(UMouseEvent& e) {
-  UPoint p;
+  Point p;
   bool must_forward;
   getCentredCoords(e, p, must_forward);
   
@@ -666,13 +667,12 @@ void UPiemenu::pressCB(UMouseEvent& e) {
   motionCB(e);
 }
 
-/* ==================================================== ===== ======= */
 
 void UPiemenu::releaseCB(UMouseEvent& e) {
   ptimer->stop();
   
   //if (!ctlmenu_mode) {
-  UPoint p;
+  Point p;
   bool must_forward;
   float d = getCentredCoords(e, p, must_forward);
   if (must_forward && to_menu) {
@@ -713,9 +713,8 @@ void UPiemenu::releaseCB(UMouseEvent& e) {
   }
 }
 
-/* ==================================================== ===== ======= */
 
-void UPiemenu::hideCB(UEvent& e) {
+void UPiemenu::hideCB(Event& e) {
   //cerr << "hideCB " << this << endl;
   
   // ATT: keep last 'opener' value because the menu is hidden when the 
@@ -732,13 +731,12 @@ void UPiemenu::hideCB(UEvent& e) {
   novice_mode = false;
 }
 
-/* ==================================================== ===== ======= */
 /* obsolete: for the old WaveMenu subclass:
  
 void UPiemenu::closeMenus(UMouseEvent& e, bool close_submenus) {
   ptimer->stop();
   
-  UPoint p;
+  Point p;
   bool must_forward;
   float d = getCentredCoords(e, p, must_forward);
   

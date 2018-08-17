@@ -1,18 +1,26 @@
-/* ***********************************************************************
- *
+/*
  *  uhardfont.cpp
- *  Ubit GUI Toolkit - Version 6.0
- *  (C) 1999-2008 Eric Lecolinet | ENST Paris | www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE : 
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE 
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. 
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU 
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION; 
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
+ *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
+
 
 #include <cstdio>
 #include <iostream>
@@ -34,7 +42,7 @@
 
 namespace ubit {
 
-UHardFont::UHardFont(UDisp* nd, const UFontDesc& fd)  // glcontext dependent!!!
+UHardFont::UHardFont(Display* nd, const UFontDesc& fd)  // glcontext dependent!!!
 : status(NO_FONT), count(1)
 #if WITH_2D_GRAPHICS
   ,sysf(0)
@@ -43,12 +51,12 @@ UHardFont::UHardFont(UDisp* nd, const UFontDesc& fd)  // glcontext dependent!!!
   ,ftf(null)
 #endif
 {
-  if (UAppli::conf.is_using_freetype) {
+  if (Application::conf.is_using_freetype) {
 #ifdef UBIT_WITH_GL
     ftf = loadFTGLFont(nd, fd);     // glcontext dependent!!!
     if (ftf) status = FTGL_FONT;
 #else
-    UAppli::error("UHardFont::UHardFont","FreeType requires OpenGL");
+    Application::error("UHardFont::UHardFont","FreeType requires OpenGL");
 #endif
     return;
   }
@@ -59,12 +67,12 @@ UHardFont::UHardFont(UDisp* nd, const UFontDesc& fd)  // glcontext dependent!!!
   else return;
 
 #if UBIT_WITH_X11 && UBIT_WITH_GL
-  if (UAppli::isUsingGL()) {
+  if (Application::isUsingGL()) {
     //glf = glGenLists(256);
     //glXUseXFont(sysf->fid, 0, 255, glf);
     glf = glGenLists(sysf->max_char_or_byte2 + 1);   // glcontext dependent!!!
     if (glf == 0) {
-      UAppli::error("UHardFont::UHardFont","out of display lists");
+      Application::error("UHardFont::UHardFont","out of display lists");
       return;
     }
     glXUseXFont(sysf->fid, sysf->min_char_or_byte2, 
@@ -83,11 +91,10 @@ UHardFont::~UHardFont() {     // glcontext dependent!!!
 #endif
 }
 
-/* ==================================================== ===== ======= */
 
 float UHardFont::getAscent() const {
 #if UBIT_WITH_GL
-  if (UAppli::conf.is_using_freetype) return ftf->Ascender();
+  if (Application::conf.is_using_freetype) return ftf->Ascender();
 #endif
 #if WITH_2D_GRAPHICS
   return sysf->ascent;
@@ -97,7 +104,7 @@ float UHardFont::getAscent() const {
 
 float UHardFont::getDescent() const {
 #if UBIT_WITH_GL
-  if (UAppli::conf.is_using_freetype) return -ftf->Descender();  //att: Descender() is < 0 !
+  if (Application::conf.is_using_freetype) return -ftf->Descender();  //att: Descender() is < 0 !
 #endif
 #if WITH_2D_GRAPHICS
   return sysf->descent;
@@ -107,7 +114,7 @@ float UHardFont::getDescent() const {
 
 float UHardFont::getHeight() const {
 #if UBIT_WITH_GL
-  if (UAppli::conf.is_using_freetype) return ftf->Ascender() - ftf->Descender(); //att: Descender() is < 0 !
+  if (Application::conf.is_using_freetype) return ftf->Ascender() - ftf->Descender(); //att: Descender() is < 0 !
 #endif
 #if WITH_2D_GRAPHICS
   return sysf->ascent + sysf->descent;
@@ -115,7 +122,6 @@ float UHardFont::getHeight() const {
   return 0; // toolkit compled with improper options
 }
 
-/* ==================================================== ===== ======= */
 #if (UBIT_WITH_X11 && WITH_2D_GRAPHICS)
 
 // va savoir pourquoi: parfois default_char vaut n'importe quoi !
@@ -154,7 +160,7 @@ static int CharWidth(XFontStruct* f, char _c) {
 
 float UHardFont::getWidth(char c) const {
 #if UBIT_WITH_GL
-  if (UAppli::conf.is_using_freetype) {
+  if (Application::conf.is_using_freetype) {
     char s[2];
     s[0] = c;
     s[1] = 0;
@@ -175,7 +181,7 @@ float UHardFont::getWidth(char c) const {
 
 float UHardFont::getWidth(const char* s, int len) const {
 #if UBIT_WITH_GL
-  if (UAppli::conf.is_using_freetype) {
+  if (Application::conf.is_using_freetype) {
     return ftf->Advance(s, len);  // ELC: 'len' rajoute a Advance()
   }
 #endif
@@ -190,7 +196,7 @@ float UHardFont::getWidth(const char* s, int len) const {
 
 /* ==================================================== [Elc] ======= */
 
-static bool getNext(UStr& item, UStr& list) {
+static bool getNext(String& item, String& list) {
   int pos = list.find(',');
   if (pos < 0) {
     item = list;
@@ -204,22 +210,21 @@ static bool getNext(UStr& item, UStr& list) {
   return !item.empty();
 }
 
-/* ==================================================== ===== ======= */
 #if WITH_2D_GRAPHICS
 
-XFontStruct* UHardFont::loadSysFont(UDisp* nd, const UFontDesc& fd) {
+XFontStruct* UHardFont::loadSysFont(Display* nd, const UFontDesc& fd) {
   if (!fd.family) return null;
   const UFontFamily* ff = fd.family;
-  UStr family, families = ff->defs.families;
+  String family, families = ff->defs.families;
   
   while ((getNext(family, families))) {
     
-    UStr weight, weights = 
+    String weight, weights = 
     (fd.styles & UFont::BOLD) ? ff->defs.bold_weight : ff->defs.normal_weight;
 
     while ((getNext(weight, weights))) {
 
-      UStr style, styles =
+      String style, styles =
       (fd.styles & UFont::ITALIC) ? ff->defs.italic_style : ff->defs.normal_style;
       
       while ((getNext(style, styles))) {
@@ -233,7 +238,7 @@ XFontStruct* UHardFont::loadSysFont(UDisp* nd, const UFontDesc& fd) {
         XFontStruct* fs = null;
         fs = XLoadQueryFont(((UDispX11*)nd)->getSysDisp(), font_name);
 #else
-        UAppli::fatalError("UHardFont::loadSysFont","this function requires the Ubit toolkit to be compiled with X11 or GDK");
+        Application::fatalError("UHardFont::loadSysFont","this function requires the Ubit toolkit to be compiled with X11 or GDK");
         fs = null; // !!!
 #endif
         if (fs) return fs;
@@ -244,7 +249,6 @@ XFontStruct* UHardFont::loadSysFont(UDisp* nd, const UFontDesc& fd) {
 }
 
 #endif
-/* ==================================================== ===== ======= */
 #if UBIT_WITH_GL
 
 // FTGLBitmapFont / FTGLPixmapFont / FTGLExtrdFont /  FTGLOutlineFont * 
@@ -253,16 +257,16 @@ XFontStruct* UHardFont::loadSysFont(UDisp* nd, const UFontDesc& fd) {
 
 // !!!!!!!!!!!!!!!!!  GESTION COUTEUSE ??? A REVOIR !!!! @@@@  !!!!!!!!!!!!!!!!!!!!!!!!
 
-FTFont* UHardFont::loadFTGLFont(UDisp* nd, const UFontDesc& fd) {
+FTFont* UHardFont::loadFTGLFont(Display* nd, const UFontDesc& fd) {
 #if !defined(UBIT_WITH_FREETYPE)
-  UAppli::fatalError("UHardFont::loadFTGLFont",
+  Application::fatalError("UHardFont::loadFTGLFont",
                      "FreeType font requested but Ubit was compiled without FreeType");
   return null;
   
 #else
   if (!fd.family) return null;
   const UFontFamily* ff = fd.family;
-  UStr fnames;
+  String fnames;
   //int card = 0;
   //char ** list = XGetFontPath(nd->getSysDisp(), &card);
   //for (int k = 0; k < card; k++) cerr << list[k] << endl;
@@ -277,7 +281,7 @@ FTFont* UHardFont::loadFTGLFont(UDisp* nd, const UFontDesc& fd) {
     else  fnames = ff->defs.fty_regular;
   }
   
-  UStr fname;
+  String fname;
   while ((getNext(fname, fnames))) {
     FTFont* f = (FTFont*)new FTGLTextureFont(fname.c_str());
     if (f->Error() != 0) delete f;
@@ -289,7 +293,7 @@ FTFont* UHardFont::loadFTGLFont(UDisp* nd, const UFontDesc& fd) {
   
   // not found!
   const char* font_name = fd.family->name.empty() ? "[Unknown]" : fd.family->name.c_str();
-  UAppli::warning("UHardFont","Can't find FreeType font: %s", font_name);
+  Application::warning("UHardFont","Can't find FreeType font: %s", font_name);
   return null;
 #endif
 }

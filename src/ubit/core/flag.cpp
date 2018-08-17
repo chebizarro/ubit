@@ -1,6 +1,5 @@
-/************************************************************************
- *
- *  uflag.cpp
+/*
+ *  flag.cpp
  *  Ubit GUI Toolkit - Version 6.0
  *  (C) 2009 | Eric Lecolinet | ENST Paris | http://www.enst.fr/~elc/ubit
  *
@@ -24,15 +23,14 @@ NAMESPACE_UBIT
 
 const UFlag UFlag::none;
 
-bool UFlag::verifies(const UUpdateContext& ctx, const UElem&) const {
+bool UFlag::verifies(const UpdateContext& ctx, const Element&) const {
   return (ctx.getFlagdef(this) != null);
 }
 
-bool UNotFlag::verifies(const UUpdateContext& ctx, const UElem& par) const {
+bool UNotFlag::verifies(const UpdateContext& ctx, const Element& par) const {
   return !cond.verifies(ctx, par);
 }
 
-/* ==================================================== ===== ======= */
 
 UFlagdef::UFlagdef() : flag(null) {}
 UFlagdef::UFlagdef(const UFlag& f) : flag(&f) {}
@@ -52,21 +50,20 @@ UFlagdef& UFlagdef::clear() {
 }
 
 void UFlagdef::update() {
-  updateAutoParents(UUpdate::LAYOUT_PAINT);
+  updateAutoParents(Update::LAYOUT_PAINT);
 }
 
-void UFlagdef::putProp(UUpdateContext* ctx, UElem&) {
+void UFlagdef::putProp(UpdateContext* ctx, Element&) {
   if (flag && flag != &UFlag::none) ctx->addFlagdef(this);
 }
 
-/* ==================================================== ===== ======= */
 
 UPropdef::UPropdef() : prop(null) {}
 UPropdef::UPropdef(const UFlag& _f) : UFlagdef(_f), prop(null) {}
-UPropdef::UPropdef(const UFlag& _f, UAttr& _p) : UFlagdef(_f), prop(&_p) {}
+UPropdef::UPropdef(const UFlag& _f, Attribute& _p) : UFlagdef(_f), prop(&_p) {}
 
 UPropdef& upropdef() {return *new UPropdef();}
-UPropdef& upropdef(const class UFlag& _f, UAttr& _p) {return *new UPropdef(_f, _p);}
+UPropdef& upropdef(const class UFlag& _f, Attribute& _p) {return *new UPropdef(_f, _p);}
 
 UPropdef& UPropdef::set(const UFlag& _f) {
   if (checkConst()) return *this;
@@ -76,7 +73,7 @@ UPropdef& UPropdef::set(const UFlag& _f) {
   return *this;
 }
 
-UPropdef& UPropdef::set(UAttr& _p) {
+UPropdef& UPropdef::set(Attribute& _p) {
   if (checkConst()) return *this;
   // test equals ???
   prop = _p;
@@ -84,7 +81,7 @@ UPropdef& UPropdef::set(UAttr& _p) {
   return *this;
 }
 
-UPropdef& UPropdef::set(const UFlag& _f, UAttr& _p) {
+UPropdef& UPropdef::set(const UFlag& _f, Attribute& _p) {
   if (checkConst()) return *this;
   // test equals ???
   flag = &_f;
@@ -101,12 +98,11 @@ UPropdef& UPropdef::clear() {
   return *this;
 }
 
-void UPropdef::putProp(UUpdateContext *ctx, UElem&) {
+void UPropdef::putProp(UpdateContext *ctx, Element&) {
   if (prop && flag && flag != &UFlag::none)
     ctx->addFlagdef(this);
 }
 
-/* ==================================================== ======== ======= */
 
 UPropval::UPropval() : flag(null) {}
 UPropval::UPropval(const UFlag& _f) : flag(&_f) {}
@@ -116,10 +112,10 @@ UPropval& upropval(const class UFlag& _f) {
 }
 
 void UPropval::update() {
-  updateAutoParents(UUpdate::LAYOUT_PAINT);
+  updateAutoParents(Update::LAYOUT_PAINT);
 }
 
-void UPropval::putProp(UUpdateContext* ctx, UElem& par) {
+void UPropval::putProp(UpdateContext* ctx, Element& par) {
   if (flag) {
     const UPropdef* fd = ctx->getPropdef(flag);
     if (fd && fd->getProp()) fd->getProp()->putProp(ctx, par);

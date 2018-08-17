@@ -1,68 +1,77 @@
-/* ==================================================== ======== ======= *
- *
+/*
  *  uparent.hpp [internal implementation]
- *  Ubit GUI Toolkit - Version 6
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE : 
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE 
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. 
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU 
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION; 
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
+
 
 #ifndef _uparent_hpp_
 #define	_uparent_hpp_ 1
+
 namespace ubit {
 
 /** [impl] Internal implementation of a parent node.
 */
-class UParent {
+class Parent {
 public:
-  UParent(UChildIter i) : child_iter(i) {}
+  Parent(ChildIter i) : child_iter(i) {}
   
-  UElem* operator*() {return child_iter->parent;}
-  const UElem* operator*() const {return child_iter->parent;}
+  Element* operator*() {return child_iter->parent;}
+  const Element* operator*() const {return child_iter->parent;}
   
-  UChild& getChild() {return child_iter.child();}
+  Child& getChild() {return child_iter.child();}
   
 private:
-  UChildIter child_iter;
+  ChildIter child_iter;
 };
 
-/* ==================================================== ======== ======= */
 
 template <class _I>
-struct _UParentIter : public _I {
-  _UParentIter() : _I(null) {}       // !ATT: peut poser probleme si pas g++ !
-  _UParentIter(const _I& i) : _I(i) {}
-  _UParentIter(const _UParentIter& i) : _I(i) {}
+struct _ParentIter : public _I {
+  _ParentIter() : _I(null) {}       // !ATT: peut poser probleme si pas g++ !
+  _ParentIter(const _I& i) : _I(i) {}
+  _ParentIter(const _ParentIter& i) : _I(i) {}
   
-  UElem* operator*() {return static_cast<UElem*>(*_I::operator*());}
-  UParent&  parent() {return _I::operator*();}
+  Element* operator*() {return static_cast<Element*>(*_I::operator*());}
+  Parent&  parent() {return _I::operator*();}
 };
 
-/** forward iterator in a parent list.
-* @see: UNode::pbegin(), UParents.
-*/
-typedef _UParentIter<std::list<UParent>::iterator> UParentIter;
+/**
+ * forward iterator in a parent list.
+ * @see: Node::pbegin(), Parents.
+ */
+typedef _ParentIter<std::list<Parent>::iterator> UParentIter;
 
-/* ==================================================== ===== ======= */
-/** Parent list.
-* see also: UParentIter and UElem::parents().
-*/
-class UParents : public std::list<UParent> {
+/**
+ * Parent list.
+ * see also: UParentIter and Element::parents().
+ */
+class Parents : public std::list<Parent> {
 public:
-  void removeFirst(UChild*);
+  void removeFirst(Child*);
   /// removes the first element that is pointing to this child.
 
-  void updateAutoParents(const UUpdate&);
+  void updateAutoParents(const Update&);
   ///< update parents that are in autoUpdate mode.
 
-  void fireParents(const UCond& c, UNode* n);
+  void fireParents(const Condition& c, Node* n);
   ///< fire parents callbacks that match this event.
   
   void setParentsViewsModes(int vmodes, bool on_off);

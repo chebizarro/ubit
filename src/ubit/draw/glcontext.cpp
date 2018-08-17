@@ -1,18 +1,26 @@
-/* ***********************************************************************
- *
+/*
  *  UGlcontext.cpp: OpenGL rendering context
- *  Ubit GUI Toolkit - Version 6.0
- *  (C) 2008 Eric Lecolinet | ENST Paris | www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE : 
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE 
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. 
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU 
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION; 
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
+ *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
+
 
 #include <ubit/ubit_features.h> 
 #if UBIT_WITH_GL
@@ -47,7 +55,7 @@ namespace ubit {
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if UBIT_WITH_X11
 
-UGlcontext::UGlcontext(UDisp* d, UGlcontext* sharelists) :
+UGlcontext::UGlcontext(Display* d, UGlcontext* sharelists) :
 URenderContext(d), win_height(0), cx(0), cy(0) 
 {
   glxcontext = ((UDispX11*)d)->createGlcontext(sharelists);
@@ -59,7 +67,7 @@ UGlcontext::~UGlcontext() {
 
 void UGlcontext::makeCurrent() const {
   if (!dest) {
-    UAppli::error("UGlcontext::makeCurrent","null drawable");
+    Application::error("UGlcontext::makeCurrent","null drawable");
     return;
   }
   
@@ -80,7 +88,7 @@ void UGlcontext::swapBuffers() {
   glXSwapBuffers(((UHardwinX11*)dest)->getSysDisp(), ((UHardwinX11*)dest)->getSysWin());
 }
 
-// used by UDisp::getFont() to create fonts in the default context
+// used by Display::getFont() to create fonts in the default context
 bool UGlcontext::isSharedWith(const URenderContext* c) const {
   const UGlcontext* glc = c->toGlcontext();
   return glc && glc->glxcontext == glxcontext; // !!! A COMPLETER : FAUT VERIFIER SHAREDLISTS !!!
@@ -90,7 +98,7 @@ bool UGlcontext::isSharedWith(const URenderContext* c) const {
 
 #elif UBIT_WITH_GLUT
 
-UGlcontext::UGlcontext(UDisp* d, UHardwinGLUT* hw) :
+UGlcontext::UGlcontext(Display* d, UHardwinGLUT* hw) :
 URenderContext(d), win_height(0), cx(0), cy(0) 
 {
   hardwin = hw;
@@ -100,7 +108,7 @@ UGlcontext::~UGlcontext() {}
 
 void UGlcontext::makeCurrent() const {
   if (!dest) {
-    UAppli::error("UGlcontext::makeCurrent","null destination drawable");
+    Application::error("UGlcontext::makeCurrent","null destination drawable");
     return;
   }
 
@@ -111,7 +119,7 @@ void UGlcontext::makeCurrent() const {
   // always called because destination may have changed
   if (hardwin->sys_win)
     glutSetWindow(hardwin->sys_win);
-  else UAppli::error("UGlcontext::makeCurrent","destination drawable is not initialized");
+  else Application::error("UGlcontext::makeCurrent","destination drawable is not initialized");
 }
 
 void UGlcontext::swapBuffers() {
@@ -119,7 +127,7 @@ void UGlcontext::swapBuffers() {
   glutSwapBuffers();
 }
 
-// used by UDisp::getFont() to create fonts in the default context
+// used by Display::getFont() to create fonts in the default context
 bool UGlcontext::isSharedWith(const URenderContext* c) const {
   return false;                // !!! A COMPLETER : FAUT VERIFIER SHAREDLISTS !!!
 }
@@ -158,30 +166,30 @@ void UGlcontext::flush() {
   glFlush();
 }
 
-void UGlcontext::setPaintMode(UGraph& g) {
+void UGlcontext::setPaintMode(Graph& g) {
   MAKE_CURRENT;
   glLogicOp(GL_COPY);
   glColor4ubv(g.color_rgba.comps);
 }
 
-void UGlcontext::setXORMode(UGraph& g, const UColor& bg) {
+void UGlcontext::setXORMode(Graph& g, const Color& bg) {
   MAKE_CURRENT;
   glLogicOp(GL_XOR);
   //setGLColor(color ^ bgcolor); // color_rgba !!!
-  UAppli::warning("UGraph::setXORMode","XOR mode not implemented in OpenGL; color %p", &bg); //  !!!!  &&&&
+  Application::warning("Graph::setXORMode","XOR mode not implemented in OpenGL; color %p", &bg); //  !!!!  &&&&
   g.bgcolor_rgba = bg.getRgba();
   glColor4ubv(g.bgcolor_rgba.comps);
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UGlcontext::setColor(UGraph& g, const UColor& c) {
+void UGlcontext::setColor(Graph& g, const Color& c) {
   MAKE_CURRENT;
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   
   if (g.in_xor_mode) {
-    UAppli::warning("UGraph::setColor","XOR mode not implemented in OpenGL; color %p", &c); //@@@!!!!
+    Application::warning("Graph::setColor","XOR mode not implemented in OpenGL; color %p", &c); //@@@!!!!
   }
   g.color_rgba = c.getRgba();
   //if (color_rgba.components[3] >= 255) color_rgba.components[3] = int(alpha * 255);  //&&&&&&
@@ -190,20 +198,20 @@ void UGlcontext::setColor(UGraph& g, const UColor& c) {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UGlcontext::setBackground(UGraph& g, const UColor& c) {
+void UGlcontext::setBackground(Graph& g, const Color& c) {
   //MAKE_CURRENT;
   g.bgcolor_rgba = c.getRgba();
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UGlcontext::setFont(UGraph& g, const UFontDesc& fd) {
+void UGlcontext::setFont(Graph& g, const UFontDesc& fd) {
   //MAKE_CURRENT;
 } 
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UGlcontext::setWidth(UGraph& g, double w) { 
+void UGlcontext::setWidth(Graph& g, double w) { 
   MAKE_CURRENT;
   //get supported line width range and step size
   //glGetFloatv(GL_LINE_WIDTH_RANGE,sizes);
@@ -217,7 +225,7 @@ void UGlcontext::copyArea(double x, double y, double w, double h, double delta_x
                            bool generate_refresh_events_when_obscured) const 
 {
   MAKE_CURRENT;
-  UAppli::error("UGraph::copyArea","This function is not available when OpenGL is used");
+  Application::error("Graph::copyArea","This function is not available when OpenGL is used");
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -435,7 +443,7 @@ void UGlcontext::drawPolygon(const float* coords2d, int card, int polytype) cons
 }
 
 
-void UGlcontext::drawPolygon(const std::vector<UPoint>& points, int polytype) const {
+void UGlcontext::drawPolygon(const std::vector<Point>& points, int polytype) const {
   int card = points.size();
   if (card <= 0) return;
   MAKE_CURRENT;
@@ -446,7 +454,7 @@ void UGlcontext::drawPolygon(const std::vector<UPoint>& points, int polytype) co
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UGlcontext::drawIma(const UGraph& g, const UIma& ima, double x, double y, double scale) const {
+void UGlcontext::drawIma(const Graph& g, const Image& ima, double x, double y, double scale) const {
   // une seule natima dans ce cas: la premiere
   if (!ima.getNatImas().empty()) {
     UHardIma* ni = *(ima.getNatImas().begin());
@@ -455,7 +463,7 @@ void UGlcontext::drawIma(const UGraph& g, const UIma& ima, double x, double y, d
   }
 }
 
-void UGlcontext::drawTex(const UGraph& g, const UHardImaGL* ni,
+void UGlcontext::drawTex(const Graph& g, const UHardImaGL* ni,
                           double x, double y, double width, double height) const
 {
   MAKE_CURRENT;
@@ -493,7 +501,7 @@ void UGlcontext::drawTex(const UGraph& g, const UHardImaGL* ni,
  void UGlcontext::drawTex(URenderContext* ge, const UHardIma& ima,
  float x, float y, float width, float height) {
  #ifndef UBIT_WITH_GL
- UAppli::internalError("UGraph::drawTex","invalid function in GL mode");
+ Application::internalError("Graph::drawTex","invalid function in GL mode");
  #else
  if (!ima->glpix) {
  // TRANSITION: cas ou ou a d'abord creee une XImage
@@ -505,7 +513,7 @@ void UGlcontext::drawTex(const UGraph& g, const UHardImaGL* ni,
  
  // ima rect: rectangle de la location de l'ima dans target view
  // si l'image n'etait pas clippee
- URect imarect(x, y, width, height);
+ Rectangle imarect(x, y, width, height);
  
  // intersection d'imarect avec le clip courant
  bool clipstat = imarect.setInter(ge->cliprect.x - ge->xwin,

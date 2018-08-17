@@ -1,27 +1,35 @@
-/************************************************************************
- *
- *  ufile.hpp
- *  Ubit GUI Toolkit - Version 6
+/*
+ *  file.hpp
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE :
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION;
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
 
 #ifndef _ufile_hpp_
 #define	_ufile_hpp_ 1
+
 #include <vector>
-#include <ubit/unode.hpp>
+#include <ubit/core/node.h>
+
 namespace ubit {
   
-  /* ==================================================== ======== ======= */
-  /** File status returned by functions that open files.
+    /** File status returned by functions that open files.
    */
   struct UFileStat {
     enum {
@@ -39,12 +47,11 @@ namespace ubit {
    */
   typedef UFileStat UFilestat;
   
-  /* ==================================================== ======== ======= */
-  /** file mode.
+    /** file mode.
    */
   class UFileMode {
   public:
-    UFileMode(const UStr& pathname);
+    UFileMode(const String& pathname);
     
     bool isValid() const;
     bool isDir()  const;
@@ -60,21 +67,20 @@ namespace ubit {
     int mode;  //mode_t mode;
   };
   
-  /* ==================================================== ======== ======= */
-  /** file info.
+    /** file info.
    */
   class UFileInfo : public UFileMode {
   public:
-    UFileInfo(const UStr& path);
+    UFileInfo(const String& path);
     ///< sets fileinfo data for this path and stores path as a name.
     
     UFileInfo(const char* fullpath, const char* fname);  
     ///< sets fileinfo data for fullpath and stores fname as a name.
     
-    void setPath(const UStr& path);
+    void setPath(const String& path);
     ///< resets fileinfo data for this path.
     
-    const UStr* getFileName() const {return pname;}
+    const String* getFileName() const {return pname;}
     ///< returns the file name (without the path).
     
     unsigned long getSize() const {return size;}
@@ -83,21 +89,21 @@ namespace ubit {
     unsigned long getModTime() const {return modtime;}
     //< returns the time when file data was last modified.
     
-    UIma& getIconImage() const;
+    Image& getIconImage() const;
     /**< return an image that characterizes this file type.
      * the returned image is shared and can't be deleted.
      */
     
-    UIma& getMiniIconImage() const;
+    Image& getMiniIconImage() const;
     /**< return an mini image that characterizes this file type.
      * the returned image is shared and can't be deleted.
      */
     
-    void getInfoString(UStr& str) const;
+    void getInfoString(String& str) const;
     ///< copies infos in str.
     
     enum PrefixType {LOCAL, SSH, HTTP, FTP};  
-    static int parsePrefix(const UStr& path);
+    static int parsePrefix(const String& path);
     ///< returns the PrefixType.
     
   protected:
@@ -105,7 +111,7 @@ namespace ubit {
     friend class UFilebox;
     unsigned long size;
     unsigned long modtime;
-    uptr<UStr> pname;
+    uptr<String> pname;
     void stat(const char* path);
   };
   
@@ -113,21 +119,20 @@ namespace ubit {
    */
   typedef std::vector<UFileInfo*> UFileInfos;
   
-  /* ==================================================== ======== ======= */
-  /** File Directory.
+    /** File Directory.
    */
   class UFileDir {
   public:
     UFileDir();
-    UFileDir(const UStr& path);
+    UFileDir(const String& path);
     virtual ~UFileDir();
     
-    void read(const UStr& path);
+    void read(const String& path);
     /**< reads this directory and gets file entries.
-     * @see read(const UStr& path, const UStr& prefix, const UStr& filter, bool with_dot_files)
+     * @see read(const String& path, const String& prefix, const String& filter, bool with_dot_files)
      */
     
-    void read(const UStr& path, const UStr& prefix, const UStr& filter, bool with_dot_files);
+    void read(const String& path, const String& prefix, const String& filter, bool with_dot_files);
     /**< reads this directory and gets file entries.
      * Args:
      * - prefix: get files that start witrh this prefix
@@ -136,12 +141,12 @@ namespace ubit {
      * _ with_hidden_files: get files starting with a dot.
      */
     
-    void readRemote(const UStr& path, const UStr& prefix, const UStr& filter, bool with_dot_files);
+    void readRemote(const String& path, const String& prefix, const String& filter, bool with_dot_files);
     /**< reads a remote directory and gets file entries.
      * same as read() but SSH is used to acces a remote directory
      */
     
-    const UStr& getPath() const;
+    const String& getPath() const;
     /**< returns the full pathname of the directory
      * note that the path arg. given to the constr, read(), readRemote()
      * is expanded, so that getPath() may return a different string.
@@ -150,7 +155,7 @@ namespace ubit {
     const UFileInfos& getFileInfos() const {return file_infos;}
     ///< returns the (filtered) file entries of the directory.
     
-    static void expandDirPath(UStr& dirpath);
+    static void expandDirPath(String& dirpath);
     ///< expands the directory path (if there are path symbols in the dirpath).
     
     // - - - Impl - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -158,34 +163,31 @@ namespace ubit {
     friend class UIconbox;
     UFileInfo dir_info;
     UFileInfos file_infos;
-    std::vector<UStr*> filters;
+    std::vector<String*> filters;
     static bool compareEntries(const UFileInfo*, const UFileInfo*);  
-    static void parseFilter(std::vector<UStr*>& filters, const UStr& filter);
+    static void parseFilter(std::vector<String*>& filters, const String& filter);
   };
   
-  /* ==================================================== ======== ======= */
-  /** file cache for SSH.
+    /** file cache for SSH.
    */
   class UFileCache {
   public:
     static void createCache();
     static void cleanCache();
     
-    static const UStr& getCachePath();
+    static const String& getCachePath();
     
-    static UStr* createFullPath(const UStr& path);
+    static String* createFullPath(const String& path);
     //  expands ~, ssh:, http:, ftp:.
     
-    static const UStr* getOrCreateFullPath(const UStr& path);
+    static const String* getOrCreateFullPath(const String& path);
     // same as createFullPath() but fullpath may be shared with path
     
-    static bool getCachePath(const UStr& url, int path_type,
-                             UStr& server, UStr& path, UStr& cachepath);
+    static bool getCachePath(const String& url, int path_type,
+                             String& server, String& path, String& cachepath);
   protected:
-    static UStr cache;
+    static String cache;
   };
   
 }
 #endif
-/* ==================================================== [TheEnd] ======= */
-/* ==================================================== [(c)Elc] ======= */

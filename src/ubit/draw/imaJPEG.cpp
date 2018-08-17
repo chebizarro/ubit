@@ -1,4 +1,4 @@
-/*************************************************************************
+/**
  *
  *  uimaJPEG.cpp : glue with the JPEG library (libjpeg.so)
  *  Ubit GUI Toolkit - Version 6.0
@@ -53,15 +53,15 @@ extern "C" {
 using namespace std;
 namespace ubit {
 
-// NOTE: actuellement les images sont toujours lues sur le UDisp d'origine
-// (celui de UAppli) puis converties sur d'autres UDisp via les fonctions
+// NOTE: actuellement les images sont toujours lues sur le Display d'origine
+// (celui de Application) puis converties sur d'autres Display via les fonctions
 // ad hoc de UHardIma. La consequence est que RGBmaps ne contient en fait
-// qu'une seule map, celle du UDisp d'origine (mais on pourrait imaginer
-// de relire l'image pour chaque UDisp, en particulier pour obtenir une
-// neilleure qualite quand le UDisp d'origine est 15 bits
+// qu'une seule map, celle du Display d'origine (mais on pourrait imaginer
+// de relire l'image pour chaque Display, en particulier pour obtenir une
+// neilleure qualite quand le Display d'origine est 15 bits
 
 struct UJPEG {
-  UJPEG(UHardIma&, const UStr& fname, int max_w, int max_h);
+  UJPEG(UHardIma&, const String& fname, int max_w, int max_h);
   ~UJPEG();
   int getStat() const {return stat;};
 
@@ -107,9 +107,9 @@ private:
 #if WITH_2D_GRAPHICS
   struct RGBmaps {
     ~RGBmaps();
-    void getColormaps(UDisp*, USysPixel*& red_map, USysPixel*& green_map, 
+    void getColormaps(Display*, USysPixel*& red_map, USysPixel*& green_map, 
                       USysPixel*& blue_map);
-    void realizeColormaps(UDisp*, USysPixel*& red_map, USysPixel*& green_map, 
+    void realizeColormaps(Display*, USysPixel*& red_map, USysPixel*& green_map, 
                           USysPixel*& blue_map);
     std::vector<USysPixel*> red_maps;
     std::vector<USysPixel*> green_maps;
@@ -123,9 +123,8 @@ private:
 UJPEG::RGBmaps* UJPEG::rgb_maps = null;  // shared: RGB maps for all displays
 #endif
 
-/* ==================================================== ======== ======= */
 
-int UImaJPEG::read(UHardIma& nima, const UStr& fpath, int wmax, int hmax) {
+int UImaJPEG::read(UHardIma& nima, const String& fpath, int wmax, int hmax) {
   UJPEG jpeg(nima, fpath, wmax, hmax);
  
  // At this point you may want to check to see whether any corrupt-data
@@ -153,7 +152,7 @@ void UJPEG::setSize(int w, int h, int max_w, int max_h) {
   }
 }
 
-UJPEG::UJPEG(UHardIma& nima, const UStr& fpath, int max_w, int max_h)
+UJPEG::UJPEG(UHardIma& nima, const String& fpath, int max_w, int max_h)
 : natima(nima) {
   jfile = null;
   buffer = null;
@@ -221,7 +220,7 @@ UJPEG::UJPEG(UHardIma& nima, const UStr& fpath, int max_w, int max_h)
 #endif
 
   {  // cas d'erreur (impossible sauf si ni GL ni 2D_GRAPHICS)
-    UAppli::internalError("UImaJPEG","could not create image");
+    Application::internalError("UImaJPEG","could not create image");
     stat = UFilestat::MiscError;
     return;
   }
@@ -229,7 +228,6 @@ UJPEG::UJPEG(UHardIma& nima, const UStr& fpath, int max_w, int max_h)
 DONE: readData();
 }
 
-/* ==================================================== ======== ======= */
 // note that ima is not deleted by the destructor
 
 UJPEG::~UJPEG() {
@@ -241,7 +239,6 @@ UJPEG::~UJPEG() {
   }
 }
 
-/* ==================================================== ======== ======= */
 // NOTE:
 // la solution: red_map[prow[0]] + green_map[prow[1]] + blue_map[prow[2]]
 // est plus generale que: 
@@ -285,7 +282,6 @@ void UJPEG::putLine_GL32(int xin1, int xin2, int yout) {
 }
 
 #endif
-/* ==================================================== ======== ======= */
 #if WITH_2D_GRAPHICS
 
 // x2 exclus
@@ -401,7 +397,6 @@ void UJPEG::putLine_X16(int xin1, int xin2, int yout) {
  * will go away automatically when the JPEG object is cleaned up.
  */
 
-/* ==================================================== ======== ======= */
 /*
  * Sample routine for JPEG decompression.  We assume that the source file name
  * is passed in.  We want to return 1 on success, 0 on error.
@@ -427,8 +422,6 @@ void UJPEG::readHeader() {
    */
 }
 
-/* ==================================================== ======== ======= */
-/* ==================================================== ======== ======= */
 
 void UJPEG::readData() {
   /* Step 4: set parameters for decompression */
@@ -485,7 +478,7 @@ void UJPEG::readData() {
 #endif
 
   {  // cas d'erreur (impossible sauf si ni GL ni 2D_GRAPHICS)
-    UAppli::internalError("UJPEG","wrong image class");
+    Application::internalError("UJPEG","wrong image class");
     stat = UFilestat::MiscError;
     return;
   }
@@ -550,7 +543,6 @@ DONE: /* Step 6: while (scan lines remain to be read) */
  * temporary files are deleted if the program is interrupted.  See libjpeg.doc.
  */
 
-/* ==================================================== ======== ======= */
 /*
  * ERROR HANDLING:
  *
@@ -592,14 +584,13 @@ void UJPEG::my_error_mgr::my_error_exit(j_common_ptr cinfo) {
 }
 //}
 
-/* ==================================================== ======== ======= */
 #if WITH_2D_GRAPHICS
 
 UJPEG::RGBmaps::~RGBmaps() {
   // a completer: detruire les colormaps !!!!!
 }
 
-void UJPEG::RGBmaps::getColormaps(UDisp* nd, USysPixel*& red_map,
+void UJPEG::RGBmaps::getColormaps(Display* nd, USysPixel*& red_map,
                                      USysPixel*& green_map, USysPixel*& blue_map) {
   int id = nd->getID();
   if (id < (int)red_maps.size() && red_maps[id] != null) {
@@ -613,7 +604,7 @@ void UJPEG::RGBmaps::getColormaps(UDisp* nd, USysPixel*& red_map,
   }
 }
 
-void UJPEG::RGBmaps::realizeColormaps(UDisp* nd, USysPixel*& red_map,
+void UJPEG::RGBmaps::realizeColormaps(Display* nd, USysPixel*& red_map,
                                          USysPixel*& green_map, USysPixel*& blue_map) {
   USysColor red_colors[256], green_colors[256], blue_colors[256];
   

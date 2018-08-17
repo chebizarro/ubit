@@ -1,18 +1,25 @@
-/************************************************************************
- *
- *  uhtml.hpp: HTML parser and renderer
- *  Ubit GUI Toolkit - Version 6
+/*
+ *  html.h: HTML parser and renderer
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE :
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION;
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
 
 #ifndef _uhtml_hpp_
 #define _uhtml_hpp_
@@ -24,182 +31,181 @@ namespace ubit {
   
   /** HTML Grammar.
    */ 
-  class UHtmlGrammar : public UXmlGrammar {
+  class HtmlGrammar : public XmlGrammar {
   public:
-    UHtmlGrammar();
+    HtmlGrammar();
   };
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   /** HTML Parser.
-   * this parser should be used instead of UXmlParser for parsing HTML text.
+   * this parser should be used instead of XmlParser for parsing HTML text.
    * It automatically:
-   * - adds the UHtmlGrammar grammar to the grammar list 
+   * - adds the HtmlGrammar grammar to the grammar list 
    * - sets the parser in Permissive and CollapseSpaces modes.
    * @see class XmlParser for details.
    */ 
-  class UHtmlParser : public UXmlParser {
+  class HtmlParser : public XmlParser {
   public:
-    UHtmlParser();
+    HtmlParser();
   };
   
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   /** HTML Attribute.
    */ 
-  struct UHtmlAttribute : public UAttr {
-    UCLASSDEF("uhtmlattribute", UHtmlAttribute, null)
+  struct HtmlAttribute : public Attribute {
+    UCLASSDEF("uhtmlattribute", HtmlAttribute, null)
     
-    virtual void setValue(const UStr& val) {setValueImpl(pvalue, val);}
-    virtual bool getValue(UStr& val) const {return getValueImpl(pvalue, val);}
+    virtual void setValue(const String& val) {setValueImpl(pvalue, val);}
+    virtual bool getValue(String& val) const {return getValueImpl(pvalue, val);}
     
-    static void setValueImpl(uptr<UStr>& pvalue, const UStr& value);
-    static bool getValueImpl(const uptr<UStr>& pvalue, UStr& value);
+    static void setValueImpl(uptr<String>& pvalue, const String& value);
+    static bool getValueImpl(const uptr<String>& pvalue, String& value);
 
-    uptr<UStr> pvalue;
+    uptr<String> pvalue;
   };
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  struct UHtmlStyle : public UAttrList {
-    UCLASSDEF("style", UHtmlStyle, new UHtmlStyle)
-    void initNode(UDoc* doc, UElem* parent);    
-    void setValue(const UStr& val) {UHtmlAttribute::setValueImpl(pvalue, val);}
-    bool getValue(UStr& val) const {return UHtmlAttribute::getValueImpl(pvalue, val);}
+  struct HtmlStyle : public AttributeList {
+    UCLASSDEF("style", HtmlStyle, new HtmlStyle)
+    void initNode(Document* doc, Element* parent);    
+    void setValue(const String& val) {HtmlAttribute::setValueImpl(pvalue, val);}
+    bool getValue(String& val) const {return HtmlAttribute::getValueImpl(pvalue, val);}
   private:
-    uptr<UStr> pvalue;  
+    uptr<String> pvalue;  
   };
   
-  struct UHtmlClass : public UHtmlAttribute {
-    UCLASSDEF("class", UHtmlClass, new UHtmlClass)
-    void initNode(UDoc* doc, UElem* parent);
+  struct HtmlClass : public HtmlAttribute {
+    UCLASSDEF("class", HtmlClass, new HtmlClass)
+    void initNode(Document* doc, Element* parent);
   };
 
-  struct UHtmlId : public UHtmlAttribute {
-    UCLASSDEF("id", UHtmlId, new UHtmlId)
-    void initNode(UDoc* doc, UElem* parent);
+  struct HtmlId : public HtmlAttribute {
+    UCLASSDEF("id", HtmlId, new HtmlId)
+    void initNode(Document* doc, Element* parent);
   };
   
-  struct UHtmlRel : public UHtmlAttribute {
-    UCLASSDEF("rel", UHtmlRel, new UHtmlRel)
+  struct HtmlRel : public HtmlAttribute {
+    UCLASSDEF("rel", HtmlRel, new HtmlRel)
   };
   
-  struct UHtmlType : public UHtmlAttribute {
-    UCLASSDEF("type", UHtmlType, new UHtmlType)
+  struct HtmlType : public HtmlAttribute {
+    UCLASSDEF("type", HtmlType, new HtmlType)
   };
   
-  struct UHtmlAlt : public UHtmlAttribute {
-    UCLASSDEF("alt", UHtmlAlt, new UHtmlAlt)
+  struct HtmlAlt : public HtmlAttribute {
+    UCLASSDEF("alt", HtmlAlt, new HtmlAlt)
   };
   
-  struct UHtmlName : public UHtmlAttribute {
-    UCLASSDEF("name", UHtmlName, new UHtmlName)
+  struct HtmlName : public HtmlAttribute {
+    UCLASSDEF("name", HtmlName, new HtmlName)
   };
   
-  struct UHtmlSrc : public UHtmlAttribute {
-    UCLASSDEF("src", UHtmlSrc, new UHtmlSrc)
+  struct HtmlSrc : public HtmlAttribute {
+    UCLASSDEF("src", HtmlSrc, new HtmlSrc)
   };
   
-  struct UHtmlHref : public UHtmlAttribute {
-    UCLASSDEF("href", UHtmlHref, new UHtmlHref)
+  struct HtmlHref : public HtmlAttribute {
+    UCLASSDEF("href", HtmlHref, new HtmlHref)
   };
   
-  struct UHtmlColor : public UColor {
-    UCLASSDEF("color", UHtmlColor, new UHtmlColor)
-    void setValue(const UStr& value);    
-    bool getValue(UStr& val) const {return UHtmlAttribute::getValueImpl(pvalue, val);}
+  struct HtmlColor : public Color {
+    UCLASSDEF("color", HtmlColor, new HtmlColor)
+    void setValue(const String& value);    
+    bool getValue(String& val) const {return HtmlAttribute::getValueImpl(pvalue, val);}
   private:
-    uptr<UStr> pvalue;
+    uptr<String> pvalue;
   };
   
-  struct UHtmlBgcolor : public UBackground {
-    UCLASSDEF("bgcolor", UHtmlBgcolor, new UHtmlBgcolor)
-    void setValue(const UStr&);
-    bool getValue(UStr& val) const {return UHtmlAttribute::getValueImpl(pvalue, val);}
+  struct HtmlBgcolor : public Background {
+    UCLASSDEF("bgcolor", HtmlBgcolor, new HtmlBgcolor)
+    void setValue(const String&);
+    bool getValue(String& val) const {return HtmlAttribute::getValueImpl(pvalue, val);}
   private:
-    uptr<UStr> pvalue;
+    uptr<String> pvalue;
   }; 
   
-  struct UHtmlBorder : public UBorder {
-    UCLASSDEF("border", UHtmlBorder, new UHtmlBorder)
-    void setValue(const UStr& v);
-    bool getValue(UStr& val) const {return UHtmlAttribute::getValueImpl(pvalue, val);}
+  struct HtmlBorder : public Border {
+    UCLASSDEF("border", HtmlBorder, new HtmlBorder)
+    void setValue(const String& v);
+    bool getValue(String& val) const {return HtmlAttribute::getValueImpl(pvalue, val);}
   private:
-    uptr<UStr> pvalue;
+    uptr<String> pvalue;
   };
   
-  struct UHtmlFontFace : public UFont {
-    UCLASSDEF("face", UHtmlFontFace, new UHtmlFontFace)
-    void setValue(const UStr&);    
-    bool getValue(UStr& val) const {return UHtmlAttribute::getValueImpl(pvalue, val);}
+  struct HtmlFontFace : public UFont {
+    UCLASSDEF("face", HtmlFontFace, new HtmlFontFace)
+    void setValue(const String&);    
+    bool getValue(String& val) const {return HtmlAttribute::getValueImpl(pvalue, val);}
   private:
-    uptr<UStr> pvalue;
+    uptr<String> pvalue;
   };
   
-  struct UHtmlFontSize : public UFont {
-    UCLASSDEF("size", UHtmlFontSize, new UHtmlFontSize)    
-    void setValue(const UStr&);
-    bool getValue(UStr& val) const {return UHtmlAttribute::getValueImpl(pvalue, val);}
+  struct HtmlFontSize : public UFont {
+    UCLASSDEF("size", HtmlFontSize, new HtmlFontSize)    
+    void setValue(const String&);
+    bool getValue(String& val) const {return HtmlAttribute::getValueImpl(pvalue, val);}
   private:
-    uptr<UStr> pvalue;
+    uptr<String> pvalue;
   };
   
   
-  struct UHtmlUWidth : public UHtmlAttribute {
-    UCLASSDEF("width", UHtmlUWidth, new UHtmlUWidth)
-    //void setValue(const UStr&);
-    //bool getValue(UStr& val) const {return UHtmlAttribute::getValueImpl(pvalue,val);}
+  struct HtmlWidth : public HtmlAttribute {
+    UCLASSDEF("width", HtmlWidth, new HtmlWidth)
+    //void setValue(const String&);
+    //bool getValue(String& val) const {return HtmlAttribute::getValueImpl(pvalue,val);}
   private:
-    void initNode(UDoc*, UElem* parent);
+    void initNode(Document*, Element* parent);
   };
   
-  struct UHtmlHeight : public UHtmlAttribute {
-    UCLASSDEF("height", UHtmlHeight, new UHtmlHeight)
-    //void setValue(const UStr&);
-    //bool getValue(UStr& val) const {return UHtmlAttribute::getValueImpl(pvalue,val);}
+  struct HtmlHeight : public HtmlAttribute {
+    UCLASSDEF("height", HtmlHeight, new HtmlHeight)
+    //void setValue(const String&);
+    //bool getValue(String& val) const {return HtmlAttribute::getValueImpl(pvalue,val);}
   private:
-    void initNode(UDoc*, UElem* parent);
+    void initNode(Document*, Element* parent);
   };
   
-  struct UHtmlAlign : public UHalign {
-    UCLASSDEF("align", UHtmlAlign, new UHtmlAlign)
-    void setValue(const UStr&);
-    bool getValue(UStr& val) const {return UHtmlAttribute::getValueImpl(pvalue, val);}
+  struct HtmlAlign : public Halign {
+    UCLASSDEF("align", HtmlAlign, new HtmlAlign)
+    void setValue(const String&);
+    bool getValue(String& val) const {return HtmlAttribute::getValueImpl(pvalue, val);}
   private:    
-    uptr<UStr> pvalue;
+    uptr<String> pvalue;
   };
   
-  struct UHtmlValign : public UValign {
-    UCLASSDEF("valign", UHtmlValign, new UHtmlValign)
-    void setValue(const UStr&);
-    bool getValue(UStr& val) const {return UHtmlAttribute::getValueImpl(pvalue, val);}
+  struct HtmlValign : public Valign {
+    UCLASSDEF("valign", HtmlValign, new HtmlValign)
+    void setValue(const String&);
+    bool getValue(String& val) const {return HtmlAttribute::getValueImpl(pvalue, val);}
   private:    
-    uptr<UStr> pvalue;
+    uptr<String> pvalue;
   };
 
-  struct UHtmlColspan : public UHtmlAttribute {
-    UCLASSDEF("colspan", UHtmlColspan, new UHtmlColspan)
-    void initNode(UDoc* doc, UElem* parent);
-    void setValue(const UStr&);
+  struct HtmlColspan : public HtmlAttribute {
+    UCLASSDEF("colspan", HtmlColspan, new HtmlColspan)
+    void initNode(Document* doc, Element* parent);
+    void setValue(const String&);
   };
   
-  struct UHtmlRowspan : public UHtmlAttribute {
-    UCLASSDEF("rowspan", UHtmlRowspan, new UHtmlRowspan)
-    void initNode(UDoc* doc, UElem* parent);
-    void setValue(const UStr&);
+  struct HtmlRowspan : public HtmlAttribute {
+    UCLASSDEF("rowspan", HtmlRowspan, new HtmlRowspan)
+    void initNode(Document* doc, Element* parent);
+    void setValue(const String&);
   };
     
-  struct UHtmlCellspacing : public UHtmlAttribute {
-    UCLASSDEF("cellspacing", UHtmlCellspacing, new UHtmlCellspacing)
-    void setValue(const UStr&);
+  struct HtmlCellspacing : public HtmlAttribute {
+    UCLASSDEF("cellspacing", HtmlCellspacing, new HtmlCellspacing)
+    void setValue(const String&);
   };
     
-  struct UHtmlCellpadding : public UHtmlAttribute {
-    UCLASSDEF("cellpadding", UHtmlCellpadding, new UHtmlCellpadding)
-    void setValue(const UStr&);
+  struct HtmlCellpadding : public HtmlAttribute {
+    UCLASSDEF("cellpadding", HtmlCellpadding, new HtmlCellpadding)
+    void setValue(const String&);
   };  
     
-  struct UHtmlNowrap : public UHtmlAttribute {
-    UCLASSDEF("nowrap", UHtmlNowrap, new UHtmlNowrap)
-    void setValue(const UStr&);
+  struct HtmlNowrap : public HtmlAttribute {
+    UCLASSDEF("nowrap", HtmlNowrap, new HtmlNowrap)
+    void setValue(const String&);
   };
   
 }

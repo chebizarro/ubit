@@ -1,6 +1,5 @@
-/************************************************************************
- *
- *  u3d.cpp: 3D Widgets
+/*
+ *  3d.cpp: 3D Widgets
  *  Ubit GUI Toolkit - Version 6.0
  *  (C) 2008 | Eric Lecolinet | ENST Paris | www.enst.fr/~elc/ubit
  *
@@ -21,7 +20,7 @@
 #include <algorithm>
 #include <ubit/ubit.hpp>
 #include <ubit/ugl.hpp>
-#include <ubit/uevent.hpp>
+#include <ubit/core/event.h>
 #include <ubit/uupdate.hpp>
 #include <ubit/uupdatecontext.hpp>
 #include <ubit/ui/uviewImpl.hpp>
@@ -83,16 +82,16 @@ U3Dpos& U3Dpos::rotate(float dx_rot, float dy_rot, float dz_rot) {
 }
 
 void U3Dpos::update() {
-  updateAutoParents(UUpdate::paint);
+  updateAutoParents(Update::paint);
 }
 
-void U3Dpos::putProp(UUpdateContext* ctx, UElem&) {
+void U3Dpos::putProp(UpdateContext* ctx, Element&) {
   ctx->pos = this;
 }
 
 // =============================================================================
 
-struct U3DposHandle : public UAttr {
+struct U3DposHandle : public Attribute {
   UCLASSDEF("U3DposHandle", U3DposHandle, null)
   
   enum Transform {XYPOS, ZPOS, XROT, YROT, ZROT}; 
@@ -101,16 +100,16 @@ struct U3DposHandle : public UAttr {
   virtual ~U3DposHandle();
   
   // - - - impl - - - - -- - - - - - - - - - - - - - - - - - - - - - - -
-  virtual void putProp(UUpdateContext*, UElem&) {}
-  virtual void addingTo(UChild&, UElem& parent);
-  virtual void removingFrom(UChild&, UElem& parent);
+  virtual void putProp(UpdateContext*, Element&) {}
+  virtual void addingTo(Child&, Element& parent);
+  virtual void removingFrom(Child&, Element& parent);
   // NOTE that removingFrom() requires a destructor to be defined.
   
 protected:
   Transform transform;
   uptr<U3Dpos> pos;
   UCall* callbacks;
-  UPoint prev;
+  Point prev;
 
   virtual void mouseCB(UMouseEvent&);
   virtual void pressCB(UMouseEvent&);
@@ -126,10 +125,10 @@ transform(_t), pos(_pos), callbacks(null) {}
 
 U3DposHandle::~U3DposHandle() {}
 
-void U3DposHandle::addingTo(UChild& c, UElem& parent) {
-  UAttr::addingTo(c, parent);
+void U3DposHandle::addingTo(Child& c, Element& parent) {
+  Attribute::addingTo(c, parent);
   if (callbacks) {
-    UAppli::error("U3DposHandle::addingTo","a U3DposHandle cannot be added to several parents; U3DposHandle object: %p",this);
+    Application::error("U3DposHandle::addingTo","a U3DposHandle cannot be added to several parents; U3DposHandle object: %p",this);
     delete callbacks;
   }
   callbacks = &ucall(this, &U3DposHandle::mouseCB);
@@ -137,9 +136,9 @@ void U3DposHandle::addingTo(UChild& c, UElem& parent) {
                  + UOn::doubleClick/callbacks);
 }
 
-void U3DposHandle::removingFrom(UChild& c, UElem& parent) {
+void U3DposHandle::removingFrom(Child& c, Element& parent) {
   delete callbacks;
-  UAttr::removingFrom(c, parent);
+  Attribute::removingFrom(c, parent);
 }
 
 void U3DposHandle::mouseCB(UMouseEvent& e) {
@@ -157,7 +156,7 @@ void U3DposHandle::pressCB(UMouseEvent& e) {
 void U3DposHandle::releaseCB(UMouseEvent& e) {}
 
 void U3DposHandle::dragCB(UMouseEvent& e) {
-  UPoint screen_pos = e.getScreenPos();
+  Point screen_pos = e.getScreenPos();
   float dx = screen_pos.x - prev.x;
   float dy = -screen_pos.y + prev.y;   // !!!
   prev = screen_pos;
@@ -205,10 +204,10 @@ void U3DposHandle::doubleClickCB(UMouseEvent&) {
 // =============================================================================
 
 UStyle* U3Dbox::createStyle() {
-  return UBox::createStyle();
+  return Box::createStyle();
 }
 
-U3Dbox::U3Dbox(UArgs args) : UBox(args), ppos(new U3Dpos) {
+U3Dbox::U3Dbox(Args args) : Box(args), ppos(new U3Dpos) {
   addAttr(*ppos);
 }
 
@@ -231,28 +230,28 @@ U3Dbox& U3Dbox::rotate(float dxrot, float dyrot, float dzrot) {
 // =============================================================================
   
 UStyle* U3Dwin::createStyle() {
-  UStyle* style = UBox::createStyle();
+  UStyle* style = Box::createStyle();
   style->orient = UOrient::VERTICAL;
-  style->local.border = &UBorder::etchedOut;
+  style->local.border = &Border::etchedOut;
   return style;
 }
   
-U3Dwin::U3Dwin(UArgs args) : U3Dbox() {  
+U3Dwin::U3Dwin(Args args) : U3Dbox() {  
   add(uhflex() 
       + utop() + createTitleBar("")           // !!!! title !!!!
       + uvflex() + args
       );
 }
   
-UBox& U3Dwin::createTitleBar(const UStr& title) {
+Box& U3Dwin::createTitleBar(const String& title) {
   return 
   uhbox(*new U3DposHandle(*ppos, U3DposHandle::XYPOS) 
         + uleft()
-        + ualpha(0.5) + UBackground::navy + upadding(UIGNORE,2) + UColor::white 
+        + ualpha(0.5) + Background::navy + upadding(UIGNORE,2) + Color::white 
         + UFont::bold + " " + uelem(ustr(title)) + "         "
         + ubox(*new U3DposHandle(*ppos, U3DposHandle::ZPOS)
-               + UBackground::white + UColor::navy + UFont::x_large + " zZ ")
-        + uelem(uscale(0.6) //+ UBackground::white
+               + Background::white + Color::navy + UFont::x_large + " zZ ")
+        + uelem(uscale(0.6) //+ Background::white
                    + ustr(" ")  // ustr needed by CC for some reason 
                    + ubox(*new U3DposHandle(*ppos, U3DposHandle::YROT) + U3Dicon::y_rot)
                    + ubox(*new U3DposHandle(*ppos, U3DposHandle::XROT) + U3Dicon::x_rot)
@@ -261,29 +260,29 @@ UBox& U3Dwin::createTitleBar(const UStr& title) {
         );
   /*
    + uhflex() 
-   + ubox(UBackground::none + " ").ignoreEvents()
+   + ubox(Background::none + " ").ignoreEvents()
    + ubox(" ").ignoreEvents()
    + uright() 
-   + ubox(UBackground::none + UOn::arm/UColor::red + "X" //+ ucall(this, &Lens::deleteLens))
+   + ubox(Background::none + UOn::arm/Color::red + "X" //+ ucall(this, &Lens::deleteLens))
    */
 }
 
 // =============================================================================
 
 UStyle* U3Dcanvas::createStyle() {
-  UStyle* style = UBox::createStyle();
+  UStyle* style = Box::createStyle();
   style->viewStyle = &U3DcanvasView::style;
-  style->halign = UHalign::LEFT;
-  style->valign = UValign::TOP;
+  style->halign = Halign::LEFT;
+  style->valign = Valign::TOP;
   return style;
 }
 
-U3Dcanvas::U3Dcanvas(UArgs a) : UBox(a),
+U3Dcanvas::U3Dcanvas(Args a) : Box(a),
 fovy(FOVY), aspect(1.), near(NEAR_PLANE), far(FAR_PLANE) {
 #ifdef UBIT_WITH_GL
-  UAppli::conf.is_using_gl = true;
+  Application::conf.is_using_gl = true;
 #else
-  UAppli::error("U3Dcanvas::U3Dcanvas", 
+  Application::error("U3Dcanvas::U3Dcanvas", 
                 "U3Dcanvas requires OpenGL and FreeType (see ./configure --help for compilation options of the Ubit toolkit)");
 #endif
 }
@@ -294,14 +293,14 @@ U3Dcanvas::~U3Dcanvas() {}
 
 UViewStyle U3DcanvasView::style(&U3DcanvasView::createView, UCONST);
 
-void U3DcanvasView::doUpdate(UUpdateContext& ctx, URect r, URect clip, UViewUpdate& vu) {
+void U3DcanvasView::doUpdate(UpdateContext& ctx, Rectangle r, Rectangle clip, UViewUpdate& vu) {
 #ifndef UBIT_WITH_GL
-  UView::doUpdate(ctx, r, clip, vu);
+  View::doUpdate(ctx, r, clip, vu);
 #else
   int frame_width  = int(getWin()->getWidth());
   int frame_height = int(getWin()->getHeight());
   
-  UGraph* g = ctx.getGraph();  // g may be null!
+  Graph* g = ctx.getGraph();  // g may be null!
   if (g) {
     g->set3Dmode(true);
     // set the viewport for drawing in the 3Dcanvas
@@ -330,7 +329,7 @@ void U3DcanvasView::doUpdate(UUpdateContext& ctx, URect r, URect clip, UViewUpda
     glLoadIdentity();
   }
   
-  UView::doUpdate(ctx, r, clip, vu);
+  View::doUpdate(ctx, r, clip, vu);
   
   if (g) {
     glMatrixMode(GL_PROJECTION);
@@ -359,9 +358,9 @@ void U3DcanvasView::doUpdate(UUpdateContext& ctx, URect r, URect clip, UViewUpda
 
 struct MatchView {
 public:
-  UPoint p;
+  Point p;
   float distance;
-  UView* view;
+  View* view;
   U3Dpos* pos3d;
   bool in;
   
@@ -374,15 +373,15 @@ public:
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-UView* U3DcanvasView::findInChildren(UElem* grp, const UPoint& winpos,
-                                     const UUpdateContext& ctx, UViewFind& vf) 
+View* U3DcanvasView::findInChildren(Element* grp, const Point& winpos,
+                                     const UpdateContext& ctx, UViewFind& vf) 
 {
   if (!grp->isShowable() || grp->isIgnoringEvents()) return null;
   
 #ifndef UBIT_WITH_GL
-  return UView::findInChildren(grp, e, cond, ctx, vf);
+  return View::findInChildren(grp, e, cond, ctx, vf);
 #else  
-  UUpdateContext ctx2 = ctx; // voir plus loin
+  UpdateContext ctx2 = ctx; // voir plus loin
   glMatrixMode(GL_MODELVIEW);
   
   GLdouble point1[3], point2[3], modelMatrix[16], projectionMatrix[16];
@@ -405,37 +404,37 @@ UView* U3DcanvasView::findInChildren(UElem* grp, const UPoint& winpos,
   viewport[2] = int(this->width);
   viewport[3] = int(this->height);
   
-  // NB: att aux confusions entre ex,ey et x,y qui sont les coords de UView !  
+  // NB: att aux confusions entre ex,ey et x,y qui sont les coords de View !  
   float ex = winpos.x - this->x;
   float ey = this->height - (winpos.y - this->y);
   
-  bool in_softwin_list = grp->getDisplayType() == UElem::WINLIST;  // ?????
+  bool in_softwin_list = grp->getDisplayType() == Element::WINLIST;  // ?????
   
   vector<MatchView> views;
   
   for (UChildReverseIter ch = grp->crbegin(); ch != grp->crend(); ++ch) {
     if (!ch.getCond() || ch.getCond()->verifies(ctx, *grp)) {
-      UDimension dim(0,0);
-      UElem* chgrp = (*ch)->toElem();
-      UBox* chbox = null;
-      UView* chview = null;
+      Dimension dim(0,0);
+      Element* chgrp = (*ch)->toElem();
+      Box* chbox = null;
+      View* chview = null;
       
       if (!chgrp || !chgrp->isShowable() || chgrp->isIgnoringEvents())
         continue;
       
-      if (! (chbox = chgrp->toBox())) {   // is an UElem not a UBox
-        UView* v = findInGroup(chgrp, winpos, ctx, vf);
+      if (! (chbox = chgrp->toBox())) {   // is an Element not a Box
+        View* v = findInGroup(chgrp, winpos, ctx, vf);
         if (v) return v; 
       }
       
-      else if (chbox && in_softwin_list && chbox->getDisplayType() == UElem::SOFTWIN
+      else if (chbox && in_softwin_list && chbox->getDisplayType() == Element::SOFTWIN
                && (chview = chbox->getViewInImpl(this /*,null*/))) {   //pas de ch
         // !!! faudrait tester chview->isShown() !!!
-        UView* v = chview->findInBox(chbox, winpos, ctx, vf);
+        View* v = chview->findInBox(chbox, winpos, ctx, vf);
         if (v) return v; 
       }
       
-      else if (chbox && chbox->getDisplayType() == UElem::BLOCK    // elimine les UWin
+      else if (chbox && chbox->getDisplayType() == Element::BLOCK    // elimine les Window
                && (chview = chbox->getViewInImpl(this, /*&ch.child(),*/ dim))) {
         // !!! faudrait tester chview->isShown() !!!
         
@@ -444,7 +443,7 @@ UView* U3DcanvasView::findInChildren(UElem* grp, const UPoint& winpos,
         if (!pos3d) chgrp->children().findClass(pos3d);     // lourd !!!
         
         if (!pos3d) {
-          UView* v = chview->findInBox(chbox, winpos, ctx, vf);  // fait quoi ?????
+          View* v = chview->findInBox(chbox, winpos, ctx, vf);  // fait quoi ?????
           if (v) return v; 
         }
         
@@ -460,21 +459,21 @@ UView* U3DcanvasView::findInChildren(UElem* grp, const UPoint& winpos,
           float ez = 0;
           if (gluUnProject(ex, ey, ez, modelMatrix, projectionMatrix, viewport, 
                            &point1[0], &point1[1], &point1[2]) == GL_FALSE) {
-            UAppli::internalError("U3DBox::findInChildren","glUnproject failed");
+            Application::internalError("U3DBox::findInChildren","glUnproject failed");
             continue;
           }
           
           ez = 0.5;
           if (gluUnProject(ex, ey, ez, modelMatrix, projectionMatrix, viewport, 
                            &point2[0], &point2[1], &point2[2]) == GL_FALSE) {
-            UAppli::internalError("U3DBox::findInChildren","glUnproject failed");
+            Application::internalError("U3DBox::findInChildren","glUnproject failed");
             continue;
           }
           
           //point1 and point2 defines the mouse click line in the plan coordinate system.
           //get the point on this line with z = 0
           if (point1[2] == point2[2]) {
-            UAppli::internalError("U3DBox::findInChildren","no intersection");
+            Application::internalError("U3DBox::findInChildren","no intersection");
             continue;
           }
           
@@ -514,10 +513,10 @@ UView* U3DcanvasView::findInChildren(UElem* grp, const UPoint& winpos,
   sort<vector<MatchView>::iterator>(views.begin(), views.end());  //sort views
   
   // find the first view that matches
-  UView* source_view = null;
+  View* source_view = null;
   
   for (vector<MatchView>::iterator it = views.begin(); it!=views.end(); ++it) {
-    UBox* box = (*it).view->getBox();
+    Box* box = (*it).view->getBox();
     if (box) {
       vf.ref_pos.x = (*it).p.x;
       vf.ref_pos.y = (*it).p.y;
@@ -548,7 +547,7 @@ UView* U3DcanvasView::findInChildren(UElem* grp, const UPoint& winpos,
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 bool U3DcanvasView::unproject(const U3Dpos* pos3d,
-                              const UPoint& winpos, UPoint& convpos) {
+                              const Point& winpos, Point& convpos) {
   glMatrixMode(GL_MODELVIEW);
   
   GLdouble point1[3], point2[3], modelMatrix[16], projectionMatrix[16];
@@ -571,7 +570,7 @@ bool U3DcanvasView::unproject(const U3Dpos* pos3d,
   viewport[2] = int(this->width);
   viewport[3] = int(this->height);
   
-  // NB: att aux confusions entre ex,ey et x,y qui sont les coords de UView !  
+  // NB: att aux confusions entre ex,ey et x,y qui sont les coords de View !  
   float ex = winpos.x - this->x;
   float ey = this->height - (winpos.y - this->y);
   
@@ -586,21 +585,21 @@ bool U3DcanvasView::unproject(const U3Dpos* pos3d,
   float ez = 0;
   if (gluUnProject(ex, ey, ez, modelMatrix, projectionMatrix, viewport, 
                    &point1[0], &point1[1], &point1[2]) == GL_FALSE) {
-    UAppli::internalError("U3DBox::findInChildren","glUnproject failed");
+    Application::internalError("U3DBox::findInChildren","glUnproject failed");
     return false;
   }
   
   ez = 0.5;
   if (gluUnProject(ex, ey, ez, modelMatrix, projectionMatrix, viewport, 
                    &point2[0], &point2[1], &point2[2]) == GL_FALSE) {
-    UAppli::internalError("U3DBox::findInChildren","glUnproject failed");
+    Application::internalError("U3DBox::findInChildren","glUnproject failed");
     return false;
   }
   
   //point1 and point2 defines the mouse click line in the plan coordinate system.
   //get the point on this line with z = 0
   if (point1[2] == point2[2]) {
-    UAppli::internalError("U3DBox::findInChildren","no intersection");
+    Application::internalError("U3DBox::findInChildren","no intersection");
     return false;
   }
   
@@ -620,7 +619,7 @@ bool U3DcanvasView::unproject(const U3Dpos* pos3d,
 
 // =============================================================================
 
-void UView::beginUpdate3d(UViewUpdateImpl& vd, UElem& grp, UUpdateContext& curp) {
+void View::beginUpdate3d(UViewUpdateImpl& vd, Element& grp, UpdateContext& curp) {
 #ifdef UBIT_WITH_GL
   if (!vd.can_paint) return;
   
@@ -639,7 +638,7 @@ void UView::beginUpdate3d(UViewUpdateImpl& vd, UElem& grp, UUpdateContext& curp)
 #endif
 }
 
-void UView::endUpdate3d(UViewUpdateImpl& vd, UElem& grp, UUpdateContext& curp) {
+void View::endUpdate3d(UViewUpdateImpl& vd, Element& grp, UpdateContext& curp) {
 #ifdef UBIT_WITH_GL
   if (!vd.can_paint) return;
   

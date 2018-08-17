@@ -1,6 +1,6 @@
-/************************************************************************
+/*
 *
-*  usocket.hpp: simple sockets
+*  usocket.h: simple sockets
  *  Ubit GUI Toolkit - Version 6
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
 *
@@ -16,6 +16,7 @@
 
 #ifndef _usocket_hpp_
 #define	_usocket_hpp_ 1
+
 #include <ubit/udefs.hpp>
 #include <ubit/ustr.hpp>
 
@@ -27,18 +28,17 @@ namespace ubit {
   class UOutbuf;
   class UInbuf;
 
-/* ==================================================== ===== ======= */
 /** Ubit Simple Sockets.
  * Example:
  <pre><tt>
   // creates a new socket connected to host "myhost" on port 666
-  USocket* s = new USocket("myhost", 666);
+  Socket* s = new Socket("myhost", 666);
 
   // adds a callback function so that socketInputCB(s) will be called each time
   // s receives data.
   s->onInput(ucall(s, socketInputCB));
 
-  void socketInputCB(USocket* s) {
+  void socketInputCB(Socket* s) {
     UInbuf ibuf;
   
     // receiveBlock() retreives the data sent by sendBlock()
@@ -61,12 +61,12 @@ namespace ubit {
  *
  * See also: UServerSocket.
  */
-class USocket {
+class Socket {
 public:
-  USocket();
-  USocket(const char* remote_host, int remote_port);
-  USocket(const UStr& remote_host, int remote_port);
-  virtual ~USocket();
+  Socket();
+  Socket(const char* remote_host, int remote_port);
+  Socket(const String& remote_host, int remote_port);
+  virtual ~Socket();
 
   virtual int connect(const char* remote_host, int remote_port);
   virtual void close();
@@ -145,13 +145,13 @@ protected:
 
  void newConnection(UServerSocket* servs) {
      // accepts the connection and returns the corresponding socket
-     USocket* s = servs->accept();
-     s->onInput(ucall(s, socketInputCB));  // see USocket
+     Socket* s = servs->accept();
+     s->onInput(ucall(s, socketInputCB));  // see Socket
      ....
  }  
  </tt></pre>
  *
- * See also: USocket.
+ * See also: Socket.
  */
 class UServerSocket {
 public:
@@ -169,13 +169,13 @@ public:
    * accept() is typically called in such a callback
    */
 
-  virtual USocket* accept();
+  virtual Socket* accept();
   /**< listens for a connection to be made and accepts it.
     * This method blocks until a connection is made. It is typically called
     * in a callback function: see onInput() and class UServerSocket
     *
     * Note: accept() calls createSocket() to create the new socket.
-    * By default this functions returns {new USocket}. It can be redefined
+    * By default this functions returns {new Socket}. It can be redefined
     * by UServerSocket subclasses to create appropriate socket objets.
     */
 
@@ -194,7 +194,7 @@ public:
   virtual void close();
   ///< closes this socket.
 
-  virtual USocket* createSocket() const {return new USocket();}
+  virtual Socket* createSocket() const {return new Socket();}
   ///< called by accept() to create the new socket (see accept() for details).
 
   bool isClosed() const {return listen_sock < 0;}
@@ -213,7 +213,7 @@ protected:
 };
 
 /* ==================================================== [Elc] ======= */
-/** UIObuf (@see USocket).
+/** UIObuf (@see Socket).
 */
 class UIObuf {
 public:
@@ -234,7 +234,7 @@ public:
   bool augment(unsigned short);
 
 protected:
-  friend class USocket;
+  friend class Socket;
   enum {DEFAULT_BUFSIZE = 512, AUGMENT_QUANTUM = 2048};
   char* buffer;
   char  default_buffer[DEFAULT_BUFSIZE];
@@ -243,7 +243,7 @@ protected:
 };
 
 /* ==================================================== [Elc] ======= */
-/** UOutbuf (@see USocket).
+/** UOutbuf (@see Socket).
 */
 class UOutbuf : public UIObuf {
 public:
@@ -251,7 +251,7 @@ public:
   void writeChar(unsigned char);
   void writeShort(short);
   void writeLong(long);
-  void writeString(const UStr&);
+  void writeString(const String&);
   void writeString(const char*);
   void writeString(const char* s, unsigned int len);
   void writeEvent(unsigned char event_type, unsigned char event_flow,
@@ -259,7 +259,7 @@ public:
 };
 
   /* ==================================================== [Elc] ======= */
-/** UInbuf (@see USocket).
+/** UInbuf (@see Socket).
 */
 class UInbuf : public UIObuf {
 public:
@@ -267,7 +267,7 @@ public:
   void readChar(unsigned char&);
   void readShort(short&);
   void readLong(long&);
-  void readString(UStr&);
+  void readString(String&);
   void readEvent(unsigned char& event_type, unsigned char& event_flow,
                  long& x, long& y, unsigned long& detail);
 };

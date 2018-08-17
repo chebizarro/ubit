@@ -1,18 +1,25 @@
-/************************************************************************
- *
- *  ufinderImpl.hpp: ufinder implementation (see ufinder.hpp)
- *  Ubit GUI Toolkit - Version 6
+/*
+ *  finderImpl.h: ufinder implementation (see ufinder.hpp)
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE :
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION;
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
 
 #ifndef _ufinderImpl_hpp_
 #define _ufinderImpl_hpp_
@@ -21,26 +28,27 @@
 #include <ubit/uicon.hpp>
 #include <ubit/ufont.hpp>
 #include <ubit/ulistbox.hpp>
+
 namespace ubit {
   
   /* [Impl] A directory in the UFinder.
    */ 
   class UFinderDir : public UItem {
     friend class UFinder;
-    UStr fpath, fname;
+    String fpath, fname;
     uptr<UIconbox> iconbox;
     UPopmenu popmenu;
     bool keep_open;
     int path_type;
     
   public:
-    UFinderDir(class UFinder*, const UStr& path, int path_type);
+    UFinderDir(class UFinder*, const String& path, int path_type);
     ~UFinderDir();
     
-    const UStr& getDir() const;
+    const String& getDir() const;
     class UIconbox* getIconbox() const;
     
-    void setDir(const UStr& dirname);
+    void setDir(const String& dirname);
     void setIconbox(class UIconbox*);
     
     void emph(bool state);
@@ -48,14 +56,13 @@ namespace ubit {
     bool isKeepOpen() {return keep_open;}
   };
   
-  /* ==================================================== ===== ======= */
   /* [Impl] A host in the UFinder.
    */ 
-  class UFinderHost : public UBox {   // UVbox
+  class UFinderHost : public Box {   // UVbox
   public:
     typedef void (UFinderHost::*HostMethod)();
     
-    UFinderHost(class UFinder*, const UStr& hostname);
+    UFinderHost(class UFinder*, const String& hostname);
     void resolve(HostMethod);
     void createClone();
     void deleteClone();
@@ -67,23 +74,22 @@ namespace ubit {
   protected:
     friend class UFinder;
     class UFinder& fd;
-    UStr hostname, address;
-    UBox *clone_btn, *xhost_btn, *put_btn, *get_btn;
-    UWin *clone_win;
+    String hostname, address;
+    Box *clone_btn, *xhost_btn, *put_btn, *get_btn;
+    Window *clone_win;
     
-    void resolveCB(UMessageEvent&, HostMethod);
+    void resolveCB(MessageEvent&, HostMethod);
     void createCloneImpl();
     void addXhostImpl();
     void calibrateImpl();
     void putFileImpl();
   };
   
-  /* ==================================================== ===== ======= */
   /* [Impl] UFinder communication (remote file access by using ssh, etc)
    */ 
   class UFinderCom {
   public:
-    UFinderCom(UFinder*, const UStr& path, int path_type);
+    UFinderCom(UFinder*, const String& path, int path_type);
     
   protected:
     enum {INVALID_URL=-2};
@@ -92,7 +98,7 @@ namespace ubit {
     
     pthread_t thread_id;
     UFinder* fd;
-    UStr path, cachepath;
+    String path, cachepath;
     int type, mode;
     int stat;
   };

@@ -1,25 +1,34 @@
-/************************************************************************
- *
- *  uscrollbar.hpp
- *  Ubit GUI Toolkit - Version 6
+/*
+ *  scrollbar.hpp
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE :
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION;
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
 
 #ifndef _uscrollbar_hpp_
 #define	_uscrollbar_hpp_ 1
+
 #include <ubit/ubox.hpp>
 #include <ubit/ucolor.hpp>
 #include <ubit/ustyle.hpp>
 #include <ubit/uview.hpp>
+
 namespace ubit {
   
   /** Scrollbar widget.
@@ -35,17 +44,17 @@ namespace ubit {
    *  - UOn::change is fired continuously while the knob is dragged
    *  both callbacks are equivalent when isTracking() is true
    */
-  class UScrollbar: public UBox {
+  class UScrollbar: public Box {
   public:
     UCLASS(UScrollbar)
 
-    UScrollbar(const UArgs& = UArgs::none);
+    UScrollbar(const Args& = Args::none);
     /**< creates a new scrollbar (@see also shortcut uscrollbar()).
      * Default orientation is vertical. new UScrollbar(UOrient::horizontal) creates
      * a horizontal slider. The scrollbar value is in the range [0., 100.]
      */
     
-    UScrollbar(UFloat& value, const UArgs& = UArgs::none);
+    UScrollbar(Float& value, const Args& = Args::none);
     /**< creates a new scrollbar with a model value.
      * the scrollbar is synchronized with this value. Several widgets 
      * (eg.scrollbar) that share the same value are synchronized.
@@ -87,21 +96,19 @@ namespace ubit {
 
     virtual bool isTransparent() const;
     
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    // implementation
     
-    UFloat& value() {return *pvalue;}
+    Float& value() {return *pvalue;}
 
-    virtual UBox* getKnob() {return pknob;}
-    virtual UBox* getRail() {return prail;}
-    virtual UBox* getLessButton() {return pless_btn;}
-    virtual UBox* getMoreButton() {return pmore_btn;}
+    virtual Box* getKnob() {return pknob;}
+    virtual Box* getRail() {return prail;}
+    virtual Box* getLessButton() {return pless_btn;}
+    virtual Box* getMoreButton() {return pmore_btn;}
     ///< return the knob, the rail and the 2 scroll buttons (if any, null otherwise).
     
-    virtual UBox* createKnob(bool vertical);
-    virtual UBox* createRail(bool vertical);
-    virtual UBox* createLessButton(bool vertical);
-    virtual UBox* createMoreButton(bool vertical);
+    virtual Box* createKnob(bool vertical);
+    virtual Box* createRail(bool vertical);
+    virtual Box* createLessButton(bool vertical);
+    virtual Box* createMoreButton(bool vertical);
     /* fonctions that create the knob, the rail and the 2 scroll buttons.
      * can be redefined by subclasses to use other widgets
      */
@@ -119,9 +126,9 @@ namespace ubit {
   private:
     friend class UScrollbarView;
     friend class UScrollpane;
-    uptr<UFloat> pvalue;	        // scrollbar value (percentage)
+    uptr<Float> pvalue;	        // scrollbar value (percentage)
     uptr<UScrollpane> ppane;	    // the pane controlled by this scrollbar
-    uptr<UBox> pless_btn, pmore_btn, pknob, prail;
+    uptr<Box> pless_btn, pmore_btn, pknob, prail;
     uptr<UPos> pknob_pos;		      // current position of the knob
     float unit_increment, block_increment;
     float delta_mouse;
@@ -136,35 +143,34 @@ namespace ubit {
     virtual void dragKnob(UMouseEvent&);
     virtual void pressRail(UMouseEvent&);
     virtual void releaseRail(UMouseEvent&);
-    virtual float getPercent(UMouseEvent&, UView* knob_view, UView* rail_view, float delta_mouse);
+    virtual float getPercent(UMouseEvent&, View* knob_view, View* rail_view, float delta_mouse);
     virtual float getIncrementPercent(UMouseEvent&, float increment);
   };
   
-  inline UScrollbar& uscrollbar(const UArgs& args = UArgs::none) {return *new UScrollbar(args);}
+  inline UScrollbar& uscrollbar(const Args& args = Args::none) {return *new UScrollbar(args);}
   ///< shortcut that creates a new scrollbar (that is vertical by default).
   
-  UScrollbar& uhscrollbar(const UArgs& args = UArgs::none);
+  UScrollbar& uhscrollbar(const Args& args = Args::none);
   ///< shortcut that creates a new horizontal scrollbar
   
-  inline UScrollbar& uvscrollbar(const UArgs& args = UArgs::none) {return *new UScrollbar(args);}
+  inline UScrollbar& uvscrollbar(const Args& args = Args::none) {return *new UScrollbar(args);}
   ///< shortcut that creates a new vertical scrollbar
   
 
-  /* ==================================================== ===== ======= */
   /** Scrollbar View Renderer.
    *  used by: UScrollbar
    *  - Implementation: clients usually don't need to use this class
    */
-  class UScrollbarView : public UView {
+  class UScrollbarView : public View {
     friend class UScrollbar;
   public:
     static  UViewStyle style;  // renderer
     virtual UViewStyle* getViewStyle() {return &style;}
     
-    UScrollbarView(UBox*, UView* parview, UHardwinImpl*);
-    static UView* createView(UBox*, UView* parview, UHardwinImpl*);
+    UScrollbarView(Box*, View* parview, UHardwinImpl*);
+    static View* createView(Box*, View* parview, UHardwinImpl*);
     
-    virtual void doUpdate(UUpdateContext&, URect r, URect clip, UViewUpdate&);
+    virtual void doUpdate(UpdateContext&, Rectangle r, Rectangle clip, UViewUpdate&);
   };
 }
 #endif

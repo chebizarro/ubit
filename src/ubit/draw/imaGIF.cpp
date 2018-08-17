@@ -1,4 +1,4 @@
-/* ==================================================== ======== ======= *
+/*
 *
 * uimaGIF.cpp : glue with the GIF/UNGIF library  (libungif)
 * file adapted from the UNGIF "util" program "gif2x11.c" by Gershon Elber.
@@ -72,7 +72,7 @@ _stklen = 16384;	  // Increase default stack size
 namespace ubit {
   
 struct UGif {
-  UGif(UHardIma& nima, const UStr& fpath, int max_w, int max_h);
+  UGif(UHardIma& nima, const String& fpath, int max_w, int max_h);
   ~UGif();
   int getStat() const {return stat;};
   
@@ -117,16 +117,14 @@ InterlacedOffset[] = { 0, 4, 2, 1 },  /* The way Interlaced image should. */
 InterlacedJumps[]  = { 8, 8, 4, 2 };   /* be read - offsets and jumps... */
 
 /* ==================================================== [Elc] ======= */
-/* ==================================================== ===== ======= */
 
-int UImaGIF::read(UHardIma& nima, const UStr& fpath, int wmax, int hmax) {
+int UImaGIF::read(UHardIma& nima, const String& fpath, int wmax, int hmax) {
   UGif ug(nima, fpath, wmax, hmax);    // !! wmax, hmax only for GL !!!!!!
   return ug.getStat();
 }
 
-/* ==================================================== ===== ======= */
 
-UGif::UGif(UHardIma& nima, const UStr& fpath, int max_w, int max_h)
+UGif::UGif(UHardIma& nima, const String& fpath, int max_w, int max_h)
 : natima(nima) {
   gfile = null;
   imacount = 0;
@@ -174,7 +172,6 @@ UGif::UGif(UHardIma& nima, const UStr& fpath, int max_w, int max_h)
   }
 }
 
-/* ==================================================== ======== ======= */
 // note that ima and imashape are not deleted by the destructor
 
 UGif::~UGif() {
@@ -212,8 +209,6 @@ void UGif::setSize(int w, int h, int max_w, int max_h) {
   }
 }
 */
-/* ==================================================== ======== ======= */
-/* ==================================================== ======== ======= */
 
 void UGif::read() {  
   GifRecordType recordType;
@@ -245,8 +240,6 @@ void UGif::read() {
   while (recordType != TERMINATE_RECORD_TYPE);
 }
 
-/* ==================================================== ======== ======= */
-/* ==================================================== ======== ======= */
 #if UBIT_WITH_GL
 
 void UGif::putLine_GL32(int x1, int x2, int y) {
@@ -291,7 +284,6 @@ void UGif::fillBackground_GL32(int x1, int x2, int y1, int y2) {
 }
 
 #endif
-/* ==================================================== ======== ======= */
 #if WITH_2D_GRAPHICS
 
 // x2 exclus
@@ -430,7 +422,7 @@ void UGif::readImage() {
 #endif
 
   { // cas d'erreur (impossible sauf si ni GL ni 2D_GRAPHICS)
-    UAppli::internalError("UGif::readImage","could not create image");
+    Application::internalError("UGif::readImage","could not create image");
     stat = UFilestat::MiscError;
     return;
   }
@@ -477,10 +469,9 @@ DONE:
 #endif
   
   // cas d'erreur (impossible sauf si ni GL ni 2D_GRAPHICS)
-  UAppli::internalError("UHardGifReader","wrong image format");
+  Application::internalError("UHardGifReader","wrong image format");
 }
 
-/* ==================================================== ======== ======= */
 #if WITH_2D_GRAPHICS
 
 void UGif::createConvtable() {
@@ -504,7 +495,6 @@ void UGif::createConvtable() {
 }
 
 #endif
-/* ==================================================== ======== ======= */
 
 void UGif::readExtension() {
   GifByteType *extension = null;

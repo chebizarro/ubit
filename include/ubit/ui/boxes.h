@@ -1,22 +1,32 @@
-/************************************************************************
- *
- *  uboxes.hpp : misc containers.
- *  Ubit GUI Toolkit - Version 6
+/*
+ *  boxes.hpp : misc containers.
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE : 
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE 
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. 
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU 
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION; 
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
+
 
 #ifndef _uboxes_hpp_
 #define	_uboxes_hpp_ 1
+
 #include <ubit/ubox.hpp>
+
 namespace ubit {
   
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -28,13 +38,13 @@ namespace ubit {
    *  It is generally well suited for displaying/editing text (UTexfield and 
    *  UTextarea enforce this behavior)
    *
-   *  Implementation note: a UFlowbox is an UBox with UFlowview renderer.
+   *  Implementation note: a UFlowbox is an Box with UFlowview renderer.
    */
-  class UFlowbox: public UBox {
+  class UFlowbox: public Box {
   public:
     UCLASS(UFlowbox)
 
-    UFlowbox(UArgs args = UArgs::none);
+    UFlowbox(Args args = Args::none);
     /**< create a new flowbox; @see also shortcut: uflowbox().
      * a flowbox displays strings and other objects as a continous 2D flow
      */
@@ -42,7 +52,7 @@ namespace ubit {
     static UStyle* createStyle();
   };
   
-  inline UFlowbox& uflowbox(UArgs args = UArgs::none) {return *new UFlowbox(args);}
+  inline UFlowbox& uflowbox(Args args = Args::none) {return *new UFlowbox(args);}
   ///< shortcut that creates a new UFlowBox.
   
    
@@ -52,20 +62,20 @@ namespace ubit {
    *  Buttons included in this object are displayed in a specific
    *  way (their border does not appear, etc.)
    *
-   *  See class UBox for details.
+   *  See class Box for details.
    *  See also: class UMenubar for creating menu bars
    */
-  class UBar: public UBox {
+  class UBar: public Box {
   public:
     UCLASS(UBar)
 
-    UBar(UArgs args = UArgs::none): UBox(args) {}
+    UBar(Args args = Args::none): Box(args) {}
     ///< creates a new horizontal bar; @see also shortcut: ubar().
     
     static UStyle* createStyle();
   };
   
-  inline UBar& ubar(UArgs args = UArgs::none) {return *new UBar(args);}
+  inline UBar& ubar(Args args = Args::none) {return *new UBar(args);}
   ///< shortcut function that creates a new UBar.
   
   
@@ -76,60 +86,60 @@ namespace ubit {
    *  Buttons included in this object are also displayed in a specific
    *  way (their border won't appear, etc.)
    *
-   *  See class UBox for details.
+   *  See class Box for details.
    */
-  class UStatusbar: public UBox {
+  class UStatusbar: public Box {
   public:
     UCLASS(UStatusbar)
 
-    UStatusbar(UArgs args = UArgs::none): UBox(args) {}
+    UStatusbar(Args args = Args::none): Box(args) {}
     ///< create a new status bar; @see also shortcut: ustatusbar().
     
     static UStyle* createStyle();
   };
   
-  inline UStatusbar& ustatusbar(UArgs args = UArgs::none) {return *new UStatusbar(args);}
+  inline UStatusbar& ustatusbar(Args args = Args::none) {return *new UStatusbar(args);}
   ///< shortcut that creates a new UStatusbar.
   
   
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   /** Card box (or Tabbed Pane).
    */
-  class UCardbox : public UBox {
+  class UCardbox : public Box {
   public:
     UCLASS(UCardbox)
 
-    UCardbox(UArgs args = UArgs::none);
+    UCardbox(Args args = Args::none);
     ///< creates a new card box; @see also shortcut: ucardbox().
     
     virtual ~UCardbox();
     
     static  UStyle* createStyle();
     
-    virtual UCardbox& addCard(UBox& card);
+    virtual UCardbox& addCard(Box& card);
     /**< adds a superimposed card (without a tab).
      * @see also: addTab()
      */
     
-    virtual UCardbox& addTab(UArgs tab_content, UBox& card);
+    virtual UCardbox& addTab(Args tab_content, Box& card);
     /**< adds a superimposed card with an associated tab.
      * tab_content can be a string, an icon and a string, or any other valid +arglist.
      * @see also: addCard()
      */
     
-    virtual UBox* getCard(int index) const;
+    virtual Box* getCard(int index) const;
     ///< returns the card at this index.
     
-    virtual int getCardIndex(UBox& card) const;
+    virtual int getCardIndex(Box& card) const;
     ///< returns the index of this card (-1 if not found).
     
-    virtual UBox* getSelectedCard() const;
+    virtual Box* getSelectedCard() const;
     ///< returns the card that is currently selected (null if none).
     
     virtual int getSelectedIndex() const;
     ///< returns the index of the card that is currently selected (-1 if none).
     
-    virtual void setSelectedCard(UBox& card);
+    virtual void setSelectedCard(Box& card);
     ///< selects this card.
     
     virtual void setSelectedIndex(int index);
@@ -148,7 +158,7 @@ namespace ubit {
 #endif
   };
   
-  inline UCardbox& ucardbox(UArgs args = UArgs::none) {return *new UCardbox(args);}
+  inline UCardbox& ucardbox(Args args = Args::none) {return *new UCardbox(args);}
   ///< shortcut that creates a new UCardbox.
   
     
@@ -158,16 +168,16 @@ namespace ubit {
    *  when a docbox is iconfied the working area is hidden but the titlebar
    * remains visible.
    */
-  class UDocbox : public UBox {
+  class UDocbox : public Box {
   public:
     UCLASS(UDocbox)
 
-    UDocbox(UArgs args = UArgs::none);
+    UDocbox(Args args = Args::none);
     virtual ~UDocbox();
     
-    virtual UBox& titlebar()           {return *ptitlebar;}
+    virtual Box& titlebar()           {return *ptitlebar;}
     virtual UScrollpane& scrollpane()  {return *pspane;}
-    virtual UBox& content()            {return *pcontent;}
+    virtual Box& content()            {return *pcontent;}
     virtual UScale& scale()            {return *pscale;}
     virtual void iconify(bool);
     virtual bool isIconified() const;
@@ -178,7 +188,7 @@ namespace ubit {
     
 #ifndef NO_DOC
   protected:
-    uptr<UBox> ptitlebar, pcontent;
+    uptr<Box> ptitlebar, pcontent;
     uptr<UScrollpane> pspane;
     uptr<UScale> pscale;
     float zoom_quantum;
@@ -189,26 +199,26 @@ namespace ubit {
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   /** Alertbox gadget
    */
-  class UAlertbox : public UBox {
+  class UAlertbox : public Box {
   public:
     UCLASS(UAlertbox)
 
-    UAlertbox(UArgs args = UArgs::none);
+    UAlertbox(Args args = Args::none);
     
     static UStyle* createStyle();
     
     // NB: show doit etre redefini, sinon show("abcd") est pris comme show(bool)
     // a cause des conversions implicites (stupides) du C++
-    virtual void show(bool b) {UBox::show(b);}
+    virtual void show(bool b) {Box::show(b);}
     virtual void show(const char* msg) {showMsg(msg);}
-    virtual void show(const UStr& msg) {showMsg(msg);}
+    virtual void show(const String& msg) {showMsg(msg);}
     
     virtual void showMsg(const char* msg);
-    virtual void showMsg(const UStr& msg);
+    virtual void showMsg(const String& msg);
     ///< shows the alert box with this message.
     
   private:
-    UElem message;
+    Element message;
   };
   
 }

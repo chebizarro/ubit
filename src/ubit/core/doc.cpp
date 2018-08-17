@@ -1,6 +1,5 @@
-/************************************************************************
- *
- *  udoc.cpp: Document Element
+/*
+ *  doc.cpp: Document Element
  *  Ubit GUI Toolkit - Version 6.0
  *  (C) 2008 | Eric Lecolinet | ENST Paris | www.enst.fr/~elc/ubit
  *
@@ -24,30 +23,29 @@ using namespace std;
 namespace ubit {
 
 
-UDocFactory& UDocFactory::getDefaultFactory() {
-  static UDocFactory* fact = new UDocFactory();
+DocumentFactory& DocumentFactory::getDefaultFactory() {
+  static DocumentFactory* fact = new DocumentFactory();
   return *fact;
 }
 
-UDocFactory& UDoc::getDefaultFactory() {
-  return UDocFactory::getDefaultFactory();
+DocumentFactory& Document::getDefaultFactory() {
+  return DocumentFactory::getDefaultFactory();
 }
 
-UDoc::UDoc() : ppath(new UStr("")) {}
-UDoc::UDoc(const UStr& _path) : ppath(new UStr(_path)) {}
-UDoc::~UDoc() {}
+Document::Document() : ppath(new String("")) {}
+Document::Document(const String& _path) : ppath(new String(_path)) {}
+Document::~Document() {}
 
-/* ==================================================== ===== ======= */
 
-bool UDoc::isEditable() const {return false;}
-void UDoc::setEditable(bool state) {}
+bool Document::isEditable() const {return false;}
+void Document::setEditable(bool state) {}
 
-void UDoc::setPath(const UStr& _path) {
+void Document::setPath(const String& _path) {
   if (!ppath) ppath = ustr();
   *ppath = _path;
 }
 
-void UDoc::makePath(UStr& path, const UStr& name) {
+void Document::makePath(String& path, const String& name) {
   path = name;
   path.trim();
   int pos;
@@ -68,67 +66,64 @@ void UDoc::makePath(UStr& path, const UStr& name) {
   if (pos == 0) path.remove(0, 5); // remove "file:"
 
   if (path.at(0) != '/')  {
-    UStr dirname = getPath().dirname();
+    String dirname = getPath().dirname();
     path.insert(0, dirname);
   }
 }
 
-/* ==================================================== ======== ======= */
 
-void UDoc::addLinkCallback(const UChild& cond_slash_callback) {
-  if (!call_list) call_list = new UElem();
+void Document::addLinkCallback(const Child& cond_slash_callback) {
+  if (!call_list) call_list = new Element();
   call_list->add(cond_slash_callback);
 }
 
-void UDoc::linkEventCB(UInputEvent& e, const UStr* path) {
+void Document::linkEventCB(UInputEvent& e, const String* path) {
   if (call_list) {
     //const UOn* on = dynamic_cast<const UOn*>(&e.getCond());  // ???
     //if (on) {
-    //e.setTarget((UNode*)path);   ??? sert a qq chose ??? @@@!!!
+    //e.setTarget((Node*)path);   ??? sert a qq chose ??? @@@!!!
     //e.setCond(*on);
     call_list->fire(e);
     //}
   }
 }
 
-  /* ==================================================== ===== ======= */
 
-UFlatDoc::UFlatDoc(const UStr& _pathname) 
-: UDoc(_pathname), edit(null) {
+FlatDocument::FlatDocument(const String& _pathname) 
+: Document(_pathname), edit(null) {
 }
 
-bool UFlatDoc::isEditable() const {
+bool FlatDocument::isEditable() const {
   return edit ? edit->isEditable() : false;
 }
 
-void UFlatDoc::setEditable(bool state) {
+void FlatDocument::setEditable(bool state) {
   if (edit) edit->setEditable(state);
 }
 
-/* ==================================================== ======== ======= */
 
-class TextDocCreator : public UDocCreator {
+class TextDocCreator : public DocumentCreator {
 public:
-  virtual UDoc* create(UDocSource&);
+  virtual Document* create(DocumentSource&);
 };
 
 
-UDoc* TextDocCreator::create(UDocSource& so) {
-  UStr* str = null;
+Document* TextDocCreator::create(DocumentSource& so) {
+  String* str = null;
 
-  if (so.from == UDocSource::PATHNAME) {
-    str = new UStr();
+  if (so.from == DocumentSource::PATHNAME) {
+    str = new String();
     if ((so.stat = str->read(*so.fullpath)) <= 0) {
       delete str;
       return null;
     }
   }
-  else if (so.from == UDocSource::BUFFER) {
-    str = new UStr(so.buffer ? *so.buffer : "");
+  else if (so.from == DocumentSource::BUFFER) {
+    str = new String(so.buffer ? *so.buffer : "");
     so.stat = 1;
   }
-  else if (so.from == UDocSource::SCRATCH) {
-    str = new UStr();
+  else if (so.from == DocumentSource::SCRATCH) {
+    str = new String();
     so.stat = 1;
   }
   else {
@@ -136,11 +131,11 @@ UDoc* TextDocCreator::create(UDocSource& so) {
     return null;
   }
   
-  UBox& fbox = uflowbox(upadding(4,6) + *str);
+  Box& fbox = uflowbox(upadding(4,6) + *str);
   UEdit& ed = uedit();
   fbox.addAttr(ed);      // editable
 
-  UFlatDoc* doc = new UFlatDoc(*so.path);
+  FlatDocument* doc = new FlatDocument(*so.path);
   doc->add(fbox);
   doc->edit = &ed;
   return doc;
@@ -148,28 +143,28 @@ UDoc* TextDocCreator::create(UDocSource& so) {
 
 /* ==================================================== [Elc] ======= */
 
-class ImaDocCreator : public UDocCreator {
+class ImaDocCreator : public DocumentCreator {
 public:
-  virtual UDoc* create(UDocSource&);
+  virtual Document* create(DocumentSource&);
 };
 
 
-UDoc* ImaDocCreator::create(UDocSource& so) {
-  UIma* ima = null;
+Document* ImaDocCreator::create(DocumentSource& so) {
+  Image* ima = null;
 
-  if (so.from == UDocSource::PATHNAME) {
-    ima = new UIma();
+  if (so.from == DocumentSource::PATHNAME) {
+    ima = new Image();
     if ((so.stat = ima->read(*so.fullpath)) <= 0) {
       delete ima; 
       return null;
     }
   }
-  else if (so.from == UDocSource::BUFFER) {
+  else if (so.from == DocumentSource::BUFFER) {
     so.stat = 0;
     return null;  // not implemented!
   }
-  else if (so.from == UDocSource::BUFFER) {
-    ima = new UIma();
+  else if (so.from == DocumentSource::BUFFER) {
+    ima = new Image();
     so.stat = 1;
   }
   else {
@@ -177,7 +172,7 @@ UDoc* ImaDocCreator::create(UDocSource& so) {
     return null;
   }
   
-  UDoc* doc = new UFlatDoc(*so.path);
+  Document* doc = new FlatDocument(*so.path);
   doc->addAttr(uleft());  // do not center images!
   doc->add(ima);
   return doc;
@@ -185,38 +180,38 @@ UDoc* ImaDocCreator::create(UDocSource& so) {
 
 /* ==================================================== [Elc] ======= */
 
-UPluginDoc::UPluginDoc(const UStr& _pathname) 
-: UDoc(_pathname) {
+PluginDocument::PluginDocument(const String& _pathname) 
+: Document(_pathname) {
 }
 
-class UPluginDocCreator : public UDocCreator {
+class UPluginDocCreator : public DocumentCreator {
 public:
-  UPluginDocCreator(const UStr& doctype, const UStr& command);
+  UPluginDocCreator(const String& doctype, const String& command);
 
-  virtual UDoc* create(UDocSource&);
-  virtual void exec(UInputEvent&, UDoc*);
-  virtual void open(UInputEvent&, UDoc*);
-  virtual void openWith(UInputEvent&, UDoc*);
-  virtual void openAsText(UInputEvent&, UDoc*);
+  virtual Document* create(DocumentSource&);
+  virtual void exec(UInputEvent&, Document*);
+  virtual void open(UInputEvent&, Document*);
+  virtual void openWith(UInputEvent&, Document*);
+  virtual void openAsText(UInputEvent&, Document*);
 protected:
-  UStr doctype, command, alt_command, status;
+  String doctype, command, alt_command, status;
 };
 
-UPluginDocCreator::UPluginDocCreator(const UStr& _doctype, 
-                                     const UStr& _command) :
+UPluginDocCreator::UPluginDocCreator(const String& _doctype, 
+                                     const String& _command) :
   doctype(_doctype),
   command(_command) {
 }
 
 
-UDoc* UPluginDocCreator::create(UDocSource& so) {
+Document* UPluginDocCreator::create(DocumentSource& so) {
   so.stat = 0;
-  if (so.from == UDocSource::BUFFER) {
+  if (so.from == DocumentSource::BUFFER) {
     return null;
   }
 
-  UStr* fname = new UStr(so.path->basename());
-  UDoc* doc = new UPluginDoc(*so.path);
+  String* fname = new String(so.path->basename());
+  Document* doc = new PluginDocument(*so.path);
 
   doc->addAttr(utop() + upadding(13,13) + uvspacing(8) + UFont::large);
   doc->add(uhbox(uelem(UFont::bold + "File: ") + fname));
@@ -229,7 +224,7 @@ UDoc* UPluginDocCreator::create(UDocSource& so) {
   }
 
   if (!command.empty()) {
-    UStr& help_s = ustr();
+    String& help_s = ustr();
     if (command !="open") help_s = " (using " & command & " )";
     
     doc->add(uhbox(uleft() + USymbol::right + " "
@@ -248,20 +243,19 @@ UDoc* UPluginDocCreator::create(UDocSource& so) {
                  + ulinkbutton(UFont::bold + "Open As Text"
                                + ucall(this, doc, &UPluginDocCreator::openAsText))));
   status = "";
-  doc->add(" " + uhbox(UColor::red + UFont::bold + status));
+  doc->add(" " + uhbox(Color::red + UFont::bold + status));
   return doc;
 }
 
-/* ==================================================== ======== ======= */
 
-void UPluginDocCreator::open(UInputEvent& e, UDoc* doc) {
+void UPluginDocCreator::open(UInputEvent& e, Document* doc) {
   status = "";
   if (command.empty()) return;
-  if (e.getDisp() != UAppli::getDisp()) {
+  if (e.getDisp() != Application::getDisp()) {
     status = "Operation not allowed on clones";
     return;
   }
-  UStr s = command & " \"" & doc->getPath() & "\"&";
+  String s = command & " \"" & doc->getPath() & "\"&";
   // OK sur clones si le filename n'est pas trop bizarre
   //if (s.find('`') >= 0 || s.find('|') >= 0 || s.find('*') >= 0 || s.find('?') >= 0) {
   //  status = "Invalid file name";
@@ -271,47 +265,46 @@ void UPluginDocCreator::open(UInputEvent& e, UDoc* doc) {
   if (stat != 0) status = "Status: ", status &= stat; 
 }
 
-/* ==================================================== ======== ======= */
 
-void UPluginDocCreator::openWith(UInputEvent& e, UDoc* doc) {
+void UPluginDocCreator::openWith(UInputEvent& e, Document* doc) {
   status = "";
   if (alt_command.empty()) return;
-  if (e.getDisp() != UAppli::getDisp()) {
+  if (e.getDisp() != Application::getDisp()) {
     status = "Operation not allowed on clones";
     return;
   }
-  UStr s = alt_command & " \"" & doc->getPath() & "\"&";
+  String s = alt_command & " \"" & doc->getPath() & "\"&";
   int stat = system(s.c_str());
   if (stat != 0) status = "Status: ", status &= stat;
 }
 
 
-void UPluginDocCreator::exec(UInputEvent& e, UDoc* doc) {
+void UPluginDocCreator::exec(UInputEvent& e, Document* doc) {
   status = "";
-  if (e.getDisp() != UAppli::getDisp()) {
+  if (e.getDisp() != Application::getDisp()) {
     status = "Operation not allowed on clones";
     return;
   }
 
-  UStr dir  = doc->getPath().dirname();
-  UStr name = doc->getPath().basename();
+  String dir  = doc->getPath().dirname();
+  String name = doc->getPath().basename();
 
   // faire cd avant l'exec pour mettre dans le bon contexte si lecture
   // d'arguments
-  UStr s = "(cd \"" & dir & "\"; " & " \"" & name & "\")&";  
+  String s = "(cd \"" & dir & "\"; " & " \"" & name & "\")&";  
   int stat = system(s.c_str());
   if (stat != 0) status = "Status: ", status &= stat;
 }
 
 
-void UPluginDocCreator::openAsText(UInputEvent& e, UDoc* doc) {
+void UPluginDocCreator::openAsText(UInputEvent& e, Document* doc) {
   status = "";
   doc->removeAll();
 
   TextDocCreator creator;
-  UDocSource so(UDocSource::PATHNAME, &doc->getPath(), null);
+  DocumentSource so(DocumentSource::PATHNAME, &doc->getPath(), null);
   
-  UDoc* doc2 = creator.create(so);
+  Document* doc2 = creator.create(so);
   if (doc2) {
     doc->removeAll();
     doc->add(doc2);
@@ -320,7 +313,7 @@ void UPluginDocCreator::openAsText(UInputEvent& e, UDoc* doc) {
 
 /* ==================================================== [Elc] ======= */
 
-UDocFactory::UDocFactory() {
+DocumentFactory::DocumentFactory() {
   stat = 0;
   errors = null;
 
@@ -330,21 +323,21 @@ UDocFactory::UDocFactory() {
   default_creator = new UPluginDocCreator("","");  //empty = unknown command
 #endif
   
-  UDocCreator& image_creator = *new ImaDocCreator();
+  DocumentCreator& image_creator = *new ImaDocCreator();
   addCreator("xpm", image_creator);
   addCreator("jpg", image_creator);
   addCreator("jpeg",image_creator);
   addCreator("gif", image_creator);
 
-  UDocCreator& html_creator = *new UHtmlCreator();
+  DocumentCreator& html_creator = *new HtmlCreator();
   addCreator("html", html_creator);
   addCreator("htm",  html_creator);
 
-  UDocCreator& xml_creator = *new UXmlCreator();
+  DocumentCreator& xml_creator = *new XmlCreator();
   addCreator("xhtml",xml_creator);
   addCreator("xml",  xml_creator);
   
-  UDocCreator& text_creator = *new TextDocCreator();
+  DocumentCreator& text_creator = *new TextDocCreator();
   addCreator("txt", text_creator);
   addCreator("java",text_creator);
   addCreator("c",   text_creator);
@@ -356,7 +349,7 @@ UDocFactory::UDocFactory() {
   addCreator("am", text_creator);
   addCreator("in", text_creator);
 
-  UDocCreator& pdf_creator =
+  DocumentCreator& pdf_creator =
 #if (defined(__MACH__) && defined(__APPLE__))        //__POWERPC__
     *new UPluginDocCreator("PDF Document", "open");
 #else
@@ -364,7 +357,7 @@ UDocFactory::UDocFactory() {
 #endif
   addCreator("pdf", pdf_creator);
 
-  UDocCreator& office_creator =
+  DocumentCreator& office_creator =
 #if (defined(__MACH__) && defined(__APPLE__))        //__POWERPC__
     *new UPluginDocCreator("Office Document", "open");
 #else
@@ -376,27 +369,26 @@ UDocFactory::UDocFactory() {
   addCreator("rtf", office_creator);
 }
 
-UDocFactory::~UDocFactory() {
+DocumentFactory::~DocumentFactory() {
   // detruire les Creators
 }
 
-int UDocFactory::getStatus() const {
+int DocumentFactory::getStatus() const {
   return stat;
 }
 
-UStr* UDocFactory::getErrors() const {
+String* DocumentFactory::getErrors() const {
   return errors;
 }
 
-void UDocFactory::saveErrors(bool mode) {
-  if (mode) errors = new UStr();
+void DocumentFactory::saveErrors(bool mode) {
+  if (mode) errors = new String();
   else errors = null;
 }
 
-/* ==================================================== ======== ======= */
 
-UDocSource::UDocSource(int _from, const UStr* _path, UStr* _errors,
-                       const UStr* _buffer)
+DocumentSource::DocumentSource(int _from, const String* _path, String* _errors,
+                       const String* _buffer)
 : from(_from), stat(0), path(_path), buffer(_buffer), errors(_errors)
 {
   // path is not duplicated
@@ -404,69 +396,67 @@ UDocSource::UDocSource(int _from, const UStr* _path, UStr* _errors,
   fullpath = UFileCache::getOrCreateFullPath(*_path);
 }
 
-/* ==================================================== ======== ======= */
 
-UDoc* UDocFactory::read(const UStr& pathname) {
+Document* DocumentFactory::read(const String& pathname) {
   stat = 0;
   if (errors) errors->clear();
 
-  UStr fext = pathname.suffix();
-  UDocCreator* cr = getCreator(fext);
+  String fext = pathname.suffix();
+  DocumentCreator* cr = getCreator(fext);
   if (!cr) cr = getDefaultCreator();
   if (!cr) return null;
 
-  UDocSource so(UDocSource::PATHNAME, &pathname, errors);
-  UDoc* doc = cr->create(so);
+  DocumentSource so(DocumentSource::PATHNAME, &pathname, errors);
+  Document* doc = cr->create(so);
   stat = so.stat;
   return doc;
 }
 
-UDoc* UDocFactory::load(const UStr& name, const UStr& buffer) {
+Document* DocumentFactory::load(const String& name, const String& buffer) {
   stat = 0;
   if (errors) errors->clear();
 
-  UStr fext = name.suffix();
-  UDocCreator* cr = getCreator(fext);
+  String fext = name.suffix();
+  DocumentCreator* cr = getCreator(fext);
   if (!cr) cr = getDefaultCreator();
   if (!cr) return null;
 
-  UDocSource so(UDocSource::BUFFER, &name, errors, &buffer);
-  UDoc* doc = cr->create(so);
+  DocumentSource so(DocumentSource::BUFFER, &name, errors, &buffer);
+  Document* doc = cr->create(so);
   stat = so.stat;
   return doc;
 }
 
-UDoc* UDocFactory::create(const UStr& name) {
+Document* DocumentFactory::create(const String& name) {
   stat = 0;
   if (errors) errors->clear();
 
-  UStr fext = name.suffix();
-  UDocCreator* cr = getCreator(fext);
+  String fext = name.suffix();
+  DocumentCreator* cr = getCreator(fext);
   if (!cr) cr = getDefaultCreator();
   if (!cr) return null;
 
-  UDocSource so(UDocSource::SCRATCH, &name, errors);
-  UDoc* doc = cr->create(so);
+  DocumentSource so(DocumentSource::SCRATCH, &name, errors);
+  Document* doc = cr->create(so);
   stat = so.stat;
   return doc;
 }
 
-/* ==================================================== ======== ======= */
 
-bool UDocFactory::Comp::operator()(const UStr* s1, const UStr* s2) const {
+bool DocumentFactory::Comp::operator()(const String* s1, const String* s2) const {
   return s1->compare(*s2, true) < 0;   // ignore case
 }
 
-void UDocFactory::addCreator(const UStr& suffix, UDocCreator& creator) {
+void DocumentFactory::addCreator(const String& suffix, DocumentCreator& creator) {
   // si existe deja ?
   rmap[&ustr(suffix)] = &creator;
 }
 
-void UDocFactory::setDefaultCreator(UDocCreator& creator) {
+void DocumentFactory::setDefaultCreator(DocumentCreator& creator) {
   default_creator = &creator;
 }
 
-UDocCreator* UDocFactory::getCreator(const UStr& fext) {
+DocumentCreator* DocumentFactory::getCreator(const String& fext) {
   if (fext.empty()) return null;
 
   Map::iterator k = rmap.find(&fext);
@@ -475,7 +465,7 @@ UDocCreator* UDocFactory::getCreator(const UStr& fext) {
   return null;  // not found
 }
 
-UDocCreator* UDocFactory::getDefaultCreator() {
+DocumentCreator* DocumentFactory::getDefaultCreator() {
   return default_creator;
 }
 

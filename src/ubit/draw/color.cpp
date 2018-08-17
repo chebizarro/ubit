@@ -1,18 +1,26 @@
-/* ***********************************************************************
- *
+/*
  *  ucolor.cpp: Color Attribute
- *  Ubit GUI Toolkit - Version 6
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE : 
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE 
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. 
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU 
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION; 
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
+
 
 #include <ubit/ubit_features.h>
 #include <map>
@@ -73,90 +81,90 @@ return (comps[0]==r*255 && comps[1]==g*255
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-UColor UColor::none(NONE_COLOR, UCONST);
-UColor UColor::inherit(INHERIT_COLOR, UCONST);
-UColor UColor::disabled(0x8c, 0x8c, 0x8c, 255, UCONST);
+Color Color::none(NONE_COLOR, UCONST);
+Color Color::inherit(INHERIT_COLOR, UCONST);
+Color Color::disabled(0x8c, 0x8c, 0x8c, 255, UCONST);
 
-UColor UColor::black(0, 0, 0, 255, UCONST);
-UColor UColor::white(255, 255, 255, 255, UCONST);
-UColor UColor::lightgrey(0xd9, 0xd9, 0xd9, 255, UCONST);
-UColor UColor::grey(0xda, 0xda, 0xda, 255, UCONST);
-UColor UColor::darkgrey(0x80, 0x80, 0x80, 255, UCONST);
-UColor UColor::navy(0, 0, 128, 255, UCONST);
-UColor UColor::lightblue(160, 210, 245, 255, UCONST);
-UColor UColor::blue(0x44, 0x7A, 0xC5, 255, UCONST);
-UColor UColor::red(255, 0, 0, 255, UCONST);
-UColor UColor::green(0, 0xaa, 0, 255, UCONST);
-UColor UColor::yellow(255, 255, 0, 255, UCONST);
-UColor UColor::orange(255, 165, 0, 255, UCONST);
-UColor UColor::wheat(245, 222, 179, 255, UCONST);
-UColor UColor::teal(95, 158, 160, 255, UCONST);
+Color Color::black(0, 0, 0, 255, UCONST);
+Color Color::white(255, 255, 255, 255, UCONST);
+Color Color::lightgrey(0xd9, 0xd9, 0xd9, 255, UCONST);
+Color Color::grey(0xda, 0xda, 0xda, 255, UCONST);
+Color Color::darkgrey(0x80, 0x80, 0x80, 255, UCONST);
+Color Color::navy(0, 0, 128, 255, UCONST);
+Color Color::lightblue(160, 210, 245, 255, UCONST);
+Color Color::blue(0x44, 0x7A, 0xC5, 255, UCONST);
+Color Color::red(255, 0, 0, 255, UCONST);
+Color Color::green(0, 0xaa, 0, 255, UCONST);
+Color Color::yellow(255, 255, 0, 255, UCONST);
+Color Color::orange(255, 165, 0, 255, UCONST);
+Color Color::wheat(245, 222, 179, 255, UCONST);
+Color Color::teal(95, 158, 160, 255, UCONST);
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #ifndef WITH_2D_GRAPHICS
 # define unsetPixels() 
 #endif
 
-UColor::UColor() : rgba(0u, 0u, 0u, 255u) {  // opaque black
+Color::Color() : rgba(0u, 0u, 0u, 255u) {  // opaque black
   ostate = RGBA_COLOR;
   unsetPixels();
 }
 
-UColor::UColor(const UColor& c) : rgba(c.rgba) {
+Color::Color(const Color& c) : rgba(c.rgba) {
   ostate = c.ostate;
 #if WITH_2D_GRAPHICS
   pixels = c.pixels;
 #endif
 }
 
-UColor::UColor(const UColor& c, float a) : rgba(c.rgba) {
+Color::Color(const Color& c, float a) : rgba(c.rgba) {
   ostate = RGBA_COLOR;
   rgba.comps[3] = (unsigned char)(a*255);
   unsetPixels();
 }
 
-UColor::UColor(const UColor& c, unsigned int a) : rgba(c.rgba) {
+Color::Color(const Color& c, unsigned int a) : rgba(c.rgba) {
   ostate = RGBA_COLOR;
   rgba.comps[3] = a;
   unsetPixels();
 }
 
-UColor::UColor(const URgba& comps) : rgba(comps) {
+Color::Color(const URgba& comps) : rgba(comps) {
   ostate = RGBA_COLOR;
   unsetPixels();
 }
 
-UColor::UColor(float r, float g, float b, float a) : rgba(r, g, b, a) {
+Color::Color(float r, float g, float b, float a) : rgba(r, g, b, a) {
   ostate = RGBA_COLOR;
   unsetPixels();
 }
 
-UColor::UColor(unsigned int r, unsigned int g, unsigned int b, unsigned int a) 
+Color::Color(unsigned int r, unsigned int g, unsigned int b, unsigned int a) 
 : rgba(r,g,b,a) {
   ostate = RGBA_COLOR;
   unsetPixels();
 }
 
-UColor::UColor(unsigned int r, unsigned int g, unsigned int b, unsigned int a, UConst m) 
-: UAttr(m), rgba(r,g,b,a) {
+Color::Color(unsigned int r, unsigned int g, unsigned int b, unsigned int a, UConst m) 
+: Attribute(m), rgba(r,g,b,a) {
   ostate = RGBA_COLOR;
   unsetPixels();
 }
 
-UColor::UColor(const UStr& color_name, float a) {
+Color::Color(const String& color_name, float a) {
   setNamedColor(color_name, a);
 }
 
-UColor::UColor(unsigned char special, UConst m) 
-: UAttr(m), rgba(0u, 0u, 0u, 0u) {
+Color::Color(unsigned char special, UConst m) 
+: Attribute(m), rgba(0u, 0u, 0u, 0u) {
   ostate = special;
 }
 
-UColor::~UColor() {}
+Color::~Color() {}
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  
-UColor& UColor::operator=(const UColor& c) {
+Color& Color::operator=(const Color& c) {
   if (checkConst()) return *this;
   if (equals(c)) return *this;
   ostate = c.ostate;
@@ -168,7 +176,7 @@ UColor& UColor::operator=(const UColor& c) {
   return *this;
 }
   
-UColor& UColor::setRgba(const URgba& comps) {
+Color& Color::setRgba(const URgba& comps) {
   if (checkConst()) return *this;
   if (equals(comps)) return *this;
   ostate = RGBA_COLOR;
@@ -178,64 +186,64 @@ UColor& UColor::setRgba(const URgba& comps) {
   return *this;
 }
 
-UColor& UColor::setRgbaF(float r, float g, float b, float a) {
+Color& Color::setRgbaF(float r, float g, float b, float a) {
   return setRgba(URgba(r, g, b, a));
 }
 
-UColor& UColor::setRgbaI(unsigned int r, unsigned int g, unsigned int b, unsigned int a) {
+Color& Color::setRgbaI(unsigned int r, unsigned int g, unsigned int b, unsigned int a) {
   return setRgba(URgba(r, g, b, a));
 }
 
-UColor& UColor::setNamedColor(const UStr& colname, float a) {
+Color& Color::setNamedColor(const String& colname, float a) {
   if (checkConst()) return *this;
   URgba comps;
   bool found = parseColor(colname.c_str(), comps);
   comps.comps[3] = (unsigned char)(a*255); 
   if (found) return setRgba(comps);
   else {
-    warning("UColor::setNamedColor","color name '%s' not found", 
+    warning("Color::setNamedColor","color name '%s' not found", 
             (colname.empty() ? "null" : colname.c_str()));
     return *this;
   }
 }
 
-bool UColor::equals(const UColor& c) const {
+bool Color::equals(const Color& c) const {
   return (ostate == c.ostate && rgba == c.rgba);
 }
 
-bool UColor::equals(const URgba& comps) const {
+bool Color::equals(const URgba& comps) const {
   return (ostate == RGBA_COLOR && rgba == comps);
 }
 
-bool UColor::equals(float r, float g, float b, float a) const {
+bool Color::equals(float r, float g, float b, float a) const {
   return (ostate == RGBA_COLOR && rgba == URgba(r, g, b, a));
 }
 
-bool UColor::equals(unsigned int r, unsigned int g, unsigned int b, unsigned int a) const {
+bool Color::equals(unsigned int r, unsigned int g, unsigned int b, unsigned int a) const {
   return (ostate == RGBA_COLOR && rgba == URgba(r,g,b,a));
 }
 
-void UColor::update() {
-  updateAutoParents(UUpdate::paint);    //size unchanged
+void Color::update() {
+  updateAutoParents(Update::paint);    //size unchanged
 }
 
-void UColor::putProp(UUpdateContext* props, UElem&) {
+void Color::putProp(UpdateContext* props, Element&) {
   props->color = this;
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if WITH_2D_GRAPHICS
 
-void UColor::unsetPixels() {
+void Color::unsetPixels() {
   for (int k = 0; k < (int)pixels.size(); ++k) pixels[k] = UNSET_PIXEL;
   static bool first_time = true;
-  if (rgba.comps[3] != 255 && !UAppli::isUsingGL() && first_time) {
+  if (rgba.comps[3] != 255 && !Application::isUsingGL() && first_time) {
     first_time = false;
-    warning("UColor","alpha value ignored because the application was not launched in OpenGL mode");
+    warning("Color","alpha value ignored because the application was not launched in OpenGL mode");
   }
 }
 
-unsigned long UColor::getPixel(UDisp* d) const {
+unsigned long Color::getPixel(Display* d) const {
   int id = d->getID();
   if (id < (int)pixels.size() && pixels[id] != UNSET_PIXEL) return pixels[id];
   
@@ -249,7 +257,7 @@ unsigned long UColor::getPixel(UDisp* d) const {
 #endif
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-bool UColor::parseColor(const char* name, URgba& c) {
+bool Color::parseColor(const char* name, URgba& c) {
   if (!name || !*name) {
     c.setRgbaI(0, 0, 0); // not found
     return false;
@@ -321,7 +329,7 @@ void NamedColorMap::add(const NamedColor& cspec) {
   map[cspec.colname] = &cspec;
 }
 
-void UColor::addNamedColor(const char* name, const URgba& c) { 
+void Color::addNamedColor(const char* name, const URgba& c) { 
   if (!named_colors) named_colors = new NamedColorMap();
   NamedColor* nc = new NamedColor;
   nc->colname = strdup(name);

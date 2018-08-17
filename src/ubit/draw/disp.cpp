@@ -1,18 +1,25 @@
-/************************************************************************
- *
- *  udisp.cpp: Graphical Display (may be remotely located)
- *  Ubit GUI Toolkit - Version 6
+/*
+ *  disp.cpp: Graphical Display (may be remotely located)
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE :
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION;
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
 
 #include <iostream>
 #include <algorithm>
@@ -21,7 +28,7 @@
 #include <ubit/uwin.hpp>
 #include <ubit/ueventflow.hpp>
 #include <ubit/uscrollbar.hpp>
-#include <ubit/uselection.hpp>
+#include <ubit/Selection.hpp>
 #include <ubit/uconf.hpp>
 #include <ubit/uappli.hpp>
 #include <ubit/core/uappliImpl.hpp>
@@ -43,8 +50,8 @@ namespace ubit {
 
 // ==================================================== [Ubit Toolkit] =========
 
-UDisp* UDisp::create(const UStr& dname) {
-  UDisp* d = null;
+Display* Display::create(const String& dname) {
+  Display* d = null;
 #if UBIT_WITH_GLUT
   d = new UDispGLUT(dname);
 #elif UBIT_WITH_X11
@@ -52,22 +59,22 @@ UDisp* UDisp::create(const UStr& dname) {
 //#elif UBIT_WITH_GDK
 //  d = new UDispGDK(dname);
 #else
-  UAppli::fatalError("UDisp::create","no available underlying windowing toolkit")
+  Application::fatalError("Display::create","no available underlying windowing toolkit")
 #endif
-  // ne peut pas etre dans UDisp constr, car ceux des subclasses doivent etre executes
-  if (d && d->isOpened()) UAppli::impl.displist.push_back(d);
+  // ne peut pas etre dans Display constr, car ceux des subclasses doivent etre executes
+  if (d && d->isOpened()) Application::impl.displist.push_back(d);
   return d;
 }
 
 // ==================================================== [Ubit Toolkit] =========
 
-UDisp::UDisp(const UStr& dname) :
-id(UAppli::impl.displist.size()), 
-conf(UAppli::conf), 
+Display::Display(const String& dname) :
+id(Application::impl.displist.size()), 
+conf(Application::conf), 
 display_name(dname),
-bpp(UAppli::conf.bpp),
-depth_size(UAppli::conf.depth_size),
-stencil_size(UAppli::conf.stencil_size),
+bpp(Application::conf.bpp),
+depth_size(Application::conf.depth_size),
+stencil_size(Application::conf.stencil_size),
 screen_width(0), screen_height(0),
 screen_width_mm(0), screen_height_mm(0),
 is_opened(false), 
@@ -82,19 +89,19 @@ paste_pos(0) {
   // if :screen not found add ":0" (except if display_name is empty)
   if (!display_name.empty() && display_name.rfind(':') < 0) display_name &= ":0";
   
-  if (UAppli::isUsingGL()) {
+  if (Application::isUsingGL()) {
 #ifndef UBIT_WITH_GL
-    UAppli::error("UDisp","OpenGL mode requested but the Ubit GUI toolkit was not compiled with the OpenGL library");
+    Application::error("Display","OpenGL mode requested but the Ubit GUI toolkit was not compiled with the OpenGL library");
 #endif
   }
 }
 
-UDisp::~UDisp() {
-  UAppli::deleteNotify(this);
+Display::~Display() {
+  Application::deleteNotify(this);
 } 
 
 /*
- bool UDisp::isGLAvailable() const {
+ bool Display::isGLAvailable() const {
  #if UBIT_WITH_GL
  return true;
  #else
@@ -104,7 +111,7 @@ UDisp::~UDisp() {
  */
 // ==================================================== [Ubit Toolkit] =========
 
-URenderContext* UDisp::getDefaultContext() {
+URenderContext* Display::getDefaultContext() {
   if (default_context) return default_context;
   
   // if default_context is not initialized, search (by order of preference):
@@ -129,8 +136,8 @@ URenderContext* UDisp::getDefaultContext() {
   return default_context;
 }
 
-void UDisp::makeDefaultContextCurrentIfNeeded() {
-  if (!UAppli::isUsingGL()) return;
+void Display::makeDefaultContextCurrentIfNeeded() {
+  if (!Application::isUsingGL()) return;
   
   // note that getDefaulContext() inits 'default_context' if not already done
   URenderContext* dc = getDefaultContext();
@@ -139,36 +146,36 @@ void UDisp::makeDefaultContextCurrentIfNeeded() {
 
 // ==================================================== [Ubit Toolkit] =========
 
-void UDisp::add(UWin& win) {  
+void Display::add(Window& win) {  
   winlist.add(win);   // add to the window list
 
   // !!ATT: marche pas si meme win ajoutee plusieurs fois !!
-  //UChild* c = null;
+  //Child* c = null;
   //if (win.pbegin() != win.pend()) c = &win.pbegin().parent().getChild();
   win.initViewImpl(/*c,*/ null, this);
 
   // ne pas afficher de fenetre avant lancement de la mainloop
-  if (UAppli::isRunning() && win.isShowable()) win.show(true);
+  if (Application::isRunning() && win.isShowable()) win.show(true);
 }
 
-void UDisp::remove(UWin& win, bool auto_delete) {
+void Display::remove(Window& win, bool auto_delete) {
   win.show(false);
   winlist.remove(win, auto_delete);
 }
 
-void UDisp::add(UWin* win) {  
-  if (!win) UAppli::error("UDisp::add","null UWin* argument");
+void Display::add(Window* win) {  
+  if (!win) Application::error("Display::add","null Window* argument");
   else add(*win);
 }
 
-void UDisp::remove(UWin* win, bool auto_delete) {  
-  if (!win) UAppli::error("UDisp::remove","null UWin* argument");
+void Display::remove(Window* win, bool auto_delete) {  
+  if (!win) Application::error("Display::remove","null Window* argument");
   else remove(*win, auto_delete);
 }
 
 // ==================================================== [Ubit Toolkit] =========
 
-void UDisp::addHardwin(UWin* win) {
+void Display::addHardwin(Window* win) {
   if (!win) return;
   UHardwinImpl* hw = win->hardImpl();
   //UHardwinImpl* hw = win->getHardwin(this);  PAS BON !!!
@@ -178,7 +185,7 @@ void UDisp::addHardwin(UWin* win) {
     hardwin_list.push_back(hw);      // ne pas ajouter 2 fois
 }
 
-void UDisp::removeHardwin(UWin* win) {
+void Display::removeHardwin(Window* win) {
   if (!win) return;
   UHardwinImpl* hw = win->hardImpl();
   // UHardwinImpl* hw = win->getHardwin(this); PAS BON !!!
@@ -190,7 +197,7 @@ void UDisp::removeHardwin(UWin* win) {
 
 // ==================================================== [Ubit Toolkit] =========
 
-void UDisp::setPixelPerMM(double pixel_per_mm) {
+void Display::setPixelPerMM(double pixel_per_mm) {
   MM_TO_PX = pixel_per_mm;
   CM_TO_PX = pixel_per_mm * 10;
   IN_TO_PX = pixel_per_mm * 25.4;  // generally close to 72 
@@ -198,7 +205,7 @@ void UDisp::setPixelPerMM(double pixel_per_mm) {
   PC_TO_PX = 12 * pixel_per_mm * 25.4 / 72.;  // 1 pc = 12 pt  
 }
 
-void UDisp::setPixelPerInch(double pixel_per_inch) {
+void Display::setPixelPerInch(double pixel_per_inch) {
   MM_TO_PX = pixel_per_inch / 25.4;
   CM_TO_PX = pixel_per_inch / 25.4 * 10;
   IN_TO_PX = pixel_per_inch;
@@ -206,25 +213,25 @@ void UDisp::setPixelPerInch(double pixel_per_inch) {
   PC_TO_PX = 12 * pixel_per_inch / 72.;  // 1 pc = 12 pt  
 }
 
-UStr* UDisp::getPasteTarget(int& pos) const {
+String* Display::getPasteTarget(int& pos) const {
   pos = paste_pos; 
   return paste_str;
 }
 
-void UDisp::clearPasteTarget() {
+void Display::clearPasteTarget() {
   paste_str = null;
   paste_pos = 0;
 }
 
-void UDisp::copySelection(UMouseEvent& e, USelection& textsel) {
+void Display::copySelection(UMouseEvent& e, Selection& textsel) {
   textsel.copyText(copy_buffer);
   setSelectionOwner(e);
 }
 
-void UDisp::pasteSelection(UMouseEvent& e, UStr* _paste_str, int _paste_pos) {
+void Display::pasteSelection(UMouseEvent& e, String* _paste_str, int _paste_pos) {
   // il faut effacer toutes les selections avant de faire un paste (sinon tout
   // va se melanger n'importe comment)  
-  const UFlowList& flist = UAppli::getFlowList();
+  const UFlowList& flist = Application::getFlowList();
   for (UFlowList::const_iterator it = flist.begin(); it != flist.end(); ++it) {
     if (&(*it)->getDisp() == this && (*it)->getSelection()) 
       (*it)->getSelection()->clear();
@@ -237,16 +244,15 @@ void UDisp::pasteSelection(UMouseEvent& e, UStr* _paste_str, int _paste_pos) {
   pasteSelectionRequest(e);
 }
 
-/* ==================================================== ======== ======= */
 
-USelection* UDisp::getChannelSelection(int _channel) {
+Selection* Display::getChannelSelection(int _channel) {
   UEventFlow* fl = getChannelFlow(_channel);
   if (!fl) return null;
   else return fl->getSelection();
 }
 
-UEventFlow* UDisp::getChannelFlow(int _channel) const {
-  UFlowList& flist = UAppli::impl.flowlist; 
+UEventFlow* Display::getChannelFlow(int _channel) const {
+  UFlowList& flist = Application::impl.flowlist; 
   for (unsigned int k = 0; k < flist.size(); ++k) {
     if (&flist[k]->getDisp() == this && flist[k]->getChannel() == _channel)
       return flist[k];
@@ -254,7 +260,7 @@ UEventFlow* UDisp::getChannelFlow(int _channel) const {
   return null;
 }
 
-UEventFlow* UDisp::obtainChannelFlow(int _channel) {
+UEventFlow* Display::obtainChannelFlow(int _channel) {
   UEventFlow* fl = getChannelFlow(_channel);
   if (!fl) fl = new UEventFlow(*this, _channel);
   return fl;
@@ -262,7 +268,7 @@ UEventFlow* UDisp::obtainChannelFlow(int _channel) {
 
 // ==================================================== [Ubit Toolkit] =========
 
-void UDisp::countBits(unsigned long mask, int& bits, int& shift) {
+void Display::countBits(unsigned long mask, int& bits, int& shift) {
   bool in_tab = true; shift = 0; bits = 0;
   while (mask != 0) {
     if (in_tab) {
@@ -278,7 +284,7 @@ void UDisp::countBits(unsigned long mask, int& bits, int& shift) {
 // ==================================================== [Ubit Toolkit] =========
 // Fonts
 
-UHardFont* UDisp::getFont(const UFontDesc* f) { // !NOTE: may change the glcontext!
+UHardFont* Display::getFont(const UFontDesc* f) { // !NOTE: may change the glcontext!
   if (!f) return null;
   makeDefaultContextCurrentIfNeeded();
    
@@ -289,7 +295,7 @@ UHardFont* UDisp::getFont(const UFontDesc* f) { // !NOTE: may change the glconte
   else return font_map[ff.ffindex][f->findex];
 }
 
-void UDisp::realizeFontFamily(const UFontFamily& fam) {
+void Display::realizeFontFamily(const UFontFamily& fam) {
   if (fam.ffindex < 0) {      // new FontFamily
     fam.ffindex = fam.family_count++;
   }
@@ -330,19 +336,19 @@ void UDisp::realizeFontFamily(const UFontFamily& fam) {
 }
 
 
-UHardFont* UDisp::realizeFont(const UFont& font) {
+UHardFont* Display::realizeFont(const UFont& font) {
   UFontDesc f(font);
   return realizeFont(f);
 }
 
-UHardFont* UDisp::realizeFont(const UFontDesc& _f) {
+UHardFont* Display::realizeFont(const UFontDesc& _f) {
   const UFontFamily* fam = _f.family;
   // on ne peut pas modifier _f directement car _f.family doit
   // rester null dans les cas des modifiers UFont::small etc
   UFontDesc f = _f;
   
   // sets and initializes the font family if needed
-  if (!fam) f.family = fam = UAppli::conf.default_font->family;
+  if (!fam) f.family = fam = Application::conf.default_font->family;
   
   if (!fam->ready || fam->ffindex >= (signed)font_map.size() || !font_map[fam->ffindex])
     realizeFontFamily(*fam);
@@ -363,11 +369,11 @@ UHardFont* UDisp::realizeFont(const UFontDesc& _f) {
   else return font_map[fam->ffindex][f.findex] = nf;  // DONE!
   
   // otherwise...
-  UStr s = "Can't load font '"; s &= fam->name;
+  String s = "Can't load font '"; s &= fam->name;
   if (f.styles & UFont::BOLD) s &= " bold";
   if (f.styles & UFont::ITALIC) s &= " italic";
   s &= "' (using alternate font)";
-  UAppli::warning("UDisp::realizeFont", s.c_str());
+  Application::warning("Display::realizeFont", s.c_str());
   
   // try the same font without stylistic options
   if (f.styles != 0)  {
@@ -410,21 +416,21 @@ UHardFont* UDisp::realizeFont(const UFontDesc& _f) {
   }
   
   // plus aucun espoir...
-  UAppli::fatalError("UDisp::realizeFont","can't load any appropriate font");
+  Application::fatalError("Display::realizeFont","can't load any appropriate font");
   return null;
 }
 
 // ==================================================== [Ubit Toolkit] =========
 
-UEventFlow* UDisp::obtainFlow(unsigned int estate, int channel) {
+UEventFlow* Display::obtainFlow(unsigned int estate, int channel) {
   if (estate & UMS_EVENT_MASK) {                         // ???? !!! PBM si pas X11 ???
     // create a new flow or returns an existing flow if ID already used.
     return obtainChannelFlow(channel);
   }
-  return UAppli::impl.disp->obtainChannelFlow(0);  // default
+  return Application::impl.disp->obtainChannelFlow(0);  // default
 }
 
-void UDisp::onResize(UView* winview, const UDimension& size) {
+void Display::onResize(View* winview, const Dimension& size) {
   // ce test est pas bon car winview peut avoir ete change sans que onResize()
   // ait ete mis a jour (c'est le cas avec GLUT par exple)
   //if (winview->getWidth() != size.width || winview->getHeight() != size.height) {
@@ -440,33 +446,33 @@ void UDisp::onResize(UView* winview, const UDimension& size) {
     last_resize.count++;
     last_resize.winview = winview;
     last_resize.newsize = size;
-    UAppli::postpone(ucall(this, winview, &UDisp::onResizeCB));
+    Application::postpone(ucall(this, winview, &Display::onResizeCB));
   //}
 }
 
-void UDisp::onResizeCB(UView* winview) {
+void Display::onResizeCB(View* winview) {
   if (last_resize.winview == winview && last_resize.count == 1) {
     last_resize.winview = null;
-    UDimension& size = last_resize.newsize;
+    Dimension& size = last_resize.newsize;
     
-    UWin* win = winview->getWin();
+    Window* win = winview->getWin();
     UHardwinImpl* hw = win->getHardwin(this);
     //cerr << "onResizeCB " <<win->hardImpl() << " "<< hw << endl;
-    hw->doUpdateImpl(UUpdate::LAYOUT, win, winview, &size);
+    hw->doUpdateImpl(Update::LAYOUT, win, winview, &size);
     win->repaint();
   }
   last_resize.count--;
 }
 
-void UDisp::onPaint(UView* winview, float x, float y, float w, float h) {
+void Display::onPaint(View* winview, float x, float y, float w, float h) {
   if (last_resize.count == 0) {  
-    URect clip(x, y, w, h);
+    Rectangle clip(x, y, w, h);
     winview->updatePaint(&clip);
   }
 }
 
 // Notifies the UMS when a window is opened/closed.
-//void UDisp::showNotify(USysWindow w, bool shows) {
+//void Display::showNotify(USysWindow w, bool shows) {
 // if (!disp.umsclient) return;
 // if (shows) disp.umsclient->winOpened(w);
 // else disp.umsclient->winClosed(w);

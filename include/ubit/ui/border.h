@@ -1,44 +1,53 @@
-/************************************************************************
- *
- *  uborder.hpp: widget border
- *  Ubit GUI Toolkit - Version 6
+/*
+ *  border.h: widget border
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE : 
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE 
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. 
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU 
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION; 
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
+
 
 #ifndef _uborder_hpp_
 #define	_uborder_hpp_ 1
+
 #include <ubit/uattr.hpp>
 #include <ubit/ulength.hpp>
+
 namespace ubit {
   
   class UBorderContent;
   
-  /** UBox Border.
+  /** Box Border.
    */
-  class UBorder : public UAttr {
+  class Border : public Attribute {
   public:
-    UCLASS(UBorder)
+    UCLASS(Border)
     
     enum {NONE, LINE, SHADOW, ETCHED};
     ///< predefined decorations.
     
-    static UBorder none, empty, line, shadowIn, shadowOut, etchedIn, etchedOut;
+    static Border none, empty, line, shadowIn, shadowOut, etchedIn, etchedOut;
     ///< predefined borders.
     
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-    UBorder(int decoration = NONE);
+    Border(int decoration = NONE);
     
-    UBorder(int decoration, const UColor& color, const UColor& bgcolor,
+    Border(int decoration, const Color& color, const Color& bgcolor,
             float width = 1, float height = 1);
     /**< creates a new Border with custom properties.
      * arguments:
@@ -48,29 +57,28 @@ namespace ubit {
      *    are shared and should not be deleted (by calling the delete operator)
      */
     
-    UBorder(const UBorder&);
+    Border(const Border&);
     ///< creates a new Border that is a copy of another Border.
      
-    virtual ~UBorder();
+    virtual ~Border();
     
-    virtual UBorder& operator=(const UBorder&);
+    virtual Border& operator=(const Border&);
 
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     
     int getDecoration() const {return decoration;}
-     UBorder& setDecoration(int decoration);
+     Border& setDecoration(int decoration);
     ///< changes the decoration.
     
-    const UColor& getColor() const {return *pcolor;}
-    UBorder& setColor(const UColor&);
+    const Color& getColor() const {return *pcolor;}
+    Border& setColor(const Color&);
     ///< changes foreground color; beware that the color arg is NOT duplicated and can't be freed.
     
-    const UColor& getBgcolor() const {return *pbgcolor;}
-    UBorder& setBgcolor(const UColor&);
+    const Color& getBgcolor() const {return *pbgcolor;}
+    Border& setBgcolor(const Color&);
     ///< changes background color; beware that the color arg is NOT duplicated and can't be freed.
          
-    const UPaddingSpec& getPadding() const {return padding;}
-    UBorder& setPadding(const UPaddingSpec&);
+    const PaddingSpec& getPadding() const {return padding;}
+    Border& setPadding(const PaddingSpec&);
     
     bool isRounded() const {return is_rounded;}
     ///< returns true if the border is rounded.
@@ -78,77 +86,74 @@ namespace ubit {
     bool isOverlaid() const {return is_overlaid;}
     ///< returns true if the border is overlaid.
     
-    UBorder& setOverlaid(bool state);
+    Border& setOverlaid(bool state);
     
     //float getThickness() const {return thickness;}
-    //UBorder& setThickness(float);
+    //Border& setThickness(float);
 
     virtual void update();
 
-    virtual void getSize(const UUpdateContext&, UPaddingSpec&) const;
-    virtual void paint(UGraph&, const UUpdateContext&, const URect& r) const;
-    virtual void paintDecoration(UGraph& g, const URect& r, UElem& obj, 
-                                 const UColor& fg, const UColor& bg) const;
+    virtual void getSize(const UpdateContext&, PaddingSpec&) const;
+    virtual void paint(Graph&, const UpdateContext&, const Rectangle& r) const;
+    virtual void paintDecoration(Graph& g, const Rectangle& r, Element& obj, 
+                                 const Color& fg, const Color& bg) const;
     
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #ifndef NO_DOC
   protected:
     short decoration;
     bool is_overlaid, is_rounded;
-    UPaddingSpec padding;
-    uptr<const UColor> pcolor, pbgcolor;
+    PaddingSpec padding;
+    uptr<const Color> pcolor, pbgcolor;
     
-    UBorder(int decoration, const UColor& color, const UColor& bgcolor,
+    Border(int decoration, const Color& color, const Color& bgcolor,
             float width, float height, UConst);    
-    virtual void constructs(int decoration, const UColor& _color, const UColor& _bgcolor);
-    virtual void putProp(UUpdateContext*, UElem&);
+    virtual void constructs(int decoration, const Color& _color, const Color& _bgcolor);
+    virtual void putProp(UpdateContext*, Element&);
 #endif
   };
   
-  inline UBorder& uborder(UBorder& b) {return *new UBorder(b);}
+  inline Border& uborder(Border& b) {return *new Border(b);}
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   
   /** Rounded border.
    */
-  class URoundBorder : public UBorder {
+  class URoundBorder : public Border {
   public:
     UCLASS(URoundBorder)
 
     URoundBorder(int decoration = NONE);
-    URoundBorder(int decoration, const UColor& color, const UColor& bgcolor,
+    URoundBorder(int decoration, const Color& color, const Color& bgcolor,
                  float width, float height, float arc_w, float arc_h);
 
     float getArcWidth()  const {return arc_w;}
     float getArcHeight() const {return arc_h;}
     
-    virtual void paintDecoration(UGraph& g, const URect& r, UElem& obj, 
-                                 const UColor& fg, const UColor& bg) const;
+    virtual void paintDecoration(Graph& g, const Rectangle& r, Element& obj, 
+                                 const Color& fg, const Color& bg) const;
   protected:
     float arc_w, arc_h;
   };
 
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   
   /** Border that can contain other objects, including elements.
    */
-class UCompositeBorder : public UBorder {
+class UCompositeBorder : public Border {
   public:
     UCLASS(UCompositeBorder)
 
     UCompositeBorder();
 
-    UCompositeBorder(const UArgs& children);
+    UCompositeBorder(const Args& children);
     ///< creates a border that contains widgets.
     
-    virtual UElem* getSubGroup() const {return pchildren;}
+    virtual Element* getSubGroup() const {return pchildren;}
     ///< [Impl] returns the children.
     
-    virtual void putProp(UUpdateContext*, UElem&);
+    virtual void putProp(UpdateContext*, Element&);
 
 protected:    
-    uptr<UElem> pchildren;
+    uptr<Element> pchildren;
   };
   
 }

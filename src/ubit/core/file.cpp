@@ -1,6 +1,5 @@
-/************************************************************************
- *
- *  ufile.cpp: useful classes and functions for managing directories and file entries
+/*
+ *  file.cpp: useful classes and functions for managing directories and file entries
  *  Ubit GUI Toolkit - Version 6
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
  *
@@ -44,29 +43,29 @@ namespace ubit {
   struct UFileType {
     enum {NONE, FOLDER, TXT, HTML, CODE };
     int   type;
-    UStr  type_name;
-    UIma* icone_ima;
+    String  type_name;
+    Image* icone_ima;
   };
   
   class UFileTypeMap {
   public:
     UFileTypeMap();
     void add(const UFileType*);  // adds or replaces
-    const UFileType* find(const UStr& ext) const;
+    const UFileType* find(const String& ext) const;
     
   private:
     struct Comp {
-      bool operator()(const UStr* s1, const UStr* s2) const {
+      bool operator()(const String* s1, const String* s2) const {
         return s1->compare(*s2, true) < 0;   // ignore case
       }
     };
-    typedef std::map<const UStr*, UFileType*, Comp> Map;
+    typedef std::map<const String*, UFileType*, Comp> Map;
     Map ftmap;
   };
   
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   
-  UFileMode::UFileMode(const UStr& path) {
+  UFileMode::UFileMode(const String& path) {
     const char* p = path.c_str();
     struct stat st;
     // lstat pour eviter de suivre les liens (ce qui peut provoquer
@@ -89,17 +88,17 @@ namespace ubit {
   
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   
-  UFileInfo::UFileInfo(const UStr& path) {
+  UFileInfo::UFileInfo(const String& path) {
     setPath(path);
   }
   
   UFileInfo::UFileInfo(const char* fullpath, const char* _name) {
-    pname = new UStr(_name);
+    pname = new String(_name);
     stat(fullpath);
   }
   
-  void UFileInfo::setPath(const UStr& path) {
-    pname = new UStr(path);
+  void UFileInfo::setPath(const String& path) {
+    pname = new String(path);
     stat(path.c_str());
   }
   
@@ -136,7 +135,7 @@ namespace ubit {
   
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   
-  UIma& UFileInfo::getMiniIconImage() const {
+  Image& UFileInfo::getMiniIconImage() const {
     if (S_ISDIR(mode)) {              // directory
       return UPix::folder;
     }
@@ -150,14 +149,14 @@ namespace ubit {
     else return UPix::question;	 // whatever
   }
   
-  UIma& UFileInfo::getIconImage() const {
+  Image& UFileInfo::getIconImage() const {
     if (isDir()) {
       if (*pname == "..") return UPix::bigUp;
       else return UPix::bigFolder;
     }
     
     else if (isFile() || isLink()) {
-      UStr ext = pname->suffix();
+      String ext = pname->suffix();
       // accepter les fichiers de backup
       if (ext[-1] == '~') ext.remove(-1,1);
       
@@ -200,7 +199,7 @@ namespace ubit {
   
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   
-  void UFileInfo::getInfoString(UStr& s) const {
+  void UFileInfo::getInfoString(String& s) const {
     char str[200];
     
     if (S_ISDIR(mode))       // directory
@@ -245,14 +244,14 @@ namespace ubit {
   
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   
-  static bool cmpPrefix(const UStr& path, const char* prefix) {
+  static bool cmpPrefix(const String& path, const char* prefix) {
     for (int k = 0; prefix[k]!=0; k++) {
       if (path[k] != prefix[k]) return false;
     }
     return true;
   }
   
-  int UFileInfo::parsePrefix(const UStr& path) {
+  int UFileInfo::parsePrefix(const String& path) {
     if (cmpPrefix(path, "http:") || cmpPrefix(path, "https:"))
       return HTTP;
     else if (cmpPrefix(path, "ssh:"))
@@ -264,12 +263,11 @@ namespace ubit {
   }
   
   /* ==================================================== [Elc] ======= */
-  /* ==================================================== ===== ======= */
   // NB: la fonction Unix 'scandir' n'est pas standard (que BSD)!
   
   UFileDir::UFileDir() : dir_info("") {}
   
-  UFileDir::UFileDir(const UStr& _path) : dir_info("") {
+  UFileDir::UFileDir(const String& _path) : dir_info("") {
     read(_path, "", "", false);
   }
   
@@ -278,7 +276,7 @@ namespace ubit {
     for(unsigned int k = 0; k < file_infos.size(); ++k) delete file_infos[k];
   }
   
-  const UStr& UFileDir::getPath() const {return *dir_info.getFileName();}
+  const String& UFileDir::getPath() const {return *dir_info.getFileName();}
   
   bool UFileDir::compareEntries(const UFileInfo* e1, const UFileInfo* e2) {
     if (e1->isDir() && !e2->isDir()) return true;
@@ -286,7 +284,7 @@ namespace ubit {
     else return strcmp(e1->pname->c_str(), e2->pname->c_str()) < 0;
   }
   
-  static bool matchFilters(const char* dname, const std::vector<UStr*>& filters) {
+  static bool matchFilters(const char* dname, const std::vector<String*>& filters) {
     const char* ext = UCstr::suffix(dname);
     if (!ext || !*ext) return false;      // no suffix
     // test all filters
@@ -298,14 +296,14 @@ namespace ubit {
     return false;
   }
   
-  void UFileDir::read(const UStr& _path) {read(_path, "", "", false);}
+  void UFileDir::read(const String& _path) {read(_path, "", "", false);}
   
-  void UFileDir::read(const UStr& _path, const UStr& prefix, 
-                      const UStr& filter, bool hidden_files) {
+  void UFileDir::read(const String& _path, const String& prefix, 
+                      const String& filter, bool hidden_files) {
     for(unsigned int k = 0; k < file_infos.size(); ++k) delete file_infos[k];
     file_infos.clear();
     
-    UStr path = _path;
+    String path = _path;
     expandDirPath(path);
     dir_info.setPath(path);
     
@@ -376,11 +374,10 @@ namespace ubit {
     delete fullpath;
   }
   
-  /* ==================================================== ===== ======= */
   
-  void UFileDir::readRemote(const UStr& path, const UStr& prefix,
-                            const UStr& filter, bool hidden_files) {
-    UStr host, fpath, cachepath;
+  void UFileDir::readRemote(const String& path, const String& prefix,
+                            const String& filter, bool hidden_files) {
+    String host, fpath, cachepath;
     UFileCache::getCachePath(path, UFileInfo::SSH, host, fpath, cachepath);
     
     dir_info.setPath(cachepath);
@@ -450,10 +447,9 @@ namespace ubit {
     delete fullpath;
   }
   
-  /* ==================================================== ===== ======= */
   // format: blabla (*.html; *.xhtml; *.*)
   
-  void UFileDir::parseFilter(vector<UStr*>& filters, const UStr& filter_str) {
+  void UFileDir::parseFilter(vector<String*>& filters, const String& filter_str) {
     const char* p = filter_str.c_str();
     if (!p) return;
     
@@ -470,7 +466,7 @@ namespace ubit {
         }
         
         if (e != p) {
-          UStr* s = new UStr();
+          String* s = new String();
           s->insert(0, p, 0, e-p);
           filters.push_back(s);
         }
@@ -481,9 +477,8 @@ namespace ubit {
     }
   }
   
-  /* ==================================================== ===== ======= */
   
-  void UFileDir::expandDirPath(UStr& dir) {
+  void UFileDir::expandDirPath(String& dir) {
     // faudrait virer les blancs au debut et a la fin !!!!!
     if (dir.empty()) {
       dir = "/";
@@ -512,18 +507,17 @@ namespace ubit {
   }
   
   /* ==================================================== [Elc] ======= */
-  /* ==================================================== ===== ======= */
   
-  static void makeDir(const UStr& path) {
+  static void makeDir(const String& path) {
     if (path.empty()) return;
     UFileMode fm(path);
     if (fm.isDir()) return;  // already created
-    UStr com = "mkdir " & path;
+    String com = "mkdir " & path;
     system(com.c_str());     // eviter system
   }
   
-  static UStr normSlashes(const UStr& in) {
-    UStr s = in;
+  static String normSlashes(const String& in) {
+    String s = in;
     for (int k = 0; k < s.length(); k++) {
       if (s[k] == '/') s.setCharAt(k,'%');
     }
@@ -531,8 +525,8 @@ namespace ubit {
   }
   
   // ATT: ca va dependre de la platform !!!
-  static UStr normURL(const UStr& in) {
-    UStr s = in;
+  static String normURL(const String& in) {
+    String s = in;
     for (int k = 0; k < s.length(); k++) {
       if (s[k] == ' ') {s.replace(k, 1, "\\ "); k++;}
       else if (s[k] == '~') {s.replace(k, 1, "%7E"); k++;}
@@ -541,21 +535,20 @@ namespace ubit {
   }
   
   /*
-   static UStr normSpaces(const UStr& in) {
-   UStr s = in;
+   static String normSpaces(const String& in) {
+   String s = in;
    for (int k = 0; k < s.length(); k++) {
    if (s[k] == ' ') {s.replace(k, 1, "\\ "); k++;}
    }
    return s;
    }
    */
-  /* ==================================================== ===== ======= */
   
-  UStr UFileCache::cache;
+  String UFileCache::cache;
   
   void UFileCache::cleanCache() {
     if (!cache.empty()) {
-      UStr com = "rm -r " & cache;
+      String com = "rm -r " & cache;
       system(com.c_str());     // eviter system
     }
   }
@@ -564,7 +557,7 @@ namespace ubit {
     const char* user = ::getenv("USER");
     if (!user | !*user) return;
     
-    cache = "/tmp/" & UAppli::getName() & "-" & user;
+    cache = "/tmp/" & Application::getName() & "-" & user;
     cleanCache();
     
     makeDir(cache);
@@ -576,12 +569,11 @@ namespace ubit {
   }
   
   
-  const UStr& UFileCache::getCachePath() {
+  const String& UFileCache::getCachePath() {
     if (cache.empty()) createCache();
     return cache;
   }
   
-  /* ==================================================== ===== ======= */
   // "ssh://toto.enst.fr"
   // "ssh://toto.enst.fr/"
   // "ssh://toto.enst.fr:"
@@ -590,8 +582,8 @@ namespace ubit {
   // "ssh://toto.enst.fr:Public"
   // "ssh://toto.enst.fr:Public/"
   
-  bool UFileCache::getCachePath(const UStr& url, int path_type,
-                                UStr& server, UStr& spath, UStr& cachepath) {
+  bool UFileCache::getCachePath(const String& url, int path_type,
+                                String& server, String& spath, String& cachepath) {
     if (cache.empty()) createCache();
     int dd = url.find("://");
     if (dd) server.insert(0, url, dd+3);   // dont copy "ssh://" prefix
@@ -632,16 +624,15 @@ namespace ubit {
     return true;
   }
   
-  /* ==================================================== ===== ======= */
   
-  const UStr* UFileCache::getOrCreateFullPath(const UStr& path) {
+  const String* UFileCache::getOrCreateFullPath(const String& path) {
     if (path.empty()) return &path;
     int type = UFileInfo::parsePrefix(path);
     
     if (type == UFileInfo::LOCAL) {
       if (path[0] != '~') return &path;
       else {
-        UStr* fullp = new UStr(path);
+        String* fullp = new String(path);
         //NB: ne PAS faire de free() sur un getenv!
         char* home = getenv("HOME");
         if (home) fullp->replace(0, 1, home); // virer ~mais pas /
@@ -649,19 +640,17 @@ namespace ubit {
       }
     }
     else {
-      UStr server, spath;
-      UStr* cachepath = new UStr();
+      String server, spath;
+      String* cachepath = new String();
       getCachePath(path, type, server, spath, *cachepath);
       return cachepath;
     }
   }
   
-  UStr* UFileCache::createFullPath(const UStr& path) {
-    const UStr* fullp = getOrCreateFullPath(path);
-    if (fullp == &path) return new UStr(path);
-    else return const_cast<UStr*>(fullp);
+  String* UFileCache::createFullPath(const String& path) {
+    const String* fullp = getOrCreateFullPath(path);
+    if (fullp == &path) return new String(path);
+    else return const_cast<String*>(fullp);
   }
   
 }
-/* ==================================================== [TheEnd] ======= */
-/* ==================================================== [(c)Elc] ======= */

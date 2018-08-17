@@ -1,6 +1,5 @@
-/************************************************************************
- *
- *  ufinderImpl.cpp: ufinder implementation (see ufinder.hpp)
+/*
+ *  finderImpl.cpp: ufinder implementation (see ufinder.hpp)
  *  Ubit GUI Toolkit - Version 6.0
  *  (C) 2008 | Eric Lecolinet | ENST Paris | www.enst.fr/~elc/ubit
  *
@@ -48,9 +47,8 @@ static void _openPMenuCB(UMouseEvent& e, UPopmenu* m) {
   if (e.getButton() == e.RightButton) m->open(e);
 }
   
-/* ==================================================== ===== ======= */
 
-UFinderDir::UFinderDir(UFinder* fd, const UStr& _fpath, int _path_type) {
+UFinderDir::UFinderDir(UFinder* fd, const String& _fpath, int _path_type) {
   fpath = _fpath;
   fname = _fpath.basename();
   // CP du /  : basename est null mais il faut mettre qq chose
@@ -60,9 +58,9 @@ UFinderDir::UFinderDir(UFinder* fd, const UStr& _fpath, int _path_type) {
   path_type = _path_type;
   
   popmenu.add
-    (ualpha(0.5) + UBackground::black
-     + UColor::white + UFont::bold + UBorder::none
-     + ubutton("     ReOpen " + UColor::yellow + fpath // read again if already opened
+    (ualpha(0.5) + Background::black
+     + Color::white + UFont::bold + Border::none
+     + ubutton("     ReOpen " + Color::yellow + fpath // read again if already opened
                + ucall(fd, this, &UFinder::openDir))
      + ubutton("     Close Folder"
                + ucall(fd, this, true, &UFinder::removeIconbox))
@@ -88,11 +86,11 @@ UFinderDir::UFinderDir(UFinder* fd, const UStr& _fpath, int _path_type) {
  
 UFinderDir::~UFinderDir() {}
 
-const UStr& UFinderDir::getDir() const {return fpath;}
+const String& UFinderDir::getDir() const {return fpath;}
 
 class UIconbox* UFinderDir::getIconbox() const {return iconbox;}
 
-void UFinderDir::setDir(const UStr& _fpath) {fpath = _fpath;}
+void UFinderDir::setDir(const String& _fpath) {fpath = _fpath;}
 
 void UFinderDir::setIconbox(class UIconbox* _ibox) {
   if (iconbox != _ibox) {
@@ -109,10 +107,10 @@ void UFinderDir::emph(bool state) {
 /* ==================================================== [Elc] ======= */
 // HISTORY
 
-UFinderDir* UFinder::findDir(const UStr& name) {
+UFinderDir* UFinder::findDir(const String& name) {
   UFinderDir* found = null;
 
-  for (UChildIter c = folderlist.cbegin(); c != folderlist.cend(); c++) {
+  for (ChildIter c = folderlist.cbegin(); c != folderlist.cend(); c++) {
     UFinderDir* de = dynamic_cast<UFinderDir*>(*c);
     if (de && de->fpath.equals(name)) found = de;
   }
@@ -156,7 +154,7 @@ void UFinder::showDirInfo(UFinderDir* de) {
 
 /* ==================================================== [Elc] ======= */
 
-void UFinder::showFile(const UStr& pathname, UDoc* doc) {
+void UFinder::showFile(const String& pathname, Document* doc) {
   pdocbox->scrollpane().setScroll(0,0);
   if (listener) listener->docShown(pathname, doc);
 
@@ -172,10 +170,10 @@ void UFinder::showFile(const UStr& pathname, UDoc* doc) {
     pdocbox->update();
   }
 
-  //UAppli::setTitle(UAppli::getName() & " - " & pathname.basename());
+  //Application::setTitle(Application::getName() & " - " & pathname.basename());
 }
 
-void UFinder::showDir(const UStr& pathname) {
+void UFinder::showDir(const String& pathname) {
   if (listener) listener->dirShown(pathname);
   
   if (mode != DirMode) {
@@ -191,9 +189,9 @@ void UFinder::showDir(const UStr& pathname) {
 
 // =============================================================================
   
-void UFinder::linkActionCB(UInputEvent& e, UDoc* doc) {
+void UFinder::linkActionCB(UInputEvent& e, Document* doc) {
   ULinkbutton * link = null;
-  UStr url;
+  String url;
   
   if (!doc || !e.getSource() 
       || !(link = dynamic_cast<ULinkbutton*>(e.getSource()))
@@ -202,7 +200,7 @@ void UFinder::linkActionCB(UInputEvent& e, UDoc* doc) {
       )
     return;
   
-  UStr path;
+  String path;
   doc->makePath(path, url);
   
   if (!path.empty()) {
@@ -213,12 +211,12 @@ void UFinder::linkActionCB(UInputEvent& e, UDoc* doc) {
 
 // =============================================================================
 
-int UFinder::openFile(const UStr& pathname, int path_type) {
+int UFinder::openFile(const String& pathname, int path_type) {
   hideAlert();
   if (listener) listener->fileRequest(pathname);
 
-  UDocFactory& fact = UDoc::getDefaultFactory();    
-  UDoc* doc = fact.read(pathname);
+  DocumentFactory& fact = Document::getDefaultFactory();    
+  Document* doc = fact.read(pathname);
   if (doc) {
     //pdocbox->content().setAutoUpdate(false);
     if (listener) listener->docLoaded(pathname, doc);
@@ -237,9 +235,9 @@ int UFinder::openFile(const UStr& pathname, int path_type) {
 
 /* ==================================================== [Elc] ======= */
 
-int UFinder::openDir(const UStr& pathname, int path_type) {
+int UFinder::openDir(const String& pathname, int path_type) {
   int stat = false;
-  UStr fpath = pathname;
+  String fpath = pathname;
   UFileDir::expandDirPath(fpath);  // pour transformer . en sa valeur
 
   if (fpath.empty()) return false;
@@ -259,7 +257,6 @@ int UFinder::openDir(const UStr& pathname, int path_type) {
   return stat;
 }
 
-/* ==================================================== ======== ======= */
 
 int UFinder::openDir(UFinderDir* de) {
   if (!de) return false;
@@ -379,7 +376,7 @@ void UFinder::previousEntry() {
   if (prev_icon) {
     piconbox->selectIcon(*prev_icon);
     if (mode == DocMode) {
-      UStr pathname = piconbox->pathname() & "/" & prev_icon->getName();
+      String pathname = piconbox->pathname() & "/" & prev_icon->getName();
       open(pathname);
     }
   }
@@ -405,7 +402,7 @@ void UFinder::nextEntry() {
   if (next_icon) {
     piconbox->selectIcon(*next_icon);
     if (mode == DocMode) {
-      UStr pathname = piconbox->pathname() & "/" & next_icon->getName();
+      String pathname = piconbox->pathname() & "/" & next_icon->getName();
       open(pathname);
     }  
   }
@@ -419,7 +416,7 @@ void UFinder::openEntry() {
   {
     //c'est pas bon: si basename est protege en lecture on peut plus remonter!
     //name &= "/..";
-    UStr pathname;
+    String pathname;
     if (getSelectedIcon()->getName() == "..")
       pathname = piconbox->pathname().dirname();
     else
@@ -440,7 +437,6 @@ void UFinder::iconActionCB(UIconbox* ibox) {
   openEntry();
 }
 
-/* ==================================================== ======== ======= */
 
 void UFinder::iconSelectCB(UIconbox* ibox) {
   if (piconbox && piconbox != ibox) {
@@ -454,7 +450,6 @@ void UFinder::iconSelectCB(UIconbox* ibox) {
   //if (open_in_fullwin && fullwin->isShown()) showFullWin();
 }
 
-/* ==================================================== ======== ======= */
 
 void UFinder::showPreviewRequest(UIcon* icon) {
   if (!icon) return;
@@ -468,18 +463,16 @@ void UFinder::showPreviewRequest(UIcon* icon) {
   }
 }
 
-/* ==================================================== ======== ======= */
 
 void UFinder::showPreview(UIcon* icon) {
   if (!icon) return; 
   if (icon != last_preview) {
     last_preview = icon;
-    UStr pathname = piconbox->pathname() & "/" & icon->getName();
+    String pathname = piconbox->pathname() & "/" & icon->getName();
     //ctrls->preview.read(icon->name(), pathname);
   }
 }
 
-/* ==================================================== ===== ======= */
 
 void UFinder::showIconPreviews() {
   if (previews_current == previews_end) {
@@ -491,7 +484,7 @@ void UFinder::showIconPreviews() {
     UIcon* icon = dynamic_cast<UIcon*>(*previews_current);
     previews_current++;
     if (icon) {
-      UStr pathname = piconbox->pathname() & "/" & icon->getName();
+      String pathname = piconbox->pathname() & "/" & icon->getName();
       //icon->readIconImage(icon->getName(), pathname);
       icon->loadImage(pathname);
       return;  // sortir du callback qui sera rappele par le timer
@@ -509,23 +502,22 @@ extern "C" {
 
 #ifndef NO_REMOTE_DOC
 
-UFinderCom::UFinderCom(UFinder* _fd, const UStr& _path, int _type)
+UFinderCom::UFinderCom(UFinder* _fd, const String& _path, int _type)
 : fd(_fd), path(_path), type(_type), mode(0), stat(0) {
   pthread_create(&thread_id, NULL, (START_ROUTINE)loadDoc, this);
 }
 
-/* ==================================================== ===== ======= */
 
 void UFinderCom::loadDoc(UFinderCom* d) {        // A REVOIR!!!!!!!!! 
 #if 0 
   //cerr << "BEGIN thread " << pthread_self() << endl;
   //cerr << "\n*** LoadDoc " << d->path << endl;  
-  UStr com;
+  String com;
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   
   if (d->type == UFileInfo::SSH) {
-    UStr server, spath;
+    String server, spath;
     d->mode = UFileMode::FILE;
     if (d->path[-1]=='/') d->mode = UFileMode::DIR;
 
@@ -547,7 +539,7 @@ void UFinderCom::loadDoc(UFinderCom* d) {        // A REVOIR!!!!!!!!!
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
   else if (d->type == UFileInfo::HTTP) {
-    UStr server, spath;
+    String server, spath;
     if (!UFileCache::getCachePath(d->path, UFileInfo::HTTP,
                                   server, spath, d->cachepath)) {
       d->stat = INVALID_URL;
@@ -562,7 +554,7 @@ void UFinderCom::loadDoc(UFinderCom* d) {        // A REVOIR!!!!!!!!!
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
   else if (d->type == UFileInfo::FTP) {
-    UStr server, spath;
+    String server, spath;
     if (!UFileCache::getCachePath(d->path, UFileInfo::FTP,
                                   server, spath, d->cachepath)) {
       d->stat = INVALID_URL;
@@ -582,7 +574,7 @@ void UFinderCom::loadDoc(UFinderCom* d) {        // A REVOIR!!!!!!!!!
     /*
     FILE* p = popen(com.c_str(), "r");
     if (p) {
-      UStr res;
+      String res;
       char buf[1000];
       while (fgets(buf, sizeof(buf), p)) res.append(buf);
       cout << "Result: " << res << endl;
@@ -593,7 +585,7 @@ void UFinderCom::loadDoc(UFinderCom* d) {        // A REVOIR!!!!!!!!!
   
 END_THREAD:
   // sert a mettre a jour le graphique, mais dans le thread principal
-  UAppli::postpone(ucall(d, &UFinderCom::showDoc));
+  Application::postpone(ucall(d, &UFinderCom::showDoc));
 
   //cerr << "END thread " << pthread_self() << endl;
   pthread_exit(NULL);
@@ -601,7 +593,6 @@ END_THREAD:
 #endif
 }
 
-/* ==================================================== ======== ======= */
 
 void UFinderCom::showDoc() {
   if (stat == INVALID_URL) {
@@ -644,7 +635,6 @@ void UFinderCom::showDoc() {
 #endif
 
 /* ==================================================== [Elc] ======= */
-/* ==================================================== ===== ======= */
 
 void UFinderHost::putFile() {
   UIcon* icon = fd.getSelectedIcon();
@@ -663,9 +653,9 @@ void UFinderHost::putFileImpl() {
   }
 
   //if (remote_ums) delete remote_ums;         // !!!  A REVOIR
-  UMService* remote_ums = new UMService(address);
+  MessageService* remote_ums = new MessageService(address);
 
-  UStr path = fd.piconbox->pathname() & "/" & icon->getName();
+  String path = fd.piconbox->pathname() & "/" & icon->getName();
 
   int f = ::open(path.c_str(), O_RDONLY, 0);
   if (f < 0) {
@@ -674,7 +664,7 @@ void UFinderHost::putFileImpl() {
   }
 
   {// header
-    UStr header = "!UFP1 RFB [header] ";
+    String header = "!UFP1 RFB [header] ";
     header &= path;                                // !! pbm des blancs !!
     if (!remote_ums->sendBlock(header.c_str(), header.length()+1)) {
       fd.showAlert("PutFile: can't connect remote host ");
@@ -731,16 +721,16 @@ bool UFinder::isBrowsing() const {
 
 bool UFinder::browseHosts() {
   if (local_ums) delete local_ums;
-  local_ums = new UMService("localhost");
+  local_ums = new MessageService("localhost");
   return local_ums->browseUMServers(ucall(this, &UFinder::browseCB));
 }
 
-void UFinder::browseCB(UMessageEvent& e) {
-  UMService::BrowseReply r(e);
+void UFinder::browseCB(MessageEvent& e) {
+  MessageService::BrowseReply r(e);
   if (r.serviceName.empty()) return;
  
   UFinderHost* found = null;
-  for (UChildIter i = hostlist.cbegin(); i != hostlist.cend(); i++) {
+  for (ChildIter i = hostlist.cbegin(); i != hostlist.cend(); i++) {
     UFinderHost* host = dynamic_cast<UFinderHost*>(*i);
     if (host) {
       if (host->hostname == r.serviceName) {
@@ -756,13 +746,13 @@ void UFinder::browseCB(UMessageEvent& e) {
     addHost(r.serviceName);
 }
 
-UFinderHost* UFinder::addHost(const UStr& hostname) {
+UFinderHost* UFinder::addHost(const String& hostname) {
   UFinderHost* host = new UFinderHost(this, hostname);
   hostlist.add(host);
   return host;
 }
 
-UFinderHost* UFinder::addHostCB(const UStr* hostname) {
+UFinderHost* UFinder::addHostCB(const String* hostname) {
   if (!hostname || hostname->empty()) return null;
   else return addHost(*hostname);
 }
@@ -771,7 +761,7 @@ void UFinder::removeHost(UFinderHost* host) {
   if (host) hostlist.remove(*host);
 }
 
-void UFinder::addHosts(const vector<UStr*>& hostnames) {
+void UFinder::addHosts(const vector<String*>& hostnames) {
   for (unsigned int k = 0; k < hostnames.size(); k++) 
     if (hostnames[k]) addHost(*hostnames[k]);
 }
@@ -782,18 +772,18 @@ void UFinder::addHosts(char const* hostnames[]) {
 
 /* ==================================================== (c)[Elc] ======= */
 
-UFinderHost::UFinderHost(class UFinder* _fd, const UStr& _hostname)
+UFinderHost::UFinderHost(class UFinder* _fd, const String& _hostname)
 : fd(*_fd), hostname(_hostname), clone_win(null) //, remote_ums(null) 
 {
   clone_btn = 
-  &ucheckbox(//UBackground::none
+  &ucheckbox(//Background::none
              "Clone"
              + UOn::select / ucall(this, &UFinderHost::createClone)
              + UOn::deselect / ucall(this, &UFinderHost::deleteClone)
              );
 
   xhost_btn = 
-  &ucheckbox(//UBackground::none
+  &ucheckbox(//Background::none
              + "Xhost"
              + UOn::select / ucall(this, &UFinderHost::addXhost)
              + UOn::deselect / ucall(this, &UFinderHost::removeXhost)
@@ -801,7 +791,7 @@ UFinderHost::UFinderHost(class UFinder* _fd, const UStr& _hostname)
 
   put_btn = null;
   
-  UBox& funcbox = uvbox(*clone_btn + *xhost_btn);
+  Box& funcbox = uvbox(*clone_btn + *xhost_btn);
   funcbox.setAttr(upadding().setLeft(6));
   funcbox.show(false);
 
@@ -813,8 +803,8 @@ UFinderHost::UFinderHost(class UFinder* _fd, const UStr& _hostname)
   }
   
   UItem& name_box = uitem
-    (UColor::black + UOn::select / UFont::bold
-     + UOn::select / UBackground::none
+    (Color::black + UOn::select / UFont::bold
+     + UOn::select / Background::none
      + UOn::select / UPix::minus
      + UOn::deselect / UPix::plus
      + " " + hostname
@@ -849,14 +839,13 @@ void UFinderHost::resolve(HostMethod m) {
   }
 }
 
-void UFinderHost::resolveCB(UMessageEvent& e, HostMethod m) {
-  UMService::ResolveReply r(e);
+void UFinderHost::resolveCB(MessageEvent& e, HostMethod m) {
+  MessageService::ResolveReply r(e);
   address = r.hosttarget;
   if (m) (this->*m)();
 }
 
 /* ==================================================== (c)[Elc] ======= */
-/* ==================================================== ======== ======= */
 
 void UFinderHost::calibrate() {
   resolve(&UFinderHost::calibrateImpl);
@@ -866,7 +855,6 @@ void UFinderHost::calibrateImpl() {
   if (fd.local_ums) fd.local_ums->sendRequest(UMSrequest::CALIBRATE);
 }
 
-/* ==================================================== ======== ======= */
 
 void UFinderHost::addXhost() {
   resolve(&UFinderHost::addXhostImpl);
@@ -877,7 +865,7 @@ void UFinderHost::addXhostImpl() {
     fd.showAlert("can't xhost + display: " & hostname & " address is unknown");
     return;
   }
-  UStr com = "xhost +"; com &= address;
+  String com = "xhost +"; com &= address;
   system(com.c_str());
 }
 
@@ -886,13 +874,12 @@ void UFinderHost::removeXhost() {
     fd.showAlert("can't xhost - display: " & hostname & " address is unknown");
     return;
   }
-  UStr com = "xhost -"; com &= address;
+  String com = "xhost -"; com &= address;
   system(com.c_str());
 }
 
-/* ==================================================== ======== ======= */
 
-void UFinder::createClone(const UStr& hostname) {
+void UFinder::createClone(const String& hostname) {
   UFinderHost* host = addHost(hostname);
   host->createClone();
 }
@@ -907,7 +894,7 @@ void UFinderHost::createCloneImpl() {
     return;
   }
 
-  UDisp* disp = UAppli::openDisp(address);
+  Display* disp = Application::openDisp(address);
   if (!disp) {
     fd.showAlert("can't open display: " & hostname & " (address: " & address & ")");
     return;
@@ -915,7 +902,7 @@ void UFinderHost::createCloneImpl() {
 
   delete clone_win;  // un seul clone !
   clone_win = fd.createCloneFrame("Clone from " & hostname);
-  clone_win->add(UOn::close / ucall(clone_btn, false, true, &UElem::setSelected));
+  clone_win->add(UOn::close / ucall(clone_btn, false, true, &Element::setSelected));
   disp->add(*clone_win);
   clone_win->show();
 }
@@ -927,10 +914,9 @@ void UFinderHost::deleteClone() {
   clone_win = null;
 }
 
-/* ==================================================== ======== ======= */
 
-void UFinder::createCloneRequest(UMessageEvent& e) {
-  const UStr* hostname = e.getMessage();
+void UFinder::createCloneRequest(MessageEvent& e) {
+  const String* hostname = e.getMessage();
   if (!hostname || hostname->empty()) return;
 
   *ask_dialog_msg = "Open Clone on " & *hostname & " ?";
@@ -941,7 +927,7 @@ void UFinder::createCloneRequest(UMessageEvent& e) {
   }
 }
 
-UFrame* UFinder::createCloneFrame(const UStr& title) {
+UFrame* UFinder::createCloneFrame(const String& title) {
   return &uframe(opts.clone_frame_size + this).setTitle(title);
 }
 

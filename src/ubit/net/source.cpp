@@ -1,6 +1,5 @@
-/************************************************************************
- *
- *  usource.cpp: file and socket data management
+/*
+ *  source.cpp: file and socket data management
  *  Ubit GUI Toolkit - Version 6.0
  *  (C) 1999-2008 / Eric Lecolinet / ENST Paris / www.enst.fr/~elc/ubit
  *
@@ -53,8 +52,8 @@ static void inputCB(gpointer input, gint source, GdkInputCondition) {
 void USource::open(int _source) {
   source = _source;
   is_opened = true;
-  UElem* sources = UAppli::impl.sources;
-  UChildIter i = sources->children().find(*this); 
+  Element* sources = Application::impl.sources;
+  ChildIter i = sources->children().find(*this); 
   // ne pas mettre 2 fois dans la liste!
 # if UBIT_WITH_GDK
   if (i != sources->cend()) g_source_remove(gid);
@@ -68,43 +67,43 @@ void USource::close() {
   gdk_input_remove(gid);
   gid = 0;
 # endif  
-  UElem* sources = UAppli::impl.sources;
+  Element* sources = Application::impl.sources;
   sources->remove(*this, false);
   if (is_opened) fireClose();
   is_opened = false;
 }
 
 void USource::onAction(UCall& c) {
-  UChild* l = new UChild(&c);
+  Child* l = new Child(&c);
   l->setCond(UOn::action);
   _addAttr(*l);
 }
 
 void USource::onClose(UCall& c) {
-  UChild* l = new UChild(&c);
+  Child* l = new Child(&c);
   l->setCond(UOn::close);
   _addAttr(*l);
 }
 
 void USource::fireInput() {
   if (isDestructed()) return;  // securite
-  UEvent e(UOn::action, this);  //UNodeEvent
-  //e.setWhen(UAppli::getTime());
+  Event e(UOn::action, this);  //UNodeEvent
+  //e.setWhen(Application::getTime());
   fire(e);
 }
 
 void USource::fireClose() {
   if (isDestructed()) return;  // securite
-  UEvent e(UOn::close, this);  //UNodeEvent
-  //e.setWhen(UAppli::getTime());
+  Event e(UOn::close, this);  //UNodeEvent
+  //e.setWhen(Application::getTime());
   fire(e);
 }
 
 //==============================================================================
 
-void UAppliImpl::resetSources(UElem* sources, fd_set& read_set, int& maxfd) {
+void UAppliImpl::resetSources(Element* sources, fd_set& read_set, int& maxfd) {
   if (!sources) return;
-  for (UChildIter c = sources->cbegin(); c != sources->cend(); ++c) {
+  for (ChildIter c = sources->cbegin(); c != sources->cend(); ++c) {
     USource* i = static_cast<USource*>(*c);
     int fd = 0;
     if (i && ((fd = i->source) >= 0)) {
@@ -114,10 +113,10 @@ void UAppliImpl::resetSources(UElem* sources, fd_set& read_set, int& maxfd) {
   }
 }
 
-void UAppliImpl::cleanSources(UElem* sources) {
+void UAppliImpl::cleanSources(Element* sources) {
   if (!sources) return;
   struct stat statbuf;
-  for (UChildIter c = sources->cbegin(); c != sources->cend(); ) {
+  for (ChildIter c = sources->cbegin(); c != sources->cend(); ) {
     int fd = 0;
     USource* i = static_cast<USource*>(*c);
     ++c;  // possible destruction => faire ++ avant
@@ -129,9 +128,9 @@ void UAppliImpl::cleanSources(UElem* sources) {
   }
 }
 
-void UAppliImpl::fireSources(UElem* sources, fd_set& read_set) {
+void UAppliImpl::fireSources(Element* sources, fd_set& read_set) {
   if (!sources) return;
-  for (UChildIter c = sources->cbegin(); c != sources->cend(); ) {
+  for (ChildIter c = sources->cbegin(); c != sources->cend(); ) {
     USource* i = static_cast<USource*>(*c);
     ++c;  // stop() peut detruire le USource => faire ++ avant
     

@@ -1,30 +1,38 @@
-/************************************************************************
- *
- *  uinteractors.hpp: most common interactors
- *  Ubit GUI Toolkit - Version 6
+/*
+ *  interactors.h: most common interactors
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE :
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION;
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
 
 #ifndef _uinteractors_hpp_
 #define	_uinteractors_hpp_ 1
+
 #include <ubit/ustr.hpp>
 #include <ubit/uedit.hpp>
 #include <ubit/ubox.hpp>
+
 namespace ubit {
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   /** Separator gadget: horizontal or vertical separator for menus and boxes.
    */
-  class USepar: public UBox {
+  class USepar: public Box {
   public:
     UCLASS(USepar)
     static UStyle* createStyle();
@@ -40,12 +48,11 @@ namespace ubit {
   ///< create a new separator.
 
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   /** Label widget: can display any combination of text, images, and other widgets.
    *
-   * Default look and feel (can be changed by adding appropriate UAttr(s)):
+   * Default look and feel (can be changed by adding appropriate Attribute(s)):
    * - horizontal layout (see attribute UOrient)
-   * - font and foreground color inherited from parents (see UFont and UColor)
+   * - font and foreground color inherited from parents (see UFont and Color)
    * - transparent backgound (see UBackgound and UAlpha)
    * - automatically resized when children (text, images, and other widgets) are 
    *   changed or resized. Add a USize attribute to change this behavior or to 
@@ -55,11 +62,11 @@ namespace ubit {
    *
    * As other widgets, a label can contain any combination of text, images and  
    * other widgets and its look can be changed by adding appropriate UAttrs
-   * (for specifying a specific UBackground, UAlpha, UPadding, UBorder, etc.)
+   * (for specifying a specific Background, UAlpha, UPadding, Border, etc.)
    *   
    *  Example:
    *  <pre>  
-   *     UStr& s = "ON";
+   *     String& s = "ON";
    *     ULabel& mylabel = ulabel(uima("myimage.jpg") + "Current state: " + s)
    *  </prep>
    *  Creates a label that contains an image followed by "Current state: " and the
@@ -67,36 +74,35 @@ namespace ubit {
    *
    *  ulabel(...) is a shortcut for *new ULabel(...)
    */
-  class ULabel: public UBox {
+  class ULabel: public Box {
   public:
     UCLASS(ULabel)
     static UStyle* createStyle();
 
-    ULabel(UArgs arglist = UArgs::none) : UBox(arglist) {}
+    ULabel(Args arglist = Args::none) : Box(arglist) {}
     ///< create a new label.
     
-    ULabel(int nbchars, UArgs arglist = UArgs::none);
+    ULabel(int nbchars, Args arglist = Args::none);
     ///< create a new label with a size of nbchars.    
   };
   
   
-  inline ULabel& ulabel(UArgs arglist = UArgs::none) 
+  inline ULabel& ulabel(Args arglist = Args::none) 
   {return *new ULabel(arglist);}
   ///< shortcut function that return *new ULabel(arglist).
 
-  inline ULabel& ulabel(int nbchars, UArgs arglist = UArgs::none) 
+  inline ULabel& ulabel(int nbchars, Args arglist = Args::none) 
   {return *new ULabel(nbchars, arglist);}
   ///< shortcut function that return *new ULabel(nbchars, arglist).
 
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   /** Textfield widget: single line editor.
    * A textfield is (roughly) similar to a ULabel except that it can edit text.
    *
-   * Default look and feel (can be changed by adding appropriate UAttr()):
+   * Default look and feel (can be changed by adding appropriate Attribute()):
    *  - horizontal layout (can't be changed)
-   *  - UFont and foreground UColor inherited from parents
-   *  - white UBackground
+   *  - UFont and foreground Color inherited from parents
+   *  - white Background
    *  - NOT resized when children (text, images, other widgets) are changed or resized:
    *    a textfield keeps its initial size (calculated to fit its initial chidren).
    *    Add a USize attribute to change this behavior or to impose a given size.
@@ -104,12 +110,12 @@ namespace ubit {
    *    uhflex()/uvflex() attributes.
    *
    * As other widgets, a textfield can contain any combination of text, images and  
-   * other widgets and its look can be changed by adding appropriate UAttr(s)
-   * (for specifying a specific UBackground, UAlpha, UPadding, UBorder, etc.)
+   * other widgets and its look can be changed by adding appropriate Attribute(s)
+   * (for specifying a specific Background, UAlpha, UPadding, Border, etc.)
    *
    * Example:
    *  <pre>
-   *      UStr& s = ustr("World!");
+   *      String& s = ustr("World!");
    *      UTextfield& tf = utextfield(UPix::doc + "Hello " + UPix::ray + s)
    *  </pre>
    * Creates a textfield that contains an image followed by "Hello ", another image
@@ -119,7 +125,7 @@ namespace ubit {
    *  utextfield(...) is a shortcut for *new UTextfield(...)
    *
    * CALLBACKS:
-   * Any UBox callback can be added to a textfield (see UOn and UCall). However,
+   * Any Box callback can be added to a textfield (see UOn and UCall). However,
    * the most useful callback conditions for this widget are:
    *  - UOn::action (default condition) fires callbacks when the RETURN key is pressed.
    *  - UOn::strChange fires callbacks when the text is changed
@@ -127,8 +133,8 @@ namespace ubit {
    * Example:
    * <pre>
    *    struct Demo {
-   *       void enterCB(UEvent&);
-   *       void changeCB(UEvent&);
+   *       void enterCB(Event&);
+   *       void changeCB(Event&);
    *    };
    * 
    *    Demo* d = new Demo();
@@ -148,27 +154,27 @@ namespace ubit {
    *
    * The enterCB() and changeCB() methods would typically do something like:
    * <pre>
-   *    void Demo::enterCB(UEvent& e) {
+   *    void Demo::enterCB(Event& e) {
    *        if (!e.getSource()) return;
-   *        UStr s = e.getSource()->retrieveText();
+   *        String s = e.getSource()->retrieveText();
    *        char c = e.getChar();
    *        ...
    *    }
    * </pre>
    * e.getSource() returns the address of the object that produced the event (the
    * textfield in this case) and retrieveText() returns the text contained inside
-   * The UEvent argument is optional: ucall() could refer to an instance method
+   * The Event argument is optional: ucall() could refer to an instance method
    * that has no such argument.
    */
-  class UTextfield: public UBox {
+  class UTextfield: public Box {
   public:
     UCLASS(UTextfield)
     static UStyle* createStyle();
 
-    UTextfield(UArgs arglist = UArgs::none);
+    UTextfield(Args arglist = Args::none);
     ///< creates a widget for editing a line of text (@see also shortcut utextfield()).
     
-    UTextfield(int nbchars, UArgs arglist = UArgs::none);
+    UTextfield(int nbchars, Args arglist = Args::none);
     /**< creates a widget for editing one line of text (@see also shortcut utextfield()).
      * the textbox will be large enough to display nbchars.
      */
@@ -182,16 +188,15 @@ namespace ubit {
     
   };
   
-  inline UTextfield& utextfield(UArgs arglist = UArgs::none) 
+  inline UTextfield& utextfield(Args arglist = Args::none) 
   {return *new UTextfield(arglist);}
   ///< shortcut that returns *new UTextfield(arglist).
   
-  inline UTextfield& utextfield(int nbchars, UArgs arglist = UArgs::none)
+  inline UTextfield& utextfield(int nbchars, Args arglist = Args::none)
   {return *new UTextfield(nbchars, arglist);}
   ///< shortcut that returns *new UTextfield(nbchars, arglist).
   
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   /** Textarea widget: multiple line editor.
    * This widget does the same as UTextfield except that is can contains as many
    * lines as needed. Children are layed out as a continuous flow: see UFlowView.
@@ -201,16 +206,15 @@ namespace ubit {
     UCLASS(UTextarea)
     static UStyle* createStyle();
 
-    UTextarea(UArgs arglist = UArgs::none) : UTextfield(arglist) {}
+    UTextarea(Args arglist = Args::none) : UTextfield(arglist) {}
     ///< creates a new text area (@see also shortcut utextarea()).    
   };
   
-  inline UTextarea& utextarea(UArgs arglist = UArgs::none) 
+  inline UTextarea& utextarea(Args arglist = Args::none) 
   {return *new UTextarea(arglist);}
   ///< shortcut thar returns *new UTextarea(arglist).
   
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   /** Button widget.
    * A UButton is similar to a UButton except that:
    * - it is clickable (see the "callback" section below)
@@ -218,11 +222,11 @@ namespace ubit {
    *   is contained in a UMenu, a UMenubar or a UBar and grey otherwise.
    *
    * As other widgets, a button can contain any combination of text, images and  
-   * other widgets and its look can be changed by adding appropriate UAttr(s)
-   * (for specifying a specific UBackground, UAlpha, UPadding, UBorder, etc.)
+   * other widgets and its look can be changed by adding appropriate Attribute(s)
+   * (for specifying a specific Background, UAlpha, UPadding, Border, etc.)
    *
    * CALLBACKS:
-   * Any UBox callback can be added to a textfield (see UOn and UCall). However,
+   * Any Box callback can be added to a textfield (see UOn and UCall). However,
    * the most useful callback conditions for this widget are:
    *  - UOn::action (default condition) fires callbacks the button is clicked
    *  - UOn::arm : fires callbacks when the button is pressed
@@ -235,7 +239,7 @@ namespace ubit {
    *    };
    *
    *    Demo* d = new Demo();
-   *    UBox& b = ubutton(UPix::diskette + " Save"
+   *    Box& b = ubutton(UPix::diskette + " Save"
    *                      + UOn::action / ucall(d, &Demo::saveFile)
    *                      + utip("Saves the current file"));
    * </pre>
@@ -250,7 +254,7 @@ namespace ubit {
    * UOn::action can be omitted, because it is the default callback condition for
    * this widget:  ucall(...) alone is thus identical to: UOn::action / ucall(...)
    *
-   * saveFile() could have an optional UEvent argument (see UTextfield as an example)
+   * saveFile() could have an optional Event argument (see UTextfield as an example)
    * or some specific arguments given bu ucall (see UCall)
    *
    * utip(..) adds a tool tip to this button that will show the corresponding message
@@ -263,16 +267,16 @@ namespace ubit {
    *
    * @see also: UItem, URadiobutton, UCheckbox
    */
-  class UButton: public UBox {
+  class UButton: public Box {
   public:
     UCLASS(UButton)
     static UStyle* createStyle();
     enum ButtonType {AUTO, NORMAL, MENU, BAR, TAB};
 
-    UButton(UArgs arglist = UArgs::none);
+    UButton(Args arglist = Args::none);
     ///< creates a standard push button.
  
-    UButton(int button_style, UArgs arglist = UArgs::none);
+    UButton(int button_style, Args arglist = Args::none);
     ///< creates a push button wich the specified 'button_style'.
     
   private:
@@ -280,17 +284,16 @@ namespace ubit {
     unsigned char button_type;
   };
   
-  inline UButton& ubutton(UArgs arglist = UArgs::none) {return *new UButton(arglist);}
+  inline UButton& ubutton(Args arglist = Args::none) {return *new UButton(arglist);}
   ///< creates a button.
   
-  UButton& uflatbutton(UArgs arglist = UArgs::none);
+  UButton& uflatbutton(Args arglist = Args::none);
   ///< creates a "flat" button with a thin line border.
   
-  UButton& utabbutton(UArgs arglist = UArgs::none);
+  UButton& utabbutton(Args arglist = Args::none);
   ///< creates a "tab" button (for tabbed panes, @see UCardbox).
 
      
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   /** Item Button widget (a kind of button that is used in UListbox(es)).
    *
    *  Same behavior as UButton but with a different decoration (no visible
@@ -300,20 +303,19 @@ namespace ubit {
    *  - same default properties, layout and resize behavior as ULabel.
    *  - same callbacks as UButton.
    */
-  class UItem: public UBox {
+  class UItem: public Box {
   public:
     UCLASS(UItem)
     static UStyle* createStyle();
 
-    UItem(UArgs = UArgs::none);
+    UItem(Args = Args::none);
     ///< creates a new "item" button.
   };
   
-  inline UItem& uitem(UArgs a = UArgs::none) {return *new UItem(a);}
+  inline UItem& uitem(Args a = Args::none) {return *new UItem(a);}
   ///< creates a new "item" button.
   
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   /** Radio Button gadget.
    * See UButton.
    */
@@ -322,14 +324,13 @@ namespace ubit {
     UCLASS(URadiobutton)
     static UStyle* createStyle();
 
-    URadiobutton(UArgs arglist = UArgs::none);
+    URadiobutton(Args arglist = Args::none);
     ///< create a radio button.
   };
   
-  inline URadiobutton& uradiobutton(UArgs a = UArgs::none) {return *new URadiobutton(a);}
+  inline URadiobutton& uradiobutton(Args a = Args::none) {return *new URadiobutton(a);}
   ///< creates a radio button.
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   /** Checkbox gadget.
    *
    * in addition to UButton's Callbacks :
@@ -348,14 +349,14 @@ namespace ubit {
     UCLASS(UCheckbox)
     static UStyle* createStyle();
 
-    UCheckbox(UArgs arglist = UArgs::none);
+    UCheckbox(Args arglist = Args::none);
     ///< creates a checkbox.
     
     UCheckbox& select(bool state = true) {return setSelected(state);}
     ///< shortcut for setSelected(bool state = true).
     
     virtual UCheckbox& setSelected(bool state = true, bool call_callbacks = true) 
-    {UElem::setSelected(state, call_callbacks); return *this;}
+    {Element::setSelected(state, call_callbacks); return *this;}
     /**< specifies whether this object is selected.
      * fire related callbacks if 'call_callbacks' is true
      */
@@ -363,11 +364,10 @@ namespace ubit {
     bool isSelected() const {return emodes.IS_SELECTED;}
   };
   
-  inline UCheckbox& ucheckbox(UArgs arglist = UArgs::none) {return *new UCheckbox(arglist);}
+  inline UCheckbox& ucheckbox(Args arglist = Args::none) {return *new UCheckbox(arglist);}
   ///< creates a checkbox.
   
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   /** Link Button gadget.
    * used for HTML links (no border and specific properties).
    * See UButton.
@@ -377,16 +377,15 @@ namespace ubit {
     UCLASS(ULinkbutton)
     static UStyle* createStyle();
     
-    ULinkbutton(UArgs = UArgs::none);
+    ULinkbutton(Args = Args::none);
     
-    virtual UStr getHRef() const;// {UStr val; getAttrValue(val,"href"); return val;}  // pas tres efficace!
+    virtual String getHRef() const;// {String val; getAttrValue(val,"href"); return val;}  // pas tres efficace!
   };
   
-  inline ULinkbutton& ulinkbutton(UArgs a = UArgs::none) {return *new ULinkbutton(a);}
+  inline ULinkbutton& ulinkbutton(Args a = Args::none) {return *new ULinkbutton(a);}
   ///< creates a "link" button (@see ULinkbutton).
   
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   /** Spinbox gadget.
    *  Geometry:
    *  - Same geometry as UTextfield: keeps its initial size
@@ -394,15 +393,15 @@ namespace ubit {
    *  - UOn::action (default callback, can be omitted) is fired when the value is changed
    *  - UOn::change is fired when the value is changed
    */
-  class USpinbox : public UBox {
+  class USpinbox : public Box {
   public:
     UCLASS(USpinbox)
     static UStyle* createStyle();
 
-    USpinbox(UArgs = UArgs::none);
+    USpinbox(Args = Args::none);
     ///< creates a spin box.
     
-    USpinbox(UInt& value, UArgs = UArgs::none);
+    USpinbox(Int& value, Args = Args::none);
     ///< creates a spin box that is linked to an integer model.
         
     virtual int getValue() const {return *pvalue;}
@@ -413,7 +412,7 @@ namespace ubit {
      * UOn::change and UOn::action callbacks are fired when the value is changed.
      */
     
-    UInt& value() {return *pvalue;}
+    Int& value() {return *pvalue;}
     /**< returns the internal value model.
      * UOn::change and UOn::action callbacks are fired when the value is changed.
      * this object can be shared but can't be deleted.
@@ -425,24 +424,24 @@ namespace ubit {
     virtual void setIncrement(int);
     ///< changes the increment.
     
-    UStr& str() {return *pstr;}
+    String& str() {return *pstr;}
     /**< return internal string model of the text.
      * this object can be shared but can't be deleted.
      */
     
   protected:
-    virtual void constructs(const UArgs& a);
+    virtual void constructs(const Args& a);
     virtual void updateValue(int dir);
     virtual void changed();
     
   private:
-    uptr<UInt> pvalue;
-    uptr<UStr> pstr;
+    uptr<Int> pvalue;
+    uptr<String> pstr;
     uptr<UTextfield> ptextfield;
     int increment;
   };
   
-  inline USpinbox& uspinbox(UArgs a = UArgs::none) {return *new USpinbox(a);}
+  inline USpinbox& uspinbox(Args a = Args::none) {return *new USpinbox(a);}
   ///< creates a spin box.
   
 }

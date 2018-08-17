@@ -1,18 +1,25 @@
-/************************************************************************
- *
- *  umenu.cpp: menu bars, pulldown and popup menus
- *  Ubit GUI Toolkit - Version 6
+/*
+ *  menu.cpp: menu bars, pulldown and popup menus
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE :
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION;
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
 
 #include <ubit/ubit_features.h>
 #include <iostream>
@@ -25,7 +32,7 @@
 #include <ubit/uwin.hpp>
 #include <ubit/uview.hpp>
 #include <ubit/ui/uviewImpl.hpp>
-#include <ubit/uevent.hpp>
+#include <ubit/core/event.h>
 #include <ubit/ustyle.hpp>
 #include <ubit/ucolor.hpp>
 #include <ubit/uborder.hpp>
@@ -45,31 +52,30 @@ UStyle* UPopmenu::createStyle() {
   return UMenu::createStyle();
 }
 
-UPopmenu::UPopmenu(const UArgs& a) : UMenu(a) {
+UPopmenu::UPopmenu(const Args& a) : UMenu(a) {
   wmodes.IS_AUTO_OPENED = false;
 }
 
-/* ==================================================== ======== ======= */
 
 UStyle* UMenubar::createStyle() {
   UStyle* style = new UStyle();
-  style->textSeparator = new UStr("\t");
+  style->textSeparator = new String("\t");
   style->orient = UOrient::HORIZONTAL;
-  style->halign = UHalign::LEFT;
-  style->valign = UValign::FLEX;
+  style->halign = Halign::LEFT;
+  style->valign = Valign::FLEX;
   style->hspacing = 4;
   style->vspacing = 5;
   style->font = &UFont::bold;
-  style->local.border = &UBorder::shadowOut;
+  style->local.border = &Border::shadowOut;
   return style;
 }
 
-UMenubar::UMenubar(const UArgs& a): UBar(a) {
+UMenubar::UMenubar(const Args& a): UBar(a) {
   emodes.IS_BROWSABLE = true;
   
-  static UMultiCond* cond = null;
+  static MultiCondition* cond = null;
   if (!cond) {
-    cond = new UMultiCond();
+    cond = new MultiCondition();
     *cond += UOn::enter;
     *cond += UOn::leave;
     *cond += UOn::mrelease;
@@ -84,36 +90,34 @@ void UMenubar::menuChildCB(UInputEvent& e) {
   mc.menuChildCB(e, this);
 }
 
-/* ==================================================== [(c)Elc] ======= */
 
 UStyle* UMenu::createStyle() {
   UStyle& s = *new UStyle();
   s.textSeparator = &ustr("\n");
   s.orient = UOrient::VERTICAL;
-  s.halign = UHalign::FLEX;
-  s.valign = UValign::TOP;
+  s.halign = Halign::FLEX;
+  s.valign = Valign::TOP;
   s.hspacing = 1;
   s.vspacing = 1;
   s.setPadding(0, 0);
-  s.local.border = &UBorder::shadowOut;
-  s.local.background = &UBackground::velin;
+  s.local.border = &Border::shadowOut;
+  s.local.background = &Background::velin;
   return &s;
 }
 
-/* ==================================================== ======== ======= */
 
-UMenu::UMenu(const UArgs& a) : 
-UWin(a),
+UMenu::UMenu(const Args& a) : 
+Window(a),
 menu_opener_cb(null),
 placement(null)
 {
   wmodes.IS_MENU = true;
   emodes.IS_BROWSABLE = true;
-  if (UAppli::conf.soft_menus) wmodes.IS_HARDWIN = false;
+  if (Application::conf.soft_menus) wmodes.IS_HARDWIN = false;
   
-  static UMultiCond* cond = null;
+  static MultiCondition* cond = null;
   if (!cond) {
-    cond = new UMultiCond();
+    cond = new MultiCondition();
     *cond += UOn::enter;
     *cond += UOn::leave;
     *cond += UOn::mrelease;
@@ -126,7 +130,7 @@ placement(null)
 // dans les desctructeurs!)
 UMenu::~UMenu() {
   // att: reset du MenuCtrl si on detruit le menu
-  UEventFlow* fl = UAppli::getFlow(0);   // DEFAULT IFLOW : A REVOIR
+  UEventFlow* fl = Application::getFlow(0);   // DEFAULT IFLOW : A REVOIR
   if (fl) fl->getMenuManager().closeAllMenus(true);
   if (placement) delete(placement); placement = null;
   destructs();
@@ -135,7 +139,7 @@ UMenu::~UMenu() {
 bool UMenu::realize() {
   if (wmodes.IS_HARDWIN) return realizeHardwin(UWinImpl::MENU);
   else {
-    UAppli::internalError("UMenu::realize",
+    Application::internalError("UMenu::realize",
                           "can't realize the soft window of this UMenu (%p)",this);
     return false;
   }
@@ -150,14 +154,13 @@ void UMenu::setPlacement(const UWinPlacement& pl) {
   placement = new UWinPlacement(pl);
 }
 
-/* ==================================================== ======== ======= */
 
-void UMenu::addingTo(UChild& c, UElem& parent) {
-  UWin::addingTo(c, parent);
+void UMenu::addingTo(Child& c, Element& parent) {
+  Window::addingTo(c, parent);
   
-  static UMultiCond* cond = null;
+  static MultiCondition* cond = null;
   if (!cond) {
-    cond = new UMultiCond();
+    cond = new MultiCondition();
     *cond += UOn::enter;
     *cond += UOn::leave;
     *cond += UOn::arm;
@@ -170,19 +173,18 @@ void UMenu::addingTo(UChild& c, UElem& parent) {
 }
 
 //NB: removingFrom() requires a destructor to be defined
-void UMenu::removingFrom(UChild& c, UElem& parent) {
+void UMenu::removingFrom(Child& c, Element& parent) {
   // don't delete the ucalls as they are shared
   if (menu_opener_cb) parent.removeAttr(*menu_opener_cb);
   
-  UWin::removingFrom(c, parent);
+  Window::removingFrom(c, parent);
 }
 
-/* ==================================================== [(c)Elc] ======= */
 // Cette fonction est appelee par les boutons qui ouvrent un submenu.
 
 void UMenu::menuOpenerCB(UInputEvent& e) {
   UMenuManager& mc = e.getFlow()->getMenuManager();
-  UView* opener_view = e.getView();
+  View* opener_view = e.getView();
   
   if (e.getCond() == UOn::arm) {
     //cerr<< endl << "UMenu::armOpener"<< endl;
@@ -221,7 +223,7 @@ void UMenu::menuChildCB(UInputEvent& e) {
   mc.menuChildCB(e, this);
 }
 
-void UMenuManager::menuChildCB(UInputEvent& e, UBox* menu_or_menubar) {
+void UMenuManager::menuChildCB(UInputEvent& e, Box* menu_or_menubar) {
   if (e.getCond() == UOn::mrelease) {
     if (active_opener != e.getView() && !e.dontCloseMenu()) {
       //cerr << "menuChildCB: release" << endl;
@@ -261,7 +263,6 @@ void UMenuManager::closeMenuAfterDelay() {
   }
 }
 
-/* ==================================================== ======== ======= */
 
 void UPopmenu::open(UMouseEvent& e) {
   // the menu will behave as a "spring menu" if x>=0 and y>=0 because it will
@@ -271,42 +272,41 @@ void UPopmenu::open(UMouseEvent& e) {
   UMenu::show(true, e.getDisp());
 }
 
-void UMenu::show(bool state, UDisp* disp) {
-  if (UAppli::isExiting()) return;
+void UMenu::show(bool state, Display* disp) {
+  if (Application::isExiting()) return;
   
   if (wmodes.IS_HARDWIN) 
   /*nop*/;     // hardwins have only one shared window
   else if (disp == null) {
     // verifier si actual_view toujours dans la liste
     USoftwinImpl* softw = softImpl();
-    UView* v = softw ? softw->getActualView(views) : null;
+    View* v = softw ? softw->getActualView(views) : null;
     if (v) disp = v->getDisp();
   }
   
   if (state) {
-    if (!disp) disp = UAppli::getDisp();
-    UEventFlow* ef = const_cast<UDisp*>(disp)->obtainChannelFlow(0);
+    if (!disp) disp = Application::getDisp();
+    UEventFlow* ef = const_cast<Display*>(disp)->obtainChannelFlow(0);
     if (ef) openImpl(ef->getMenuManager(), null, /*null,*/ false, disp);
-    else UAppli::internalError("UMenu::show","null event flow; menu: %p",this);
+    else Application::internalError("UMenu::show","null event flow; menu: %p",this);
   }
   
   else {  // !state
     UEventFlow* f = null;
     if (disp) f = disp->getChannelFlow(0);  // DEFAULT IFLOW : A REVOIR
-    else f = UAppli::getFlow(0);
+    else f = Application::getFlow(0);
     
     // fermer les sous-menus de CE menu
     if (f) f->getMenuManager().closeSubMenus(this, true/*including*/);    
-    UWin::show(false, disp);
+    Window::show(false, disp);
   }
 }
 
-/* ==================================================== ======== ======= */
 
-// a generaliser avec UElem::closeWinCB
-static UMenu* getMenuParent(UView* opener) {
-  for (UView *v = opener; v != null; v = v->getParentView()) {
-    UBox* box = v->getBox();
+// a generaliser avec Element::closeWinCB
+static UMenu* getMenuParent(View* opener) {
+  for (View *v = opener; v != null; v = v->getParentView()) {
+    Box* box = v->getBox();
     if (box) {
       if (dynamic_cast<UMenubar*>(box)) return null;
       UMenu* menu = dynamic_cast<UMenu*>(box);
@@ -316,11 +316,11 @@ static UMenu* getMenuParent(UView* opener) {
   return null;
 }
 
-void UMenu::openImpl(UMenuManager& mc, UView* opener, 
-                     bool auto_place, UDisp* disp) {
-  UView* winview = getWinView(opener ? opener->getDisp() : null);
+void UMenu::openImpl(UMenuManager& mc, View* opener, 
+                     bool auto_place, Display* disp) {
+  View* winview = getWinView(opener ? opener->getDisp() : null);
   if (!winview)  {
-    UAppli::error("UMenu::openImpl","the window of this UMenu (%p) is not realized; check if this menu has a valid parent",this);
+    Application::error("UMenu::openImpl","the window of this UMenu (%p) is not realized; check if this menu has a valid parent",this);
     return;
   };
   
@@ -354,7 +354,7 @@ void UMenu::openImpl(UMenuManager& mc, UView* opener,
     if (!this->realize()) return;
   }
   
-  // affecter le browsingGroup de UAppli:
+  // affecter le browsingGroup de Application:
   // -- c'est celui herite du graphe d'instanciation
   //    (en particulier le cas des menubars ou des menus cascades)
   // -- sauf s'il est nul auquel cas le browsingGroup sera l'opener
@@ -370,12 +370,12 @@ void UMenu::openImpl(UMenuManager& mc, UView* opener,
     else if (auto_place) {	 // default rules
       UWinPlacement pl;
       if (is_cascaded) {
-        pl.halign = &UHalign::right;
+        pl.halign = &Halign::right;
         pl.hoppositeBorder = true;
         pl.hdist = 1;
       }  
       else {
-        pl.valign = &UValign::bottom;
+        pl.valign = &Valign::bottom;
         pl.voppositeBorder = true;
         pl.vdist = 1;
       }
@@ -395,20 +395,19 @@ void UMenu::openImpl(UMenuManager& mc, UView* opener,
   // NB: ne pas faire de grab si plusieurs display: comme il est toujours
   // fait sur les 1er UDips il bloquerait les autres
   
-  if (wmodes.IS_HARDWIN && UAppli::getDispList().size() == 1
-      && UAppli::conf.menu_grab) {
+  if (wmodes.IS_HARDWIN && Application::getDispList().size() == 1
+      && Application::conf.menu_grab) {
     
     // EX-BUG: ne rien faire quand disp est null sinon ca bloque
     //if (disp) disp->grabPointer();+
     // mod:5fev6: il faut grabber sinon les menus ne marchent plus correctement
     // le pbm venait d'ailleurs: ungrab n'etait pas correctement appele
     
-    if (!disp) disp = UAppli::getDisp();
-    const_cast<UDisp*>(disp)->grabPointer(); 
+    if (!disp) disp = Application::getDisp();
+    const_cast<Display*>(disp)->grabPointer(); 
   }
 }
 
-/* ==================================================== [(c)Elc] ======= */
 
 UMenuManager::~UMenuManager() {}
 
@@ -439,13 +438,13 @@ bool UMenuManager::contains(UMenu* menu) const {
   return false;   // not found
 }
 
-bool UMenuManager::contains(UView* v) const {
+bool UMenuManager::contains(View* v) const {
   while (v && !v->getBox()->toMenu()) v = v->getParentView();
   if (!v) return false;
   return contains(v->getBox()->toMenu());
 }
 
-void UMenuManager::openMenu(UView* opener, UMenu* menu, UDisp*_disp) {
+void UMenuManager::openMenu(View* opener, UMenu* menu, Display*_disp) {
   active_menu = menu;
   active_opener = opener;
   disp = _disp;
@@ -456,22 +455,22 @@ void UMenuManager::openMenu(UView* opener, UMenu* menu, UDisp*_disp) {
     else menustack.push_back(menu);
     menu_count++;
   }
-  menu->UWin::show(true, disp);
+  menu->Window::show(true, disp);
 }
 
 void UMenuManager::closeAllMenus(bool clear_top_menu) {
-  if (UAppli::isExiting()) return;
+  if (Application::isExiting()) return;
   
   for (int k = 0; k < menu_count; k++) {
-    // !ATT: uses UWin::show(), not the specific UMenu::show() method.
-    menustack[k]->UWin::show(false, null);
+    // !ATT: uses Window::show(), not the specific UMenu::show() method.
+    menustack[k]->Window::show(false, null);
   }
   menu_count = 0;
   
   active_menu = null;
   active_opener = null;
-  if (disp) const_cast<UDisp*>(disp)->ungrabPointer(); 
-  else UAppli::getDisp()->ungrabPointer(); 
+  if (disp) const_cast<Display*>(disp)->ungrabPointer(); 
+  else Application::getDisp()->ungrabPointer(); 
   
   if (clear_top_menu) top_menu = null;
 }
@@ -510,14 +509,13 @@ void UMenuManager::closeSubMenus(UMenu* menu, bool including_this_menu) {
   k++; found++;
   
   for ( ; k < menu_count; k++) {
-    // !ATT: uses UWin::show(), not the specific UMenu::show() method.
-    menustack[k]->UWin::show(false, null);
+    // !ATT: uses Window::show(), not the specific UMenu::show() method.
+    menustack[k]->Window::show(false, null);
   }
   menu_count = found;
 }
 
 
-/* ==================================================== [(c)Elc] ======= */
 
 /* $$$void UMenuManager::enterMenuOpener(UInputEvent& e, UMenu* menu_to_open) {
  // si autoOpenMode et meme browsing group, alors auto ouvrir
@@ -526,14 +524,14 @@ void UMenuManager::closeSubMenus(UMenu* menu, bool including_this_menu) {
  possible_opener_menu = menu_to_open;
  possible_closer = null;
  possible_closer_menu = null;
- open_timer->start(UAppli::conf.open_submenu_delay, 1, false);
+ open_timer->start(Application::conf.open_submenu_delay, 1, false);
  //}
  }
  
  void UMenuManager::enterMenubarChild(UInputEvent& e, bool inside_menubar) {
  //if (eflow.getBrowsingGroup() && e.getBrowsingGroup() == eflow.getBrowsingGroup()) 
  
- UElem* opener = e.getSource();
+ Element* opener = e.getSource();
  cerr << "enterMenubarChild" <<  opener << endl;
  
  if (top_menu && opener && opener->isChildOf(*top_menu)) {
@@ -550,7 +548,7 @@ void UMenuManager::closeSubMenus(UMenu* menu, bool including_this_menu) {
  possible_opener_menu = menu;
  possible_closer = null;
  possible_closer_menu = null;
- //open_timer->start(UAppli::conf.open_submenu_delay, 1, false);
+ //open_timer->start(Application::conf.open_submenu_delay, 1, false);
  
  // set by enterMenuOpener
  if (!inside_menubar && possible_opener && possible_opener_menu) {
@@ -563,7 +561,7 @@ void UMenuManager::closeSubMenus(UMenu* menu, bool including_this_menu) {
  }
  
  void UMenuManager::leaveMenubarChild(UInputEvent& e, bool inside_menubar) {
- UElem* opener = e.getSource();
+ Element* opener = e.getSource();
  cerr << "leaveMenubarChild" <<  opener << endl;
  
  if (active_menu) {
@@ -603,7 +601,7 @@ void UMenuManager::closeSubMenus(UMenu* menu, bool including_this_menu) {
  ) {
  possible_closer = e.getView();
  possible_closer_menu = containing_menu;
- //close_timer->start(UAppli::conf.open_submenu_delay, 1, false);
+ //close_timer->start(Application::conf.open_submenu_delay, 1, false);
  }
  }
  }

@@ -1,18 +1,25 @@
-/************************************************************************
- *
- *  uappli.cpp: Appplication Context (must be created first)
- *  Ubit GUI Toolkit - Version 6
+/*
+ *  appli.cpp: Appplication Context (must be created first)
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE :
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION;
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
 
 #include <ubit/ubit_features.h>
 #include <algorithm>
@@ -31,7 +38,7 @@
 #include <ubit/core/uappliImpl.hpp>
 #include <ubit/ueventflow.hpp>
 #include <ubit/uupdate.hpp>
-#include <ubit/uselection.hpp>
+#include <ubit/Selection.hpp>
 #include <ubit/uconf.hpp>
 #include <ubit/ustr.hpp>
 #include <ubit/usource.hpp>
@@ -41,11 +48,11 @@ using namespace std;
 namespace ubit {
 
 
-//UConf UAppli::conf is in uconf.cpp to avoid init problems
+//UConf Application::conf is in uconf.cpp to avoid init problems
 
 // the (unique) implementation of the application context
 static UAppliImpl appli_impl;
-UAppliImpl& UAppli::impl = appli_impl;
+UAppliImpl& Application::impl = appli_impl;
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -56,7 +63,7 @@ app_name(null),
 is_terminated(false),
 // should not be set to null because UAppliImpl constr may be called after the
 // init. of this variable
-//error_handler(null), cf UAppli::getErrorHandler()
+//error_handler(null), cf Application::getErrorHandler()
 main_frame(null),
 sources(null),
 modalwins(null),
@@ -72,7 +79,7 @@ is_processing_layout_update_requests(false) {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-UStr& UAppli::initConf(int& argc, char** argv, UOption* opts, const char* cfile) {
+String& Application::initConf(int& argc, char** argv, Option* opts, const char* cfile) {
   conf.readAttributes(cfile);
   // parseOptions(opts) first because they superseede Ubit options
   if (opts) conf.parseOptions(argc, argv, opts);
@@ -87,21 +94,21 @@ UStr& UAppli::initConf(int& argc, char** argv, UOption* opts, const char* cfile)
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-UAppli::UAppli(int& argc, char** argv, UOption* opts, const char* confile) {
-  UStr s = argv[0];
-  impl.app_name = new UStr(s.basename());
-  impl.disp = UDisp::create(initConf(argc, argv, opts, confile));
+Application::Application(int& argc, char** argv, Option* opts, const char* confile) {
+  String s = argv[0];
+  impl.app_name = new String(s.basename());
+  impl.disp = Display::create(initConf(argc, argv, opts, confile));
 
   if (!impl.disp->isOpened()) {   // throws an exception
-    UAppli::fatalError("UAppli","The UAppli display can't be opened (is the X11 Server running?)");
+    Application::fatalError("Application","The Application display can't be opened (is the X11 Server running?)");
   }
 
   if (impl.appli) {
-    UAppli::fatalError("UAppli","The UAppli is already created (an application must have only one UAppli)");
+    Application::fatalError("Application","The Application is already created (an application must have only one Application)");
     return;
   }
   impl.appli = this;
-  impl.sources = new UElem();
+  impl.sources = new Element();
   // UWinList elements are not counted has parents when auto deleting children
   impl.modalwins = new UWinList();
   
@@ -114,7 +121,7 @@ UAppli::UAppli(int& argc, char** argv, UOption* opts, const char* confile) {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-UAppli::~UAppli() {
+Application::~Application() {
   impl.is_terminated = true;
   //pose probleme: des destructeurs peuvent etre appeles juste apres
   //-> ne pas faire d'exception dans un tel cas!  
@@ -124,72 +131,72 @@ UAppli::~UAppli() {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /*  APPELE OU ?
-void UAppli::realize() {
-  UDisp::realize();
+void Application::realize() {
+  Display::realize();
   //if (conf.locale) setlocale(LC_CTYPE, conf.locale);
   if (!conf.locale.empty()) setlocale(LC_ALL, conf.locale.c_str());
   //impl.natappli->setProperties(conf);
-  const UStr& name = getAppName();
-  static const UStr res_class = "Ubit";
+  const String& name = getAppName();
+  static const String res_class = "Ubit";
   natdisp->getMainFrame().setNames(res_class, name, name, name);
 } 
 */
-  //bool UAppli::isRealized() const {return natdisp->isRealized();}
-  //const char* UAppli::getCommandName() const {return conf.app_name;}
-  //const char* UAppli::getCommandPath() const {return (conf.app_argc>0 ? conf.app_argv[0] : null);}
+  //bool Application::isRealized() const {return natdisp->isRealized();}
+  //const char* Application::getCommandName() const {return conf.app_name;}
+  //const char* Application::getCommandPath() const {return (conf.app_argc>0 ? conf.app_argv[0] : null);}
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   
-UAppli& UAppli::appli() {
+Application& Application::appli() {
   if (!impl.appli)    // throws an exception
-    UAppli::fatalError("UAppli::appli()","no UAppli instance (not created yet?, already destroyed?)");
+    Application::fatalError("Application::appli()","no Application instance (not created yet?, already destroyed?)");
   return *impl.appli;
 }
 
-UAppli* UAppli::getAppli() {return impl.appli;}
+Application* Application::getAppli() {return impl.appli;}
 
-bool UAppli::isExiting() {return impl.is_terminated;}
+bool Application::isExiting() {return impl.is_terminated;}
 
-const char* UAppli::getVersion() {return UBIT_VERSION;}
+const char* Application::getVersion() {return UBIT_VERSION;}
 
-//const char* UAppli::getWindowingToolkit() {return conf.windowing_toolkit;}
+//const char* Application::getWindowingToolkit() {return conf.windowing_toolkit;}
 
-bool UAppli::isRunning() {return impl.mainloop_running;}
+bool Application::isRunning() {return impl.mainloop_running;}
 
-UFrame* UAppli::getMainFrame() {return impl.main_frame;}
+UFrame* Application::getMainFrame() {return impl.main_frame;}
 
-const UStr& UAppli::getName() {
-  if (!appli_impl.app_name) appli_impl.app_name = new UStr();
+const String& Application::getName() {
+  if (!appli_impl.app_name) appli_impl.app_name = new String();
   return *appli_impl.app_name;
 }
 
-UStyleSheet& UAppli::getStyleSheet() {
+StyleSheet& Application::getStyleSheet() {
   return impl.stylesheet;
 }
 
-const UStyle& UAppli::getDefaultStyle() {
+const UStyle& Application::getDefaultStyle() {
   static UStyle* default_style = new UStyle();
   return *default_style;
 }
 
 
-UStr UAppli::getTitle() {
+String Application::getTitle() {
   if (impl.main_frame) return impl.main_frame->getTitle();
   else return "";
 }
 
-void UAppli::setTitle(const UStr& title) {
+void Application::setTitle(const String& title) {
   if (impl.main_frame) impl.main_frame->setTitle(title);
 }
 
-void UAppli::setFocus(UView* v) {
+void Application::setFocus(View* v) {
   getFlow(0)->setFocus(v);
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 // En arg: n'importe quelle Window; mais seul le MainFrame (= le 1er Frame 
-// ajoute a UAppli) est automatiquement affichee par defaut
-void UAppli::add(UWin& win) {
+// ajoute a Application) est automatiquement affichee par defaut
+void Application::add(Window& win) {
   impl.disp->add(win);
   UFrame* frame = dynamic_cast<UFrame*>(&win);
   if (frame && !impl.main_frame) {    // makes the first UFrame be the 'Main Frame'
@@ -198,53 +205,53 @@ void UAppli::add(UWin& win) {
   }
 }
 
-void UAppli::add(UWin* win) {
-  if (!win) error("UAppli::add","null argument");
+void Application::add(Window* win) {
+  if (!win) error("Application::add","null argument");
   else add(*win);
 }
 
-void UAppli::remove(UWin& win, bool remove_mode) {
+void Application::remove(Window& win, bool remove_mode) {
   if (&win == impl.main_frame) impl.main_frame = null;
   impl.disp->remove(win, remove_mode);
 }
 
-void UAppli::remove(UWin* win, bool remove_mode) {
-  if (!win) error("UAppli::remove","null argument");
+void Application::remove(Window* win, bool remove_mode) {
+  if (!win) error("Application::remove","null argument");
   else remove(*win, remove_mode);
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-static void updateAll2(UElem* grp, const UUpdate& mode) {
+static void updateAll2(Element* grp, const Update& mode) {
   // NB: du fait des parents multiples, il est possible de remettre
   // a jour plusieurs fois la meme window
   // ==> il faudrait tenir compte du flag must-update
   if (grp->toWin()) grp->toWin()->update(mode);
   
-  for (UChildIter c = grp->cbegin(); c != grp->cend(); ++c) {
-    UElem* g = (*c)->toElem();
+  for (ChildIter c = grp->cbegin(); c != grp->cend(); ++c) {
+    Element* g = (*c)->toElem();
     if (g) updateAll2(g, mode);    // in any case
   }
 }
 
 //  updates all visible windows recursively
-void UAppli::updateAll(const UUpdate& mode) {
-  for (UChildIter c = impl.disp->winlist.cbegin(); c != impl.disp->winlist.cend(); ++c) {
-    UElem* g = (*c)->toElem();
+void Application::updateAll(const Update& mode) {
+  for (ChildIter c = impl.disp->winlist.cbegin(); c != impl.disp->winlist.cend(); ++c) {
+    Element* g = (*c)->toElem();
     if (g) updateAll2(g, mode);
   }
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-int UAppli::start() {
+int Application::start() {
   // updateAll() remet l'affichage a jour avant d'entrer dans la mainloop
   // pour eviter des pbms d'initialisation du layout, en part. avec le texte
   impl.appli->updateAll();
 
   //if (impl.app_title.empty()) setTitle(*impl.app_name);
   //else setTitle(impl.app_title);
-  UStr t = getTitle();
+  String t = getTitle();
   if (t.empty()) setTitle(*impl.app_name);
 
   impl.main_status = 0;
@@ -257,7 +264,7 @@ int UAppli::start() {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UAppli::quit(int status) {
+void Application::quit(int status) {
   impl.main_status = status;
   impl.is_terminated = true;
   impl.disp->quitLoop(true);  // main loop
@@ -265,7 +272,7 @@ void UAppli::quit(int status) {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-int UAppliImpl::startModalWinLoop(UWin& win) {
+int UAppliImpl::startModalWinLoop(Window& win) {
   modal_status = 0;
   disp->startLoop(false);  // sub loop
   processPendingRequests();
@@ -276,12 +283,12 @@ void UAppliImpl::setModalStatus(int status) {
   modal_status = status;
 }
 
-void UAppliImpl::addModalWin(UWin& win) {
+void UAppliImpl::addModalWin(Window& win) {
   modalwins->remove(win, false);   // remove if already in the list
   modalwins->add(win, 0);            // add at the beginning of the list
 }
 
-void UAppliImpl::removeModalWin(UWin& win) {
+void UAppliImpl::removeModalWin(Window& win) {
   disp->quitLoop(false);     // subloop
   modalwins->remove(win, false);
 }
@@ -313,7 +320,7 @@ void UAppliImpl::processDeleteRequests() {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UAppliImpl::addDeleteRequest(UView* v) {
+void UAppliImpl::addDeleteRequest(View* v) {
   del_view_list.push_back(v);
   request_mask |= DELETE_REQUEST;
 }
@@ -335,7 +342,7 @@ void UAppliImpl::addDeleteRequest(UObject* b) {
      }
    }
    */  
-  if (UAppli::conf.postpone_delete) {
+  if (Application::conf.postpone_delete) {
     del_obj_list.push_back(b);    
     request_mask |= DELETE_REQUEST;    
   }
@@ -352,9 +359,9 @@ void UAppliImpl::processUpdateRequests()
   
   is_processing_update_requests = true;
     
-  // this will prevent UView::updateWinPaint() to draw anything as the final
+  // this will prevent View::updateWinPaint() to draw anything as the final
   // refresh is performed for the entire windows a few lines below
-  if (UAppli::conf.is_using_gl) is_processing_layout_update_requests = true;
+  if (Application::conf.is_using_gl) is_processing_layout_update_requests = true;
   
   // incorrect: voir plus bas
   //UpdateRequests::iterator p = update_list.begin();
@@ -366,7 +373,7 @@ void UAppliImpl::processUpdateRequests()
   // (hence, is size() and the address of its elements may change)
   
   for (unsigned int k = 0; k < update_list.size(); ++k) {
-    UBox* obj = update_list[k].obj;
+    Box* obj = update_list[k].obj;
     if (obj) {     // obj == null if the obj was deleted in the meanwhile
       obj->doUpdate(update_list[k].upd, null);     // !!!&&& second arg should be disp !!!
       obj->omodes.IS_UPDATING = false;
@@ -378,15 +385,15 @@ void UAppliImpl::processUpdateRequests()
 
   update_list.clear();
 
-  if (UAppli::conf.is_using_gl) {  // refresh des windows modifiees !!!A METTRE DANS UDisp
-    // !!!! IL FAUDRAIT considere TOUS les UDisp  !!!@@@
-    UDisp::HardwinList::iterator c = disp->hardwin_list.begin();
-    UDisp::HardwinList::iterator c_end = disp->hardwin_list.end();
+  if (Application::conf.is_using_gl) {  // refresh des windows modifiees !!!A METTRE DANS Display
+    // !!!! IL FAUDRAIT considere TOUS les Display  !!!@@@
+    Display::HardwinList::iterator c = disp->hardwin_list.begin();
+    Display::HardwinList::iterator c_end = disp->hardwin_list.end();
     for ( ; c != c_end; ++c) {
       UHardwinImpl* hw = *c;
       if (hw && hw->must_update && hw->win) {
         //cerr << "> processUpdateRequests: HW: " << hw <<endl;
-        hw->win->doUpdate(UUpdate::paint, disp);
+        hw->win->doUpdate(Update::paint, disp);
         hw->must_update = false;
         //cerr << "< processUpdateRequests: HW: " << hw <<endl <<endl;
       }
@@ -399,7 +406,7 @@ void UAppliImpl::processUpdateRequests()
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UAppliImpl::addUpdateRequest(UBox* obj, const UUpdate& upd) {
+void UAppliImpl::addUpdateRequest(Box* obj, const Update& upd) {
   // don't update an object that has been destructed
   if (obj->omodes.IS_DESTRUCTED || obj->omodes.IS_DESTRUCTING || is_terminated) return;
   
@@ -414,18 +421,18 @@ void UAppliImpl::addUpdateRequest(UBox* obj, const UUpdate& upd) {
   
   bool remove_paint = false;
   
-  if (UAppli::conf.is_using_gl) { 
-    if (upd.modes == UUpdate::PAINT) {
-      for (UView* v = obj->views; v != null; v = v->next) {
+  if (Application::conf.is_using_gl) { 
+    if (upd.modes == Update::PAINT) {
+      for (View* v = obj->views; v != null; v = v->next) {
         if (v->hardwin) v->hardwin->must_update = true;
       }
       goto END;
     }
-    else if (upd.modes & UUpdate::PAINT) {
-      for (UView* v = obj->views; v != null; v = v->next) {
+    else if (upd.modes & Update::PAINT) {
+      for (View* v = obj->views; v != null; v = v->next) {
         if (v->hardwin) v->hardwin->must_update = true;
       }
-      remove_paint = true;   // remove UUpdate::PAINT
+      remove_paint = true;   // remove Update::PAINT
     }
   }
   
@@ -436,7 +443,7 @@ END:
   request_mask |= UPDATE_REQUEST;
 }
 
-void UAppliImpl::removeUpdateRequests(UBox* box) {
+void UAppliImpl::removeUpdateRequests(Box* box) {
   if (is_terminated || box == null) return;
   for (unsigned int k = 0; k < update_list.size(); ++k) {
     if (box == update_list[k].obj) update_list[k].obj = null;
@@ -444,7 +451,7 @@ void UAppliImpl::removeUpdateRequests(UBox* box) {
 }
 
 /*
-UpdateRequest* UAppliImpl::findUpdateRequest(UBox* obj, unsigned int& k) {
+UpdateRequest* UAppliImpl::findUpdateRequest(Box* obj, unsigned int& k) {
   if (is_terminated) return null;
   for (; k < update_list.size(); k++) {
     if (obj == update_list[k].obj) return &update_list[k];
@@ -454,7 +461,7 @@ UpdateRequest* UAppliImpl::findUpdateRequest(UBox* obj, unsigned int& k) {
 */
 //==============================================================================
 
-void UAppli::deleteNotify(UDisp* d) {
+void Application::deleteNotify(Display* d) {
   for (unsigned int k = 0; k < impl.displist.size(); ++k) {
     if (impl.displist[k] == d) {
       // va tout decaler si on enleve de la liste !
@@ -464,14 +471,14 @@ void UAppli::deleteNotify(UDisp* d) {
   }
 }
 
-void UAppli::deleteNotify(UView* deleted_view) {
+void Application::deleteNotify(View* deleted_view) {
   UFlowList& flist = impl.flowlist; 
   for (unsigned int k = 0; k < flist.size(); k++) {
     if (flist[k]) flist[k]->deleteNotify(deleted_view);
   }
 }
 
-void UAppli::deleteNotify(UElem* deleted_group) {
+void Application::deleteNotify(Element* deleted_group) {
   UFlowList& flist = impl.flowlist; 
   for (unsigned int k = 0; k < flist.size(); k++) {
     if (flist[k]) flist[k]->deleteNotify(deleted_group);
@@ -480,23 +487,23 @@ void UAppli::deleteNotify(UElem* deleted_group) {
 
 //==============================================================================
 
-const UDispList& UAppli::getDispList() {
+const UDispList& Application::getDispList() {
   return impl.displist;
 }
 
-UDisp* UAppli::getDisp() {return impl.disp;}
+Display* Application::getDisp() {return impl.disp;}
 
 // NB: un acces direct par [] serait possible
-UDisp* UAppli::getDisp(int _id)  {
+Display* Application::getDisp(int _id)  {
   for (unsigned int k = 0; k < impl.displist.size(); ++k) {
     if (impl.displist[k]->getID() == _id) return impl.displist[k];
   }
   return null;
 }
  
-UDisp* UAppli::openDisp(const UStr& _display_name) {
-  //UDisp* d = new UDisp(_display_name);
-  UDisp* d = UDisp::create(_display_name);
+Display* Application::openDisp(const String& _display_name) {
+  //Display* d = new Display(_display_name);
+  Display* d = Display::create(_display_name);
   if (d && d->isOpened()) return d;
   else {
     delete d;
@@ -504,29 +511,29 @@ UDisp* UAppli::openDisp(const UStr& _display_name) {
   }
 }
 
-void UAppli::closeDisp(UDisp* d) {
+void Application::closeDisp(Display* d) {
   delete d;
 }
 
-bool UAppli::hasTelePointers() {
+bool Application::hasTelePointers() {
   return (conf.tele_pointers && impl.displist.size() > 1);
 }
 
 //==============================================================================
 
-const UFlowList& UAppli::getFlowList() {
+const UFlowList& Application::getFlowList() {
   return impl.flowlist;
 }
 
 // NB: un acces direct par [] serait possible
-UEventFlow* UAppli::getFlow(int _id)  {
+UEventFlow* Application::getFlow(int _id)  {
   for (unsigned int k = 0; k < impl.flowlist.size(); ++k) {
     if (impl.flowlist[k]->getID() == _id) return impl.flowlist[k];
   }
   return null;
 }
 
-USelection* UAppli::getSelection(int _id) {
+Selection* Application::getSelection(int _id) {
   UEventFlow* fl = getFlow(_id);
   if (!fl) return null;
   else return fl->getSelection();
@@ -534,18 +541,18 @@ USelection* UAppli::getSelection(int _id) {
 
 //==============================================================================
 
-UMenu* UAppli::getOpenedMenu() {
+UMenu* Application::getOpenedMenu() {
   UEventFlow* fl = impl.disp->obtainChannelFlow(0);  // DEFAULT IFLOW : A REVOIR
   return fl ? fl->menu_man.getDeepestMenu() : null; 
 }
 
-const UStr& UAppli::getImaPath() {
+const String& Application::getImaPath() {
   return impl.imapath;
 }
 
-void UAppli::setImaPath(const UStr& value) {
+void Application::setImaPath(const String& value) {
   impl.imapath = value;
-  UStr& path = impl.imapath;
+  String& path = impl.imapath;
   
   if (path[0] == '~' && (path[1] == '/' || path[1] == 0)) {
     //NB: ne PAS faire de free() sur un getenv!
@@ -559,21 +566,21 @@ void UAppli::setImaPath(const UStr& value) {
 
 //==============================================================================
 
-void UAppli::setMotionLag(unsigned long app_lag, unsigned long nat_lag) {
+void Application::setMotionLag(unsigned long app_lag, unsigned long nat_lag) {
   impl.app_motion_lag = app_lag;
   impl.nat_motion_lag = nat_lag;
 }
 
-unsigned long UAppli::getTime() {return UTimerImpl::getTime();}
+unsigned long Application::getTime() {return UTimerImpl::getTime();}
 
-void UAppli::postpone(UCall& c) {  // pas tout a fait correct si mthreads!
+void Application::postpone(UCall& c) {  // pas tout a fait correct si mthreads!
   addTimeout(0, 1, c);
   //if (pthread_self() != main_thread) {
-  // UMessage::send(*impl.disp->getMainFrame(), "wakeup");    !!!@@@@!!!!
+  // Message::send(*impl.disp->getMainFrame(), "wakeup");    !!!@@@@!!!!
   // }
 }
 
-void UAppli::addTimeout(unsigned long _delay, int _ntimes, UCall& c) {
+void Application::addTimeout(unsigned long _delay, int _ntimes, UCall& c) {
   UTimer* t = new UTimer(_delay, _ntimes, true); // true => auto_delete
   t->onTimeout(c);
   t->start();
@@ -581,48 +588,48 @@ void UAppli::addTimeout(unsigned long _delay, int _ntimes, UCall& c) {
 
 //==============================================================================
 
-UMessagePortMap* UAppli::getMessagePortMap() {return impl.messmap;}
+MessagePortMap* Application::getMessagePortMap() {return impl.messmap;}
 
-UMessagePort* UAppli::findMessagePort(const UStr& name) {
+MessagePort* Application::findMessagePort(const String& name) {
   if (impl.messmap) return impl.messmap->findMessagePort(name);
   else return null;
 }
 
-UMessagePort& UAppli::getMessagePort(const UStr& name) {
-  if (!impl.messmap) impl.messmap = new UMessagePortMap();
+MessagePort& Application::getMessagePort(const String& name) {
+  if (!impl.messmap) impl.messmap = new MessagePortMap();
   return impl.messmap->getMessagePort(name);
 }
 
-void UAppli::onMessage(const UStr& name, UCall& c) {
-  UMessagePort& mp = getMessagePort(name);
-  //mp.onChange(c); devrait etre onChange si c'etait une UNode
+void Application::onMessage(const String& name, UCall& c) {
+  MessagePort& mp = getMessagePort(name);
+  //mp.onChange(c); devrait etre onChange si c'etait une Node
   mp.add(c); 
 }
 
 //==============================================================================
 
-void UAppli::error(const char* fun, const char* format, ...){
+void Application::error(const char* fun, const char* format, ...){
   va_list ap;
   va_start(ap, format);
   raiseError(UError::ERROR, null/*object*/, fun, format, ap);
   va_end(ap);
 }
 
-void UAppli::warning(const char* fun, const char* format, ...){
+void Application::warning(const char* fun, const char* format, ...){
   va_list ap;
   va_start(ap, format);
   raiseError(UError::WARNING, null/*object*/, fun, format, ap);
   va_end(ap);
 }
 
-void UAppli::fatalError(const char* fun, const char* format, ...){
+void Application::fatalError(const char* fun, const char* format, ...){
   va_list ap;
   va_start(ap, format);
   raiseError(UError::FATAL_ERROR, null/*object*/, fun, format, ap);
   va_end(ap);
 }
 
-void UAppli::internalError(const char* fun, const char* format, ...){
+void Application::internalError(const char* fun, const char* format, ...){
   va_list ap;
   va_start(ap, format);
   raiseError(UError::INTERNAL_ERROR, null/*object*/, fun, format, ap);
@@ -631,7 +638,7 @@ void UAppli::internalError(const char* fun, const char* format, ...){
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UAppli::raiseError(int errnum, const UObject* obj, const char* funcname, 
+void Application::raiseError(int errnum, const UObject* obj, const char* funcname, 
                         const char* format, ...){
   va_list ap;
   va_start(ap, format);
@@ -639,12 +646,12 @@ void UAppli::raiseError(int errnum, const UObject* obj, const char* funcname,
   va_end(ap);
 }
 
-void UAppli::raiseError(int errnum, const UObject* obj, const char* funcname, 
+void Application::raiseError(int errnum, const UObject* obj, const char* funcname, 
                         const char* format, va_list ap){
   getErrorHandler().raiseError(errnum, obj, funcname, format, ap);
 }
 
-UErrorHandler& UAppli::getErrorHandler() {
+UErrorHandler& Application::getErrorHandler() {
   // this variable should be null even if this UAppliImpl constr was not called
   if (!appli_impl.error_handler) {
     appli_impl.error_handler = 
@@ -657,13 +664,13 @@ UErrorHandler& UAppli::getErrorHandler() {
   return *appli_impl.error_handler;
 }
 
-void UAppli::setErrorHandler(UErrorHandler& eh) {
+void Application::setErrorHandler(UErrorHandler& eh) {
   appli_impl.error_handler = eh;
 }
 
 //==============================================================================
 
-UErrorHandler::UErrorHandler(const UStr& _label, std::ostream* _fout) : 
+UErrorHandler::UErrorHandler(const String& _label, std::ostream* _fout) : 
 plabel(ustr(_label)),
 pbuffer(null),
 fout(_fout) {
@@ -675,7 +682,7 @@ void UErrorHandler::setOutputStream(std::ostream* f) {
   fout = f;
 }
 
-void UErrorHandler::setOutputBuffer(UStr* s) {
+void UErrorHandler::setOutputBuffer(String* s) {
   pbuffer = s;
 }
 
@@ -704,7 +711,7 @@ void UErrorHandler::error(int errnum, const UObject *obj, const char* fun,
 }
 
 void UErrorHandler::parserError(int errnum, const UChar* tbuffer,
-                                const char* msg1, const UStr& name,
+                                const char* msg1, const String& name,
                                 const char* msg2, const UChar* line) const {
   // eviter erreurs de positionnement en debut de buffer
   if (line < tbuffer) line = tbuffer;
@@ -716,7 +723,7 @@ void UErrorHandler::parserError(int errnum, const UChar* tbuffer,
   }
   
   // n'afficher que le debut de line et remplacer les \n par des \ suivis de n
-  UStr line_beg;
+  String line_beg;
   if (line) {
     line_beg.append(line, 60);
     for ( int k = 0; k < line_beg.length(); k++) {
@@ -724,7 +731,7 @@ void UErrorHandler::parserError(int errnum, const UChar* tbuffer,
     }
   }
   
-  UStr& err = ustr("At line ");
+  String& err = ustr("At line ");
   err &= l;
   err &= ":\n";
   err &= line_beg;
@@ -745,7 +752,7 @@ void UErrorHandler::raiseError(int errnum, const UObject* obj, const char* funcn
   if (e.errnum < 0) throw e;
 }
 
-void UErrorHandler::raiseError(int errnum, UStr* msg) const {
+void UErrorHandler::raiseError(int errnum, String* msg) const {
   UError e(errnum, null, null);
     if (msg) {
       strncpy(e.message, msg->c_str(), sizeof(e.message));

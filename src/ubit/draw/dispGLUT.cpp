@@ -1,6 +1,5 @@
-/************************************************************************
- *
- *  udispGLUT.cpp: GLUT implementation
+/*
+ *  dispGLUT.cpp: GLUT implementation
  *  Ubit GUI Toolkit - Version 6.0
  *  (C) 2009 | Eric Lecolinet | ENST Paris | www.enst.fr/~elc/ubit
  *
@@ -47,7 +46,7 @@ UCursor UCursor::dnd(GLUT_CURSOR_CYCLE, UCONST);  // ???
   
 // ==================================================== [Ubit Toolkit] =========
 
-UDispGLUT::UDispGLUT(const UStr& _dname) : UDisp(_dname)
+UDispGLUT::UDispGLUT(const String& _dname) : Display(_dname)
 {
   const char* dname = getDisplayName().empty() ? "''" : getDisplayName().c_str();
 
@@ -73,13 +72,13 @@ UDispGLUT::UDispGLUT(const UStr& _dname) : UDisp(_dname)
   screen_height_mm = glutGet(GLUT_SCREEN_HEIGHT_MM);
   
   if (screen_width_mm == 0 || screen_height_mm == 0) {
-    UAppli::warning("UDispGLUT","the resolution of the diplay is unknow (display %s)",dname);
+    Application::warning("UDispGLUT","the resolution of the diplay is unknow (display %s)",dname);
     setPixelPerInch(72);   // default
   }
   else setPixelPerMM(double(screen_width)/screen_width_mm);
    
-  //if (!(default_rc = UGraph::createRC(this, null/*sharelists*/))) {
-  //  UAppli::error("UDispGLUT","could not create Rendering Context on display '%s'",dname);
+  //if (!(default_rc = Graph::createRC(this, null/*sharelists*/))) {
+  //  Application::error("UDispGLUT","could not create Rendering Context on display '%s'",dname);
   //  return;
   //}
   
@@ -101,7 +100,7 @@ unsigned long UDispGLUT::createColorPixel(const URgba& rgba) {
   return 0;
 }
 
-UHardwinGLUT* UDispGLUT::createWinImpl(UWin* win) {
+UHardwinGLUT* UDispGLUT::createWinImpl(Window* win) {
   return new UHardwinGLUT(this, win);
 }
 
@@ -118,32 +117,32 @@ void UDispGLUT::deleteCursorImpl(UCursorImpl* ci) {
 
 // =============================================================================
 
-void UDispGLUT::setPointerPos(const UPoint&) {
-  UAppli::error("UDisp::setPointerPos","Not available with GLUT");
+void UDispGLUT::setPointerPos(const Point&) {
+  Application::error("Display::setPointerPos","Not available with GLUT");
 }
 
-UPoint UDispGLUT::getPointerPos() const {
-  UAppli::error("UDisp::getPointerPos","Not available with GLUT");
-  return UPoint(0,0);
+Point UDispGLUT::getPointerPos() const {
+  Application::error("Display::getPointerPos","Not available with GLUT");
+  return Point(0,0);
 }
 
 int UDispGLUT::getPointerState() const {
-  UAppli::error("UDisp::getPointerState","Not available with GLUT");
+  Application::error("Display::getPointerState","Not available with GLUT");
   return 0;
 }
 
 bool UDispGLUT::grabPointer(const UCursor* c) {
-  //UAppli::error("UDisp::grabPointer","Not available with GLUT");
+  //Application::error("Display::grabPointer","Not available with GLUT");
   return false;
 }
 
 void UDispGLUT::ungrabPointer() {
-  //UAppli::error("UDisp::ungrabPointer","Not available with GLUT");
+  //Application::error("Display::ungrabPointer","Not available with GLUT");
 }
 
 bool UDispGLUT::pickWindow(int& x_in_win, int& y_in_win, UHardwinImpl* window,
                            UCursor* cursor, UCall* callback) {
-  UAppli::error("UDisp::pickWindow","This function is not available when using GLUT");
+  Application::error("Display::pickWindow","This function is not available when using GLUT");
   return false;
 }
 
@@ -177,7 +176,7 @@ void UDispGLUT::quitLoop(bool main) {
   exit(0);
 }
 
-UWin* UDispGLUT::retrieveWin(int sys_win) {
+Window* UDispGLUT::retrieveWin(int sys_win) {
   HardwinList::iterator c = hardwin_list.begin();  // NB: on pourrait utiliser un VECTOR?
   HardwinList::iterator c_end = hardwin_list.end();
   for ( ; c != c_end; ++c) {
@@ -194,33 +193,33 @@ namespace glut {
   static int _win_pos_x = 0, _win_pos_y = 0;
   
   static void winMotionCB(int x, int y) {
-    UWin* win = _disp->retrieveWin(glutGetWindow());
+    Window* win = _disp->retrieveWin(glutGetWindow());
     if (!win) return;
-    UEventFlow* f = UAppli::impl.flowlist[0];
-    unsigned long time = UAppli::getTime();  
+    UEventFlow* f = Application::impl.flowlist[0];
+    unsigned long time = Application::getTime();  
 
-    f->mouseMotion(win->getWinView(_disp), time, _state, UPoint(x,y), 
-                   UPoint(x + _win_pos_x, y + _win_pos_y));
+    f->mouseMotion(win->getWinView(_disp), time, _state, Point(x,y), 
+                   Point(x + _win_pos_x, y + _win_pos_y));
     //cerr << "winMotionCB " << (x+_win_pos_x) <<" "<< (y+_win_pos_y) <<endl;
 
-    UAppli::impl.processPendingRequests();
+    Application::impl.processPendingRequests();
   }
   
   
   static void winMouseCB(int btn, int up_down, int x, int y) {
     // NB: l'appel du callback positionne glutGetWindow correctement
     int cur_win = glutGetWindow();
-    UWin* win = _disp->retrieveWin(cur_win);
+    Window* win = _disp->retrieveWin(cur_win);
     if (!win) return;
 
-    UEventFlow* f = UAppli::impl.flowlist[0];
-    UView* winview = win->getWinView(_disp);
-    unsigned long time = UAppli::getTime();
+    UEventFlow* f = Application::impl.flowlist[0];
+    View* winview = win->getWinView(_disp);
+    unsigned long time = Application::getTime();
     
     _win_pos_x = glutGet(GLUT_WINDOW_X);
     _win_pos_y = glutGet(GLUT_WINDOW_Y);
-    UPoint scr_pos(x + _win_pos_x, y + _win_pos_y);
-    UPoint win_pos(x, y);
+    Point scr_pos(x + _win_pos_x, y + _win_pos_y);
+    Point win_pos(x, y);
     //cerr << "winMouseCB " << _win_pos_x<<" "<<_win_pos_y<<" / "<<scr_pos<<endl;
     
     if (up_down == GLUT_DOWN) {
@@ -242,7 +241,7 @@ namespace glut {
           f->mousePress(winview, time, _state, win_pos, scr_pos, UMouseEvent::RightButton);
           break;
         default:
-          UAppli::warning("glutMousePress", "unknown mouse button %d", btn);
+          Application::warning("glutMousePress", "unknown mouse button %d", btn);
           break;
       }
     }
@@ -265,21 +264,21 @@ namespace glut {
           f->mouseRelease(winview, time, _state, win_pos, scr_pos, UMouseEvent::RightButton);
           break;
         default:
-          UAppli::warning("glutMouseRelease", "unknown mouse button %d", btn);
+          Application::warning("glutMouseRelease", "unknown mouse button %d", btn);
           break;
       }
     }
-    UAppli::impl.processPendingRequests();
+    Application::impl.processPendingRequests();
   }
   
   // -----------------------------------------------------------------------------
   
   static void winSpecialCB(int keycode, int x, int y) {  // modifiers, etc.
-    UWin* win = _disp->retrieveWin(glutGetWindow());
+    Window* win = _disp->retrieveWin(glutGetWindow());
     if (!win) return;
-    UEventFlow* f = UAppli::impl.flowlist[0];
-    UView* winview = win->getWinView(_disp);
-    unsigned long time = UAppli::getTime();
+    UEventFlow* f = Application::impl.flowlist[0];
+    View* winview = win->getWinView(_disp);
+    unsigned long time = Application::getTime();
 
     //cerr << "glutSpecialCB: code: " << int(keycode) << endl;
     
@@ -292,15 +291,15 @@ namespace glut {
     _state = _mouse_state | glutGetModifiers();
     f->keyRelease(winview, time, _state, keycode, 0/*keychar*/);
 
-    UAppli::impl.processPendingRequests();
+    Application::impl.processPendingRequests();
   }
   
   static void winKeyboardCB(unsigned char keychar, int x, int y) {
-    UWin* win = _disp->retrieveWin(glutGetWindow());
+    Window* win = _disp->retrieveWin(glutGetWindow());
     if (!win) return;
-    UEventFlow* f = UAppli::impl.flowlist[0];
-    UView* winview = win->getWinView(_disp);
-    unsigned long time = UAppli::getTime();
+    UEventFlow* f = Application::impl.flowlist[0];
+    View* winview = win->getWinView(_disp);
+    unsigned long time = Application::getTime();
 
     //cerr << "glutKeyboardCB: key: " << keychar << " int: "<< int(keychar) << endl;
     
@@ -316,53 +315,53 @@ namespace glut {
       _state = _mouse_state | glutGetModifiers();
       f->keyPress(winview, time, _state, 0/*keycode*/, keychar);
       f->keyRelease(winview, time, _state, 0/*keycode*/, keychar);
-      UAppli::impl.processPendingRequests();
+      Application::impl.processPendingRequests();
     }
   }
   
   // -----------------------------------------------------------------------------
   
   static void winEntryCB(int in_out) {
-    UWin* win = _disp->retrieveWin(glutGetWindow());
+    Window* win = _disp->retrieveWin(glutGetWindow());
     if (!win) return;
-    UEventFlow* f = UAppli::impl.flowlist[0];    
-    UView* winview = win->getWinView(_disp);
-    unsigned long time = UAppli::getTime();
+    UEventFlow* f = Application::impl.flowlist[0];    
+    View* winview = win->getWinView(_disp);
+    unsigned long time = Application::getTime();
 
     _win_pos_x = glutGet(GLUT_WINDOW_X);
     _win_pos_y = glutGet(GLUT_WINDOW_Y);
     
     if (in_out == GLUT_ENTERED) f->winEnter(winview, time);
     else if (in_out == GLUT_LEFT) f->winLeave(winview, time);
-    UAppli::impl.processPendingRequests();
+    Application::impl.processPendingRequests();
   }
   
   static void winDisplayCB() {    
     if (glutLayerGet(GLUT_NORMAL_DAMAGED)) { // glutDisplayCB() caused by window system
-      UWin* win = _disp->retrieveWin(glutGetWindow());
+      Window* win = _disp->retrieveWin(glutGetWindow());
       if (!win) return;
       
-      UView* v = win->getWinView();
+      View* v = win->getWinView();
       //cerr << "winDisplayCB " << win << " size " <<v->width << " " <<  v->height << endl;
       _disp->onPaint(v, v->x, v->y, v->width, v->height);
     }
     // in all cases, even if caused by glutPostRedisplay()
-    UAppli::impl.processPendingRequests();
+    Application::impl.processPendingRequests();
   }
   
   static void winReshapeCB(int w, int h) {
-    UWin* win = _disp->retrieveWin(glutGetWindow());
+    Window* win = _disp->retrieveWin(glutGetWindow());
     //cerr << "winReshapeCB " << win << " size " <<w << " " << h << endl;
     if (!win) return;
     
-    UView* v = win->getWinView();
-    _disp->onResize(v, UDimension(w, h));
+    View* v = win->getWinView();
+    _disp->onResize(v, Dimension(w, h));
   }
   
   static void winVisibilityCB(int state) {
-    UWin* win = _disp->retrieveWin(glutGetWindow());
+    Window* win = _disp->retrieveWin(glutGetWindow());
     if (!win) return;
-    //UView* v = win->getWinView();
+    //View* v = win->getWinView();
     //cerr << "glutVisibilityCB " << endl;
     // state: GLUT_NOT_VISIBLE or GLUT_VISIBLE
   }
@@ -383,7 +382,7 @@ void UDispGLUT::initWinCallbacks(int sys_win) {
   glut::_disp = this;  // static var used by callback functions
 
   if (sys_win <= 0) {
-    UAppli::error("UDispGLUT::initWinCallbacks","Wrong window ID: %d", sys_win);
+    Application::error("UDispGLUT::initWinCallbacks","Wrong window ID: %d", sys_win);
     return; 
   }
 

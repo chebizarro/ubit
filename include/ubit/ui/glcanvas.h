@@ -1,26 +1,35 @@
-/************************************************************************
- *
- *  uglcanvas.hpp: a widget for rendering OpenGL graphics (requires X11 and OpenGL)
- *  Ubit GUI Toolkit - Version 6
+/*
+ *  glcanvas.h: a widget for rendering OpenGL graphics (requires X11 and OpenGL)
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE :
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION;
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
 
 #ifndef _uglcanvas_hpp_
 #define	_uglcanvas_hpp_ 1
+
 #include <ubit/udefs.hpp>
 #if UBIT_WITH_GL
 
 # include <ubit/usubwin.hpp>
 # include <ubit/ugl.hpp>
+
 namespace ubit {
   
   /** A widget for rendering OpenGL graphics.
@@ -29,17 +38,17 @@ namespace ubit {
    *   the first time it is shown. If a GLvisual has already been created (by 
    *   another widget or any other mean) it is used by this widget.
    * - the depth (the "bpp") of the GLvisual is the depth that is used for 
-   *   displaying the widgets of the UAppli. It can be set by calling: 
-   *   UAppli::conf.setBpp(int) *before* the UAppli instance is created
-   * - the other widgets of the UAppli can't be rendered by using OpenGL if
-   *   UGlcanvas is used (hence UAppli::conf.useGLRender() won't work properly)
+   *   displaying the widgets of the Application. It can be set by calling: 
+   *   Application::conf.setBpp(int) *before* the Application instance is created
+   * - the other widgets of the Application can't be rendered by using OpenGL if
+   *   UGlcanvas is used (hence Application::conf.useGLRender() won't work properly)
    *
    */
   class UGlcanvas : public USubwin {
   public:
     UCLASS(UGlcanvas)
         
-    UGlcanvas(UArgs = UArgs::none);
+    UGlcanvas(Args = Args::none);
     virtual ~UGlcanvas();
     
     //void shareContextResources(UGlcontext* = DEFAULT_GC);
@@ -48,7 +57,7 @@ namespace ubit {
      * - the resources of the GL context of this canvas will be shared with those
      *   of the given argument if it encapsulates a GL context.
      * - the default argument DEFAULT_GC indicates that the ressources will be shared
-     *   with those of the default GC of the application (@see UDisp::getDefaultGC()).
+     *   with those of the default GC of the application (@see Display::getDefaultGC()).
      *   This will have no effect if the application was not launched in GL mode
      */
     
@@ -109,7 +118,7 @@ namespace ubit {
     //UGlcontext *glcontext, *shared_res_ctx;
   };
   
-  inline UGlcanvas& uglcanvas(UArgs a = UArgs::none) {return *new UGlcanvas(a);}
+  inline UGlcanvas& uglcanvas(Args a = Args::none) {return *new UGlcanvas(a);}
   ///< shortcut function that creates a new UGlcanvas.
   
 }

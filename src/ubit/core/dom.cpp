@@ -1,6 +1,5 @@
-/************************************************************************
- *
- *  udom.cpp: XML DOM Nodes
+/*
+ *  dom.cpp: XML DOM Nodes
  *  Ubit GUI Toolkit - Version 6.0
  *  (C) 2008 | Eric Lecolinet | ENST Paris | www.enst.fr/~elc/ubit
  *
@@ -23,34 +22,34 @@
 #include <ubit/uxmlgrammar.hpp>
 #include <ubit/uxmlparser.hpp>
 #include <ubit/uhtml.hpp>
-#include <ubit/ucss.hpp>   // pour UCssAttachment
+#include <ubit/ucss.hpp>   // pour CssAttachment
 using namespace std;
 namespace ubit {
 
 
-const UStr& UComment::getNodeName() const 
-{static UStr nn("#comment"); return nn;}
+const String& Comment::getNodeName() const 
+{static String nn("#comment"); return nn;}
 
-const UStr& UCDATASection::getNodeName() const 
-{static UStr nn("#cdata-section"); return nn;}
+const String& CDATASection::getNodeName() const 
+{static String nn("#cdata-section"); return nn;}
 
-const UStr& UXmlDocument::getNodeName() const 
-{static UStr nn("#document"); return nn;}
+const String& XmlDocument::getNodeName() const 
+{static String nn("#document"); return nn;}
 
 // NB: theoriquement ca devrait pas etre la mais ce n'est pas tres grave
-bool UImgAttachment::isLoaded() const {
+bool ImageAttachment::isLoaded() const {
   return ima->isLoaded();
 }
 
-int UImgAttachment::load(UDoc*) {
+int ImageAttachment::load(Document*) {
   return ima->loadNow();  // always reloads the file
 }
 
-int UCssAttachment::load(UDoc*) {
+int CssAttachment::load(Document*) {
   if (!doc || url.empty()) return 0;
-  UStr path; 
+  String path; 
   doc->makePath(path, url);
-  UStr style;
+  String style;
   stat = style.read(path);
   //cerr << "link stylesheet: " << stat << " pathname " << " " << path << endl;
   if (stat > 0) {
@@ -60,48 +59,46 @@ int UCssAttachment::load(UDoc*) {
   return stat;
 }
 
-/* ==================================================== [(C)Elc] ======= */
 
-//UXmlDocType::UXmlDocType()
+//XmlDocType::XmlDocType()
 //: name(null), public_id(null), system_id(null) {}
 
-UXmlDocType::UXmlDocType(const UStr& _name, const UStr& _public_id,
-                         const UStr& _system_id)
+XmlDocType::XmlDocType(const String& _name, const String& _public_id,
+                         const String& _system_id)
 : name(ustr(_name)), public_id(ustr(_public_id)), system_id(ustr(_system_id)) {
 }
 
-UXmlDocType::~UXmlDocType() {}
+XmlDocType::~XmlDocType() {}
 
-/* ==================================================== ======== ======= */
 
-UXmlDocument::UXmlDocument() : UDoc() {
+XmlDocument::XmlDocument() : Document() {
   constructs();
 }
 
-UXmlDocument::UXmlDocument(const UStr& _pathname) : UDoc(_pathname) {
+XmlDocument::XmlDocument(const String& _pathname) : Document(_pathname) {
   constructs();
 }
 
-void UXmlDocument::constructs() {
+void XmlDocument::constructs() {
   doc_type = null;
-  grammars = new UXmlGrammars;
+  grammars = new XmlGrammars;
   // c'est la grammaire par defaut pour les elements inconnus
   // elle est partagee, ce qui peut etre genant si sa taille devient grande
   // mais ceci permet que les UXmlElements pointent toujours sur des
   // classes qui continuent d'exister meme si les XmlDox correspondants
   // on ete detruits
   // ce mecanisme sera peut-etre a revoir ulterieurement....
-  addGrammar(UXmlGrammar::getSharedUndefGrammar());
+  addGrammar(XmlGrammar::getSharedUndefGrammar());
   
   // doit etre fait apres addGrammar() sinon ca plantera
   doc_elem = createElement("DocumentElement");  
   add(doc_elem);
-  xml_version = new UStr();
-  xml_encoding = new UStr("1.0");
+  xml_version = new String();
+  xml_encoding = new String("1.0");
   xml_standalone = true;
 }
 
-UXmlDocument::~UXmlDocument() {
+XmlDocument::~XmlDocument() {
   delete doc_elem;  // faudrait un uptr
   
   // NB: detruit le handle, pas les grammaires (pour des raisons de perfs
@@ -113,42 +110,41 @@ UXmlDocument::~UXmlDocument() {
 
 
 
-void UXmlDocument::addGrammar(const UXmlGrammar& g) {
+void XmlDocument::addGrammar(const XmlGrammar& g) {
   grammars->addGrammar(g);
 }
 
-/* ==================================================== [(C)Elc] ======= */
 
-UXmlCreator::UXmlCreator() {
+XmlCreator::XmlCreator() {
   load_objects = true;
   keep_comments = false;
   permissive = false;
   collapse_spaces = false;
 }
 
-UHtmlCreator::UHtmlCreator() {
+HtmlCreator::HtmlCreator() {
   permissive = true;
   collapse_spaces = true;
 }
 
-UDoc* UXmlCreator::create(UDocSource& so) {
-  UXmlDocument* doc = null;
+Document* XmlCreator::create(DocumentSource& so) {
+  XmlDocument* doc = null;
 
-  //UXmlParser parser;   // ATT !!!
-  UHtmlParser parser; 
+  //XmlParser parser;   // ATT !!!
+  HtmlParser parser; 
   parser.setPermissive(permissive);
   parser.setCollapseSpaces(collapse_spaces);
   
-  if (so.from == UDocSource::PATHNAME) {
+  if (so.from == DocumentSource::PATHNAME) {
     doc = parser.read(*so.fullpath/*, so.errors*/);
     so.stat = parser.getStatus();
   }
-  else if (so.from == UDocSource::BUFFER) {
+  else if (so.from == DocumentSource::BUFFER) {
     doc = parser.parse(*so.path, so.buffer ? *so.buffer : ""/*, so.errors*/);
     so.stat = parser.getStatus();
   }
-  else if (so.from == UDocSource::SCRATCH) {
-    doc = new UXmlDocument(*so.path);
+  else if (so.from == DocumentSource::SCRATCH) {
+    doc = new XmlDocument(*so.path);
     so.stat = 1;
   }
   else {
@@ -159,49 +155,48 @@ UDoc* UXmlCreator::create(UDocSource& so) {
   return doc;
 }
 
-/* ==================================================== [(C)Elc] ======= */
 
-UStr* UXmlDocument::createTextNode(const UStr& _data) {
-  return new UStr(_data);
+String* XmlDocument::createTextNode(const String& _data) {
+  return new String(_data);
 }
 
-UComment* UXmlDocument::createComment(const UStr& _data) {
-  return new UComment(_data); 
+Comment* XmlDocument::createComment(const String& _data) {
+  return new Comment(_data); 
 }
 
-UComment::UComment(const UStr& _data) 
-: data(new UStr(_data)) {}
+Comment::Comment(const String& _data) 
+: data(new String(_data)) {}
 
 
-UCDATASection* UXmlDocument::createCDATASection(const UStr& _data) {
-  return new UCDATASection(_data); 
+CDATASection* XmlDocument::createCDATASection(const String& _data) {
+  return new CDATASection(_data); 
 }
 
-UCDATASection::UCDATASection(const UStr& _data) 
-: data(new UStr(_data)) {}
+CDATASection::CDATASection(const String& _data) 
+: data(new String(_data)) {}
 
 // ==================================================== ======== 
 
-UProcessingInstruction*
-UXmlDocument::createProcessingInstruction(const UStr& _target, const UStr& _data) {
-  return new UProcessingInstruction(_target, _data); 
+ProcessingInstruction*
+XmlDocument::createProcessingInstruction(const String& _target, const String& _data) {
+  return new ProcessingInstruction(_target, _data); 
 }
 
-//UProcessingInstruction::UProcessingInstruction()
+//ProcessingInstruction::ProcessingInstruction()
 //: target(null), data(null) {}
 
-UProcessingInstruction::UProcessingInstruction(const UStr& _target, 
-                                               const UStr& _data)
+ProcessingInstruction::ProcessingInstruction(const String& _target, 
+                                               const String& _data)
 : target(ustr(_target)), data(ustr(_data)) {}
 
 // ==================================================== ======== 
 
-UAttr* UXmlDocument::createAttribute(const UStr& name) {
+Attribute* XmlDocument::createAttribute(const String& name) {
   // search if UAttributeClass in grammar
-  const UClass* c = grammars->getAttrClass(name);
+  const Class* c = grammars->getAttrClass(name);
   
   // create+add default AttrClass otherwise:
-  if (!c) c = UXmlGrammar::addUndefAttrClass(name); 
+  if (!c) c = XmlGrammar::addUndefAttrClass(name); 
   
   // @@@ cast necessaire a cause pbm de refs croisees dans uclass.hpp
   return c->newInstance()->toAttr();
@@ -209,21 +204,21 @@ UAttr* UXmlDocument::createAttribute(const UStr& name) {
 
 // ==================================================== ======== 
 
-UElem* UXmlDocument::createElement(const UStr& name) {
+Element* XmlDocument::createElement(const String& name) {
   // search if UElemClass in grammar
-  const UClass* c = grammars->getElementClass(name);
+  const Class* c = grammars->getElementClass(name);
   
   // create+add default ElemClass otherwise:
-  if (!c) c = UXmlGrammar::addUndefElementClass(name);
+  if (!c) c = XmlGrammar::addUndefElementClass(name);
   
   // @@@ cast necessaire a cause pbm de refs croisees dans uclass.hpp
   return c->newInstance()->toElem();
 }
 
-void UXmlDocument::initElement(UElem* e) {
-  const UStr& nname = e->getNodeName();
+void XmlDocument::initElement(Element* e) {
+  const String& nname = e->getNodeName();
   //if (nname) {
-    const UClass* c = getStyleSheet().findClass(nname);
+    const Class* c = getStyleSheet().findClass(nname);
     //il faut le mettre en premier!!!
     // cette fonctionnalite n'est pas standard !!!
     if (c) e->addImpl1(c->getAttributes(), e->abegin(), e->attributes());  // reafficher ????
@@ -231,19 +226,18 @@ void UXmlDocument::initElement(UElem* e) {
   e->initNode(this);
 }
 
-/* ==================================================== ======== ======= */
 // probleme: faire en sorte que les proplists soient dans le bon ordre et
 // qu'elles soient avant les proplist des styles attributes qui doivent 
 // etre plus loin dans la liste pour l'emporter
 
 // NB: ca ne serait pas mal de concatener pour accelerer le rendu
 
-static void _addProp(UElem* e, UAttr* prop) {
-  UChildIter i = e->abegin();
+static void _addProp(Element* e, Attribute* prop) {
+  ChildIter i = e->abegin();
   for ( ; i != e->aend(); ++i) {
     // !! vraiment un hack !!
     //if (dynamic_cast<UProps*>(*i) && !dynamic_cast<UXmlAttr*>(*i)) k++;
-    if (dynamic_cast<UAttrList*>(*i) && (*i)->getNodeName().compare("style")!=0)
+    if (dynamic_cast<AttributeList*>(*i) && (*i)->getNodeName().compare("style")!=0)
       ;
     else break;
   }
@@ -255,19 +249,19 @@ static void _addProp(UElem* e, UAttr* prop) {
 
 // ==================================================== ======== 
 
-void UXmlDocument::setClassStyle(UElem* e, const UStr& name, const UStr& value) {
+void XmlDocument::setClassStyle(Element* e, const String& name, const String& value) {
   setClassIdStyle(e, name, value);
 }
 
-void UXmlDocument::setIdStyle(UElem* e, const UStr& name, const UStr& value) {
+void XmlDocument::setIdStyle(Element* e, const String& name, const String& value) {
   setClassIdStyle(e, name, value);
 }
 
-void UXmlDocument::setClassIdStyle(UElem* e, const UStr& att_name, const UStr& att_value) 
+void XmlDocument::setClassIdStyle(Element* e, const String& att_name, const String& att_value) 
 {
   if (att_name.empty() /*|| !att_value*/) return;
   char fullname[1000];  // ATT MAX LEN !!
-  const UClass* id = null;
+  const Class* id = null;
   
   // NB: generalisable a tous les attributs
   
@@ -294,24 +288,23 @@ void UXmlDocument::setClassIdStyle(UElem* e, const UStr& att_name, const UStr& a
   //  <<" : "<< *att_name <<"="<< *att_value <<endl;
 }
 
-/* ==================================================== ======== ======= */
 
-const UDocAttachments* UXmlDocument::getAttachments() const {
+const DocumentAttachments* XmlDocument::getAttachments() const {
   return &attachments;
 }
 
-void UXmlDocument::addAttachment(UDocAttachment* a) {
+void XmlDocument::addAttachment(DocumentAttachment* a) {
   if (a) attachments.push_back(a);
 }
 
-bool UXmlDocument::loadAttachment(UDocAttachment* a, bool reload) {
+bool XmlDocument::loadAttachment(DocumentAttachment* a, bool reload) {
   if (reload || !a->isLoaded()) return (a->load(this) > 0);
   else return true;
 }
 
-int UXmlDocument::loadAttachments(bool reload) {
+int XmlDocument::loadAttachments(bool reload) {
   int count = 0;
-  for (UDocAttachments::iterator k = attachments.begin(); 
+  for (DocumentAttachments::iterator k = attachments.begin(); 
        k != attachments.end();
        k++) {
     if (*k && (reload || !(*k)->isLoaded())) {
@@ -321,23 +314,22 @@ int UXmlDocument::loadAttachments(bool reload) {
   return count;
 }
 
-/* ==================================================== [(C)Elc] ======= */
 
-static void _print(ostream* out, UStr* buf, UNode* node) {
+static void _print(ostream* out, String* buf, Node* node) {
   if (!node) return;
-  UElem* e = null;
-  UStr* text = null;
+  Element* e = null;
+  String* text = null;
 
-  if ((e = dynamic_cast<UElem*>(node))) {
+  if ((e = dynamic_cast<Element*>(node))) {
     // print begin tag (and node name)
     if (out) *out << "<" << e->getNodeName();
     if (buf) *buf &= "<" & e->getNodeName();
 
     // print attributes (if any)
-    for (UChildIter ia = e->abegin(); ia != e->aend(); ++ia) {
-      UAttr* a = dynamic_cast<UAttr*>(*ia);
+    for (ChildIter ia = e->abegin(); ia != e->aend(); ++ia) {
+      Attribute* a = dynamic_cast<Attribute*>(*ia);
       if (a /* && a->getValue()*/) {    // !! hack a revoir !!
-        UStr val;
+        String val;
         a->getValue(val);
         if (out) *out << " " << a->getName() << "=\"" << val << "\"";
         if (buf) *buf &= " " & a->getName() & "=\"" & val & "\"";
@@ -347,7 +339,7 @@ static void _print(ostream* out, UStr* buf, UNode* node) {
     if (buf) *buf &= ">\n";
 
     // print child nodes
-    for (UChildIter ic = e->cbegin(); ic != e->cend(); ++ic)
+    for (ChildIter ic = e->cbegin(); ic != e->cend(); ++ic)
       _print(out, buf, *ic);
 
     // print end tag
@@ -355,25 +347,24 @@ static void _print(ostream* out, UStr* buf, UNode* node) {
     if (buf) *buf &= "</" & e->getNodeName() & ">\n";
   }
 
-  // c'est faux pour les subclasses de UStr !!!!!!!!
-  else if ((text = dynamic_cast<UStr*>(node)) /*&& text->getData()*/) {
+  // c'est faux pour les subclasses de String !!!!!!!!
+  else if ((text = dynamic_cast<String*>(node)) /*&& text->getData()*/) {
     if (out) *out << text->getData();
     if (buf) *buf &= text->getData();
   }
 }
 
-/* ==================================================== ======== ======= */
 
-void UXmlDocument::print(std::ostream& fout) {
-  UElem* e = getDocumentElement();
+void XmlDocument::print(std::ostream& fout) {
+  Element* e = getDocumentElement();
   if (e) {
     _print(&fout, null, e);
     fout << endl << endl;
   }
 }
 
-void UXmlDocument::print(UStr& buf) {
-  UElem* e = getDocumentElement();
+void XmlDocument::print(String& buf) {
+  Element* e = getDocumentElement();
   if (e) {
     _print(null, &buf, e);
     buf &= "\n";

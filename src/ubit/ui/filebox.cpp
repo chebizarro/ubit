@@ -1,6 +1,5 @@
-/************************************************************************
- *
- *  ufilebox.cpp: File Box Element
+/*
+ *  filebox.cpp: File Box Element
  *  Ubit GUI Toolkit - Version 6.0
  *  (C) 2008 | Eric Lecolinet | ENST Paris | www.enst.fr/~elc/ubit
  *
@@ -30,18 +29,18 @@
 using namespace std;
 namespace ubit {
 
-UFilebox& ufilebox(const UArgs& a) {return *new UFilebox(a);}
+UFilebox& ufilebox(const Args& a) {return *new UFilebox(a);}
 
 UFilebox::~UFilebox() {
   // objects are implicitely deleted as they are filebox children
 }
 
-UFilebox::UFilebox(const UArgs& args) :
-  fname(new UStr), fdir2(new UStr), ffilter(new UStr), 
-  fpath(new UStr), /*viewport(null), */ autoclose(true) 
+UFilebox::UFilebox(const Args& args) :
+  fname(new String), fdir2(new String), ffilter(new String), 
+  fpath(new String), /*viewport(null), */ autoclose(true) 
 {
-  static UBorder& btn_border = 
-  *new URoundBorder(+UBorder::ETCHED, UColor::darkgrey, UColor::white,2,2,10,10);
+  static Border& btn_border = 
+  *new URoundBorder(+Border::ETCHED, Color::darkgrey, Color::white,2,2,10,10);
     
   fspec = "./";  // => scan du directory courant
   *ffilter = "*.*";
@@ -56,10 +55,10 @@ UFilebox::UFilebox(const UArgs& args) :
                                + ucall(this, &UFilebox::rescan));
   show_hidden_files->setSelectable(true);
 
-  static UStr* goto_parent = new UStr("..");
-  static UStr* goto_default = new UStr("./");
+  static String* goto_parent = new String("..");
+  static String* goto_default = new String("./");
 
-  UBox& tbar = uhbox
+  Box& tbar = uhbox
     (uhspacing(1) + upadding(3,3) 
      + uleft()
      + uitem(UPix::bigUp + ucall(this, goto_parent, &UFilebox::changeDirImpl))
@@ -85,10 +84,10 @@ UFilebox::UFilebox(const UArgs& args) :
                         + ucall(this, &UFilebox::okBehavior));
   UButton& cancel = ubutton(btn_border + "Cancel" 
                             + ucall(this, &UFilebox::cancelBehavior));
-  UBox& controls = 
+  Box& controls = 
   uhbox(upadding(0, 5)
         + uleft()
-        + uvbox(UValign::center + UFont::bold
+        + uvbox(Valign::center + UFont::bold
                 + ulabel("File Name") + ulabel("Filters"))
         + " " 
         + uhflex()
@@ -101,11 +100,11 @@ UFilebox::UFilebox(const UArgs& args) :
         + uvbox(UFont::bold + ok + cancel)
         );
   
-  mainbox = new UBox();
+  mainbox = new Box();
   mainbox->addAttr(uhflex() + uvflex());
   
   addAttr(UOrient::vertical + uvspacing(5) + upadding(4,4)
-          + new URoundBorder(UBorder::LINE,UColor::black,UColor::white,2,2,15,15));
+          + new URoundBorder(Border::LINE,Color::black,Color::white,2,2,15,15));
   
   add(utop()
       + args  //pbm place des args!
@@ -117,7 +116,6 @@ UFilebox::UFilebox(const UArgs& args) :
   rescan();   //devrait etre a l'apparition du dialog
 }
 
-/* ==================================================== ====== ======= */
 
 void UFilebox::showHiddenFiles(bool st) {
   show_hidden_files->setSelected(st);
@@ -165,11 +163,10 @@ static int separ(char *s_dir, char **s_remain) {
   return l_dir;
 }
 
-/* ==================================================== ======== ======= */
 // new_path is relative except if starting by a /
 // cette fonction reinitialise fspec sauf si arg null ou == fspec
 
-void UFilebox::changeDirImpl(UStr *argpath_str) {  
+void UFilebox::changeDirImpl(String *argpath_str) {  
   const char* argpath = argpath_str ? argpath_str->c_str() : null;
 
   if (argpath && argpath[0] == '/') {      // new_path is absolute
@@ -177,7 +174,7 @@ void UFilebox::changeDirImpl(UStr *argpath_str) {
   }
   
   else {			// new_path is relative
-    UStr newpath = fspec;
+    String newpath = fspec;
     if (newpath.empty()) newpath = "/";
 
     if (!argpath || !argpath[0])
@@ -195,7 +192,7 @@ void UFilebox::changeDirImpl(UStr *argpath_str) {
       }
       
       // garder le /
-      if (ix >= 0) newpath.remove(ix+1, UStr::npos);
+      if (ix >= 0) newpath.remove(ix+1, String::npos);
       else newpath = "/";    // racine
     }
 
@@ -214,7 +211,6 @@ void UFilebox::changeDirImpl(UStr *argpath_str) {
   }
 }
 
-/* ==================================================== ======== ======= */
 
 void UFilebox::rescan() {
   bool want_file_attributes = show_list->isSelected();
@@ -222,10 +218,10 @@ void UFilebox::rescan() {
   bool want_normalfiles = true;
   
   // creer le nouveau vieport (on detruira l'ancien a la fin)
-  UBox* viewport = &uhbox(upadding(3,3) + uhspacing(3)+ uvspacing(3));
+  Box* viewport = &uhbox(upadding(3,3) + uhspacing(3)+ uvspacing(3));
   
-  UStr dirpath = fspec.dirname(true); 
-  UStr prefix  = fspec.basename(true);
+  String dirpath = fspec.dirname(true); 
+  String prefix  = fspec.basename(true);
   UFileDir dir;
   dir.read(dirpath, prefix, *ffilter, want_hidden_files);
   
@@ -237,7 +233,7 @@ void UFilebox::rescan() {
   const UFileInfos& entries = dir.getFileInfos(); 
 
   if (want_file_attributes) {     // vertical list with attributes
-    UBox& listing = uvbox(utop() + upadding(3,3) + uhspacing(3) + uvspacing(1));
+    Box& listing = uvbox(utop() + upadding(3,3) + uhspacing(3) + uvspacing(1));
     viewport->add(listing);
     int n = 0;
     static UPadding& pad = upadding(10,UIGNORE);
@@ -246,8 +242,8 @@ void UFilebox::rescan() {
        const UFileInfo& e = *(*pe);
       
       if (e.isDir()) {	// cas directory
-        UArgs call = ucall(this, e.pname(), &UFilebox::changeDirImpl);
-        UStr* infos = new UStr();
+        Args call = ucall(this, e.pname(), &UFilebox::changeDirImpl);
+        String* infos = new String();
         e.getInfoString(*infos);
         listing.add(uitem(new_sel + call + pad
                           + e.getMiniIconImage() 
@@ -263,9 +259,9 @@ void UFilebox::rescan() {
         // - coherent si selection changee par programme (typiquement via
         //   le USelect) et non par l'utilisateur
         
-        UArgs call = UOn::select / ucall(this, e.pname(), &UFilebox::selectBehavior)
+        Args call = UOn::select / ucall(this, e.pname(), &UFilebox::selectBehavior)
                      + UOn::doubleClick / ucall(this, &UFilebox::okBehavior);
-        UStr* infos = new UStr();
+        String* infos = new String();
         e.getInfoString(*infos);
         listing.add(uitem(new_sel + call + pad
                           + e.getMiniIconImage() 
@@ -278,7 +274,7 @@ void UFilebox::rescan() {
   } //endif(want_attributes)
   
   else {   // no attributes -> matrix
-    UBox* col = &uvbox(utop());  //premiere colonne verticale du viewport
+    Box* col = &uvbox(utop());  //premiere colonne verticale du viewport
     viewport->add(*col);
     int n = 0;
     
@@ -309,7 +305,7 @@ void UFilebox::rescan() {
       }
       
       // nouvelle colonne verticale
-      if (!want_file_attributes && n % UAppli::conf.filebox_line_count == 0) {
+      if (!want_file_attributes && n % Application::conf.filebox_line_count == 0) {
         col = &uvbox(utop());
         viewport->add(*col /*, false*/);
       }
@@ -319,8 +315,8 @@ void UFilebox::rescan() {
   UScrollpane* scrollpane = 
   want_file_attributes ? new UScrollpane(true,false) : new UScrollpane(false,true);
  
-  scrollpane->addAttr(usize(UAppli::conf.filebox_width, UAppli::conf.filebox_height)
-                      + UBackground::white);
+  scrollpane->addAttr(usize(Application::conf.filebox_width, Application::conf.filebox_height)
+                      + Background::white);
   scrollpane->add(viewport);
   
   bool auto_up = mainbox->isAutoUpdate();
@@ -330,12 +326,11 @@ void UFilebox::rescan() {
   mainbox->add(scrollpane);
 }
 
-/* ==================================================== ======== ======= */
 
-void UFilebox::selectBehavior(UEvent& _e, UStr* filename) {
+void UFilebox::selectBehavior(Event& _e, String* filename) {
   *fname = *filename;
   *fpath = *fdir2 & *fname;
-  UEvent e2(UOn::change, this, _e.getSource());    //UElemEvent
+  Event e2(UOn::change, this, _e.getSource());    //UElemEvent
   fire(e2);
 }
 
@@ -345,7 +340,7 @@ void UFilebox::okBehavior(UInputEvent& e) {
     closeWin(e, 1);   // returns 1 to lock()
     e.getFlow()->closeAllMenus();
   }
-  UEvent e2(UOn::action, this, e.getSource());    //UElemEvent
+  Event e2(UOn::action, this, e.getSource());    //UElemEvent
   fire(e2);
 }
 
@@ -354,25 +349,24 @@ void UFilebox::cancelBehavior(UInputEvent& e) {
   e.getFlow()->closeAllMenus();
 }
 
-/* ==================================================== ======== ======= */
 
-void UFilebox::setName(const UStr& s) {
+void UFilebox::setName(const String& s) {
   *fname = s;  
   *fpath = *fdir2 & *fname;
 }
 
-void UFilebox::setDir(const UStr& s) {
+void UFilebox::setDir(const String& s) {
   fspec = s;
   // rajouter un / a la fin si necessaire
   if (fspec.at(-1) != '/') fspec.append("/");
   rescan();
 }
 
-void UFilebox::setDirImpl( UStr* s) {
+void UFilebox::setDirImpl( String* s) {
   if (s) setDir(*s);
 }
 
-void UFilebox::setFilter(const UStr& s) {
+void UFilebox::setFilter(const String& s) {
   *ffilter = s;
 }
 

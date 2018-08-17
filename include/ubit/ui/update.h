@@ -1,28 +1,38 @@
-/* ==================================================== ======== ======= *
- *
+/*
  *  update.hpp : graphics update
- *  Ubit GUI Toolkit - Version 6
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE : 
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE 
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. 
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU 
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION; 
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
+
 
 #ifndef _update_hpp_
 #define	_update_hpp_ 1
+
 #include <ubit/udefs.hpp>
+
 namespace ubit {
 
-/** specifies how to update UElem, UBox, UWin objects and subclasses.
- * See also: UElem::update(), UBox::update(), UWin::update().
+/** specifies how to update Element, Box, Window objects and subclasses.
+ * See also: Element::update(), Box::update(), Window::update().
  */
-class UUpdate {
+class Update {
 public:
   enum {
     PAINT = 1<<0,
@@ -44,31 +54,31 @@ public:
     ADJUST_WIN_SIZE = 1<<8
   };
   
-  static const UUpdate paint;
-  ///< paint only: prefined constant for UUpdate(PAINT);
+  static const Update paint;
+  ///< paint only: prefined constant for Update(PAINT);
   
-  static const UUpdate layoutAndPaint;
-  ///< layout then paint: prefined constant for UUpdate(LAYOUT|PAINT);
+  static const Update layoutAndPaint;
+  ///< layout then paint: prefined constant for Update(LAYOUT|PAINT);
   
-  ~UUpdate();
+  ~Update();
 
-  UUpdate(unsigned int mode_mask = LAYOUT|PAINT);  
-  /**< creates an object that specifies how to update UElem(s) and subclasses.
-    * This object is given as an argument to UElem::update(), UBox::update(),
-    * UWin::update()
-    * 'mode_mask' is a OREd combination of the constants defined in the UUpdate enum
+  Update(unsigned int mode_mask = LAYOUT|PAINT);  
+  /**< creates an object that specifies how to update Element(s) and subclasses.
+    * This object is given as an argument to Element::update(), Box::update(),
+    * Window::update()
+    * 'mode_mask' is a OREd combination of the constants defined in the Update enum
     * example:
     * <pre>
     *     ;
-    *     UBox* box = ...;
-    *     box->update(UUpdate upd(UUpdate::LAYOUT | UUpdate::PAINT));
+    *     Box* box = ...;
+    *     box->update(Update upd(Update::LAYOUT | Update::PAINT));
     * </pre>
     */
     
-  UUpdate(const UUpdate&);
-  UUpdate& operator=(const UUpdate&);
+  Update(const Update&);
+  Update& operator=(const Update&);
   
-  bool operator==(const UUpdate&);
+  bool operator==(const Update&);
   
   void addModes(unsigned int m) {modes |= m;}
 
@@ -78,10 +88,10 @@ public:
   bool isHiddenObjectsMode() const {return (modes & HIDDEN_OBJECTS) != 0;}
   ///< if true, hidden objects (which are normally ignored) will be updated.
 
-  void setPaintData(const UData*);
+  void setPaintData(const Data*);
   ///< [impl] set the data to be painted.
   
-  void setPaintStr(const UStr*, int strpos1, int strpos2);
+  void setPaintStr(const String*, int strpos1, int strpos2);
   ///< [impl] set the string to be painted.
   
   void setMove(float delta_x, float delta_y, bool x_percent, bool y_percent);
@@ -96,10 +106,10 @@ public:
   };
   
 private:
-  friend class UElem;
-  friend class UBox;
-  friend class UWin;
-  friend class UView;
+  friend class Element;
+  friend class Box;
+  friend class Window;
+  friend class View;
   friend class UAppliImpl;
   friend class UpdateRequest;
   long modes;
@@ -111,13 +121,13 @@ public:  // a cause d'un bug de CC
   };
   
   struct StrData {
-    const UData* data;
-    mutable URect* region;  // mutable impose par UBox::doUpdate()
+    const Data* data;
+    mutable Rectangle* region;  // mutable impose par Box::doUpdate()
     int pos1, pos2;
   };
   
 private:
-  // IMPL NOTE: il ne DOIT pas y avoir de subclasses car UUpdate est copie
+  // IMPL NOTE: il ne DOIT pas y avoir de subclasses car Update est copie
   // directement dans UpdateRequest (voir uappliImpl.hpp)  
   union /*UpdateImpl*/ {
     StrData sd;

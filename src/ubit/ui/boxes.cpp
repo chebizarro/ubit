@@ -1,18 +1,26 @@
-/************************************************************************
- *
- *  uboxes.cpp : misc containers.
- *  Ubit GUI Toolkit - Version 6
+/*
+ *  boxes.cpp : misc containers.
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE : 
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE 
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. 
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU 
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION; 
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
+
 
 #include <ubit/ubit_features.h>
 #include <iostream>
@@ -34,26 +42,26 @@ NAMESPACE_UBIT
 
 // ==================================================== [Ubit Toolkit] =========
 /* UVbox = vertical Box.
- *  Geometry: see class UBox for details.
+ *  Geometry: see class Box for details.
  *
-class UVbox: public UBox {
+class UVbox: public Box {
 public:
   UCLASS("uvbox", UVbox, new UVbox)
   
-  UVbox(UArgs args = UArgs::none) : UBox(args) {}
+  UVbox(Args args = Args::none) : Box(args) {}
   ///< creates a new vertical box; @see also shortcut: uvbox().
   
   static UStyle* createStyle();
 };
 
  * UHbox = horizontal Box.
- *  Geometry: see class UBox for details.
+ *  Geometry: see class Box for details.
  *
-class UHbox: public UBox {
+class UHbox: public Box {
 public:
   UCLASS("uhbox", UHbox, new UHbox)
   
-  UHbox(UArgs args = UArgs::none) : UBox(args) {}
+  UHbox(Args args = Args::none) : Box(args) {}
   ///< creates a new horizontal box; @see also shortcut: uhbox().
   
   static UStyle* createStyle();
@@ -63,8 +71,8 @@ UStyle* UHbox::createStyle() {
   UStyle* style = new UStyle();
   style->textSeparator  =  &ustr(" ");
   style->orient   = UOrient::HORIZONTAL;
-  style->halign   = UHalign::LEFT;
-  style->valign   = UValign::FLEX;
+  style->halign   = Halign::LEFT;
+  style->valign   = Valign::FLEX;
   style->hspacing = 1;
   style->vspacing = 1;
   style->local.padding.set(0,0);
@@ -75,8 +83,8 @@ UStyle* UVbox::createStyle() {
   UStyle* style = new UStyle();
   style->textSeparator  = &ustr("\n");
   style->orient   = UOrient::VERTICAL;
-  style->halign   = UHalign::FLEX;
-  style->valign   = UValign::TOP;
+  style->halign   = Halign::FLEX;
+  style->valign   = Valign::TOP;
   style->hspacing = 1;
   style->vspacing = 1;
   //style->local.vmargin  = 0;  style->local.hmargin  = 0;
@@ -90,12 +98,12 @@ UStyle* UBar::createStyle() {
   UStyle* s = new UStyle;
   s->textSeparator = &ustr("\t");
   s->orient = UOrient::HORIZONTAL;
-  s->halign = UHalign::LEFT;
-  s->valign  = UValign::FLEX;
+  s->halign = Halign::LEFT;
+  s->valign  = Valign::FLEX;
   s->hspacing = 4;
   s->vspacing = 5;
   s->local.padding.set(5,2);
-  s->local.border = &UBorder::shadowOut;
+  s->local.border = &Border::shadowOut;
   return s;
 }
 
@@ -103,12 +111,12 @@ UStyle* UStatusbar::createStyle() {
   UStyle* s = new UStyle();
   s->textSeparator  = &ustr("\t");
   s->orient = UOrient::HORIZONTAL;
-  s->halign = UHalign::LEFT;
-  s->valign  = UValign::FLEX;
+  s->halign = Halign::LEFT;
+  s->valign  = Valign::FLEX;
   s->hspacing = 2;
   s->vspacing = 2;
   s->local.padding.set(6,2); //tb,lr
-  s->local.border = &UBorder::shadowIn;
+  s->local.border = &Border::shadowIn;
   return s;
 }
 
@@ -117,10 +125,10 @@ UStyle* UStatusbar::createStyle() {
 UStyle* UFlowbox::createStyle() {
   UStyle& s = *new UStyle();
   s.viewStyle = &UFlowView::style;
-  s.textSeparator = new UStr("\n");
+  s.textSeparator = new String("\n");
   s.orient = UOrient::HORIZONTAL;
-  s.halign = UHalign::FLEX;
-  s.valign = UValign::FLEX;
+  s.halign = Halign::FLEX;
+  s.valign = Valign::FLEX;
   s.hspacing = 1;
   s.vspacing = 1;
   s.local.padding.set(0,0);
@@ -132,7 +140,7 @@ UStyle* UFlowbox::createStyle() {
   return &s;
 }
 
-UFlowbox::UFlowbox(UArgs a): UBox(a) {
+UFlowbox::UFlowbox(Args a): Box(a) {
   emodes.IS_TEXT_SELECTABLE = true;
 }
 
@@ -142,8 +150,8 @@ UStyle* UCardbox::createStyle() {
   UStyle& s = *new UStyle();
   s.viewStyle = &UPaneView::style;
   s.orient = UOrient::HORIZONTAL;
-  s.halign = UHalign::FLEX;
-  s.valign = UValign::FLEX;
+  s.halign = Halign::FLEX;
+  s.valign = Valign::FLEX;
   s.hspacing = 1;
   s.vspacing = 1;
   s.local.padding.set(0,0);
@@ -154,11 +162,11 @@ UStyle* UCardbox::createStyle() {
   return &s; 
 }
 
-UCardbox::UCardbox(UArgs args) : UBox(args), ptabs(new UListbox()) 
+UCardbox::UCardbox(Args args) : Box(args), ptabs(new UListbox()) 
 {
   ptabs->addAttr(ucall(this, &UCardbox::setSelectedImpl)
                  + UOrient::horizontal + uhflex() + uvflex()
-                 + upadding(0,0) + UBackground::none + UBorder::none);
+                 + upadding(0,0) + Background::none + Border::none);
   setAttr(*new UCompositeBorder(utop() + uhcenter() + *ptabs));
 }
 
@@ -169,8 +177,8 @@ UChoice& UCardbox::choice() {return ptabs->choice();}
 void UCardbox::setSelectedImpl() {
   int index = ptabs->choice().getSelectedIndex();
   int ix = 0;
-  for (UChildIter i = cbegin(); i != cend(); ++i) {
-    UBox* card = dynamic_cast<UBox*>(*i);
+  for (ChildIter i = cbegin(); i != cend(); ++i) {
+    Box* card = dynamic_cast<Box*>(*i);
     if (card) {
       if (ix == index) card->show(true);
       else card->show(false);
@@ -179,46 +187,46 @@ void UCardbox::setSelectedImpl() {
   }
 }
 
-UCardbox& UCardbox::addCard(UBox& card) {
-  addTab(UArgs::none, card);
+UCardbox& UCardbox::addCard(Box& card) {
+  addTab(Args::none, card);
   return *this;
 }
 
-UCardbox& UCardbox::addTab(UArgs title, UBox& card) {
-  if (&title != &UArgs::none) ptabs->add(utabbutton(title));
+UCardbox& UCardbox::addTab(Args title, Box& card) {
+  if (&title != &Args::none) ptabs->add(utabbutton(title));
   else ptabs->add(uitem());  
   add(card);
   setSelectedIndex(-1);
   return *this;
 }
 
-UBox* UCardbox::getCard(int index) const {
+Box* UCardbox::getCard(int index) const {
   int ix = 0;
-  for (UChildIter i = cbegin(); i != cend(); ++i) {
-    UBox* c = dynamic_cast<UBox*>(*i);
+  for (ChildIter i = cbegin(); i != cend(); ++i) {
+    Box* c = dynamic_cast<Box*>(*i);
     if (c && ix == index) return c;
     ix++;
   }
   return null;
 }
 
-int UCardbox::getCardIndex(UBox& card) const {
+int UCardbox::getCardIndex(Box& card) const {
   int ix = 0;
-  for (UChildIter i = cbegin(); i != cend(); ++i) {
-    UBox* c = dynamic_cast<UBox*>(*i);
+  for (ChildIter i = cbegin(); i != cend(); ++i) {
+    Box* c = dynamic_cast<Box*>(*i);
     if (c == &card) return ix;
     ix++;
   }
   return -1;
 }
 
-UBox* UCardbox::getSelectedCard() const {
+Box* UCardbox::getSelectedCard() const {
   int index = ptabs->choice().getSelectedIndex();
   if (index >= 0) return getCard(index);
   return null;
 }
 
-void UCardbox::setSelectedCard(UBox& card) {
+void UCardbox::setSelectedCard(Box& card) {
   int ix = getCardIndex(card);
   if (ix >= 0) setSelectedIndex(ix);
 }
@@ -231,19 +239,19 @@ void UCardbox::setSelectedIndex(int index) {
   ptabs->choice().setSelectedIndex(index);
 }
 
-//UBox* UCardbox::getTab(int index) const {
+//Box* UCardbox::getTab(int index) const {
 //  return ptabs->choice().getSelectableItem(index);
 //}
-//UBox* UCardbox::getSelectedTab() const {
+//Box* UCardbox::getSelectedTab() const {
 //  return ptabs->choice().getSelectedItem();
 //}
 
-//void UCardbox::setSelectedTab(UBox* tab) {
+//void UCardbox::setSelectedTab(Box* tab) {
 //  ptabs->choice().setSelectedItem(tab);
 //}
 /*
  UCardbox& UCardbox::setComboMode(bool cm) {
- UBorder* border = getBorder(true); // true => create border if needed
+ Border* border = getBorder(true); // true => create border if needed
  //cerr <<"border "<<border<<" " <<border->getSubGroup()<<endl;
  
  if (border->getSubGroup()) border->getSubGroup()->removeAll();
@@ -258,7 +266,7 @@ void UCardbox::setSelectedIndex(int index) {
  ptabs->addAttr(uhspacing(0));
  ptabs->addAttr(uhmargin(1));
  ptabs->addAttr(uvmargin(1));
- ptabs->addAttr(UBorder::none);
+ ptabs->addAttr(Border::none);
  ptabs->addAttr(UBgcolor::none);
  ptabs->addAttr(uhflex());
  ptabs->addAttr(uvflex());
@@ -270,7 +278,7 @@ void UCardbox::setSelectedIndex(int index) {
 // ==================================================== [Ubit Toolkit] =========
 // NB: ex: class UDocbox : public UVbox 
 
-UDocbox::UDocbox(UArgs args) {
+UDocbox::UDocbox(Args args) {
   zoom_quantum = 1.166;
   
   ptitlebar = uhbox();
@@ -314,20 +322,20 @@ void UDocbox::iconify(bool state) {
 
 // ==================================================== [Ubit Toolkit] =========
 
-UAlertbox::UAlertbox(UArgs args) {
-  add(UOrient::vertical + UBackground::white + ualpha(0.8)
+UAlertbox::UAlertbox(Args args) {
+  add(UOrient::vertical + Background::white + ualpha(0.8)
       + uhcenter() + uvcenter()
       + UFont::bold + UFont::large
       + args
       + UOn::action / ushow(*this, false)
       
       + uhbox(uscale(1.5) + UFont::xx_large
-              + UPix::ray + UColor::red + " Alert! ")
+              + UPix::ray + Color::red + " Alert! ")
       + " "
       + " "
       + " "
       + uhflex()  // necessaire sinon affiche un mot par ligne!
-      + uflowbox(UFont::x_large + UColor::navy + uhcenter() + message)
+      + uflowbox(UFont::x_large + Color::navy + uhcenter() + message)
       + " "
       + " "
       + " "
@@ -338,25 +346,25 @@ UAlertbox::UAlertbox(UArgs args) {
 }
 
 UStyle* UAlertbox::createStyle() {
-  UStyle*s = UBox::createStyle();
+  UStyle*s = Box::createStyle();
   s->orient = UOrient::VERTICAL;
   return s;
 }
 
-void UAlertbox::showMsg(const UStr& msg) {
+void UAlertbox::showMsg(const String& msg) {
   message.removeAll();
   message.add(ustr(msg));
   update();
-  UBox::show();
+  Box::show();
 }
 
-//void UAlertbox::showMsg(const UStr* msg) {if (msg) showMsg(*msg);}
+//void UAlertbox::showMsg(const String* msg) {if (msg) showMsg(*msg);}
 
 void UAlertbox::showMsg(const char* msg) {
   message.removeAll();
   message.add(ustr(msg));
   update();
-  UBox::show();
+  Box::show();
 }
 
 }

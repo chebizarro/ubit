@@ -1,6 +1,5 @@
-/************************************************************************
- *
- *  uhtml.cpp: HTML parser and renderer
+/*
+ *  html.cpp: HTML parser and renderer
  *  Ubit GUI Toolkit - Version 6.0
  *  (C) 2008 | Eric Lecolinet | ENST Paris | www.enst.fr/~elc/ubit
  *
@@ -26,19 +25,19 @@ namespace ubit {
 
 
 
-UHtmlParser::UHtmlParser() {
-  static const UXmlGrammar& html_grammar = *new UHtmlGrammar();
+HtmlParser::HtmlParser() {
+  static const XmlGrammar& html_grammar = *new HtmlGrammar();
   addGrammar(html_grammar);
   setPermissive(true);
   setCollapseSpaces(true);
 }
 
-void UHtmlAttribute::setValueImpl(uptr<UStr>& pvalue, const UStr& s) {
-  if (pvalue) *pvalue = s; else pvalue = new UStr(s);
+void HtmlAttribute::setValueImpl(uptr<String>& pvalue, const String& s) {
+  if (pvalue) *pvalue = s; else pvalue = new String(s);
   pvalue->trim();  // !! attention: ce  n'est pas la norme XML !!
 }
 
-bool UHtmlAttribute::getValueImpl(const uptr<UStr>& pvalue, UStr& s) {
+bool HtmlAttribute::getValueImpl(const uptr<String>& pvalue, String& s) {
   if (pvalue) {s = *pvalue; return true;}
   else {s.clear(); return false;}
 }
@@ -47,22 +46,22 @@ bool UHtmlAttribute::getValueImpl(const uptr<UStr>& pvalue, UStr& s) {
 // ELEMENTS
 
 #define UBIT_CLASS_DEF(CLASSNAME, CLASS, NEWCLASS, NEWSTYLE, MODES) \
-struct Subclass : public UClass { \
-Subclass() : UClass(CLASSNAME) {} \
+struct Subclass : public Class { \
+Subclass() : Class(CLASSNAME) {} \
 virtual int getParseModes() const {return MODES;} \
 virtual bool isInstance(UObject& obj) const {return dynamic_cast<CLASS*>(&obj);} \
 virtual CLASS* newInstance() const {return NEWCLASS;} \
 virtual UStyle* newStyle() const {return NEWSTYLE;} \
 };\
-static  const UClass& Class() {static Subclass& c = *new Subclass; return c;} \
-virtual const UClass& getClass() const {return Class();}
+static  const Class& Class() {static Subclass& c = *new Subclass; return c;} \
+virtual const Class& getClass() const {return Class();}
 
 
 #define HEAD_ELEMENT_CLASS(CL, SUPER, MODES) \
 struct UHtml_##CL : public SUPER { \
   UBIT_CLASS_DEF(#CL, UHtml_##CL, new UHtml_##CL, UHtml_##CL::createStyle(), MODES) \
   UHtml_##CL() {show(false);} \
-  virtual void initNode(UDoc*); \
+  virtual void initNode(Document*); \
 };
 
 #define ELEMENT_CLASS(CL, SUPER, MODES) \
@@ -71,17 +70,17 @@ struct UHtml_##CL : public SUPER { \
 };
 
 //NB: UHtml_html::createStyle, pas null sinon le layout sera incorrect
-struct UHtml_html : public UElem {
+struct UHtml_html : public Element {
   UCLASSDEF("html", UHtml_html, new UHtml_html)
 };
 
 //NB: styles desfinis dans UCssStyles
-HEAD_ELEMENT_CLASS(head, UElem, 0)
-HEAD_ELEMENT_CLASS(title, UElem, 0)
-HEAD_ELEMENT_CLASS(meta, UElem, UClass::EMPTY_ELEMENT)
-HEAD_ELEMENT_CLASS(link, UElem, UClass::EMPTY_ELEMENT)
-HEAD_ELEMENT_CLASS(script, UElem, UClass::DONT_PARSE_CONTENT)
-HEAD_ELEMENT_CLASS(style, UElem, UClass::DONT_PARSE_CONTENT)
+HEAD_ELEMENT_CLASS(head, Element, 0)
+HEAD_ELEMENT_CLASS(title, Element, 0)
+HEAD_ELEMENT_CLASS(meta, Element, Class::EMPTY_ELEMENT)
+HEAD_ELEMENT_CLASS(link, Element, Class::EMPTY_ELEMENT)
+HEAD_ELEMENT_CLASS(script, Element, Class::DONT_PARSE_CONTENT)
+HEAD_ELEMENT_CLASS(style, Element, Class::DONT_PARSE_CONTENT)
 
 ELEMENT_CLASS(body, UFlowbox, 0)
 ELEMENT_CLASS(div, UFlowbox, 0)
@@ -89,7 +88,7 @@ ELEMENT_CLASS(p, UFlowbox, 0)
 ELEMENT_CLASS(ul, UFlowbox, 0)
 ELEMENT_CLASS(ol, UFlowbox, 0)
 ELEMENT_CLASS(li, UFlowbox, 0)
-ELEMENT_CLASS(pre, UFlowbox, UClass::PRESERVE_SPACES)
+ELEMENT_CLASS(pre, UFlowbox, Class::PRESERVE_SPACES)
 ELEMENT_CLASS(blockquote, UFlowbox, 0)
 ELEMENT_CLASS(center, UFlowbox, 0)
 ELEMENT_CLASS(h1,UFlowbox, 0)
@@ -102,103 +101,100 @@ ELEMENT_CLASS(table, UTable, 0)
 ELEMENT_CLASS(tr, UTrow, 0)
 ELEMENT_CLASS(td, UTcell, 0)
 ELEMENT_CLASS(th, UTcell, 0)
-ELEMENT_CLASS(span, UElem, 0)
-ELEMENT_CLASS(font, UElem, 0)
-ELEMENT_CLASS(b, UElem, 0)
-ELEMENT_CLASS(i, UElem, 0)
-ELEMENT_CLASS(em, UElem, 0)
-ELEMENT_CLASS(u, UElem, 0)
+ELEMENT_CLASS(span, Element, 0)
+ELEMENT_CLASS(font, Element, 0)
+ELEMENT_CLASS(b, Element, 0)
+ELEMENT_CLASS(i, Element, 0)
+ELEMENT_CLASS(em, Element, 0)
+ELEMENT_CLASS(u, Element, 0)
 
 
 #define ELEMENT_INIT_CLASS(CL, SUPER, MODES) \
 struct UHtml_##CL : public SUPER { \
 UBIT_CLASS_DEF(#CL, UHtml_##CL, new UHtml_##CL, UCssStyles::create_##CL##_style(), MODES) \
-virtual void initNode(UDoc*); \
+virtual void initNode(Document*); \
 };
   
-ELEMENT_INIT_CLASS(img, UBox, UClass::EMPTY_ELEMENT)
-ELEMENT_INIT_CLASS(br, UElem, UClass::EMPTY_ELEMENT)
+ELEMENT_INIT_CLASS(img, Box, Class::EMPTY_ELEMENT)
+ELEMENT_INIT_CLASS(br, Element, Class::EMPTY_ELEMENT)
 
 struct UHtml_a : public ULinkbutton {
   UBIT_CLASS_DEF("a", UHtml_a, new UHtml_a, UCssStyles::create_a_style(), 0) 
-  virtual void initNode(UDoc*);
-  //virtual const UStr* getHRef() const; ihnerited from ULinkbutton.
+  virtual void initNode(Document*);
+  //virtual const String* getHRef() const; ihnerited from ULinkbutton.
 };
     
 /* ==================================================== [Elc] ======= */
 
-void UHtml_head::initNode(UDoc* doc) {
-  UElem::initNode(doc);
+void UHtml_head::initNode(Document* doc) {
+  Element::initNode(doc);
 }
 
-void UHtml_title::initNode(UDoc* doc) {   // set title....
-  UElem::initNode(doc);
+void UHtml_title::initNode(Document* doc) {   // set title....
+  Element::initNode(doc);
 }
 
-void UHtml_meta::initNode(UDoc* doc) {    // set meta....
-  UElem::initNode(doc);
+void UHtml_meta::initNode(Document* doc) {    // set meta....
+  Element::initNode(doc);
 }
 
-void UHtml_script::initNode(UDoc* doc) {    // load script....
-  UElem::initNode(doc);
+void UHtml_script::initNode(Document* doc) {    // load script....
+  Element::initNode(doc);
 }
 
-void UHtml_br::initNode(UDoc* doc) {
-  UElem::initNode(doc);
+void UHtml_br::initNode(Document* doc) {
+  Element::initNode(doc);
   add(ustr("\n"));
 }
 
-/* ==================================================== ===== ======= */
 // reload reste a faire (complique: il faut mettre a jour l'arbre)
 
-void UHtml_link::initNode(UDoc* doc) {
-  UElem::initNode(doc);
-  UXmlDocument* xmldoc = dynamic_cast<UXmlDocument*>(doc);
+void UHtml_link::initNode(Document* doc) {
+  Element::initNode(doc);
+  XmlDocument* xmldoc = dynamic_cast<XmlDocument*>(doc);
   if (xmldoc) {
-    UStr href, rel, type;
+    String href, rel, type;
     if (getAttrValue(href,"href") && !href.empty()
         && ((getAttrValue(rel,"rel") && rel.equals("stylesheet",true))
             || (getAttrValue(type,"type") && type.equals("text/css",true)))
         ) {
-      UStr path; doc->makePath(path, href);
-      UCssAttachment* a = new UCssAttachment(href, getNodeName(), xmldoc);
+      String path; doc->makePath(path, href);
+      CssAttachment* a = new CssAttachment(href, getNodeName(), xmldoc);
       xmldoc->addAttachment(a);
       a->load(xmldoc);
     }
   }
 }
 
-/* ==================================================== ===== ======= */
 
-void UHtml_style::initNode(UDoc* doc) {
-  UElem::initNode(doc);
-  UXmlDocument* xmldoc = dynamic_cast<UXmlDocument*>(doc);
+void UHtml_style::initNode(Document* doc) {
+  Element::initNode(doc);
+  XmlDocument* xmldoc = dynamic_cast<XmlDocument*>(doc);
   if (xmldoc) {
-    UChildIter i = cbegin();
+    ChildIter i = cbegin();
     if (i != cend()) {
       UCssParser css;
-      UStr* text = dynamic_cast<UStr*>(*i);    // UXmlText
-      const UStr* val = text ? &text->getData() : null;
+      String* text = dynamic_cast<String*>(*i);    // UXmlText
+      const String* val = text ? &text->getData() : null;
       if (val) css.parse(*val, xmldoc);
     }
   }
 }
 
-/* ==================================================== ===== ======= */
 
-void UHtml_a::initNode(UDoc* doc) {
-  UElem::initNode(doc);
+void UHtml_a::initNode(Document* doc) {
+  Element::initNode(doc);
   
   /*
-   const UStr* hname = getAttr("hname");
+   const String* hname = getAttr("hname");
    if (hname && !hname->empty()) {
    // rajouter dans la table des links .......
    }
    */
   
-  UStr href;
+  String href;
   if (getAttrValue(href,"href") && !href.empty()) {
-    UCall& c = ucall(doc, const_cast<const UStr*>(new UStr(href)), &UDoc::linkEventCB);
+    UCall& c = ucall(doc, const_cast<const String*>(new String(href)), &Document::linkEventCB);
     addAttr(UOn::enter / c);
     addAttr(UOn::leave / c);
     addAttr(UOn::mpress / c);
@@ -207,81 +203,79 @@ void UHtml_a::initNode(UDoc* doc) {
   }
 }
 
-/* ==================================================== ===== ======= */
 
-void UHtml_img::initNode(UDoc* doc) {
-  UElem::initNode(doc);
+void UHtml_img::initNode(Document* doc) {
+  Element::initNode(doc);
   
   // doit ignorer les events sinon les liens contenant des images
   // marcheront pas
   ignoreEvents();
   
-  UXmlDocument* xmldoc = dynamic_cast<UXmlDocument*>(doc);
+  XmlDocument* xmldoc = dynamic_cast<XmlDocument*>(doc);
   if (xmldoc) {
-    UStr src;
+    String src;
     if (getAttrValue(src,"src") && !src.empty()) {
-      UStr path; xmldoc->makePath(path, src);
-      UIma* ima = new UIma(path);   // att pas compat avec reload ima redef!
+      String path; xmldoc->makePath(path, src);
+      Image* ima = new Image(path);   // att pas compat avec reload ima redef!
       add(ima);
       //                      CF AUSSI: tailles predefinies et rescale !!!
       
-      xmldoc->addAttachment(new UImgAttachment(src, getNodeName(), ima));
+      xmldoc->addAttachment(new ImageAttachment(src, getNodeName(), ima));
     }
   }
 }
 
-/* ==================================================== ===== ======= */
 // ATTRIBUTES
 
-void UHtmlStyle::initNode(UDoc* doc, UElem*) {
-  UXmlDocument* xmldoc = dynamic_cast<UXmlDocument*>(doc);
+void HtmlStyle::initNode(Document* doc, Element*) {
+  XmlDocument* xmldoc = dynamic_cast<XmlDocument*>(doc);
   if (xmldoc && pvalue && !pvalue->empty()) {
     UCssParser css;
     css.parseAttr(*pvalue, xmldoc, this);
   }
 }
 
-void UHtmlClass::initNode(UDoc* doc, UElem* parent) {
+void HtmlClass::initNode(Document* doc, Element* parent) {
   //pourrait tester s'il y a au moins un attribut de ce nom dans la base
   //pourrait etre generalise a tous les attributs
-  UXmlDocument* xmldoc = dynamic_cast<UXmlDocument*>(doc);
-  UStr val;
+  XmlDocument* xmldoc = dynamic_cast<XmlDocument*>(doc);
+  String val;
   if (xmldoc && getValue(val)) xmldoc->setClassStyle(parent, getName(), val);
 }
 
-void UHtmlId::initNode(UDoc* doc, UElem* parent) {
-  UXmlDocument* xmldoc = dynamic_cast<UXmlDocument*>(doc);
-  UStr val;
+void HtmlId::initNode(Document* doc, Element* parent) {
+  XmlDocument* xmldoc = dynamic_cast<XmlDocument*>(doc);
+  String val;
   if (xmldoc && getValue(val)) xmldoc->setIdStyle(parent, getName(), val);
 }
 
-void UHtmlColor::setValue(const UStr& v) {
-  UHtmlAttribute::setValueImpl(pvalue, v);     // ! fait trim() !
+void HtmlColor::setValue(const String& v) {
+  HtmlAttribute::setValueImpl(pvalue, v);     // ! fait trim() !
   setNamedColor(*pvalue);
 }
 
-void UHtmlBgcolor::setValue(const UStr& v) {
-  UHtmlAttribute::setValueImpl(pvalue, v);  // fait trim() !
+void HtmlBgcolor::setValue(const String& v) {
+  HtmlAttribute::setValueImpl(pvalue, v);  // fait trim() !
   setNamedColor(*pvalue);
 }
 
-void UHtmlBorder::setValue(const UStr& v) {
-  UHtmlAttribute::setValueImpl(pvalue, v);     // ! fait trim() !
-  UStr unit;
+void HtmlBorder::setValue(const String& v) {
+  HtmlAttribute::setValueImpl(pvalue, v);     // ! fait trim() !
+  String unit;
   float n = 0;
   if (!pvalue->scanValue(n, unit)) return;
-  if (n > 1) setDecoration(UBorder::LINE);   // A COMPLETER
-  else setDecoration(UBorder::NONE);
+  if (n > 1) setDecoration(Border::LINE);   // A COMPLETER
+  else setDecoration(Border::NONE);
 }
 
-void UHtmlFontFace::setValue(const UStr& v) {
-  UHtmlAttribute::setValueImpl(pvalue, v);     // ! fait trim() !
+void HtmlFontFace::setValue(const String& v) {
+  HtmlAttribute::setValueImpl(pvalue, v);     // ! fait trim() !
   if (pvalue) setFamily(*pvalue);
 }
 
-void UHtmlFontSize::setValue(const UStr& v) {
-  UHtmlAttribute::setValueImpl(pvalue, v);     // ! fait trim() !
-  UStr unit; 
+void HtmlFontSize::setValue(const String& v) {
+  HtmlAttribute::setValueImpl(pvalue, v);     // ! fait trim() !
+  String unit; 
   float n = 0;
   if (!pvalue->scanValue(n, unit)) return;
   
@@ -302,43 +296,43 @@ void UHtmlFontSize::setValue(const UStr& v) {
 }
 
 /*
-void UHtmlUWidth::setValue(const UStr& s) {
-  if (!pvalue) pvalue = new UStr();
+void HtmlWidth::setValue(const String& s) {
+  if (!pvalue) pvalue = new String();
   *pvalue = s;
   UWidth::set(s);
 }
-void UHtmlHeight::setValue(const UStr& s) {
-  if (!pvalue) pvalue = new UStr();
+void HtmlHeight::setValue(const String& s) {
+  if (!pvalue) pvalue = new String();
   *pvalue = s;
   UHeight::set(s);
 }
 */
 
-void UHtmlUWidth::initNode(UDoc*, UElem* parent) {
+void HtmlWidth::initNode(Document*, Element* parent) {
   // NB: obtainAttr() add attribute to props
   if (pvalue && !pvalue->empty()) parent->obtainAttr<USize>().setWidth(*pvalue);
 }
 
-void UHtmlHeight::initNode(UDoc*, UElem* parent) {
+void HtmlHeight::initNode(Document*, Element* parent) {
   // NB: obtainAttr() add attribute to props
   if (pvalue && !pvalue->empty()) parent->obtainAttr<USize>().setHeight(*pvalue);
 }
 
-void UHtmlAlign::setValue(const UStr& v) {
-    UHtmlAttribute::setValueImpl(pvalue, v);     // ! fait trim() !
-    if (pvalue->equals("left",true)) *(UHalign*)this = UHalign::left;
-    else if (pvalue->equals("center",true)) *(UHalign*)this = UHalign::center;
-    else if (pvalue->equals("right",true)) *(UHalign*)this = UHalign::right;
+void HtmlAlign::setValue(const String& v) {
+    HtmlAttribute::setValueImpl(pvalue, v);     // ! fait trim() !
+    if (pvalue->equals("left",true)) *(Halign*)this = Halign::left;
+    else if (pvalue->equals("center",true)) *(Halign*)this = Halign::center;
+    else if (pvalue->equals("right",true)) *(Halign*)this = Halign::right;
   }
 
-void UHtmlValign::setValue(const UStr& v) {
-  UHtmlAttribute::setValueImpl(pvalue, v);     // ! fait trim() !
-  if (pvalue->equals("top",true)) *(UValign*)this = UValign::top;
-  else if (pvalue->equals("middle",true)) *(UValign*)this = UValign::center;
-  else if (pvalue->equals("bottom",true)) *(UValign*)this = UValign::bottom;
+void HtmlValign::setValue(const String& v) {
+  HtmlAttribute::setValueImpl(pvalue, v);     // ! fait trim() !
+  if (pvalue->equals("top",true)) *(Valign*)this = Valign::top;
+  else if (pvalue->equals("middle",true)) *(Valign*)this = Valign::center;
+  else if (pvalue->equals("bottom",true)) *(Valign*)this = Valign::bottom;
 }
 
-void UHtmlColspan::initNode(UDoc* doc, UElem* parent) {
+void HtmlColspan::initNode(Document* doc, Element* parent) {
   UTcell* cell;
   if (parent && pvalue && (cell = dynamic_cast<UTcell*>(parent))) {
     int n = pvalue->toInt();
@@ -346,15 +340,15 @@ void UHtmlColspan::initNode(UDoc* doc, UElem* parent) {
   }
 }
   
-void UHtmlColspan::setValue(const UStr& v) {
-  UHtmlAttribute::setValueImpl(pvalue, v);     // ! fait trim() !
-  UStr unit;
+void HtmlColspan::setValue(const String& v) {
+  HtmlAttribute::setValueImpl(pvalue, v);     // ! fait trim() !
+  String unit;
   float n = 0;
   if (!pvalue->scanValue(n, unit)) return;
   //if (unit.empty()) colspan = int(n);
 }
 
-void UHtmlRowspan::initNode(UDoc* doc, UElem* parent) {
+void HtmlRowspan::initNode(Document* doc, Element* parent) {
   UTcell* cell;
   if (parent && pvalue && (cell = dynamic_cast<UTcell*>(parent))) {
     int n = pvalue->toInt();
@@ -362,39 +356,38 @@ void UHtmlRowspan::initNode(UDoc* doc, UElem* parent) {
   }
 }
   
-void UHtmlRowspan::setValue(const UStr& v) {
-  UHtmlAttribute::setValueImpl(pvalue, v);     // ! fait trim() !
-  UStr unit;
+void HtmlRowspan::setValue(const String& v) {
+  HtmlAttribute::setValueImpl(pvalue, v);     // ! fait trim() !
+  String unit;
   float n = 0;
   if (!pvalue->scanValue(n, unit)) return;
   //if (unit.empty()) rowspan = int(n);
 }
 
-void UHtmlCellspacing::setValue(const UStr& v) {
-  UHtmlAttribute::setValueImpl(pvalue, v);     // ! fait trim() !
-  UStr unit;
+void HtmlCellspacing::setValue(const String& v) {
+  HtmlAttribute::setValueImpl(pvalue, v);     // ! fait trim() !
+  String unit;
   float n = 0;
   if (!pvalue->scanValue(n, unit)) return;
   //if (unit.empty() || UCSS::isEq(unit,"px")) set(i);   // A FAIRE
 }
 
-void UHtmlCellpadding::setValue(const UStr& v) {
-  UHtmlAttribute::setValueImpl(pvalue, v);     // ! fait trim() !
-  UStr unit;
+void HtmlCellpadding::setValue(const String& v) {
+  HtmlAttribute::setValueImpl(pvalue, v);     // ! fait trim() !
+  String unit;
   float n = 0;
   if (!pvalue->scanValue(n, unit)) return;
   //if (unit.empty() || UCSS::isEq(unit,"px")) set(i);   // A FAIRE
 }
 
-void UHtmlNowrap::setValue(const UStr& v) {
-  UHtmlAttribute::setValueImpl(pvalue, v);     // ! fait trim() !
+void HtmlNowrap::setValue(const String& v) {
+  HtmlAttribute::setValueImpl(pvalue, v);     // ! fait trim() !
   // pas de valeur ..
   // A FAIRE
 }
 
-/* ==================================================== ===== ======= */
 
-UHtmlGrammar::UHtmlGrammar() 
+HtmlGrammar::HtmlGrammar() 
 {  
   addElementClass(UHtml_html::Class());
   addElementClass(UHtml_head::Class());
@@ -435,29 +428,29 @@ UHtmlGrammar::UHtmlGrammar()
  
   //  - - - - - - - - - -- - - - - - - - - - - - - - -
     
-  addAttrClass(UHtmlStyle::Class());
-  addAttrClass(UHtmlClass::Class());
-  addAttrClass(UHtmlId::Class());
-  addAttrClass(UHtmlRel::Class());
-  addAttrClass(UHtmlType::Class());
-  addAttrClass(UHtmlAlt::Class());
-  addAttrClass(UHtmlName::Class());
-  addAttrClass(UHtmlSrc::Class());
-  addAttrClass(UHtmlHref::Class());
-  addAttrClass(UHtmlColor::Class());
-  addAttrClass(UHtmlBgcolor::Class());
-  addAttrClass(UHtmlFontFace::Class());
-  addAttrClass(UHtmlFontSize::Class());
-  addAttrClass(UHtmlUWidth::Class());
-  addAttrClass(UHtmlHeight::Class());
-  addAttrClass(UHtmlAlign::Class());
-  addAttrClass(UHtmlValign::Class());
-  addAttrClass(UHtmlBorder::Class());
-  addAttrClass(UHtmlColspan::Class());
-  addAttrClass(UHtmlRowspan::Class());
-  addAttrClass(UHtmlCellspacing::Class());
-  addAttrClass(UHtmlCellpadding::Class());
-  addAttrClass(UHtmlNowrap::Class());
+  addAttrClass(HtmlStyle::Class());
+  addAttrClass(HtmlClass::Class());
+  addAttrClass(HtmlId::Class());
+  addAttrClass(HtmlRel::Class());
+  addAttrClass(HtmlType::Class());
+  addAttrClass(HtmlAlt::Class());
+  addAttrClass(HtmlName::Class());
+  addAttrClass(HtmlSrc::Class());
+  addAttrClass(HtmlHref::Class());
+  addAttrClass(HtmlColor::Class());
+  addAttrClass(HtmlBgcolor::Class());
+  addAttrClass(HtmlFontFace::Class());
+  addAttrClass(HtmlFontSize::Class());
+  addAttrClass(HtmlWidth::Class());
+  addAttrClass(HtmlHeight::Class());
+  addAttrClass(HtmlAlign::Class());
+  addAttrClass(HtmlValign::Class());
+  addAttrClass(HtmlBorder::Class());
+  addAttrClass(HtmlColspan::Class());
+  addAttrClass(HtmlRowspan::Class());
+  addAttrClass(HtmlCellspacing::Class());
+  addAttrClass(HtmlCellpadding::Class());
+  addAttrClass(HtmlNowrap::Class());
 }
 
 }

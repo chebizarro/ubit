@@ -1,18 +1,25 @@
-/************************************************************************
- *
- *  ucss.cpp: HTML Style Sheets
- *  Ubit GUI Toolkit - Version 6
+/*
+ *  css.cpp: HTML Style Sheets
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE :
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION;
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
 
 #include <iostream>
 #include <ubit/ubit_features.h>
@@ -26,11 +33,11 @@ NAMESPACE_UBIT
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-struct UCssMaker: public UStyleParser::StyleMaker {
-  UXmlDocument* doc;
-  UAttrList* attributes;
+struct UCssMaker: public StyleParser::StyleMaker {
+  XmlDocument* doc;
+  AttributeList* attributes;
 
-  UCssMaker(UXmlDocument* d, UAttrList* alist) : doc(d), attributes(alist) {}
+  UCssMaker(XmlDocument* d, AttributeList* alist) : doc(d), attributes(alist) {}
 
   virtual void begin() {
     attributes = null;
@@ -43,21 +50,21 @@ struct UCssMaker: public UStyleParser::StyleMaker {
 
   virtual void create() {
     for (unsigned int k = 0; k < count; k++) {
-      const UClass* c = doc->getStyleSheet().obtainClass(*selectors[k]);
+      const Class* c = doc->getStyleSheet().obtainClass(*selectors[k]);
       //cerr << " *** " << *selectors[k] << endl;
       if (k == 0) {
         attributes = c->getAttributes();      //attributes partagee !!!
-        if (!attributes) attributes = new UAttrList;
+        if (!attributes) attributes = new AttributeList;
       }
       c->setAttributes(attributes);
     }
   }
    
-  virtual void addProp(const UStr& name, const UStr& val) {
+  virtual void addProp(const String& name, const String& val) {
     static UCssProps css_props;   // !!!
     
     if (!attributes) 
-      UAppli::error("UCssMaker","this UCssMaker object (%p) has no prop list", this);
+      Application::error("UCssMaker","this UCssMaker object (%p) has no prop list", this);
 
     UCssProps::AddPropFunc func = css_props.findAddPropFunc(name);
     if (func) func(doc, attributes, val);
@@ -73,14 +80,14 @@ struct UCssMaker: public UStyleParser::StyleMaker {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-int UCssParser::parse(const UStr& buf, UXmlDocument* doc) {
+int UCssParser::parse(const String& buf, XmlDocument* doc) {
   UCssMaker* smaker = new UCssMaker(doc, null);
   parseImpl(*smaker, buf);
   delete smaker;
   return stat;
 }
 
-int UCssParser::parseAttr(const UStr& buf, UXmlDocument* doc, UAttrList* props) {
+int UCssParser::parseAttr(const String& buf, XmlDocument* doc, AttributeList* props) {
   p = text_buffer = buf.c_str();
   if (!p || !*p) {
     p = text_buffer = null;
@@ -97,14 +104,14 @@ int UCssParser::parseAttr(const UStr& buf, UXmlDocument* doc, UAttrList* props) 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void UStyleProps::defProp(const char* propname, UStyleProps::AddPropFunc func) {
-  prop_map[new UStr(propname)] = func;
+  prop_map[new String(propname)] = func;
 }
 
-void UStyleProps::defProp(const UStr& propname, UStyleProps::AddPropFunc func) {
-  prop_map[new UStr(propname)] = func;
+void UStyleProps::defProp(const String& propname, UStyleProps::AddPropFunc func) {
+  prop_map[new String(propname)] = func;
 }
 
-UStyleProps::AddPropFunc UStyleProps::findAddPropFunc(const UStr& propname)  {
+UStyleProps::AddPropFunc UStyleProps::findAddPropFunc(const String& propname)  {
    PropMap::const_iterator k = prop_map.find(&propname);
    if (k == prop_map.end()) return 0;
    else return (k->second);
@@ -116,27 +123,26 @@ UStyleProps::~UStyleProps() {
 }
 
 /*
- //static bool isEq(const UStr& s1, const char* s2);
- //static bool isEq(const UStr* s1, const char* s2);
+ //static bool isEq(const String& s1, const char* s2);
+ //static bool isEq(const String* s1, const char* s2);
  
-bool UStyleProps::isEq(const UStr& s1, const char* s2) {
+bool UStyleProps::isEq(const String& s1, const char* s2) {
   return s1.equals(s2, true);      
 }
 
-bool UStyleProps::isEq(const UStr* s1, const char* s2) {
+bool UStyleProps::isEq(const String* s1, const char* s2) {
   return s1 ? s1->equals(s2, true) : false;
 }
 
 // QUE POSITIF !!!
-bool UStyleProps::parseNum(const UStr& s, float& val, UStr& unit) {
+bool UStyleProps::parseNum(const String& s, float& val, String& unit) {
 
-bool UStyleProps::parseNum(const UStr* s, float& val, UStr& unit) {
+bool UStyleProps::parseNum(const String* s, float& val, String& unit) {
   return s ? parseNum(*s, val, unit) : false;
 }
 */
-/* ==================================================== ======== ======= */
 
-bool UStyleProps::parseUrl(const UStr& s, UStr& url, UStr& remain) {
+bool UStyleProps::parseUrl(const String& s, String& url, String& remain) {
   url.clear(); remain.clear();
   int begin = s.find("url(");
 
@@ -158,7 +164,6 @@ bool UStyleProps::parseUrl(const UStr& s, UStr& url, UStr& remain) {
   return false;
 }
 
-/* ==================================================== ======== ======= */
 
 UCssProps::UCssProps() {  
   defProp("font-family",     create_font_family);
@@ -202,20 +207,19 @@ UCssProps::UCssProps() {
   // table_* ...
 }
 
-/* ==================================================== ======== ======= */
 
-void UCssProps::create_font_family(UXmlDocument*, UAttrList* props, const UStr& v) {
+void UCssProps::create_font_family(XmlDocument*, AttributeList* props, const String& v) {
   //UFont* p = new UFont;
   // NB: obtainAttr() add attribute to props
   if (!v.empty()) props->obtainAttr<UFont>().setFamily(v);  //  trim ??
 }
 
-void UCssProps::create_font_size(UXmlDocument*, UAttrList* props, const UStr& v) {
+void UCssProps::create_font_size(XmlDocument*, AttributeList* props, const String& v) {
   //UFont* p = new UFont;
   if (!v.empty()) props->obtainAttr<UFont>().setSize(v);  //  trim ??
 }
 
-void UCssProps::create_font_weight(UXmlDocument*, UAttrList* props, const UStr& v) {
+void UCssProps::create_font_weight(XmlDocument*, AttributeList* props, const String& v) {
   //UFont* p = new UFont;
   if (v.empty()) return;
   UFont& f = props->obtainAttr<UFont>();
@@ -224,7 +228,7 @@ void UCssProps::create_font_weight(UXmlDocument*, UAttrList* props, const UStr& 
   else /* if (isEq(v,"medium")) */ f.setBold(false);
 }
 
-void UCssProps::create_font_style(UXmlDocument*, UAttrList* props, const UStr& v) {
+void UCssProps::create_font_style(XmlDocument*, AttributeList* props, const String& v) {
   //UFont* p = new UFont();
   if (v.empty()) return;
   UFont& f = props->obtainAttr<UFont>();
@@ -233,7 +237,7 @@ void UCssProps::create_font_style(UXmlDocument*, UAttrList* props, const UStr& v
   else /* if (isEq(v,"normal")) */ f.setItalic(false);
 }
 
-//UAttribute* UCssProps::create_font(const UStr& v) {
+//UAttribute* UCssProps::create_font(const String& v) {
 //return p;
 //}
 
@@ -241,27 +245,27 @@ void UCssProps::create_font_style(UXmlDocument*, UAttrList* props, const UStr& v
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UCssProps::create_color(UXmlDocument*, UAttrList* props, const UStr& v) {
-  UColor* p = new UColor();
+void UCssProps::create_color(XmlDocument*, AttributeList* props, const String& v) {
+  Color* p = new Color();
   //trim ??
   //p->set(v);
   p->setNamedColor(v);
   props->addAttr(*p);
 }
 
-void UCssProps::create_background_color(UXmlDocument*, UAttrList* props, 
-                                        const UStr& v) {
-  UBackground* p = new UBackground();
+void UCssProps::create_background_color(XmlDocument*, AttributeList* props, 
+                                        const String& v) {
+  Background* p = new Background();
   //trim ??
-  if (v.equals("transparent",true)) p->setColor(UColor::none);
+  if (v.equals("transparent",true)) p->setColor(Color::none);
   else if (!v.empty()) p->setNamedColor(v);
   props->addAttr(*p);
 }
 
-void UCssProps::create_background_image(UXmlDocument* doc, UAttrList* props, 
-                                        const UStr& v) {
-  UBackground* p = new UBackground();
-  UStr url, remain;
+void UCssProps::create_background_image(XmlDocument* doc, AttributeList* props, 
+                                        const String& v) {
+  Background* p = new Background();
+  String url, remain;
   //trim
   if (!parseUrl(v, url, remain)) {
     props->addAttr(*p);
@@ -270,46 +274,45 @@ void UCssProps::create_background_image(UXmlDocument* doc, UAttrList* props,
   
   if (v.equals("none",true)) ;   // rien a faire ?...
   else {
-    UStr path; doc->makePath(path, url);
-    UIma* ima = new UIma(path);
+    String path; doc->makePath(path, url);
+    Image* ima = new Image(path);
     p->setIma(*ima);
-    static UStr name = "background_image";
-    doc->addAttachment(new UImgAttachment(url, name, ima));
+    static String name = "background_image";
+    doc->addAttachment(new ImageAttachment(url, name, ima));
   }
   props->addAttr(*p);
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UCssProps::create_background(UXmlDocument* doc, UAttrList* al, const UStr& v) {
-  UBackground* p = new UBackground();
+void UCssProps::create_background(XmlDocument* doc, AttributeList* al, const String& v) {
+  Background* p = new Background();
   //trim
-  UStr url, remain;
+  String url, remain;
   
   if (!parseUrl(v, url, remain)) {
     if (!v.empty()) p->setNamedColor(v);
   }
   else  {
-    UStr path; doc->makePath(path, url);
-    UIma* ima = new UIma(path);
+    String path; doc->makePath(path, url);
+    Image* ima = new Image(path);
     // EX: if (!remain.empty()) p->set(*ima, *new UBgcolor(remain));   // !! %%
     //else 
     *p = *ima;
-    static UStr name = "background";
-    doc->addAttachment(new UImgAttachment(url, name, ima));
+    static String name = "background";
+    doc->addAttachment(new ImageAttachment(url, name, ima));
   }  
   al->addAttr(*p);
 }
 
-/* ==================================================== ======== ======= */
 
-void UCssProps::create_width(UXmlDocument*, UAttrList* al, const UStr& v) {
+void UCssProps::create_width(XmlDocument*, AttributeList* al, const String& v) {
   // EX: UWidth* p = new UWidth(-1);
   // NB: obtainAttr() add attribute to props
   if (!v.empty()) al->obtainAttr<USize>().setWidth(v);
 }
 
-void UCssProps::create_height(UXmlDocument*, UAttrList* al, const UStr& v) {
+void UCssProps::create_height(XmlDocument*, AttributeList* al, const String& v) {
   // EX: UHeight* p = new UHeight(-1);
   // NB: obtainAttr() add attribute to props
   if (!v.empty()) al->obtainAttr<USize>().setHeight(v);
@@ -317,56 +320,54 @@ void UCssProps::create_height(UXmlDocument*, UAttrList* al, const UStr& v) {
 
 // egalement: 'line-height'
 
-/* ==================================================== ======== ======= */
 
-void UCssProps::create_padding_top(UXmlDocument*, UAttrList* al, const UStr& v) {
+void UCssProps::create_padding_top(XmlDocument*, AttributeList* al, const String& v) {
   // NB: obtainAttr() add attribute to props
   if (!v.empty()) al->obtainAttr<UPadding>().setTop(v);
 }
 
-void UCssProps::create_padding_bottom(UXmlDocument*, UAttrList* al, const UStr& v) {
+void UCssProps::create_padding_bottom(XmlDocument*, AttributeList* al, const String& v) {
   if (!v.empty()) al->obtainAttr<UPadding>().setBottom(v);
  }
 
-void UCssProps::create_padding_left(UXmlDocument*, UAttrList* al, const UStr& v) {
+void UCssProps::create_padding_left(XmlDocument*, AttributeList* al, const String& v) {
   if (!v.empty()) al->obtainAttr<UPadding>().setLeft(v);
 }
 
-void UCssProps::create_padding_right(UXmlDocument*, UAttrList* al, const UStr& v) {
+void UCssProps::create_padding_right(XmlDocument*, AttributeList* al, const String& v) {
   if (!v.empty()) al->obtainAttr<UPadding>().setRight(v);
 }
 
 //UCssProps::create_padding
 
-/* ==================================================== ======== ======= */
 /*  align n'existe pas, text-align joue son role ?
- void create_align(UXmlDocument*, const UStr& v) {
+ void create_align(XmlDocument*, const String& v) {
  ?? trim()
- if (isEq(UXmlAttr::value,"left")) set(UHalign::left);
- else if (isEq(UXmlAttr::value,"center")) set(UHalign::center);
- else if (isEq(UXmlAttr::value,"right"))  set(UHalign::right);
+ if (isEq(UXmlAttr::value,"left")) set(Halign::left);
+ else if (isEq(UXmlAttr::value,"center")) set(Halign::center);
+ else if (isEq(UXmlAttr::value,"right"))  set(Halign::right);
  props->addAttr(*p);
  }
  */
 
-void UCssProps::create_text_align(UXmlDocument*, UAttrList* al, const UStr& v) {
-  UHalign* p = new UHalign();
+void UCssProps::create_text_align(XmlDocument*, AttributeList* al, const String& v) {
+  Halign* p = new Halign();
   //trim ??
-  if (v.equals("left",true)) *p = UHalign::left;
-  else if (v.equals("center",true)) *p = UHalign::center;
-  else if (v.equals("right",true))  *p = UHalign::right;
+  if (v.equals("left",true)) *p = Halign::left;
+  else if (v.equals("center",true)) *p = Halign::center;
+  else if (v.equals("right",true))  *p = Halign::right;
   // A COMPLETR:   justify, etc...
   al->addAttr(*p);
 }
 
 // valign existe pas: vertical_align joue son role ?
 //
-void UCssProps::create_vertical_align(UXmlDocument*, UAttrList* al, const UStr& v) {
-  UValign* p = new UValign();
+void UCssProps::create_vertical_align(XmlDocument*, AttributeList* al, const String& v) {
+  Valign* p = new Valign();
   //trim ??
-  if (v.equals("top",true)) *p = UValign::top;
-  else if (v.equals("middle",true)) *p = UValign::center;
-  else if (v.equals("bottom",true)) *p = UValign::bottom;
+  if (v.equals("top",true)) *p = Valign::top;
+  else if (v.equals("middle",true)) *p = Valign::center;
+  else if (v.equals("bottom",true)) *p = Valign::bottom;
   // baseline et bien d'autres.....
   al->addAttr(*p);
 }
@@ -379,20 +380,18 @@ void UCssProps::create_vertical_align(UXmlDocument*, UAttrList* al, const UStr& 
  direction
  */
 
-/* ==================================================== ======== ======= */
 
-void UCssProps::create_border(UXmlDocument*, UAttrList* al, const UStr& v) {
-  UBorder* p = new UBorder();
-  UStr unit;
+void UCssProps::create_border(XmlDocument*, AttributeList* al, const String& v) {
+  Border* p = new Border();
+  String unit;
   float n = 0;
   if (!v.scanValue(n, unit)) {
-    if (n > 1) p->setDecoration(UBorder::LINE);   // A COMPLETER
-    else p->setDecoration(UBorder::NONE);
+    if (n > 1) p->setDecoration(Border::LINE);   // A COMPLETER
+    else p->setDecoration(Border::NONE);
   }
   al->addAttr(*p);
 }
 
-/* ==================================================== ======== ======= */
 /* TABLES:
 'border-collapse' collapse | separate | inherit
 'border-spacing' <length> <length>? | inherit
@@ -402,11 +401,10 @@ remplacent cellspacing et cellpadding
 'caption-side' top | bottom | inherit
 */
 
-/* ==================================================== ======== ======= */
 
 UStyle* UCssStyles::create_body_style() {
   //UStyle* style = UVbox::createStyle();
-  UStyle* style = UBox::createStyle();
+  UStyle* style = Box::createStyle();
   style->setVertPadding(8,8);
   UFont* f = new UFont(); f->setPointSize(12); style->setFont(f);
   return style;
@@ -424,7 +422,6 @@ UStyle* UCssStyles::create_p_style() {
   return style;
 }
 
-/* ==================================================== ======== ======= */
 
 UStyle* UCssStyles::create_ul_style() {
   UStyle* style = UFlowbox::createStyle();
@@ -443,12 +440,11 @@ UStyle* UCssStyles::create_ol_style() {
 UStyle* UCssStyles::create_li_style() {
   UStyle* style = UFlowbox::createStyle();
   style->local.padding.set(1, 1);
-  //style->local.content = new UElem(UPix::rball);
-  style->local.content = new UElem(" - ");
+  //style->local.content = new Element(UPix::rball);
+  style->local.content = new Element(" - ");
   return style;
 }
 
-/* ==================================================== ======== ======= */
 
 UStyle* UCssStyles::create_pre_style() {
   UStyle* style = UFlowbox::createStyle();
@@ -467,7 +463,7 @@ UStyle* UCssStyles::create_blockquote_style() {
 UStyle* UCssStyles::create_center_style() {
   UStyle* style = UFlowbox::createStyle();
   style->local.padding.set(1, 1);
-  style->halign = UValign::CENTER;
+  style->halign = Valign::CENTER;
   return style;
 }
 
@@ -515,27 +511,26 @@ UStyle* UCssStyles::create_h6_style() {
   return style;
 }
 
-/* ==================================================== ======== ======= */
 
 UStyle* UCssStyles::create_table_style() {
   UStyle* style = UTable::createStyle();
-  style->valign = UValign::BOTTOM;
-  style->halign = UHalign::LEFT;
+  style->valign = Valign::BOTTOM;
+  style->halign = Halign::LEFT;
   return style;
 }
 
 UStyle* UCssStyles::create_tr_style() {
   UStyle* style = UTrow::createStyle();
   style->hspacing = 0;
-  style->valign = UValign::BOTTOM;
-  style->halign = UHalign::LEFT;
+  style->valign = Valign::BOTTOM;
+  style->halign = Halign::LEFT;
   return style;
 }
 
 UStyle* UCssStyles::create_td_style() {
   UStyle* style = UTcell::createStyle();
-  style->valign = UValign::BOTTOM;
-  style->halign = UHalign::LEFT;
+  style->valign = Valign::BOTTOM;
+  style->halign = Halign::LEFT;
   return style;
 }
 
@@ -544,56 +539,55 @@ UStyle* UCssStyles::create_th_style() {
   return style;
 }
 
-/* ==================================================== ======== ======= */
 
 UStyle* UCssStyles::create_span_style() {
-  UStyle* style = UElem::createStyle();
+  UStyle* style = Element::createStyle();
   return style;
 }
 
 UStyle* UCssStyles::create_b_style() {
-  UStyle* style = UElem::createStyle();
+  UStyle* style = Element::createStyle();
   style->setFont(&UFont::bold);
   return style;
 }
 
 UStyle* UCssStyles::create_i_style() {
-  UStyle* style = UElem::createStyle();
+  UStyle* style = Element::createStyle();
   style->setFont(&UFont::italic);
   return style;
 }
 
 UStyle* UCssStyles::create_em_style() {
-  UStyle* style = UElem::createStyle();
+  UStyle* style = Element::createStyle();
   //style->font = &UFont::fill;
-  style->setColors(UColor::orange, UColor::white);
+  style->setColors(Color::orange, Color::white);
   return style;
 }
 
 UStyle* UCssStyles::create_u_style() {
-  UStyle* style = UElem::createStyle();
+  UStyle* style = Element::createStyle();
   style->setFont(&UFont::underline);
   return style;
 }
 
 UStyle* UCssStyles::create_font_style() {
-  UStyle* style = UElem::createStyle();
+  UStyle* style = Element::createStyle();
   return style;
 }
 
 UStyle* UCssStyles::create_img_style() {
-  UStyle* style = UBox::createStyle();
+  UStyle* style = Box::createStyle();
   return style;
 }
 
 UStyle* UCssStyles::create_br_style() {
-  UStyle* style = UElem::createStyle();
+  UStyle* style = Element::createStyle();
   return style;
 }
 
 UStyle* UCssStyles::create_a_style() {                  // A REVOIR  !!!@@@@
   UStyle* href_style = ULinkbutton::createStyle();
-  href_style->setBgcolors(UColor::none);
+  href_style->setBgcolors(Color::none);
   return href_style;
 }
 

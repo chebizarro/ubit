@@ -182,7 +182,7 @@ public:
    
   // - - - misc.  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   
-  friend Child operator/(const UCond&, Node&);  
+  friend Child operator/(const Condition&, Node&);  
   /**< conditional expression for callback functions and conditionnal objects.
     * example:
     * <pre>
@@ -200,10 +200,10 @@ public:
     * @see: addAttr(), UCall, UOn, UFlag for more details.
     */
   
-  friend Child operator/(const UCond&, Node*);
-  ///< see operator/(const UCond&, Node&).
+  friend Child operator/(const Condition&, Node*);
+  ///< see operator/(const Condition&, Node&).
   
-  virtual bool fire(UEvent&) const;
+  virtual bool fire(Event&) const;
   ///< fires callback functions that match this event.
 
   virtual Node& removeAllAttrs(bool autodel = true);
@@ -219,7 +219,7 @@ public:
   /**< changes the update policy of this object when its is modified.
     * - if 'state' is true, the object if automatically updated when modified
     *   (either by adding/removing children for Element and subclasses,
-    *   or by setting new values for UData, UStr, Attribute ...)
+    *   or by setting new values for Data, String, Attribute ...)
     * - if 'state' is false, the update() function must be called
     *   explicitely to update the graphics. This can be useful in certain cases
     *   to avoid intermediate updates in order to to speed up rendition
@@ -243,9 +243,9 @@ protected:
   ///< unlinks the object from its parents and destroys its children.
     
 public:
-  void fireParents(const UCond& c, Node* n) const {_parents.fireParents(c,n);}
+  void fireParents(const Condition& c, Node* n) const {_parents.fireParents(c,n);}
   
-  void updateAutoParents(const UUpdate& m) {_parents.updateAutoParents(m);}    
+  void updateAutoParents(const Update& m) {_parents.updateAutoParents(m);}    
   virtual void addChangeCall(UCall&);
   virtual Element* getSubGroup() const {return null;}
   
@@ -260,7 +260,7 @@ public:
   
 protected:
   friend class Child;
-  friend class UArgs;
+  friend class Args;
   friend class Parents;
   friend class Element;
   mutable Parents _parents;

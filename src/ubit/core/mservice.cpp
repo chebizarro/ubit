@@ -1,4 +1,4 @@
-/* ==================================================== ======== ======= *
+/*
 *
 *  umservice.cpp: UMS (Ubit Mouse/Message Server) services 
 *  Ubit GUI Toolkit - Version 6.0
@@ -26,7 +26,7 @@
 #include <ubit/umessage.hpp>
 #include <ubit/umservice.hpp>
 #include <ubit/umsproto.hpp>
-#include <ubit/uevent.hpp>
+#include <ubit/core/event.h>
 #if UBIT_WITH_X11
 #  include <X11/X.h>
 #else
@@ -39,34 +39,33 @@
 using namespace std;
 namespace ubit {
 
-UMService::UMService(const UStr& _host, int _port, const char* _client_name)
-: USocket(_host, (_port != 0 ? _port : UMS_PORT_NUMBER)) {
+MessageService::MessageService(const String& _host, int _port, const char* _client_name)
+: Socket(_host, (_port != 0 ? _port : UMS_PORT_NUMBER)) {
 }
 
-UMService::UMService(const UStr& _host, int _port)
-: USocket(_host, (_port != 0 ? _port : UMS_PORT_NUMBER)) {
-  onInput(ucall(this, &UMService::inputCallback));
+MessageService::MessageService(const String& _host, int _port)
+: Socket(_host, (_port != 0 ? _port : UMS_PORT_NUMBER)) {
+  onInput(ucall(this, &MessageService::inputCallback));
 }
 
-UMService::~UMService() {
-  UMessagePort& mp1 = UAppli::getMessagePort("_umsBrowse");
+MessageService::~MessageService() {
+  MessagePort& mp1 = Application::getMessagePort("_umsBrowse");
   if (browse_call) mp1.remove(*browse_call);
 
-  UMessagePort& mp2 = UAppli::getMessagePort("_umsNhb");
+  MessagePort& mp2 = Application::getMessagePort("_umsNhb");
    if (neighbor_call) mp2.remove(*neighbor_call);
 }
 
-/* ==================================================== ======== ======= */
 
-void UMService::inputCallback() {
+void MessageService::inputCallback() {
   UInbuf ib;
-  if (receiveBlock(ib) && UAppli::impl.messmap) {
+  if (receiveBlock(ib) && Application::impl.messmap) {
     //ib.data()[ib.size()-1] = 0; // faux
-    UAppli::impl.messmap->fireMessagePort(ib.data());
+    Application::impl.messmap->fireMessagePort(ib.data());
   }
   /*
    if (input) {
-     UAppli* app = UAppli::getApp();
+     Application* app = Application::getApp();
      if (app) {
        // le champ 'display' doit etre celui de l'appli et non de l'UMS
        xev.xany.display = app->getNatDisp()->getXDisplay();
@@ -76,11 +75,9 @@ void UMService::inputCallback() {
    */
 }
 
-/* ==================================================== ======== ======= */
-/* ==================================================== [(c)Elc] ======= */
 
-bool UMService::browseUMServers(UCall& c) {
-  UMessagePort& mp = UAppli::getMessagePort("_umsBrowse");
+bool MessageService::browseUMServers(UCall& c) {
+  MessagePort& mp = Application::getMessagePort("_umsBrowse");
   //mp.removeAll();
   if (browse_call) mp.remove(*browse_call);
   browse_call = c;
@@ -88,8 +85,8 @@ bool UMService::browseUMServers(UCall& c) {
   return sendRequest(UMSrequest::BROWSE_SERVERS);
 }
 
-bool UMService::browseUMSNeighbors(UCall& c) {
-  UMessagePort& mp = UAppli::getMessagePort("_umsNeighbor");
+bool MessageService::browseUMSNeighbors(UCall& c) {
+  MessagePort& mp = Application::getMessagePort("_umsNeighbor");
   //mp.removeAll();
   if (neighbor_call) mp.remove(*neighbor_call);
   neighbor_call = c;
@@ -97,10 +94,9 @@ bool UMService::browseUMSNeighbors(UCall& c) {
   return sendRequest(UMSrequest::BROWSE_NEIGHBORS);
 }
 
-/* ==================================================== ======== ======= */
 
-UMService::BrowseReply::BrowseReply(UMessageEvent& e) {
-  const UStr* msg = e.getMessage();
+MessageService::BrowseReply::BrowseReply(MessageEvent& e) {
+  const String* msg = e.getMessage();
   flags = 0;
   errorCode = 0;
   interfaceIndex = 0;
@@ -130,14 +126,13 @@ UMService::BrowseReply::BrowseReply(UMessageEvent& e) {
   }
 }
 
-/* ==================================================== [(c)Elc] ======= */
 
 struct _UMSResolveData : public UCall {
   uptr<UCall>pc;
 
   _UMSResolveData(UCall& _c) : pc(_c) {}
 
-  void operator()(UEvent& e) {
+  void operator()(Event& e) {
     (*pc)(e);
     pc = null;      // destruction de pc si pas reference' ailleurs
     delete this;    // destruction de _UMSResolveData
@@ -145,15 +140,15 @@ struct _UMSResolveData : public UCall {
 };
 
 // c est auto-detruit si pas reference
-bool UMService::resolveUMServer(const UStr& name, UCall& c) {
+bool MessageService::resolveUMServer(const String& name, UCall& c) {
   _UMSResolveData* rd = new _UMSResolveData(c);
   
-  UAppli::onMessage("_umsResolve", *rd);
+  Application::onMessage("_umsResolve", *rd);
   return sendRequest(UMSrequest::RESOLVE_SERVER, name);
 }
 
-UMService::ResolveReply::ResolveReply(UMessageEvent& e) {
-  const UStr* msg = e.getMessage();
+MessageService::ResolveReply::ResolveReply(MessageEvent& e) {
+  const String* msg = e.getMessage();
   flags = 0;
   errorCode = 0;
   interfaceIndex = 0;
@@ -182,51 +177,47 @@ UMService::ResolveReply::ResolveReply(UMessageEvent& e) {
   }
 }
 
-/* ==================================================== ======== ======= */
-/* ==================================================== [(c)Elc] ======= */
 
-bool UMService::moveMouse(int event_flow, int x, int y, bool abs_coords) {
+bool MessageService::moveMouse(int event_flow, int x, int y, bool abs_coords) {
   UMSrequest req(UMSrequest::KEY_MOUSE_CTRL);
   req.writeEvent(MotionNotify, event_flow, x, y, abs_coords);
   return sendBlock(req);
 }
 
-bool UMService::pressMouse(int event_flow, int button_mask) {
+bool MessageService::pressMouse(int event_flow, int button_mask) {
   UMSrequest req(UMSrequest::KEY_MOUSE_CTRL);
   req.writeEvent(ButtonPress, event_flow, 0, 0, button_mask);
   return sendBlock(req);
 }
 
-bool UMService::releaseMouse(int event_flow, int button_mask) {
+bool MessageService::releaseMouse(int event_flow, int button_mask) {
   UMSrequest req(UMSrequest::KEY_MOUSE_CTRL);
   req.writeEvent(ButtonRelease, event_flow, 0, 0, button_mask);
   return sendBlock(req);
 }
 
-bool UMService::pressKey(int event_flow, int keycode) {
+bool MessageService::pressKey(int event_flow, int keycode) {
   UMSrequest req(UMSrequest::KEY_MOUSE_CTRL);
   req.writeEvent(KeyPress, event_flow, 0, 0/*ex:mods*/, keycode);
   return sendBlock(req);
 }
 
-bool UMService::releaseKey(int event_flow, int keycode) {
+bool MessageService::releaseKey(int event_flow, int keycode) {
   UMSrequest req(UMSrequest::KEY_MOUSE_CTRL);
   req.writeEvent(KeyRelease, event_flow, 0, 0/*ex:mods*/, keycode);
   return sendBlock(req);
 }
 
 /*
-bool UMService::tactos(const char* data) {
+bool MessageService::tactos(const char* data) {
   UMSrequest req(UMSrequest::TACTOS);
   req.writeString(data);
   return sendBlock(req);
 }
 */
 
-/* ==================================================== [(c)Elc] ======= */
-/* ==================================================== ======== ======= */
 
-bool UMService::sendMousePress(const char* target,
+bool MessageService::sendMousePress(const char* target,
 			       int x, int y, int mouse_btn, int mods) {
   UMSrequest req(UMSrequest::SEND_EVENT);
   req.writeEvent(ButtonPress, /*flow*/0, x, y, mouse_btn | mods);
@@ -234,7 +225,7 @@ bool UMService::sendMousePress(const char* target,
   return sendBlock(req);
 }
 
-bool UMService::sendMouseRelease(const char* target,  
+bool MessageService::sendMouseRelease(const char* target,  
 				 int x, int y, int mouse_btn, int mods) {
   UMSrequest req(UMSrequest::SEND_EVENT);
   req.writeEvent(ButtonRelease, /*flow*/0, x, y, mouse_btn | mods);
@@ -242,34 +233,31 @@ bool UMService::sendMouseRelease(const char* target,
   return sendBlock(req);
 }
 
-bool UMService::sendMouseClick(const char* target, 
+bool MessageService::sendMouseClick(const char* target, 
 			       int x, int y, int mouse_btn, int mods) {
   return 
     sendMousePress(target, x, y, mouse_btn, mods)
     && sendMouseRelease(target, x, y, mouse_btn, mods);
 }
 
-/* ==================================================== [(c)Elc] ======= */
-/* ==================================================== ======== ======= */
 
-bool UMService::sendRequest(int request, const UStr& data) {
+bool MessageService::sendRequest(int request, const String& data) {
   return sendRequest(request, data.c_str());
 }
 
-bool UMService::sendRequest(int request, const char* data) {
+bool MessageService::sendRequest(int request, const char* data) {
   if (!data) data = "";    // data can be empty in this case
   UMSrequest req(request);
   req.writeString(data);
   return sendBlock(req);
 }
 
-/* ==================================================== ======== ======= */
 
-bool UMService::sendMessage(const char* target, const UStr& message) {
+bool MessageService::sendMessage(const char* target, const String& message) {
   return sendMessage(target, message.c_str());
 }
 
-bool UMService::sendMessage(const char* target, const char* message) {
+bool MessageService::sendMessage(const char* target, const char* message) {
   // on ne doit retrourner false que si la comm deconne !
   //if (!message || !*message || !target || !*target) {
   //  UError::error("warning@UMSclient::sendMessage","empty target or message (not sent)");
@@ -282,6 +270,4 @@ bool UMService::sendMessage(const char* target, const char* message) {
 }
 
 }
-/* ==================================================== [TheEnd] ======= */
-/* ==================================================== [(c)Elc] ======= */
 

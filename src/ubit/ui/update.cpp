@@ -1,6 +1,5 @@
-/************************************************************************
- *
- *  update.cpp: Paint and Layout Updates
+/*
+ *  pdate.cpp: Paint and Layout Updates
  *  Ubit GUI Toolkit - Version 6
  *  (C) 2009 | Eric Lecolinet | ENST Paris | www.enst.fr/~elc/ubit
  *
@@ -26,8 +25,8 @@ using namespace std;
 #define NAMESPACE_UBIT namespace ubit {
 NAMESPACE_UBIT
 
-const UUpdate UUpdate::paint(PAINT);
-const UUpdate UUpdate::layoutAndPaint(LAYOUT | PAINT);
+const Update Update::paint(PAINT);
+const Update Update::layoutAndPaint(LAYOUT | PAINT);
 
 /*
  NO_DELAY = 1<<2,
@@ -52,22 +51,22 @@ const UUpdate UUpdate::layoutAndPaint(LAYOUT | PAINT);
  
  //void setScroll(float delta_x, float delta_y);
  // [impl] used to scroll objects.
- //void setScroll(float delta_x, float delta_y, UView* viewport_view);
+ //void setScroll(float delta_x, float delta_y, View* viewport_view);
  //void noDelay() {modes |= NO_DELAY;}
  //will update immediately (update operations are normally buffered).   
  */
 
-UUpdate::~UUpdate() {
+Update::~Update() {
   //if (modes & STR_DATA) delete props.sd;
   //else if (modes & (/*SCROLL|*/MOVE)) delete props.sm;
 }
 
-UUpdate::UUpdate(unsigned int m) {
+Update::Update(unsigned int m) {
   modes = m;
   //props.sd = null;
 }
 
-UUpdate::UUpdate(const UUpdate& upd) {
+Update::Update(const Update& upd) {
   modes = upd.modes;
   if (modes & STR_DATA) setPaintData(null);
   else if (modes & (/*SCROLL|*/MOVE)) setMove(0,0,false,false);
@@ -76,7 +75,7 @@ UUpdate::UUpdate(const UUpdate& upd) {
   //else if (modes & (/*SCROLL|*/MOVE)) props.sm = new ScrollMove(*upd.props.sm);
 }
 
-UUpdate& UUpdate::operator=(const UUpdate& upd) {
+Update& Update::operator=(const Update& upd) {
   modes = upd.modes;
   //if (!upd.props.sd) props.sd = null;
   //else if (modes & STR_DATA) props.sd = new StrData(*upd.props.sd);
@@ -84,7 +83,7 @@ UUpdate& UUpdate::operator=(const UUpdate& upd) {
   return *this;
 }
 
-bool UUpdate::operator==(const UUpdate& upd) {
+bool Update::operator==(const Update& upd) {
   //return (modes == upd.modes && props.sd  == upd.props.sd);
   if (modes != upd.modes) return false;
   else if (modes & STR_DATA)
@@ -102,17 +101,17 @@ bool UUpdate::operator==(const UUpdate& upd) {
 }
 
 /*
- int UUpdate::getDbfMode() const {
+ int Update::getDbfMode() const {
  if (modes & NO_SOFT_DBF) return -1;    // disable
  else if (modes & SOFT_DBF) return +1;  // enable
  else return 0; // as default
  }
  */
 
-//UUpdate::StrData::StrData(const UData* d, int p1, int p2)
+//Update::StrData::StrData(const Data* d, int p1, int p2)
 //: data(d), region(null), pos1(p1), pos2(p2) {}
 
-void UUpdate::setPaintData(const UData* d) {
+void Update::setPaintData(const Data* d) {
   modes |= (PAINT | STR_DATA);
   props.sd.data = d;
   props.sd.region = null;
@@ -123,7 +122,7 @@ void UUpdate::setPaintData(const UData* d) {
 }
 
 // will only paint an enclosing subpart of this string
-void UUpdate::setPaintStr(const UStr* s, int str_pos1, int str_pos2) {
+void Update::setPaintStr(const String* s, int str_pos1, int str_pos2) {
   modes |= (PAINT | STR_DATA);
   props.sd.data = s;
   props.sd.region = null;
@@ -133,11 +132,11 @@ void UUpdate::setPaintStr(const UStr* s, int str_pos1, int str_pos2) {
   //props.sd = new StrData(s, strp1, strp2);
 }
 
-//UUpdate::ScrollMove::ScrollMove(float dx, float dy, bool _xpercent, bool _ypercent) : 
+//Update::ScrollMove::ScrollMove(float dx, float dy, bool _xpercent, bool _ypercent) : 
 //delta_x(dx), delta_y(dy), xpercent(_xpercent), ypercent(_ypercent) {
 //}
 
-void UUpdate::setMove(float dx, float dy, bool xpercent, bool ypercent) {
+void Update::setMove(float dx, float dy, bool xpercent, bool ypercent) {
   modes |= MOVE;
   props.sm.delta_x = dx;
   props.sm.delta_y = dy;
@@ -148,7 +147,7 @@ void UUpdate::setMove(float dx, float dy, bool xpercent, bool ypercent) {
 }
 
 /*
- void UUpdate::setScroll(float dx, float dy) {
+ void Update::setScroll(float dx, float dy) {
  modes |= SCROLL;
  delete props.sm;
  props.sm = new ScrollMove(dx, dy, false, false);

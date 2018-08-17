@@ -1,6 +1,5 @@
-/************************************************************************
- *
- *  uscrollpane.cpp
+/*
+ *  scrollpane.cpp
  *  Ubit GUI Toolkit - Version 6.0
  *  (C) 2008 | Eric Lecolinet | ENST Paris | www.enst.fr/~elc/ubit
  *
@@ -34,8 +33,8 @@ UStyle* UScrollpane::createStyle() {
   UStyle& s = *new UStyle();
   s.viewStyle = &UPaneView::style;
   s.orient = UOrient::HORIZONTAL;
-  s.halign = UHalign::FLEX;
-  s.valign = UValign::FLEX;
+  s.halign = Halign::FLEX;
+  s.valign = Valign::FLEX;
   s.hspacing = 1;
   s.vspacing = 1;
   // keep initial size
@@ -44,7 +43,6 @@ UStyle* UScrollpane::createStyle() {
   return &s;
 }
 
-/* ==================================================== ======== ======= */
 
 UScrollpane::~UScrollpane() {
   //!!Att: scrollbar pas forcement enfnats du Pane !
@@ -53,44 +51,43 @@ UScrollpane::~UScrollpane() {
   if (hscrollbar) hscrollbar->setPane(null); hscrollbar = null;
 }
 
-UScrollpane::UScrollpane(UArgs a) : 
-UBox(a), hscrollbar(null), vscrollbar(null) {
+UScrollpane::UScrollpane(Args a) : 
+Box(a), hscrollbar(null), vscrollbar(null) {
   addAttr(UOn::resize / ucall(this, &UScrollpane::resizeCB));
   constructs(true, true, a);
 }
 
-UScrollpane::UScrollpane(int vs_mode, int hs_mode, UArgs a) :
-UBox(a), hscrollbar(null), vscrollbar(null) {
+UScrollpane::UScrollpane(int vs_mode, int hs_mode, Args a) :
+Box(a), hscrollbar(null), vscrollbar(null) {
   addAttr(UOn::resize / ucall(this, &UScrollpane::resizeCB));
   constructs(vs_mode, hs_mode, a);
 }
 
-void UScrollpane::constructs(int vs_mode, int hs_mode, const UArgs&) {
-  UArgs ba;
+void UScrollpane::constructs(int vs_mode, int hs_mode, const Args&) {
+  Args ba;
 
   if (vs_mode) {
     vscrollbar = &uvscrollbar();
-    if (UAppli::conf.transp_scrollbars) vscrollbar->setTransparent(true);
-    ba += UValign::flex + UHalign::right + vscrollbar;
+    if (Application::conf.transp_scrollbars) vscrollbar->setTransparent(true);
+    ba += Valign::flex + Halign::right + vscrollbar;
     vscrollbar->setPane(this);
   }
 
   if (hs_mode) {
     hscrollbar = &uhscrollbar();
-    if (UAppli::conf.transp_scrollbars) hscrollbar->setTransparent(true);
-    ba += UValign::bottom + UHalign::flex + hscrollbar;
+    if (Application::conf.transp_scrollbars) hscrollbar->setTransparent(true);
+    ba += Valign::bottom + Halign::flex + hscrollbar;
     hscrollbar->setPane(this);
   }
 
-  UBorder* border = new UCompositeBorder(ba);
+  Border* border = new UCompositeBorder(ba);
   setAttr(*border);
-  if (UAppli::conf.transp_scrollbars) border->setOverlaid(true);
+  if (Application::conf.transp_scrollbars) border->setOverlaid(true);
   
   // the mouse wheel scrolls the pane
   observeChildrenEvents(UOn::wheel / ucall(this, &UScrollpane::wheelCB));
 }
 
-/* ==================================================== ======== ======= */
 
 void UScrollpane::setTracking(bool state) {
   if (hscrollbar) hscrollbar->setTracking(state);
@@ -133,16 +130,16 @@ void UScrollpane::unsetVScrollbar() {
   vscrollbar = null;
 }
 
-UBox* UScrollpane::getScrolledBox() {
-  for (UChildIter c = cbegin(); c != cend(); ++c) {
-    UBox* box = (*c)->toBox();
+Box* UScrollpane::getScrolledBox() {
+  for (ChildIter c = cbegin(); c != cend(); ++c) {
+    Box* box = (*c)->toBox();
     if (box) return box;
   }
   return null;    // not found
 }
 
-UView *UScrollpane::getScrolledView(UView* pane_view) {
-  UBox* child = getScrolledBox();
+View *UScrollpane::getScrolledView(View* pane_view) {
+  Box* child = getScrolledBox();
   return (child ? child->getViewInImpl(pane_view /*,null*/) : null);
 }
 
@@ -174,29 +171,29 @@ void UPane::setVScrollbar(UScrollbar *sc, bool add_to_pane) {
   if (sc) {
     sc->setPane(this);
     if (add_to_pane) {
-      add(UValign::flex);
-      add(UHalign::right);
+      add(Valign::flex);
+      add(Halign::right);
       add(sc);
       // pour que les add() suivants mettent les enfants en zone centrale
-      add(UHalign::flex);
+      add(Halign::flex);
     }
   }
 }
 */
 
-void UScrollpane::makeVisible(UBox& child) {
+void UScrollpane::makeVisible(Box& child) {
   bool move_x = false, move_y = false;
   
-  for (UView* v = child.getView(0); v != null; v = v->getNext()) {
-    UBox* list = getScrolledBox();
-    UView* listv = list ? list->getViewContaining(*v) : null;
-    UView* panev = getViewContaining(*v);
+  for (View* v = child.getView(0); v != null; v = v->getNext()) {
+    Box* list = getScrolledBox();
+    View* listv = list ? list->getViewContaining(*v) : null;
+    View* panev = getViewContaining(*v);
     
     if (listv && panev
         && listv->getHeight() > 0 && listv->getWidth() > 0 //ICI isShown() serait utile!!!
         && panev->getHeight() > 0 && panev->getWidth() > 0
         ) {
-      UPoint pane_pos = UView::convertPosTo(*panev, *v, UPoint(0,0));
+      Point pane_pos = View::convertPosTo(*panev, *v, Point(0,0));
       
       if (pane_pos.x + v->getWidth() > panev->getWidth()) move_x = true;
       else if (pane_pos.x < 0) move_x = true;
@@ -205,7 +202,7 @@ void UScrollpane::makeVisible(UBox& child) {
       else if (pane_pos.y < 0) move_y = true;
       
       if (move_x || move_y) {
-        UPoint list_pos = UView::convertPosTo(*listv, *v, UPoint(0,0));
+        Point list_pos = View::convertPosTo(*listv, *v, Point(0,0));
         if (move_x) {
           float _xscroll = (float)list_pos.x / listv->getWidth() * 100;
           setScrollImpl(_xscroll, yscroll);
@@ -224,8 +221,8 @@ void UScrollpane::makeVisible(UBox& child) {
 
 UScrollpane& UScrollpane::setScroll(float _xscroll, float _yscroll) {
   // NO_DELAY necessaire pour update immediat par appel de setScroll()
-  //update(UUpdate::LAYOUT | UUpdate::NO_DELAY);
-  doUpdate(UUpdate::LAYOUT);
+  //update(Update::LAYOUT | Update::NO_DELAY);
+  doUpdate(Update::LAYOUT);
   setScrollImpl(_xscroll, _yscroll);
   return *this;
 }
@@ -240,12 +237,12 @@ void UScrollpane::setScrollImpl(float _xscroll, float _yscroll) {
   
   float xoffset_max = 0, yoffset_max = 0;  // pour toutes les Views de 'pane' 
   
-  for (UView* view = views; view != null; view = view->getNext()) {
+  for (View* view = views; view != null; view = view->getNext()) {
     UPaneView* pane_view = dynamic_cast<UPaneView*>(view);  // UPaneView par constr
-    UView *winview = null;
+    View *winview = null;
     
     if (pane_view && (winview = pane_view->getWinView())) {
-      UView* viewport_view = getScrolledView(pane_view);
+      View* viewport_view = getScrolledView(pane_view);
       
       if (viewport_view) {
         UPaintEvent e(UOn::paint, winview);
@@ -300,7 +297,6 @@ void UScrollpane::setScrollImpl(float _xscroll, float _yscroll) {
 */
 }
 
-/* ==================================================== ======== ======= */
 
 void UScrollpane::resizeCB(UResizeEvent& e) {
   UPaneView *pane_view  = dynamic_cast<UPaneView*>(e.getView());
@@ -311,7 +307,7 @@ void UScrollpane::resizeCB(UResizeEvent& e) {
     float viewport_w = pane_view->getWidth()
     - pane_view->padding.left.val - pane_view->padding.right.val;
 
-    UView *viewport_view = getScrolledView(pane_view);
+    View *viewport_view = getScrolledView(pane_view);
     if (!viewport_view) return;
 
     // corrbug div by 0
@@ -330,7 +326,7 @@ void UScrollpane::resizeCB(UResizeEvent& e) {
     float viewport_h = pane_view->getHeight()
     - pane_view->padding.top.val - pane_view->padding.bottom.val;
 
-    UView *viewport_view = getScrolledView(pane_view);
+    View *viewport_view = getScrolledView(pane_view);
     if (!viewport_view) return;
     
     if (viewport_view->getHeight() == viewport_h) vscrollbar->setValue(0);
@@ -345,19 +341,18 @@ void UScrollpane::resizeCB(UResizeEvent& e) {
   }
 }
 
-/* ==================================================== ===== ======= */
 
 UViewStyle UPaneView::style(&UPaneView::createView, UCONST);
 
-UPaneView::UPaneView(UBox* box, UView* parview, UHardwinImpl* w) : 
-  UView(box, parview, w), 
+UPaneView::UPaneView(Box* box, View* parview, UHardwinImpl* w) : 
+  View(box, parview, w), 
   padding(0,0),
   xscroll(0),
   yscroll(0) {
 }
 
 // "static" constructor used by UViewStyle to make a new view
-UView* UPaneView::createView(UBox* box, UView* parview, UHardwinImpl* w) {
+View* UPaneView::createView(Box* box, View* parview, UHardwinImpl* w) {
   return new UPaneView(box, parview, w);
 }
 

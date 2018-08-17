@@ -1,6 +1,5 @@
-/************************************************************************
- *
- *  ustr.cpp: active strings (can have callbacks)
+/*
+ *  str.cpp: active strings (can have callbacks)
  *  Ubit GUI Toolkit - Version 6.0
  *  (C) 2008 | Eric Lecolinet | ENST Paris | www.enst.fr/~elc/ubit
  *
@@ -33,65 +32,65 @@
 #include <ubit/uview.hpp>
 #include <ubit/ustr.hpp>
 #include <ubit/uedit.hpp>
-#include <ubit/uselection.hpp>
+#include <ubit/Selection.hpp>
 #include <ubit/uwin.hpp>
 #include <ubit/uappli.hpp>
 using namespace std;
 #define NAMESPACE_UBIT namespace ubit {
 NAMESPACE_UBIT
 
-//UStr UStr::none((char*)null, UMode::UCONST);
-//UStr UStr::newline("\n", UMode::UCONST);
-//UStr UStr::goBOL("\15", UMode::UCONST); // retour a la ligne si necessaire
+//String String::none((char*)null, UMode::UCONST);
+//String String::newline("\n", UMode::UCONST);
+//String String::goBOL("\15", UMode::UCONST); // retour a la ligne si necessaire
 
-const UStr& UStr::getNodeName() const {static UStr nn("#text"); return nn;}
+const String& String::getNodeName() const {static String nn("#text"); return nn;}
 
-UStr& UStr::onChange(UCall &c) {
+String& String::onChange(UCall &c) {
   addChangeCall(c);
   return *this;
 }
 
-UStr::UStr(const char* chs, UConst m) : UData(m) {
+String::String(const char* chs, UConst m) : Data(m) {
   s = null; //!dont forget: checked by _set() for freeing memory!
   initImpl(chs, (chs ? strlen(chs) : 0));
 }
 
-UStr::UStr() {
+String::String() {
   s = null; // !dont forget: checked by _set() for freeing memory!
   initImpl(null, 0);
 }
 
-UStr::UStr(const char* chs) {
+String::String(const char* chs) {
   s = null; // !dont forget: checked by _set() for freeing memory!
   initImpl(chs, (chs ? strlen(chs) : 0));
 }
 
-UStr::UStr(const string& str) {
+String::String(const string& str) {
   s = null;
   initImpl(str.c_str(), str.length());  //pas optimal mais tant pis!
 }
 
-UStr::UStr(const UStr& str) {
+String::String(const String& str) {
   s = null;
   initImpl(str.s, str.len);
 }
 
 /*
-UStr::UStr(const class UInteger& _n) {
+String::String(const class UInteger& _n) {
   s = null;
   char _s[50] = "";
   sprintf(_s, "%d", _n.intValue()); // int!
   initImpl(_s, strlen(_s));
 }
 
-UStr::UStr(const class UFloat& _n) {
+String::String(const class Float& _n) {
   s = null;
   char _s[50] = ""; 
   sprintf(_s, "%f", _n.doubleValue());  // double!
   initImpl(_s, strlen(_s));
 }
 
-UStr::UStr(const class UDouble& _n) {
+String::String(const class Double& _n) {
   s = null;
   char _s[50] = "";
   sprintf(_s, "%f", _n.doubleValue());  // double!
@@ -100,7 +99,7 @@ UStr::UStr(const class UDouble& _n) {
 */
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-UStr::~UStr() {
+String::~String() {
   destructs();     // necessaire car removingFrom specifique
   if (s) free(s);
   s = null; len = 0;
@@ -108,15 +107,15 @@ UStr::~UStr() {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UStr::addingTo(UChild& c, UElem& parent) {
-  UData::addingTo(c, parent);
+void String::addingTo(Child& c, Element& parent) {
+  Data::addingTo(c, parent);
 
   // dans ce mode les Str de n'importe quel object peuvent etre selectees
-  if (UAppli::conf.generic_textsel) {
+  if (Application::conf.generic_textsel) {
     parent.emodes.IS_TEXT_SELECTABLE = true;
   }
   
-  // il y a un caret et il ne pointe sur rien -> le faire pointer sur cette UStr
+  // il y a un caret et il ne pointe sur rien -> le faire pointer sur cette String
   if (parent.emodes.IS_TEXT_EDITABLE) {
     UEdit* ed = null;
     parent.attributes().findClass(ed);
@@ -125,7 +124,7 @@ void UStr::addingTo(UChild& c, UElem& parent) {
   }
 }
 
-void UStr::removingFrom(UChild& c, UElem& parent) {
+void String::removingFrom(Child& c, Element& parent) {
   // la Str est enlevee et un caret pointait dessus -> le faire pointer sur null
   if (parent.emodes.IS_TEXT_EDITABLE) {
     UEdit* ed = null;
@@ -133,26 +132,25 @@ void UStr::removingFrom(UChild& c, UElem& parent) {
     if (!ed) parent.children().findClass(ed);
     if (ed && ed->getCaretStr() == this) ed->setCaretStr(null, 0);
   }
-  UData::removingFrom(c, parent);
+  Data::removingFrom(c, parent);
 }
 
 /* ==================================================== [Elc] ======= */
-/* ==================================================== ===== ======= */
 // NB: duplicates the char string (!ATT: length MUST be the EXACT length)
 
-void UStr::initImpl(const char *_s, int _len) {
+void String::initImpl(const char *_s, int _len) {
   if (!_s) syncVals(null, 0);
   else {
     s = (char*)malloc((_len + 1) * sizeof(char));
     if (s) {strncpy(s, _s, _len); s[_len] = 0; syncVals(s, _len);}
     else {
       syncVals(null, 0);
-      UAppli::fatalError("UStr::initImpl","No more memory; UStr object %p",this);
+      Application::fatalError("String::initImpl","No more memory; String object %p",this);
     }
   }
 }
 
-void UStr::setImpl(const char *_s, int _len) {
+void String::setImpl(const char *_s, int _len) {
   if (checkConst()) return;
   if (s) free(s);
   
@@ -162,13 +160,13 @@ void UStr::setImpl(const char *_s, int _len) {
     if (s) {strncpy(s, _s, _len); s[_len] = 0; syncVals(s, _len);}
     else {
       syncVals(null, 0);
-      UAppli::fatalError("UStr::setImpl","No more memory; UStr object %p",this);
+      Application::fatalError("String::setImpl","No more memory; String object %p",this);
     }
   }
   changed(true);
 }
 
-void UStr::setImplNoCopy(char *_s, int _len) {
+void String::setImplNoCopy(char *_s, int _len) {
   if (checkConst()) return;
   if (s) free(s);
   
@@ -181,82 +179,81 @@ void UStr::setImplNoCopy(char *_s, int _len) {
   changed(true);
 }
 
-/* ==================================================== ======== ======= */
 
-UStr& UStr::clear() {
+String& String::clear() {
   if (!s) return *this;
   setImpl((char*)null, 0);
   return *this;
 }
 
-UStr& UStr::operator=(const char* _s) {
+String& String::operator=(const char* _s) {
   if (equals(_s)) return *this;
   setImpl(_s, (_s ? strlen(_s) : 0));
   return *this;
 }
 
-UStr& UStr::operator=(const UStr& _s) {
+String& String::operator=(const String& _s) {
   if (equals(_s)) return *this;
   setImpl(_s.s, _s.len);
   return *this;
 }
 
-UStr& UStr::operator=(const string& _s) {
+String& String::operator=(const string& _s) {
   if (equals(_s)) return *this;
   setImpl(_s.c_str(), _s.length());
   return *this;
 }
 
 /*
-UStr& UStr::set(const UInteger& _n) {
+String& String::set(const UInteger& _n) {
   return setInt(_n.intValue());
 }
 
-UStr& UStr::set(const UFloat& _n) {
+String& String::set(const Float& _n) {
   return setFloat(_n.floatValue());
 }
 
-UStr& UStr::set(const UDouble& _n) {
+String& String::set(const Double& _n) {
   return setDouble(_n.doubleValue());
 }
 */
 
-UStr& UStr::setInt(int _n) {
+String& String::setInt(int _n) {
   if (checkConst()) return *this;
   char _s[50] = ""; 
   sprintf(_s, "%d", _n);
   return operator=(_s); //cf autoupdate
 }
 
-UStr& UStr::setLong(long _n) {
+String& String::setLong(long _n) {
   if (checkConst()) return *this;
   char _s[50] = ""; 
   sprintf(_s, "%ld", _n);
   return operator=(_s); //cf autoupdate
 }
 
-UStr& UStr::setFloat(float _n) {
+String& String::setFloat(float _n) {
   if (checkConst()) return *this;
   char _s[50] = ""; 
   sprintf(_s, "%f", _n);
   return operator=(_s); //cf autoupdate
 }
 
-UStr& UStr::setDouble(double _n) {
+String& String::setDouble(double _n) {
   if (checkConst()) return *this;
   char _s[50] = "";
   sprintf(_s, "%f", _n);
   return operator=(_s); //cf autoupdate
 }
 
-bool UStr::scanValue(float& val, UStr& unit) const {
+bool String::scanValue(float& val, String& unit) const {
   const char* u = null;
   bool valfound = scanValue(val, u);
   if (u && *u) unit = u; else unit.clear();
   return valfound;
 }
 
-bool UStr::scanValue(float& val, const char*& unit) const {
+bool String::scanValue(float& val, const char*& unit) const {
   val = 0.;
   if (!s || !*s) return false;
   const char* p = s; 
@@ -295,12 +292,12 @@ bool UStr::scanValue(float& val, const char*& unit) const {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-ostream& operator<<(ostream& os, const UStr& s) {
+ostream& operator<<(ostream& os, const String& s) {
   if (s.s) return (os << s.s);
   else return os;
 }
 
-istream& operator>>(istream& is, UStr& s) {
+istream& operator>>(istream& is, String& s) {
   char* c_s = null;
   is >> c_s;
   s.operator=(c_s);
@@ -309,101 +306,101 @@ istream& operator>>(istream& is, UStr& s) {
 
 /* ==================================================== [Elc] ======= */
 
-bool UStr::equals(const char* _s, bool ignore_case) const {
+bool String::equals(const char* _s, bool ignore_case) const {
   if (s == _s) return true;
   else if (!_s) return isEmpty();
   else if (!s) return (!_s || !*_s); 
   else return (UCstr::compare(s, _s, ignore_case) == 0);
 }
 
-bool UStr::equals(const UStr& _s, bool ignore_case) const {
+bool String::equals(const String& _s, bool ignore_case) const {
   return equals(_s.s, ignore_case);
 }
 
-bool UStr::equals(const string& _s, bool ignore_case) const {
+bool String::equals(const string& _s, bool ignore_case) const {
   return equals(_s.c_str(), ignore_case);
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-int UStr::compare(const char* _s, bool ignore_case) const {
+int String::compare(const char* _s, bool ignore_case) const {
   if (s == _s) return 0;
   else if (!_s) return isEmpty() ? 0 : 1;
   else if (!s) return (!_s || !*_s) ? 0 : -1;
   else return UCstr::compare(s, _s ,ignore_case);
 }
 
-int UStr::compare(const UStr& _s, bool ignore_case) const {
+int String::compare(const String& _s, bool ignore_case) const {
   return compare(_s.s, ignore_case);
 }
 
-int UStr::compare(const string& _s, bool ignore_case) const {
+int String::compare(const string& _s, bool ignore_case) const {
   return compare(_s.c_str(), ignore_case);
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-int UStr::compareN(const char* _s, unsigned int n, bool ignore_case) const {
+int String::compareN(const char* _s, unsigned int n, bool ignore_case) const {
   if (s == _s) return 0;
   else if (!_s) return isEmpty() ? 0 : 1;
   else if (!s) return (!_s || !*_s) ? 0 : -1;
   else return UCstr::compareN(s, _s, n, ignore_case);
 }
 
-int UStr::compareN(const UStr& _s, unsigned int n, bool ignore_case) const {
+int String::compareN(const String& _s, unsigned int n, bool ignore_case) const {
   return compareN(_s.s, n, ignore_case);
 }
 
-int UStr::compareN(const string& _s, unsigned int n, bool ignore_case) const {
+int String::compareN(const string& _s, unsigned int n, bool ignore_case) const {
   return compareN(_s.c_str(), n, ignore_case);
 }
 
 /* ==================================================== [Elc] ======= */
 
-int UStr::toInt() const {
+int String::toInt() const {
   return s ? atoi(s) : 0;
 }
 
-long UStr::toLong() const {
+long String::toLong() const {
   //return s ? strtol(s, null, 0) : 0;
   return s ? atol(s) : 0;
 }
 
-float UStr::toFloat() const {
+float String::toFloat() const {
   return float(s ? atof(s) : 0);
 }
 
-double UStr::toDouble() const {
+double String::toDouble() const {
   return s ? atof(s) : 0;  // == strtod(s, null) 
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-UStr UStr::toUpper() const {
-  UStr s2 = s;
+String String::toUpper() const {
+  String s2 = s;
   if (!s2.s) return s2;
   for (char* p = s2.s; *p; p++) *p = toupper(*p);
   return s2;
 }
 
-UStr UStr::toLower() const {
-  UStr s2 = s;
+String String::toLower() const {
+  String s2 = s;
   if (!s2.s) return s2;
   for (char* p = s2.s; *p; p++) *p = tolower(*p);
   return s2;
 }
 
-void UStr::upper() {
+void String::upper() {
   if (!s) return;
   for (char* p = s; *p; p++) *p = toupper(*p);
 }
 
-void UStr::lower() {
+void String::lower() {
   if (!s) return;
   for (char* p = s; *p; p++) *p = tolower(*p);
 }
 
-void UStr::capitalize() {
+void String::capitalize() {
   if (!s) return;
   if (!*s) return; else *s = toupper(*s);
   for (char* p = s+1; *p; p++) *p = tolower(*p);
@@ -411,42 +408,42 @@ void UStr::capitalize() {
 
 /* ==================================================== [Elc] ======= */
 
-bool UStr::checkFormat(int pos, int _c) {
+bool String::checkFormat(int pos, int _c) {
   if (_c == '\0') return false;      //don't insert the NUL char!
   //else if (model) return model->checkFormat(pos, _c);
   else return true;
 }
 
-bool UStr::checkFormat(int pos, const char *_s) {
+bool String::checkFormat(int pos, const char *_s) {
   if (_s == null) return false;      //don't insert the NULL string!
   //else if (model) return model->checkFormat(pos, _s);
   else return true;
 }
 
-void UStr::syncVals(char *news, int newlen) {
+void String::syncVals(char *news, int newlen) {
   s = news;
   len = newlen;
   /*
   if (model) model->set(this);
-  void UStr::setStrModel(class UEditable *m) {
+  void String::setStrModel(class UEditable *m) {
   model = m;
   chainage et cas null et enlever existant;
   */
 }
 
-void UStr::update() {
-  _parents.updateAutoParents(UUpdate::layoutAndPaint);
+void String::update() {
+  _parents.updateAutoParents(Update::layoutAndPaint);
 }
 
 // calls UOn::change callbacks of this object when its value is changed
 // then UOn::changeData AND UOn::changeStr callbacks of its parents
 //
-void UStr::changed(bool upd) {
+void String::changed(bool upd) {
   if (upd && !omodes.DONT_AUTO_UPDATE) update();
 
   if (!omodes.IGNORE_CHANGE_CALLBACKS) {
     if (_abegin() != _aend()) {
-      UEvent e(UOn::change, this);  //UNodeEvent
+      Event e(UOn::change, this);  //UNodeEvent
       fire(e);
     }
     // ensuite on lance les callbacks des parents
@@ -456,21 +453,20 @@ void UStr::changed(bool upd) {
   }
 }
 
-/* ==================================================== ===== ======= */
 
-char UStr::operator[](int pos) const {
+char String::operator[](int pos) const {
   if (!s || pos >= len) return 0;
   if (pos < 0) pos = len-1; // last char
   return s[pos];
 }
 
-char UStr::at(int pos) const {
+char String::at(int pos) const {
   if (!s || pos >= len) return 0;
   if (pos < 0) pos = len-1; // last char
   return s[pos];
 }
  
-char UStr::setCharAt(int pos, char newchar, bool upd) {
+char String::setCharAt(int pos, char newchar, bool upd) {
   if (checkConst()) return 0;
   if (!s || pos >= len) return 0;
   if (!checkFormat(pos, newchar)) return false; // !!
@@ -485,133 +481,132 @@ char UStr::setCharAt(int pos, char newchar, bool upd) {
 
 /* ==================================================== [Elc] ======= */
 
-UStr operator&(const UStr& s1, const UStr& s2) {
-  UStr str = s1; str.append(s2); return str;
+String operator&(const String& s1, const String& s2) {
+  String str = s1; str.append(s2); return str;
 }
 
-UStr operator&(const UStr& s1, const char* s2) {
-  UStr str = s1; str.append(s2); return str;
+String operator&(const String& s1, const char* s2) {
+  String str = s1; str.append(s2); return str;
 }
 
-UStr operator&(const char* s1, const UStr& s2) {
-  UStr str = s1; str.append(s2); return str;
+String operator&(const char* s1, const String& s2) {
+  String str = s1; str.append(s2); return str;
 }
 
-UStr operator&(const UStr& s1, const string& s2) {
-  UStr str = s1; str.append(s2); return str;
+String operator&(const String& s1, const string& s2) {
+  String str = s1; str.append(s2); return str;
 }
 
-UStr operator&(const string& s1, const UStr& s2) {
-  UStr str = s1; str.append(s2); return str;
+String operator&(const string& s1, const String& s2) {
+  String str = s1; str.append(s2); return str;
 }
 
-UStr operator&(const UStr& _s, int _v) {
-  UStr str(_s); str.append(_v); return str;
+String operator&(const String& _s, int _v) {
+  String str(_s); str.append(_v); return str;
 }
 
-UStr operator&(int _v, const UStr& _s) {
-  UStr str; str.setInt(_v); str.append(_s); return str;
+String operator&(int _v, const String& _s) {
+  String str; str.setInt(_v); str.append(_s); return str;
 }
 
-UStr operator&(const UStr& _s, double _v) {
-  UStr str(_s); str.append(_v); return str;
+String operator&(const String& _s, double _v) {
+  String str(_s); str.append(_v); return str;
 }
 
-UStr operator&(double _v, const UStr& _s) {
-  UStr str; str.setDouble(_v); str.append(_s); return str;
+String operator&(double _v, const String& _s) {
+  String str; str.setDouble(_v); str.append(_s); return str;
 }
 
 /*
-UStr operator&(const UStr& _s, const UInteger& _v) {
-  UStr str(_s); str.append(_v); return str;
+String operator&(const String& _s, const UInteger& _v) {
+  String str(_s); str.append(_v); return str;
 }
-UStr operator&(const UInteger& _v, const UStr& _s) {
-  UStr str; str = _v; str.append(_s); return str;
+String operator&(const UInteger& _v, const String& _s) {
+  String str; str = _v; str.append(_s); return str;
 }
-UStr operator&(const UStr& _s, const UDouble& _v) {
-  UStr str(_s); str.append(_v); return str;
+String operator&(const String& _s, const Double& _v) {
+  String str(_s); str.append(_v); return str;
 }
-UStr operator&(const UDouble& _v, const UStr& _s) {
-  UStr str; str = _v; str.append(_s); return str;
+String operator&(const Double& _v, const String& _s) {
+  String str; str = _v; str.append(_s); return str;
 }
 */
 /* ==================================================== [Elc] ======= */
 
-void UStr::append(const char c) {
+void String::append(const char c) {
   insertImpl(-1, c, true);
 }
 
-void UStr::append(const char *s2) {
+void String::append(const char *s2) {
   insertImpl(-1, s2, 0, npos, true);
 }
 
-void UStr::append(const char *s2, unsigned int nbchars) {
+void String::append(const char *s2, unsigned int nbchars) {
   insertImpl(-1, s2, 0, nbchars, true);
 }
 
-void UStr::append(const UStr &s2) {
+void String::append(const String &s2) {
   insertImpl(-1, s2.s, 0, npos, true);
 }
 
-void UStr::append(const UStr &s2, unsigned int nbchars) {
+void String::append(const String &s2, unsigned int nbchars) {
   insertImpl(-1, s2.s, 0, nbchars, true);
 }
 
-void UStr::append(const string& s2) {
+void String::append(const string& s2) {
   insertImpl(-1, s2.c_str(), 0, npos, true);
 }
 
-void UStr::append(const string& s2, unsigned int nbchars) {
+void String::append(const string& s2, unsigned int nbchars) {
   insertImpl(-1, s2.c_str(), 0, nbchars, true);
 }
 
-void UStr::append(int v2) {
+void String::append(int v2) {
   char _s2[50] = {0}; 
   sprintf(_s2, "%d", v2);
   insertImpl(-1, _s2, 0, npos, true);
 }
 
-void UStr::append(double v2) {
+void String::append(double v2) {
   char _s2[50] = {0}; 
   sprintf(_s2, "%f", v2);
   insertImpl(-1, _s2, 0, npos, true);
 }
 
 /*
-void UStr::append(const UInteger& v2) {
+void String::append(const UInteger& v2) {
   append(v2.intValue());
 }
 
-void UStr::append(const UDouble& v2) {
+void String::append(const Double& v2) {
   append(v2.doubleValue());
 }
 */
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-bool UStr::insert(int to_pos, char c) {
+bool String::insert(int to_pos, char c) {
   return insertImpl(to_pos, c, true);
 }
 
-bool UStr::insert(int to_pos, const UStr &s2, int from_pos,
+bool String::insert(int to_pos, const String &s2, int from_pos,
                   unsigned int from_nbchars) {
   return insertImpl(to_pos, s2.s, from_pos, from_nbchars, true);
 }
 
-bool UStr::insert(int to_pos, const char *s2, int from_pos,
+bool String::insert(int to_pos, const char *s2, int from_pos,
                   unsigned int from_nbchars) {
   return insertImpl(to_pos, s2, from_pos, from_nbchars, true);
 }
 
-bool UStr::insert(int to_pos, const std::string& s2, int from_pos,
+bool String::insert(int to_pos, const std::string& s2, int from_pos,
                   unsigned int from_nbchars) {
   return insertImpl(to_pos, s2.c_str(), from_pos, from_nbchars, true);
 }
 
-/* ==================================================== ======== ======= */
 // from_nbchars < 0 means whole string s2
 // return : true if changed
 
-bool UStr::insertImpl(int to_pos, const char *s2, int from_pos,
+bool String::insertImpl(int to_pos, const char *s2, int from_pos,
                       unsigned int from_nbchars, bool upd) {
   if (checkConst()) return false;
   if (!checkFormat(to_pos, s2) || to_pos > len) return false;
@@ -627,7 +622,7 @@ bool UStr::insertImpl(int to_pos, const char *s2, int from_pos,
 
   char* news = (char*) malloc(len + nbc + 1); // 0 final
   if (!news) {
-    UAppli::fatalError("UStr::insertImpl","No more memory; UStr object %p",this);
+    Application::fatalError("String::insertImpl","No more memory; String object %p",this);
     return false;		// str et strLen inchanges !
   }
 
@@ -645,16 +640,15 @@ bool UStr::insertImpl(int to_pos, const char *s2, int from_pos,
   return true;
 }
 
-/* ==================================================== ======== ======= */
 
-bool UStr::insertImpl(int pos, char c, bool upd) {
+bool String::insertImpl(int pos, char c, bool upd) {
   if (checkConst()) return false;
   if (!checkFormat(pos, c)) return false; //!!
   if (pos < 0 || pos > len) pos = len; // append
 
   char *news = (char*) malloc(len + 1 + 1); // 0 final
   if (!news) {
-    UAppli::fatalError("UStr::insertImpl","No more memory; UStr object %p",this);
+    Application::fatalError("String::insertImpl","No more memory; String object %p",this);
     return false;		// str et strLen inchanges !
   }
 
@@ -676,25 +670,24 @@ bool UStr::insertImpl(int pos, char c, bool upd) {
 
 /* ==================================================== [Elc] ======= */
 
-void UStr::remove(int pos, unsigned int nbchars) {
+void String::remove(int pos, unsigned int nbchars) {
   replaceImpl(pos, nbchars, (char*)null, true);
 }
 
-void UStr::replace(int pos, unsigned int nbchars, const UStr& s2) {
+void String::replace(int pos, unsigned int nbchars, const String& s2) {
   replaceImpl(pos, nbchars, s2.s, true);
 }
 
-void UStr::replace(int pos, unsigned int nbchars, const char *s2) {
+void String::replace(int pos, unsigned int nbchars, const char *s2) {
   replaceImpl(pos, nbchars, s2, true);
 }
 
-void UStr::replace(int pos, unsigned int nbchars, const std::string& s2) {
+void String::replace(int pos, unsigned int nbchars, const std::string& s2) {
   replaceImpl(pos, nbchars, s2.c_str(), true);
 }
 
-/* ==================================================== ======== ======= */
 
-bool UStr::replaceImpl(int pos, unsigned int nbchars, const char *str, bool upd) {
+bool String::replaceImpl(int pos, unsigned int nbchars, const char *str, bool upd) {
   if (checkConst()) return false;
   if (pos < 0) pos = len-1;  // last char (new 26jt)
 
@@ -716,7 +709,7 @@ bool UStr::replaceImpl(int pos, unsigned int nbchars, const char *str, bool upd)
   else {
     char* news = (char*)malloc(newlen + 1); // 0 final
     if (!news) {
-      UAppli::fatalError("UStr::replaceImpl","No more memory; UStr object %p",this);
+      Application::fatalError("String::replaceImpl","No more memory; String object %p",this);
       return false;		  // str et strLen inchanges !
     }
 
@@ -750,7 +743,7 @@ bool UStr::replaceImpl(int pos, unsigned int nbchars, const char *str, bool upd)
 
 /* ==================================================== [Elc] ======= */
 
-bool UStr::toString(string& str, int from_pos, unsigned int nbchars) const {
+bool String::toString(string& str, int from_pos, unsigned int nbchars) const {
   if (!s || from_pos >= len) // hors bornes
     return false;
   else {
@@ -767,21 +760,20 @@ bool UStr::toString(string& str, int from_pos, unsigned int nbchars) const {
   }
 }
 
-std::string UStr::toString(int pos, unsigned int nbchars) const {
+std::string String::toString(int pos, unsigned int nbchars) const {
   std::string substr;
   toString(substr, pos, nbchars);
   return substr;
 }
 
-UStr UStr::substring(int pos, unsigned int nbchars) const {
-  UStr substr;
+String String::substring(int pos, unsigned int nbchars) const {
+  String substr;
   substr.insert(0, *this, pos, nbchars);
   return substr;
 }
 
-/* ==================================================== ======== ======= */
 
-void UStr::trim(bool strip_beginning, bool strip_end) {
+void String::trim(bool strip_beginning, bool strip_end) {
   if (checkConst()) return;
   if (!s || !*s) return;
 
@@ -809,9 +801,8 @@ void UStr::trim(bool strip_beginning, bool strip_end) {
   syncVals(s2, p2 - p1 + 1);
 }
 
-/* ==================================================== ======== ======= */
 
-int UStr::tokenize(std::vector<UStr*>& tokens, const UStr& separators,
+int String::tokenize(std::vector<String*>& tokens, const String& separators,
 		   bool trim_beginning, bool trim_end) const
 {
   if (empty()) return 0;
@@ -819,15 +810,15 @@ int UStr::tokenize(std::vector<UStr*>& tokens, const UStr& separators,
   unsigned int ix = 0;
 
   while (p1) {
-    UStr* t;
+    String* t;
     // on recupere les tokens existants si c'est le cas
     if (ix < tokens.size()) {
       t = tokens[ix];
       if (t) t->clear(); 
-      else {t = new UStr(); tokens[ix] = t;}
+      else {t = new String(); tokens[ix] = t;}
     }
     else {
-      t = new UStr(); tokens.push_back(t);
+      t = new String(); tokens.push_back(t);
     }
     ix++;
 
@@ -844,12 +835,11 @@ int UStr::tokenize(std::vector<UStr*>& tokens, const UStr& separators,
   return ix;
 }
 
-/* ==================================================== ======== ======= */
 
-UStr UStr::split(int pos, bool delete_char_at_pos) {
-  //if (checkConst()) return UStr::none;
+String String::split(int pos, bool delete_char_at_pos) {
+  //if (checkConst()) return String::none;
   if (checkConst()) return "";
-  UStr res;
+  String res;
 
   if (!s || pos<0 || pos>=len) return res;
 
@@ -872,27 +862,27 @@ UStr UStr::split(int pos, bool delete_char_at_pos) {
 
 /* ==================================================== [Elc] ======= */
 
-int UStr::find(char c, int pos) const {
+int String::find(char c, int pos) const {
   if (empty() || pos >= len) return -1;
   char* p = ::strchr(s + pos, c);
   return (p ? p-s : -1);
 }
 
-int UStr::find(const char* s2, int pos) const {
+int String::find(const char* s2, int pos) const {
   if (empty() || !s2 || pos >= len) return -1;
   char* p = ::strstr(s + pos, s2);
   return (p ? p-s : -1);
 }
 
-int UStr::find(const UStr& s2, int pos) const {
+int String::find(const String& s2, int pos) const {
   return find(s2.c_str(), pos);
 }
 
-int UStr::find(const std::string& s2, int pos) const {
+int String::find(const std::string& s2, int pos) const {
   return find(s2.c_str(), pos);
 }
 
-int UStr::rfind(char c) const {
+int String::rfind(char c) const {
   if (empty()) return -1;
   char* p = ::strrchr(s, c);
   return (p ? p-s : -1);
@@ -900,7 +890,7 @@ int UStr::rfind(char c) const {
 
 /* ==================================================== [Elc] ======= */
 
-void UStr::getSize(UUpdateContext& ctx, UDimension& dim) const {
+void String::getSize(UpdateContext& ctx, Dimension& dim) const {
   // NB: conserver une hauteur stable etfaire en sorte que la surface ne soit 
   // jamais de taille nulle (sinon on ne pourra plus la selecionner en cliquant)  
   UFontMetrics fm(ctx);
@@ -909,7 +899,7 @@ void UStr::getSize(UUpdateContext& ctx, UDimension& dim) const {
 }
 
 // prototype for warped text (UFlowview)
-void UStr::getSize(UUpdateContext& ctx, UDimension& dim, float available_width,
+void String::getSize(UpdateContext& ctx, Dimension& dim, float available_width,
                    int offset, int& str_sublen, int& change_line) const {
   UFontMetrics fm(ctx);
   if (s && *s) {
@@ -927,16 +917,16 @@ void UStr::getSize(UUpdateContext& ctx, UDimension& dim, float available_width,
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UStr::paint(UGraph& g, UUpdateContext& ctx, const URect& r) const {
+void String::paint(Graph& g, UpdateContext& ctx, const Rectangle& r) const {
   paint(g, ctx, r, 0, len);
 }
 
-void UStr::paint(UGraph& g, UUpdateContext& ctx, const URect& r,
+void String::paint(Graph& g, UpdateContext& ctx, const Rectangle& r,
                  int offset, int cellen) const {
   // !! don't confuse cellen and len!
   if (!s || !*s) return;
   
-  USelection* ts = g.getDisp() ? g.getDisp()->getChannelSelection(0) : null;
+  Selection* ts = g.getDisp() ? g.getDisp()->getChannelSelection(0) : null;
 
   //ce qui serait cool c'est d'economiser les setColor et setFont!!!
   g.setFont(ctx.fontdesc);
@@ -950,8 +940,8 @@ void UStr::paint(UGraph& g, UUpdateContext& ctx, const URect& r,
   if (!omodes.IS_IN_SELECTION
       || !ts || !ts->in_obj
       // permettre l'affichage des objets inclus dans ts.in_obj
-      || ts->fromLink == USelection::null_link
-      || ts->toLink == USelection::null_link
+      || ts->fromLink == Selection::null_link
+      || ts->toLink == Selection::null_link
       || ts->fromLink == ts->endPressLink
       || ts->toLink == ts->endPressLink
       ) {
@@ -964,10 +954,10 @@ void UStr::paint(UGraph& g, UUpdateContext& ctx, const URect& r,
 
     int deb = 0, fin = cellen;
     float ww = 0;    // ex int
-    // IL FAUDRAIT tester LEs LIENs (pas les UStr)
+    // IL FAUDRAIT tester LEs LIENs (pas les String)
     // sinon les strings partagees vont s'allumer a plusieurs endroits!!
 
-    if (this == dynamic_cast<const UStr*>(*(ts->fromLink))) {
+    if (this == dynamic_cast<const String*>(*(ts->fromLink))) {
       deb = ts->fromPos - offset;
       if (deb < 0) deb = 0;  //inclus dans selection
       else if (deb >= cellen) deb = cellen;   //exclus (avant) selection
@@ -976,7 +966,7 @@ void UStr::paint(UGraph& g, UUpdateContext& ctx, const URect& r,
     // pas de else: this peut etre a la fois fromLink et toLink
     // (c'est meme le cas le plus frequent!)
 
-    if (this == dynamic_cast<const UStr*>(*(ts->toLink))) {
+    if (this == dynamic_cast<const String*>(*(ts->toLink))) {
       fin = ts->toPos - offset;
       if (fin < 0) fin = 0;   //exclus (apres) selection
       else if (fin >= cellen) fin = cellen; //inclus dans selection
@@ -1014,8 +1004,8 @@ void UStr::paint(UGraph& g, UUpdateContext& ctx, const URect& r,
 
 /* ==================================================== [Elc] ======= */
 
-UStr UStr::basename(bool with_suffix) const {
-  UStr res;
+String String::basename(bool with_suffix) const {
+  String res;
   if (len == 0) return res;
   
   char* dir_name, *base_name, *suffix;
@@ -1028,8 +1018,8 @@ UStr UStr::basename(bool with_suffix) const {
 }
 
 
-UStr UStr::dirname(bool with_slash) const {
-  UStr res;
+String String::dirname(bool with_slash) const {
+  String res;
   if (len == 0) res = ".";
   else {
     char* dir_name, *base_name, *suffix; 
@@ -1044,8 +1034,8 @@ UStr UStr::dirname(bool with_slash) const {
   return res;
 }
 
-UStr UStr::suffix() const {
-  UStr res;
+String String::suffix() const {
+  String res;
   if (len == 0) return res;
   
   char* dir_name, *base_name, *suffix;
@@ -1055,9 +1045,9 @@ UStr UStr::suffix() const {
   return res;
 }
 
-UStr UStr::expand() const {
+String String::expand() const {
   if (empty()) return "";
-  UStr res = *this;
+  String res = *this;
   
   if (s[0] == '~' && s[1] == '/') {
     //NB: ne PAS faire de free() sur un getenv!
@@ -1070,9 +1060,9 @@ UStr UStr::expand() const {
 
 /* ==================================================== [Elc] ======= */
 
-int UStr::read(const UStr& filename) {
+int String::read(const String& filename) {
   if (checkConst()) return 0;
-  UStr fname = filename.expand();
+  String fname = filename.expand();
   if (fname.empty()) return UFilestat::CannotOpen;
   
   char* buffer = null;
@@ -1116,11 +1106,10 @@ int UStr::read(const UStr& filename) {
   return res;
 }
 
-/* ==================================================== ===== ======= */
 
-int UStr::readLines(const UStr& filename, std::vector<UStr*>& lines,
+int String::readLines(const String& filename, std::vector<String*>& lines,
                     bool strip_beginning, bool strip_end) {
-  UStr fname = filename.expand();
+  String fname = filename.expand();
   if (fname.empty()) return UFilestat::CannotOpen;
   
   ifstream in(fname.c_str());
@@ -1128,7 +1117,7 @@ int UStr::readLines(const UStr& filename, std::vector<UStr*>& lines,
   
   string line;
   while ((std::getline(in, line))) {
-    UStr* l = new UStr(line);
+    String* l = new String(line);
     l->trim(strip_beginning, strip_end);
     if (l->empty()) delete l; else lines.push_back(l);
   }
@@ -1136,10 +1125,9 @@ int UStr::readLines(const UStr& filename, std::vector<UStr*>& lines,
   return UFilestat::Opened;
 }
 
-/* ==================================================== ===== ======= */
 
-int UStr::write(const UStr& filename) {
-  UStr fname = filename.expand();
+int String::write(const String& filename) {
+  String fname = filename.expand();
   if (fname.empty()) return UFilestat::CannotOpen;
   
   int fd = -1;

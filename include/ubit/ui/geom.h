@@ -1,52 +1,61 @@
-/************************************************************************
- *
- *  uboxgeom.hpp: attributes for controlling UBox geometry
- *  Ubit GUI Toolkit - Version 6
+/*
+ *  boxgeom.h: attributes for controlling Box geometry
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE :
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION;
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
 
 #ifndef uboxgeom_hpp
 #define	uboxgeom_hpp 1
+
 #include <ubit/uattr.hpp>
 #include <ubit/ulength.hpp>
 #include <ubit/ugeom.hpp>
+
 namespace ubit {
   
   /** Widget scale.
-   * The UScale attribute specifies the scaling factor of widgets (UBox subclasses)
+   * The UScale attribute specifies the scaling factor of widgets (Box subclasses)
    * and their direct and indirect children in the instance graph. 
    *
    * If a child widget has also a UScale attribute, this scale spec. is multiplied
    * with the scale spec. of the parent (and so on, recursively)
    */
-  class UScale : public UAttr {
+  class UScale : public Attribute {
   public:
     UCLASS(UScale)
     
     UScale(float value = 1.);
     ///< creates a new scale attribute; see also shortcut uscale().
     
-    UScale(const UFloat&);
+    UScale(const Float&);
     ///< creates a new scale attribute; see also shortcut uscale().
     
     operator float() const {return value;}
     ///< type conversion: returns scale value.
     
     UScale& operator=(float v)         {set(v); return *this;}
-    UScale& operator=(const UFloat& v) {set(v); return *this;}
+    UScale& operator=(const Float& v) {set(v); return *this;}
     UScale& operator=(const UScale& v) {set(v.value); return *this;}
     
     bool operator==(float v) const         {return v == value;}
-    bool operator==(const UFloat& v) const {return v == value;}
+    bool operator==(const Float& v) const {return v == value;}
     bool operator==(const UScale& v) const {return value == v.value;}
     
     virtual void set(float);
@@ -56,25 +65,25 @@ namespace ubit {
     
   private:
     float value;
-    virtual void putProp(UUpdateContext*, UElem&);
+    virtual void putProp(UpdateContext*, Element&);
   };
   
   inline UScale& uscale(float v = 1.)    {return *new UScale(v);}
   ///< shortcut that creates a new UScale.
   
-  inline UScale& uscale(const UFloat& v) {return *new UScale(v);}
+  inline UScale& uscale(const Float& v) {return *new UScale(v);}
   ///< shortcut that creates a new UScale.
   
   
   // ==================================================== Ubit Toolkit =========  
   /** Widget position.
-   * The UPos Attribute specifies the position of a widget (UBox subclasses) relatively
-   * to its parent widget (note that, currently, UPos don't work with UWin widgets)
+   * The UPos Attribute specifies the position of a widget (Box subclasses) relatively
+   * to its parent widget (note that, currently, UPos don't work with Window widgets)
    *
    * Most widgets do not need to have a UPos attribute: their position is then 
-   * calculated automatically by their parent widgets (see UHalign, UValign).
+   * calculated automatically by their parent widgets (see Halign, Valign).
    * 
-   * Depending of its x and y ULength parameters, a UPos attribute works as follows:
+   * Depending of its x and y Length parameters, a UPos attribute works as follows:
    * - it is ignored if either 'x' or 'y' is set to UAUTO or UIGNORE
    * - the widget is floating otherwise and 'x' and 'y' are relative to its parent origin
    *
@@ -88,42 +97,42 @@ namespace ubit {
    * - UPos(100|UPX, 25|UPERCENT) specifies a width of 100 pixels and a height equals
    *   to 25% of the parent's height
    */
-  class UPos : public UAttr, public UPosSpec {
+  class UPos : public Attribute, public PosSpec {
   public:
     UCLASS(UPos)
 
-    static const ULength::Modes TOP, LEFT, RIGHT, BOTTOM;
+    static const Length::Modes TOP, LEFT, RIGHT, BOTTOM;
       
-    UPos() : UPosSpec(0,0) {}
+    UPos() : PosSpec(0,0) {}
     ///< creates a new position attribute with x=0 and y=0.
       
-    UPos(ULength x, ULength y) : UPosSpec(x, y) {}
-    ///< creates a new position attribute; see also shortcut upos(ULength x, ULength y).
+    UPos(Length x, Length y) : PosSpec(x, y) {}
+    ///< creates a new position attribute; see also shortcut upos(Length x, Length y).
            
-    UPos(const UPoint& p) : UPosSpec(p.x, p.y) {}
+    UPos(const Point& p) : PosSpec(p.x, p.y) {}
     ///< creates a new position attribute; see also shortcut upos().
     
-    UPos(const UPos& p) : UPosSpec(p.x, p.y) {}
+    UPos(const UPos& p) : PosSpec(p.x, p.y) {}
     ///< creates a new position attribute.
     
-    //UPos(const UStr& xSpec, const UStr& ySpec);
+    //UPos(const String& xSpec, const String& ySpec);
     //creates a new position attribute.
 
     virtual ~UPos() {destructs();}
       
-    const ULength& getX() const {return x;}
-    const ULength& getY() const {return y;}
+    const Length& getX() const {return x;}
+    const Length& getY() const {return y;}
 
-    UPos& setX(const ULength& _x) {return set(_x, y);}
-    UPos& setY(const ULength& _y) {return set(x, _y);}
+    UPos& setX(const Length& _x) {return set(_x, y);}
+    UPos& setY(const Length& _y) {return set(x, _y);}
     
-    virtual UPos& set(const ULength& x, const ULength& y);
+    virtual UPos& set(const Length& x, const Length& y);
     UPos& operator=(const UPos& p)   {return set(p.x, p.y);}
-    UPos& operator=(const UPoint& p) {return set(p.x, p.y);}
+    UPos& operator=(const Point& p) {return set(p.x, p.y);}
 
-    virtual bool equals(const ULength& x, const ULength& y) const;
+    virtual bool equals(const Length& x, const Length& y) const;
     bool operator==(const UPos& p) const {return equals(p.x, p.y);}
-    bool operator==(const UPoint& p) const {return equals(p.x, p.y);}
+    bool operator==(const Point& p) const {return equals(p.x, p.y);}
 
     bool isFloating() const;
     /**< returns true if this UPos makes the widget to be floating.
@@ -137,19 +146,19 @@ namespace ubit {
     virtual void update();
 
    private:
-    friend class UView;
-    friend class UBox;
-    friend class UWin;
-    virtual void putProp(UUpdateContext*, UElem&);
-    virtual void addingTo(UChild&, UElem& parent);
-    virtual void removingFrom(UChild&, UElem& parent);
+    friend class View;
+    friend class Box;
+    friend class Window;
+    virtual void putProp(UpdateContext*, Element&);
+    virtual void addingTo(Child&, Element& parent);
+    virtual void removingFrom(Child&, Element& parent);
     //NB: removingFrom() requires UPos to have a destructor.    
   };
     
-  inline UPos& upos(const ULength& x, const ULength& y) {return *new UPos(x, y);}
+  inline UPos& upos(const Length& x, const Length& y) {return *new UPos(x, y);}
   ///< shortcut that creates a new UPos.
   
-  inline UPos& upos(const UPoint& p) {return *new UPos(p);}
+  inline UPos& upos(const Point& p) {return *new UPos(p);}
   ///< shortcut that creates a new UPos.
 
   
@@ -159,7 +168,7 @@ namespace ubit {
    * this attribute changes the UPos of another widget (typically a palette) 
    * that contains this handle.
    */
-  class UPosControl : public UAttr {
+  class UPosControl : public Attribute {
   public:
     UCLASS(UPosControl)
     
@@ -175,15 +184,15 @@ namespace ubit {
 #ifndef NO_DOC
   protected:
     static const int MARGIN = 5;
-    UPoint box_pos0, pt_in_pane0;
+    Point box_pos0, pt_in_pane0;
     bool change_cursor, freeze_x, freeze_y;
-    UView* moved_view;
+    View* moved_view;
     uptr<UCall> callbacks;
     uptr<UPos> posAttr;
     
-    virtual void putProp(UUpdateContext*, UElem&) {}
-    virtual void addingTo(UChild&, UElem& parent);
-    virtual void removingFrom(UChild&, UElem& parent);
+    virtual void putProp(UpdateContext*, Element&) {}
+    virtual void addingTo(Child&, Element& parent);
+    virtual void removingFrom(Child&, Element& parent);
     // NOTE that removingFrom() requires a destructor to be defined.
     
     virtual void mouseCB(UMouseEvent&);
@@ -209,13 +218,13 @@ namespace ubit {
   
   // ==================================================== Ubit Toolkit =========
   /** Widget Size.
-   * The USize attribute specifies the size of a widget (a node deriving from UBox).
+   * The USize attribute specifies the size of a widget (a node deriving from Box).
    *
    * USize specifies the preferred size of the widget and its behavior. The actual
    * widget size may depend on other factors such as its scale (see UScale) and 
    * layout constraints (see uhflex(), uvflex())
    *
-   * The type of the width and the height of the USize is ULength, which makes it
+   * The type of the width and the height of the USize is Length, which makes it
    * to specify a unit (length are in pixels if no unit is specified)
    *
    * A length of -1 means that the size of the initial content of the widget
@@ -225,56 +234,56 @@ namespace ubit {
    *
    * Note: A USize object can be shared by several widgets. 
    */
-  class USize : public UAttr, public USizeSpec {
+  class USize : public Attribute, public SizeSpec {
   public:
     UCLASS(USize)
     
-    static const ULength INITIAL;
-    static const ULength::Modes UNRESIZABLE;
+    static const Length INITIAL;
+    static const Length::Modes UNRESIZABLE;
     
-    USize() : USizeSpec(UIGNORE,UIGNORE) {}
+    USize() : SizeSpec(UIGNORE,UIGNORE) {}
     ///< creates a new size attribute with width=UAUTO and height=UAUTO.
     
-    USize(ULength width, ULength height = UIGNORE) : USizeSpec(width, height) {}
+    USize(Length width, Length height = UIGNORE) : SizeSpec(width, height) {}
     ///< creates a new size attribute, @see also the usize() shortcut.
     
-    USize(const UDimension& d) : USizeSpec(d.width, d.height) {}
+    USize(const Dimension& d) : SizeSpec(d.width, d.height) {}
     ///< creates a new size attribute.
 
-    USize(const USize& s) : USizeSpec(s) {}
+    USize(const USize& s) : SizeSpec(s) {}
     ///< creates a new size attribute.
     
-    //UPos(const UStr& widthSpec, const UStr& heightSpec);
+    //UPos(const String& widthSpec, const String& heightSpec);
     //creates a new position attribute.
 
-    const ULength& getWidth()  const {return width;}
-    const ULength& getHeight() const {return height;}
+    const Length& getWidth()  const {return width;}
+    const Length& getHeight() const {return height;}
     
-    USize& setWidth(const ULength& _w)  {return set(_w, height);}
-    USize& setHeight(const ULength& _h) {return set(width, _h);}
+    USize& setWidth(const Length& _w)  {return set(_w, height);}
+    USize& setHeight(const Length& _h) {return set(width, _h);}
     
-    virtual USize& set(const ULength& width, const ULength& height);
+    virtual USize& set(const Length& width, const Length& height);
     USize& operator=(const USize& s) {return set(s.width, s.height);}
-    USize& operator=(const UDimension& d) {return set(d.width, d.height);}
+    USize& operator=(const Dimension& d) {return set(d.width, d.height);}
     
-    virtual bool equals(const ULength& w, const ULength& h) const;
+    virtual bool equals(const Length& w, const Length& h) const;
     bool operator==(const USize& s) const {return equals(s.width, s.height);}
-    bool operator==(const UDimension& d) const {return equals(d.width, d.height);}
+    bool operator==(const Dimension& d) const {return equals(d.width, d.height);}
 
     virtual void update();
     
   private:
-    virtual void putProp(UUpdateContext*, UElem&);  
+    virtual void putProp(UpdateContext*, Element&);  
     friend class UViewLayoutImpl;
   };
   
   inline USize& usize() {return *new USize();}
   ///< shortcut function that returns *new USize().
 
-  inline USize& usize(const ULength& w, const ULength& h =UIGNORE) {return *new USize(w,h);}
+  inline USize& usize(const Length& w, const Length& h =UIGNORE) {return *new USize(w,h);}
   ///< shortcut function that returns *new USize(w, h).
   
-  inline USize& usize(const UDimension& d) {return *new USize(d);}
+  inline USize& usize(const Dimension& d) {return *new USize(d);}
   ///< shortcut function that returns *new USize(d).
   
   
@@ -284,7 +293,7 @@ namespace ubit {
    * this attribute changes the USize of another widget (typically a palette) 
    * that contains this handle.
    */
-  class USizeControl : public UAttr {
+  class USizeControl : public Attribute {
   public:
     UCLASS(USizeControl)
     
@@ -297,9 +306,9 @@ namespace ubit {
     
     // - - - impl - - - - -- - - - - - - - - - - - - - - - - - - - - - - -
 #ifndef NO_DOC
-    virtual void putProp(UUpdateContext*, UElem&) {}
-    virtual void addingTo(UChild&, UElem& parent);
-    virtual void removingFrom(UChild&, UElem& parent);
+    virtual void putProp(UpdateContext*, Element&) {}
+    virtual void addingTo(Child&, Element& parent);
+    virtual void removingFrom(Child&, Element& parent);
     // NOTE that removingFrom() requires a destructor to be defined.
   protected:
     float w0, h0;
@@ -318,42 +327,42 @@ namespace ubit {
   // ==================================================== Ubit Toolkit =========
   /** Widget padding.
    */
-  class UPadding : public UAttr {
+  class UPadding : public Attribute {
   public:
     UCLASS(UPadding)
     
     UPadding() : val(UIGNORE,UIGNORE) {}
-    UPadding(ULength width, ULength height) : val(width, height) {}
+    UPadding(Length width, Length height) : val(width, height) {}
         
     UPadding& operator=(const UPadding&);
     
-    UPadding& setWidth(ULength);
+    UPadding& setWidth(Length);
     ///< sets top and bottom padding.
     
-    UPadding& setHeight(ULength);
+    UPadding& setHeight(Length);
     ///< sets left and right padding.
 
-    UPadding& setTop(ULength);
-    UPadding& setRight(ULength);
-    UPadding& setBottom(ULength);
-    UPadding& setLeft(ULength);
+    UPadding& setTop(Length);
+    UPadding& setRight(Length);
+    UPadding& setBottom(Length);
+    UPadding& setLeft(Length);
     
-    ULength getTop()   const {return val.top;}
-    ULength getRight() const {return val.right;}
-    ULength getBottom()const {return val.bottom;}
-    ULength getLeft()  const {return val.left;}
+    Length getTop()   const {return val.top;}
+    Length getRight() const {return val.right;}
+    Length getBottom()const {return val.bottom;}
+    Length getLeft()  const {return val.left;}
     
     virtual void update();
   private:
-    UPaddingSpec val;
-    virtual void putProp(UUpdateContext*, UElem&);
+    PaddingSpec val;
+    virtual void putProp(UpdateContext*, Element&);
   };
   
   
   inline UPadding& upadding() {return *new UPadding();}
   ///< shortcut function that returns *new UPadding().
   
-  inline UPadding& upadding(ULength horiz, ULength vert) {return *new UPadding(horiz,vert);}
+  inline UPadding& upadding(Length horiz, Length vert) {return *new UPadding(horiz,vert);}
   ///< shortcut function that returns *new UPadding(horiz,vert).
 
   
@@ -362,7 +371,7 @@ namespace ubit {
    * specifies the orientation of box(es) that contain this brick.
    * Possible values: UOrient::vertical or UOrient::horizontal
    */
-  class UOrient : public UAttr {
+  class UOrient : public Attribute {
   public:
     UCLASS(UOrient)
     
@@ -378,13 +387,13 @@ namespace ubit {
     bool operator==(const UOrient& v) const {return value == v.value;}
     
     virtual void update();
-    virtual void putProp(UUpdateContext*, UElem&);
+    virtual void putProp(UpdateContext*, Element&);
     
     // - impl. - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #ifndef NO_DOC
     enum {HORIZONTAL=0, VERTICAL=1, INHERIT=2}; //dont change values
-    void addingTo(UChild&, UElem& parent);
-    void removingFrom(UChild&, UElem& parent);
+    void addingTo(Child&, Element& parent);
+    void removingFrom(Child&, Element& parent);
   private:
     char value;
     UOrient(char value, UConst);
@@ -398,7 +407,7 @@ namespace ubit {
   // ==================================================== Ubit Toolkit =========
   /** Box horizontal layout.
    * specify the horizontal layout of the children that *follow* this brick.
-   * Possible values: UHalign::left, ::right, ::center, ::flex.
+   * Possible values: Halign::left, ::right, ::center, ::flex.
    * Shortcut functions uleft(), uright(), uhcenter(), uhflex() can be used
    * to improve source code readability.
    *
@@ -409,136 +418,136 @@ namespace ubit {
    * uleft() specifies the layout of ch1 and ch2, uhflex() the layout of
    * ch3 and ch4 and uright() the layout of ch5.
    */
-  class UHalign : public UAttr {
+  class Halign : public Attribute {
   public:
-    UCLASS(UHalign)
+    UCLASS(Halign)
 
-    static UHalign left, right, flex, center;
+    static Halign left, right, flex, center;
     
-    UHalign();
-    ///< creates a new UHalign; @see also shortcuts: uhalign(), uleft(), uright(), uhcenter(), uhflex(). 
+    Halign();
+    ///< creates a new Halign; @see also shortcuts: uhalign(), uleft(), uright(), uhcenter(), uhflex(). 
     
-    UHalign(const UHalign&);
-    ///< creates a new UHalign; @see also shortcuts: uhalign(), uleft(), uright(), uhcenter(), uhflex(). 
+    Halign(const Halign&);
+    ///< creates a new Halign; @see also shortcuts: uhalign(), uleft(), uright(), uhcenter(), uhflex(). 
     
-    UHalign& operator=(const UHalign&);
-    bool operator==(const UHalign& v) const {return value == v.value;}
+    Halign& operator=(const Halign&);
+    bool operator==(const Halign& v) const {return value == v.value;}
     
     virtual void update();
-    virtual void putProp(UUpdateContext*, UElem&);
+    virtual void putProp(UpdateContext*, Element&);
     
     // - impl. - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     enum {INHERIT, LEFT, RIGHT, FLEX, CENTER};
   private:
     char value;
-    UHalign(char value, UConst);
+    Halign(char value, UConst);
   };
   
   
-  inline UHalign& uhalign(const UHalign& val) {return *new UHalign(val);}
-  ///< shortcut function that creates a new UHalign object.
+  inline Halign& uhalign(const Halign& val) {return *new Halign(val);}
+  ///< shortcut function that creates a new Halign object.
   
-  inline UHalign& uleft() {return UHalign::left;}
+  inline Halign& uleft() {return Halign::left;}
   /**< child widgets following uleft() are laid out sequentially from the left side of their parent.
    * uleft have no effect on children width (in contrast with uhflex()).
    * uleft and uright have the same effect if uhflex() appears in the same child list
-   * @see UHalign.
+   * @see Halign.
    */
   
-  inline UHalign& uright() {return UHalign::right;}
+  inline Halign& uright() {return Halign::right;}
   /**< child widgets following uright() are laid out sequentially so that the last child reaches the right side of their parent.
    * uright have no effect on children width (in contrast with uhflex()).
    * uleft and uright have the same effect if uhflex() appears in the same child list
-   * @see UHalign.
+   * @see Halign.
    */
   
-  inline UHalign& uhcenter() {return UHalign::center;}
+  inline Halign& uhcenter() {return Halign::center;}
   /**< child widgets following uhcenter() are horizontally centered in their parent.
    * uhcenter has no effect on children width (in contrast with uhflex()).
    * uhcenter has the same effect as uleft if uhflex() appears in the same child list
-   * @see UHalign.
+   * @see Halign.
    */
   
-  inline UHalign& uhflex() {return UHalign::flex;}
+  inline Halign& uhflex() {return Halign::flex;}
   /**< child widgets following uhflex() have a "flexible" horizontal layout.
    * these children will occupy the remaining space and will be resized
    * (in the horizontal direction) when their parents are resized.
    * These rules dont apply for children that are NOT resizable.
-   * @see UHalign.
+   * @see Halign.
    */
   
   
   // ==================================================== Ubit Toolkit =========
   /** Box vertical layout.
    * specify the vertical layout of the children that follow this brick.
-   * Possible values: UHalign::top, ::bottom, ::center, ::flex.
+   * Possible values: Halign::top, ::bottom, ::center, ::flex.
    * Shortcut functions utop(), ubottom(), uvcenter(), uvflex() can be used
    * to improve readability (they return the corresponding value).
    *
-   * Behaviors: same behaviors as UHalign (but in the vertical direction).
+   * Behaviors: same behaviors as Halign (but in the vertical direction).
    */
-  class UValign : public UAttr {
+  class Valign : public Attribute {
   public:
-    UCLASS(UValign)
+    UCLASS(Valign)
 
-    static UValign top, bottom, flex, center;
+    static Valign top, bottom, flex, center;
     
-    UValign();
-    ///< creates a new UValign; @see also shortcuts: uvalign(), utop(), ubottom(), uvcenter(), uvflex(). 
+    Valign();
+    ///< creates a new Valign; @see also shortcuts: uvalign(), utop(), ubottom(), uvcenter(), uvflex(). 
     
-    UValign(const UValign&);
-    ///< creates a new UValign; @see also shortcuts: uvalign(), utop(), ubottom(), uvcenter(), uvflex(). 
+    Valign(const Valign&);
+    ///< creates a new Valign; @see also shortcuts: uvalign(), utop(), ubottom(), uvcenter(), uvflex(). 
     
-    UValign& operator=(const UValign& v);
-    bool operator==(const UValign& v) const {return value == v.value;}
+    Valign& operator=(const Valign& v);
+    bool operator==(const Valign& v) const {return value == v.value;}
     
     virtual void update();
-    virtual void putProp(UUpdateContext*, UElem&);
+    virtual void putProp(UpdateContext*, Element&);
     
     // - impl. - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     enum {INHERIT, TOP, BOTTOM, FLEX, CENTER};
   private:
     char value;
-    UValign(char value, UConst);
+    Valign(char value, UConst);
   };
   
-  inline UValign& uvalign(const UValign& val) {return *new UValign(val);}
-  ///< shortcut function that creates a new UValign object.
+  inline Valign& uvalign(const Valign& val) {return *new Valign(val);}
+  ///< shortcut function that creates a new Valign object.
   
-  inline UValign& utop() {return UValign::top;}
+  inline Valign& utop() {return Valign::top;}
   /**< child widgets following utop() are laid out sequentially from the top of their parent.
    * uleft have no effect on children width (in contrast with uhflex()).
    * uleft and uright have the same effect if uhflex() appears in the same child list
-   * @see UValign.
+   * @see Valign.
    */
   
-  inline UValign& ubottom() {return UValign::bottom;}
+  inline Valign& ubottom() {return Valign::bottom;}
   /**< child widgets following ubottom() are laid out sequentially so that the last child reaches the bottom of their parent.
    * uright have no effect on children width (in contrast with uhflex()).
    * uleft and uright have the same effect if uhflex() appears in the same child list
-   * @see UValign.
+   * @see Valign.
    */
   
-  inline UValign& uvcenter() {return UValign::center;}
+  inline Valign& uvcenter() {return Valign::center;}
   /**< child widgets following uvcenter() are vertically centered in their parent.
    * uhcenter has no effect on children width (in contrast with uhflex()).
    * uhcenter has the same effect as uleft if uhflex() appears in the same child list
-   * @see UValign.
+   * @see Valign.
    */
   
-  inline UValign& uvflex() {return UValign::flex;}
+  inline Valign& uvflex() {return Valign::flex;}
   /**< child widgets following uvflex() have a "flexible" vertical layout.
    * these children will occupy the remaining space and will be resized
    * (in the horizontal direction) when their parents are resized.
    * These rules dont apply for children that are NOT resizable.
-   * @see UValign.
+   * @see Valign.
    */
   
   
   // ==================================================== Ubit Toolkit =========
   /** Box vertical spacing.
    */
-  class UVspacing : public UAttr {
+  class UVspacing : public Attribute {
   public:
     UCLASS(UVspacing)
 
@@ -559,7 +568,7 @@ namespace ubit {
     
     // - impl. - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     enum {INHERIT = -1};
-    virtual void putProp(UUpdateContext*, UElem&);
+    virtual void putProp(UpdateContext*, Element&);
   private:
     float value;
   };
@@ -570,7 +579,7 @@ namespace ubit {
   // ==================================================== Ubit Toolkit =========
   /** Box horizontal spacing.
   */
-  class UHspacing : public UAttr {
+  class UHspacing : public Attribute {
   public:
     UCLASS(UHspacing)
     
@@ -591,7 +600,7 @@ namespace ubit {
     
     // - impl. - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     enum {INHERIT = -1};
-    virtual void putProp(UUpdateContext*, UElem&);
+    virtual void putProp(UpdateContext*, Element&);
   private:
     float value;
   };

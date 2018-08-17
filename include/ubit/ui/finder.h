@@ -1,18 +1,25 @@
-/************************************************************************
- *
- *  ufinder.hpp: UFinder element
- *  Ubit GUI Toolkit - Version 6
+/*
+ *  finder.h: UFinder element
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE :
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION;
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
 
 #ifndef _ufinder_hpp_
 #define _ufinder_hpp_
@@ -21,6 +28,7 @@
 #include <ubit/umenu.hpp>
 #include <ubit/udoc.hpp>
 #include <ubit/uicon.hpp>
+
 namespace ubit {
 
  class UFinderDir;
@@ -29,40 +37,38 @@ namespace ubit {
  class UFinderControls;
  class UFinderCom;
 
-/* ==================================================== ===== ======= */
 /** UFinder Listener.
 */
 struct UFinderListener {
   virtual ~UFinderListener() {}
-  virtual void fileRequest(const UStr& pathname) {}
-  virtual void docLoaded(const UStr& pathname, UDoc*) {}
-  virtual void docShown(const UStr& pathname, UDoc*) {}
-  virtual void dirLoaded(const UStr& pathname) {}
-  virtual void dirShown(const UStr& pathname) {}
+  virtual void fileRequest(const String& pathname) {}
+  virtual void docLoaded(const String& pathname, Document*) {}
+  virtual void docShown(const String& pathname, Document*) {}
+  virtual void dirLoaded(const String& pathname) {}
+  virtual void dirShown(const String& pathname) {}
 };
 
-/* ==================================================== ===== ======= */
 /** file finder.
 */
-class UFinder : public UBox {
+class UFinder : public Box {
 public:
   UCLASS(UFinder)
 
-  struct Options : UElem {
+  struct Options : Element {
     friend class UFinder;
     Options();
     USize  clone_frame_size;
-    UBackground default_background;
-    UColor default_color;
+    Background default_background;
+    Color default_color;
     bool show_icon_images;
   };
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  UFinder(const UStr& pathname = ".");
+  UFinder(const String& pathname = ".");
   virtual ~UFinder();
     
-  virtual void open(const UStr& pathname);
+  virtual void open(const String& pathname);
   ///< opens a directory or a file (the second variant normalizes pathname).
 
   virtual void openParent();
@@ -74,13 +80,13 @@ public:
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   virtual bool browseHosts();
-  virtual UFinderHost* addHost(const UStr& hostname);
-  virtual UFinderHost* addHostCB(const UStr* hostname);
+  virtual UFinderHost* addHost(const String& hostname);
+  virtual UFinderHost* addHostCB(const String* hostname);
   virtual void removeHost(UFinderHost*);
-  virtual void addHosts(const std::vector<UStr*>& hostnames);
+  virtual void addHosts(const std::vector<String*>& hostnames);
   virtual void addHosts(const char* hostnames[]);
 
-  virtual void createClone(const UStr& hostname);
+  virtual void createClone(const String& hostname);
   ///< creates a synchronized clone on hostname.
 
   // virtual void compactEvents(bool = true);
@@ -112,7 +118,7 @@ public:
   UIcon* getSelectedIcon();
   ///< return the icon box that is currently shown (if any, null otherwise).
   
-  UDoc* getDoc() {return pdocument;}
+  Document* getDoc() {return pdocument;}
   ///< return the document box that is currently shown (if any, null otherwise).
 
   virtual void zoom(float zoom = 1.);
@@ -123,32 +129,32 @@ public:
   UCtlmenu& getContextMenu() {return *ctlmenu;}
   ///< returns the Contextual menu of the Finder.
   
-  virtual void openContextMenuIn(UBox&);
+  virtual void openContextMenuIn(Box&);
   virtual UCtlmenu& createContextMenu();
  
   void showSideBar(bool state);
   ///< shows/hides the side bar (located on the left side).
 
-  void showAlert(const UStr& msg);
+  void showAlert(const String& msg);
   void hideAlert();
   ///< shows/hides an alert message.
   
   //void showDocGlass(bool state);
   // shows/hides the document glass.
-  //UBox* getGlass() {return docglass;}
+  //Box* getGlass() {return docglass;}
   //returns the glass box that is on top of the document box.
   
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 protected:
   // documents.
   void openFBox(UFilebox&);
-  void openMsg(UMessageEvent&);
-  virtual void openImpl(const UStr& path, int path_mode, int path_type);
-  virtual int openFile(const UStr& path, int path_type);
-  virtual int openDir(const UStr& path, int path_type);
+  void openMsg(MessageEvent&);
+  virtual void openImpl(const String& path, int path_mode, int path_type);
+  virtual int openFile(const String& path, int path_type);
+  virtual int openDir(const String& path, int path_type);
   virtual int openDir(UFinderDir*);
-  virtual void showFile(const UStr& path, UDoc*);
-  virtual void showDir(const UStr& path);
+  virtual void showFile(const String& path, Document*);
+  virtual void showDir(const String& path);
   virtual void showPreview(UIcon*);
   virtual void showPreviewRequest(UIcon*);
   virtual void showIconPreviews();  
@@ -156,18 +162,18 @@ protected:
   // dirs and icons.
   virtual void addToHistory(UFinderDir*);
   virtual void removeFromHistory(UFinderDir*);
-  virtual UFinderDir* findDir(const UStr& path);
+  virtual UFinderDir* findDir(const String& path);
   virtual void showDirInfo(UFinderDir*);
   virtual void removeIconbox(UFinderDir*, bool upd);
   virtual void iconSelectCB(UIconbox*);
   virtual void iconActionCB(UIconbox*);
-  virtual void linkActionCB(UInputEvent&, UDoc*);
+  virtual void linkActionCB(UInputEvent&, Document*);
 
   // hosts and clones.
-  virtual void browseCB(UMessageEvent&);
+  virtual void browseCB(MessageEvent&);
   bool isBrowsing() const;
-  virtual void createCloneRequest(UMessageEvent&);
-  virtual UFrame* createCloneFrame(const UStr& title);
+  virtual void createCloneRequest(MessageEvent&);
+  virtual UFrame* createCloneFrame(const String& title);
   
   virtual void initOptbox();
   void showSelectedIcon();
@@ -184,25 +190,25 @@ private:
   bool is_tracking, open_in_fullwin;
   Options opts;
   UBar toolbar;
-  UBox mainbox, optbox, folderlist, hostlist, filelist;
-  uptr<UBox> optbox_btn, filelist_btn;
+  Box mainbox, optbox, folderlist, hostlist, filelist;
+  uptr<Box> optbox_btn, filelist_btn;
   uptr<UDialog> ask_dialog;
-  uptr<UStr> ask_dialog_msg;
+  uptr<String> ask_dialog_msg;
   UFinderListener* listener;
   uptr<UAlertbox> alertbox;
   uptr<UCtlmenu> ctlmenu;
-  UMService *local_ums, *remote_ums;
+  MessageService *local_ums, *remote_ums;
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // current selection
-  uptr<UDoc> pdocument;
+  uptr<Document> pdocument;
   uptr<UDocbox> pdocbox;
   uptr<UIconbox> piconbox;
-  //uptr<UBox> docglass;
+  //uptr<Box> docglass;
   uptr<UFinderDir>last_direntry;
   UIcon* last_preview_request;
   UIcon* last_preview;
-  UChildIter previews_current, previews_end;
+  ChildIter previews_current, previews_end;
   uptr<UTimer> preview_timer;
  };
 

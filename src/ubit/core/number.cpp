@@ -1,6 +1,5 @@
-/************************************************************************
- *
- *  unumber.cpp: ACtive Numbers (can have callbacks)
+/*
+ *  number.cpp: ACtive Numbers (can have callbacks)
  *  Ubit GUI Toolkit - Version 6.0
  *  (C) 2008 | Eric Lecolinet | ENST Paris | www.enst.fr/~elc/ubit
  *
@@ -20,7 +19,7 @@
 #include <ubit/ucall.hpp>
 #include <ubit/uon.hpp>
 #include <ubit/ustr.hpp>
-#include <ubit/uevent.hpp>
+#include <ubit/core/event.h>
 #include <ubit/unumber.hpp>
 #include <ubit/uappli.hpp>
 using namespace std;
@@ -28,17 +27,17 @@ using namespace std;
 NAMESPACE_UBIT
 
   
-UNumber& UNumber::onChange(UCall &c) {   // @@@ devrait heriter de UObject !!!
+Number& Number::onChange(UCall &c) {   // @@@ devrait heriter de UObject !!!
   addChangeCall(c);
   return *this;
 }
 
-void UNumber::changed(bool update_now) {
+void Number::changed(bool update_now) {
   /// if (update_now && (bmodes & UMode::NO_AUTO_UPDATE) == 0) update();
 
   if (!omodes.IGNORE_CHANGE_CALLBACKS) {
     if (_abegin() != _aend()) {
-      UEvent e(UOn::change, this);  //UNodeEvent
+      Event e(UOn::change, this);  //UNodeEvent
       fire(e);
     }
     // ensuite on lance les callbacks des parents
@@ -46,56 +45,52 @@ void UNumber::changed(bool update_now) {
   }
 }
 
-/* ==================================================== ===== ======= */
 
-UInt::UInt(const UStr& s) {
+Int::Int(const String& s) {
   setImpl(s.c_str(), false);  // dont call callbacks
 }
 
-UInt::UInt(const string& s) {
+Int::Int(const string& s) {
   setImpl(s.c_str(), false);  // dont call callbacks
 }
 
-/* ==================================================== ======== ======= */
 
-UInt& UInt::operator=(const UStr& s) {
+Int& Int::operator=(const String& s) {
   setImpl(s.c_str(), true);  // call callbacks
   return *this;
 }
 
-UInt& UInt::operator=(const std::string& s) {
+Int& Int::operator=(const std::string& s) {
   setImpl(s.c_str(), true);  // call callbacks
   return *this;
 }
 
-istream& operator>>(istream& s, UInt& v) {
+istream& operator>>(istream& s, Int& v) {
   int n;
   s >> n;
   v.setImpl(n, true);  // call callbacks
   return s;
 }
 
-ostream& operator<<(ostream& s, const UInt& v) {
+ostream& operator<<(ostream& s, const Int& v) {
   return (s << v.value);
 }
 
-/* ==================================================== ======== ======= */
 
-UInt UInt::operator++(int) {
-  UInt clone = *this;
+Int Int::operator++(int) {
+  Int clone = *this;
   setImpl(value+1);
   return clone;
 }
 
-UInt  UInt::operator--(int) {
-  UInt clone = *this;
+Int  Int::operator--(int) {
+  Int clone = *this;
   setImpl(value+1);
   return clone;
 }
 
-/* ==================================================== ======== ======= */
 
-UInt& UInt::setImpl(int v, bool call_cb) {
+Int& Int::setImpl(int v, bool call_cb) {
   if (checkConst()) return *this;
   if (value == v) return *this;
   value = v;
@@ -103,17 +98,17 @@ UInt& UInt::setImpl(int v, bool call_cb) {
   return *this;
 }
 
-UInt& UInt::setImpl(const char* s, bool call_cb) {
+Int& Int::setImpl(const char* s, bool call_cb) {
   if (checkConst()) return *this;
   if (!s) {
     value = 0;
-    UAppli::warning("UInt::set","null char* argument");
+    Application::warning("Int::set","null char* argument");
   }
   else return setImpl(strtol(s, null, 0), call_cb);
   return *this;
 }
 
-UStr UInt::toString() const {
+String Int::toString() const {
   char _s[50] = "";
   sprintf(_s, "%d", value);
   return _s;
@@ -121,54 +116,51 @@ UStr UInt::toString() const {
 
 /* ==================================================== [Elc] ======= */
 
-UFloat::UFloat(const UStr& s) {
+Float::Float(const String& s) {
   setImpl(s.c_str(), false);  // dont call callbacks
 }
 
-UFloat::UFloat(const string& s) {
+Float::Float(const string& s) {
   setImpl(s.c_str(), false);  // dont call callbacks
 }
 
-/* ==================================================== ===== ======= */
 
-UFloat& UFloat::operator=(const UStr& s) {
+Float& Float::operator=(const String& s) {
   setImpl(s.c_str(), true);  // call callbacks
   return *this;
 }
 
-UFloat& UFloat::operator=(const std::string& s) {
+Float& Float::operator=(const std::string& s) {
   setImpl(s.c_str(), true);  // call callbacks
   return *this;
 }
 
-istream& operator>>(istream& s, UFloat& v) {
+istream& operator>>(istream& s, Float& v) {
   float n;
   s >> n;
   v.setImpl(n, true);  // call callbacks
   return s;
 }
 
-/* ==================================================== ===== ======= */
 
-ostream& operator<<(ostream& s, const UFloat& v) {
+ostream& operator<<(ostream& s, const Float& v) {
   return (s << v.value);
 }
 
-UFloat UFloat::operator++(int) {
-  UFloat clone = *this;
+Float Float::operator++(int) {
+  Float clone = *this;
   (*this)++;
   return clone;
 }
 
-UFloat UFloat::operator--(int) {
-  UFloat clone = *this;
+Float Float::operator--(int) {
+  Float clone = *this;
   (*this)++;
   return clone;
 }
 
-/* ==================================================== ===== ======= */
 
-UFloat& UFloat::setImpl(float v, bool call_cb) {
+Float& Float::setImpl(float v, bool call_cb) {
   if (checkConst()) return *this;
   if (value == v) return *this;
   value = v;
@@ -176,77 +168,73 @@ UFloat& UFloat::setImpl(float v, bool call_cb) {
   return *this;
 }
 
-UFloat& UFloat::setImpl(const char* s, bool call_cb) {
+Float& Float::setImpl(const char* s, bool call_cb) {
   if (checkConst()) return *this;
   if (!s) {
     value = 0;
-    UAppli::warning("UDouble::set","null char* argument");
+    Application::warning("Double::set","null char* argument");
   }
   else return setImpl(strtod(s, null), call_cb);
   return *this;
 }
 
-UStr UFloat::toString() const {
+String Float::toString() const {
   char _s[50] = "";
   sprintf(_s, "%f", value);
   return _s;
 }
 
 /* ==================================================== [Elc] ======= */
-/* ==================================================== ===== ======= */
 
-//UDouble::UDouble(const char* s) {
+//Double::Double(const char* s) {
 //  setImpl(s, false);  // dont call callbacks
 //}
 
-UDouble::UDouble(const UStr& s) {
+Double::Double(const String& s) {
   setImpl(s.c_str(), false);  // dont call callbacks
 }
 
-UDouble::UDouble(const string& s) {
+Double::Double(const string& s) {
   setImpl(s.c_str(), false);  // dont call callbacks
 }
 
-/* ==================================================== ===== ======= */
 
-UDouble& UDouble::operator=(const UStr& s) {
+Double& Double::operator=(const String& s) {
   setImpl(s.c_str(), true);  // call callbacks
   return *this;
 }
 
-UDouble& UDouble::operator=(const std::string& s) {
+Double& Double::operator=(const std::string& s) {
   setImpl(s.c_str(), true);  // call callbacks
   return *this;
 }
 
-istream& operator>>(istream& s, UDouble& v) {
+istream& operator>>(istream& s, Double& v) {
   double n;
   s >> n;
   v.setImpl(n, true);  // call callbacks
   return s;
 }
 
-/* ==================================================== ===== ======= */
 
-ostream& operator<<(ostream& s, const UDouble& v) {
+ostream& operator<<(ostream& s, const Double& v) {
   return (s << v.value);
 }
 
-UDouble UDouble::operator++(int) {
-  UDouble clone = *this;
+Double Double::operator++(int) {
+  Double clone = *this;
   (*this)++;
   return clone;
 }
 
-UDouble UDouble::operator--(int) {
-  UDouble clone = *this;
+Double Double::operator--(int) {
+  Double clone = *this;
   (*this)++;
   return clone;
 }
 
-/* ==================================================== ===== ======= */
 
-UDouble& UDouble::setImpl(double v, bool call_cb) {
+Double& Double::setImpl(double v, bool call_cb) {
   if (checkConst()) return *this;
   if (value == v) return *this;
   value = v;
@@ -254,17 +242,17 @@ UDouble& UDouble::setImpl(double v, bool call_cb) {
   return *this;
 }
 
-UDouble& UDouble::setImpl(const char* s, bool call_cb) {
+Double& Double::setImpl(const char* s, bool call_cb) {
   if (checkConst()) return *this;
   if (!s) {
     value = 0;
-    UAppli::warning("Double::set","Null char* argument");
+    Application::warning("Double::set","Null char* argument");
   }
   else return setImpl(strtod(s, null), call_cb);
   return *this;
 }
 
-UStr UDouble::toString() const {
+String Double::toString() const {
   char _s[50] = "";
   sprintf(_s, "%f", value);
   return _s;

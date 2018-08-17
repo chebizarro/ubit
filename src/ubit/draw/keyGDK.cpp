@@ -1,4 +1,4 @@
-/* ==================================================== ======== ======= *
+/*
 *
 *  ukeyGDK.cpp : key symbols
 *  Ubit 6.0
@@ -24,6 +24,7 @@
 #include <X11/keysym.h>  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 #include <ubit/nat/udispX11.hpp>
 #include <ubit/ukey.hpp>
+
 namespace ubit {
 
 static int _MetaDown = GDK_META_MASK, _AltDown = GDK_ALT_MASK; //_ModeSwitch = 0;
@@ -124,6 +125,4 @@ void UKey::mapKeys(UNatDisp* nd) { }
 
 }
 #endif
-/* ==================================================== [TheEnd] ======= */
-/* ==================================================== [(c)Elc] ======= */
 

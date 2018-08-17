@@ -1,6 +1,5 @@
-/************************************************************************
- *
- *  utreebox.cpp
+/*
+ *  treebox.cpp
  *  Ubit GUI Toolkit - Version 6.0
  *  (C) 2008 | Eric Lecolinet | ENST Paris | www.enst.fr/~elc/ubit
  *
@@ -21,25 +20,25 @@ using namespace std;
 namespace ubit {
 
 
-UTreebox& utreebox(const UArgs& a) {return *new UTreebox(a);}
+UTreebox& utreebox(const Args& a) {return *new UTreebox(a);}
 
 UTreebox::~UTreebox() {}
 
 // ATT: TYPES LIES !
 static struct IsSelectableByTree : public UChoice::IsSelectable {
-  virtual bool operator()(const UBox* box) const {
+  virtual bool operator()(const Box* box) const {
     return dynamic_cast<const UItem*>(box);   // !!!!!!!!
   }
 } is_selectable_by_tree;
 
-UTreebox::UTreebox(const UArgs& a) : UListbox(a) {
+UTreebox::UTreebox(const Args& a) : UListbox(a) {
   choice().setSelectionRule(is_selectable_by_tree);
-  addAttr(UBorder::none);
+  addAttr(Border::none);
 }
 
 UTreenode* UTreebox::getSelectedNode() const {
-  UElem* title = choice().getSelectedItem();
-  UElem* node = title ? title->getParent(0) : null; // c'est title qui est selected !
+  Element* title = choice().getSelectedItem();
+  Element* node = title ? title->getParent(0) : null; // c'est title qui est selected !
   return node ? dynamic_cast<UTreenode*>(node) : null;
 }
 
@@ -56,32 +55,31 @@ UTreebox& UTreebox::setSelectedIndex(int i) {
   return *this;
 }
 
-/* ==================================================== ===== ======= */
 
-UTreenode& utreenode(const UArgs& title) {
+UTreenode& utreenode(const Args& title) {
   return *new UTreenode(title);
 }
 
-UTreenode& utreenode(const UArgs& title, const UArgs& children) {
+UTreenode& utreenode(const Args& title, const Args& children) {
   return *new UTreenode(title, children);
 }
 
-UTreenode::UTreenode(const UArgs& title) {
-  constructs(title, UArgs::none);
+UTreenode::UTreenode(const Args& title) {
+  constructs(title, Args::none);
 }
 
-UTreenode::UTreenode(const UArgs& title, const UArgs& children) {
+UTreenode::UTreenode(const Args& title, const Args& children) {
   constructs(title, children);
 }
 
-void UTreenode::constructs(const UArgs& _title, const UArgs& children) {
+void UTreenode::constructs(const Args& _title, const Args& children) {
   static UPadding& offset = upadding(0, UIGNORE).setLeft(40);
   psubnodes = &uvbox(children);
   psubnodes->addAttr(offset);
   psubnodes->addAttr(UVspacing::none);
   addAttr(UVspacing::none);
   
-  pexpander = new UBox
+  pexpander = new Box
     (UOn::select   / USymbol::down
      + UOn::deselect / USymbol::right
      + UOn::select   / ushow(*psubnodes, true)
@@ -91,7 +89,7 @@ void UTreenode::constructs(const UArgs& _title, const UArgs& children) {
   psubnodes->show(false);
   
   plabel = new UItem(*pexpander +  " " + _title);
-  UBox::add(*plabel + *psubnodes);
+  Box::add(*plabel + *psubnodes);
 }
 
 void UTreenode::expand(bool s) {
@@ -101,7 +99,7 @@ void UTreenode::expand(bool s) {
 /*
 void UTreenode::setOffset(UHmargin& margin) {
   UHmargin* m = null;
-  UChildIter i = psubnodes->attributes().findClass(m);
+  ChildIter i = psubnodes->attributes().findClass(m);
   if (m) remove(i);
   psubnodes->add(margin);
 }

@@ -20,6 +20,7 @@
  * MA 02110-1301, USA.
  * 
  */
+
 #ifndef UBIT_CORE_ELEMENT_H_
 #define	UBIT_CORE_ELEMENT_H_
 
@@ -79,7 +80,7 @@ namespace ubit {
      * this function MUST be redefined by subclasses if they use another Style.
      */  
     
-    const Style& getStyle(UUpdateContext*) const;
+    const Style& getStyle(UpdateContext*) const;
     /**< virtual function that returns the style of this object.
      * this function calls createStyle() the first time it is called, then it always
      * return the same Style object.
@@ -95,7 +96,7 @@ namespace ubit {
     
     virtual int getDisplayType() const {return INLINE;}
     
-    virtual void initNode(UDoc* context) {}
+    virtual void initNode(Document* context) {}
     ///< initialises the XML context of this node.
     
         
@@ -106,7 +107,7 @@ namespace ubit {
      */
     
     Element& addAttr(const Args& attributes);
-    /**< adds one or several attributes (deriving from UAttr) to the ATTRIBUTE list.
+    /**< adds one or several attributes (deriving from Attribute) to the ATTRIBUTE list.
      * @see add(const Args&) for details (both functions work in the same way).
      */
     
@@ -130,7 +131,7 @@ namespace ubit {
      * true is returned otherwise and the attribute value is stored in the 'value' argument.
      */
     
-    UAttr* getAttr(const String& attr_name) const;
+    Attribute* getAttr(const String& attr_name) const;
     /**< returns the attribute node which class name is 'attr_name'.
      * null is returned if there is no such attribute in the element's ATTRIBUTE list.
      * example: Color* col = (Color*) element.getAttr("Color");
@@ -176,8 +177,8 @@ namespace ubit {
      * </pre>
      *
      * Objects added to the CHILD list should derive from Element (typically, widgets
-     * deriving from Box, UWin), UData (viewable objects such as String, UIma) or UCall
-     * (callback objects). Certain attributes such as Color, UFont, UHalign, UValign
+     * deriving from Box, Window), Data (viewable objects such as String, Image) or UCall
+     * (callback objects). Certain attributes such as Color, UFont, Halign, Valign
      * can also be added to the child list.
      *
      * Character strings (e.g. "abcd") are implicitely converted to String objects, so 
@@ -188,7 +189,7 @@ namespace ubit {
      * converted (exple: add(ustr("abcd") + "xyz") is correct, add("abcd" + "xyz") is not)
      *
      * The addAttr() method works as add() excepts that it adds arguments to the 
-     * ATTRBITUTE list. Arguments should then derive from UAttr (attributes) or 
+     * ATTRBITUTE list. Arguments should then derive from Attribute (attributes) or 
      * UCall (callback aobjects).
      *
      * Subclasses that require a specific behavior should not redefine this function
@@ -214,7 +215,7 @@ namespace ubit {
      */
     
     virtual Element& addImpl(const Args& nodes, ChildIter pos, Children& in_list);
-    virtual bool addImpl1(const UChild& node, ChildIter pos, Children& in_list);
+    virtual bool addImpl1(const Child& node, ChildIter pos, Children& in_list);
     
     Element& remove(Node& child, bool auto_delete = true);
     /**< removes/deletes a child (and its descendants) from the CHILD list.
@@ -336,30 +337,30 @@ namespace ubit {
     
     static void closeWin(InputEvent&, int status);
     /**< closes the first window (UDialog, UMenu...) that contains this element.
-     * @see: UWin::close() and ucloseWin().
+     * @see: Window::close() and ucloseWin().
      */
     
-    void repaint() {update(UUpdate::paint);}
+    void repaint() {update(Update::paint);}
     ///< indicates that this object will be repainted (when the main loop becomes idle).
     
-    void update() {update(UUpdate::layoutAndPaint);}
+    void update() {update(Update::layoutAndPaint);}
     ///< indicates that this object will be layed out and repainted (when the main loop becomes idle).
     
-    virtual void update(const UUpdate& update_options, UDisp* = null);
+    virtual void update(const Update& update_options, Display* = null);
     /**< indicates that the layout and/or the paint of this object will be updated.
      * this will be done when the main loop becomes idle.
-     * - the first argument specify what must be updated and misc options (see UUpdate)
+     * - the first argument specify what must be updated and misc options (see Update)
      * - the second argument is only taken into account by redefinitions of this function
      * @see also: repaint(), update(), show().
      */
     
-    void doUpdate() {doUpdate(UUpdate::layoutAndPaint, null);}
+    void doUpdate() {doUpdate(Update::layoutAndPaint, null);}
     
-    virtual void doUpdate(const UUpdate&, UDisp* = null);
+    virtual void doUpdate(const Update&, Display* = null);
     /**< updates the layout and/or the paint of this object right now.
      * this function is called when the main loop becomes idle for repainting the object.
      * Usually, a client program should NOT call doUpdate() directly. Instead, it
-     * should call update() or update(const UUpdate&, UDisp*) that delay layout and
+     * should call update() or update(const Update&, Display*) that delay layout and
      * repaint actions until the main loop becomes idle. This improves performance
      * and makes double buffering possible.
      */
@@ -371,11 +372,11 @@ namespace ubit {
      * events are then received by the parent(s) of this element
      */
     
-    Element& catchEvents(const UChild& condition_callback_expr);
+    Element& catchEvents(const Child& condition_callback_expr);
     /**< catches certain events before they reach the object's children.
      * Events are not delivered to their normal targets, instead, they are catched
      * by this element if it contains the target. The specified callback is then fired 
-     * with this element as a "source" (@see UEvent::getSource()). If this callback
+     * with this element as a "source" (@see Event::getSource()). If this callback
      * calls the event's propagate() method, this event will then be sent to the
      * normal target. This makes it possible to filter events and decide which of them
      * can reach targets. Also, some some useful functions can be triggered before
@@ -394,11 +395,11 @@ namespace ubit {
      * The callback method (eg. 'foo') will be fired BEFORE this condition (eg. 'UOn::mpress')
      * occurs in a direct and indirect child of this element. 
      *
-     * To learn more about conditions @see classes UOn and UCond. To learn more about
+     * To learn more about conditions @see classes UOn and Condition. To learn more about
      * callback objects @see class UCall. 
      */  
     
-    Element& observeChildrenEvents(const UChild& condition_callback_expr);
+    Element& observeChildrenEvents(const Child& condition_callback_expr);
     /**< observe events that occur in children.
      * 'condition_callback_expr' is a construct such as: 
      * <pre>   UOn::action / ucall(obj, &Obj::foo)   // (obj type is Obj*)  
@@ -406,7 +407,7 @@ namespace ubit {
      * The callback method (eg. 'foo') will be fired AFTER this condition (eg. 'UOn::action')
      * occurs in a direct and indirect child of this element. 
      *
-     * To learn more about conditions @see classes UOn and UCond. To learn more about
+     * To learn more about conditions @see classes UOn and Condition. To learn more about
      * callback objects @see class UCall. 
      */
     
@@ -416,7 +417,7 @@ namespace ubit {
     bool hasCallback(long callback_id) const;
     ///< true if thie object has such a callback.
     
-    virtual bool fire(UEvent&) const;
+    virtual bool fire(Event&) const;
     ///< fires callback functions that match this event.  
     
     // - - - states - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

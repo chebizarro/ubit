@@ -1,18 +1,25 @@
-/************************************************************************
- *
- *  utable.cpp
- *  Ubit GUI Toolkit - Version 6
+/*
+ *  table.cpp
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE :
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION;
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
 
 #include <ubit/ubit_features.h>
 #include <iostream>
@@ -33,8 +40,8 @@ UStyle* UTable::createStyle() {
   style->viewStyle = &UTableView::style;
   style->textSeparator = &ustr("\n");
   style->orient   = UOrient::HORIZONTAL;
-  style->halign   = UHalign::LEFT;
-  style->valign   = UValign::TOP;
+  style->halign   = Halign::LEFT;
+  style->valign   = Valign::TOP;
   style->hspacing = 0; //EX 1;
   style->vspacing = 1;
   style->local.padding.set(1, 1);
@@ -48,12 +55,12 @@ UStyle* UTrow::createStyle() {
   style->orient = UOrient::HORIZONTAL;
 
   // il faut left car hflex a un resultat imprevu (bug?)
-  style->halign = UHalign::LEFT;
+  style->halign = Halign::LEFT;
 
   // il faut vflex pour etre conforme a HTML (une utcell
   // devra occuper toute la hauteur d'un utrow (nb: bug corrige
   // dans uview.cc qui permet d'utilser cette option)
-  style->valign = UValign::FLEX;
+  style->valign = Valign::FLEX;
   
   style->hspacing = 1;
   style->vspacing = 0;  //EX 1
@@ -66,15 +73,14 @@ UStyle* UTcell::createStyle() {
   UStyle* style = new UStyle();
   style->viewStyle = &UFlowView::style;
   style->orient = UOrient::HORIZONTAL;
-  style->halign = UHalign::FLEX;
-  style->valign = UValign::FLEX;
+  style->halign = Halign::FLEX;
+  style->valign = Valign::FLEX;
   style->hspacing = 0;
   style->vspacing = 0;
   style->local.padding.set(0,0);
   return style;
 }
 
-/* ==================================================== ===== ======= */
 
 UViewCell::UViewCell() {
   d = min_d = max_d = spec_d =0;
@@ -88,17 +94,17 @@ static void augmentCells(vector<UViewCell>& tab, unsigned int new_size) {
 
 /* ==================================================== [Elc] ======= */
 
-UTcell::UTcell(UArgs a): UFlowbox(a) {
+UTcell::UTcell(Args a): UFlowbox(a) {
   colspan = 1;
   rowspan = 1;
 }
 
-UTcell::UTcell(short _colspan, UArgs a) : UFlowbox(a) {
+UTcell::UTcell(short _colspan, Args a) : UFlowbox(a) {
   colspan = _colspan;
   rowspan = 1;
 }
 
-UTcell::UTcell(short _colspan, short _rowspan, UArgs a) : UFlowbox(a) {
+UTcell::UTcell(short _colspan, short _rowspan, Args a) : UFlowbox(a) {
   colspan = _colspan;
   rowspan = _rowspan;
 }
@@ -113,19 +119,18 @@ void UTcell::setRowspan(short _rowspan) {
   update();
 }
 
-/* ==================================================== ===== ======= */
 
 UViewStyle UTableView::style(&UTableView::createView, UCONST);
 
-UView* UTableView::createView(UBox* box, UView* parview, UHardwinImpl* w) {
+View* UTableView::createView(Box* box, View* parview, UHardwinImpl* w) {
   return new UTableView(box, parview, w);
 }
 
 UTableView::~UTableView() {
 }
 
-UTableView::UTableView(UBox* box, UView* parview, UHardwinImpl* w) 
-: UView(box, parview, w) {
+UTableView::UTableView(Box* box, View* parview, UHardwinImpl* w) 
+: View(box, parview, w) {
   lcur = ccur = ccount = lcount = 0;
 }
 
@@ -137,10 +142,9 @@ public:
   }
 };
 
-/* ==================================================== ===== ======= */
 
-bool UTableView::doLayout(UUpdateContext&parp, UViewLayout&vl) {
-  UBox* box = getBox();
+bool UTableView::doLayout(UpdateContext&parp, UViewLayout&vl) {
+  Box* box = getBox();
   UTableLayoutImpl vd(this);
   
   vl.spec_w = vl.spec_h = -1;
@@ -149,7 +153,7 @@ bool UTableView::doLayout(UUpdateContext&parp, UViewLayout&vl) {
   
   // !!PREMIER ROUND!!
   vl.strategy = UViewLayout::GET_HINTS;
-  UUpdateContext ctx(parp, box, this, null);
+  UpdateContext ctx(parp, box, this, null);
   tableDoLayout(vd, ctx, *box, vl);
   
   if (vl.spec_w < 0) {        // "table uses as many space as needed"
@@ -233,7 +237,7 @@ bool UTableView::doLayout(UUpdateContext&parp, UViewLayout&vl) {
   
   // !!DEUXIEME ROUND!!
   vl.strategy = UViewLayout::IMPOSE_WIDTH;
-  UUpdateContext ctx2(parp, box, this, null);
+  UpdateContext ctx2(parp, box, this, null);
   tableDoLayout(vd, ctx2, *box, vl);
   /*
   cerr << "Table: " << box << endl;
@@ -246,27 +250,26 @@ bool UTableView::doLayout(UUpdateContext&parp, UViewLayout&vl) {
   return false;
 };
 
-/* ==================================================== ===== ======= */
 
-void UTableView::tableDoLayout(UTableLayoutImpl& vd, UUpdateContext& ctx, 
-                               UElem& grp, UViewLayout& vl) {
+void UTableView::tableDoLayout(UTableLayoutImpl& vd, UpdateContext& ctx, 
+                               Element& grp, UViewLayout& vl) {
   UMultiList mlist(ctx, grp);
   ctx.rescale();
   vd.view->setScale(ctx.xyscale);
   
   if (ctx.local.content) {
-    UElem* content = ctx.local.content;
+    Element* content = ctx.local.content;
     ctx.local.content = null;	// avoid infinite recursion
     tableDoLayout(vd, ctx, *content, vl);   // pas de ctx, meme vd
   }
   
   // pour chaque ligne
-  for (UChildIter ch = mlist.begin(); ch != mlist.end(); mlist.next(ch))
+  for (ChildIter ch = mlist.begin(); ch != mlist.end(); mlist.next(ch))
     if (!ch.getCond() || ch.getCond()->verifies(ctx, grp)) {
 
-      UNode* b = (*ch);
-      UElem* chgrp = null;  // att reinit!
-      UView* chboxview = null;
+      Node* b = (*ch);
+      Element* chgrp = null;  // att reinit!
+      View* chboxview = null;
       UViewLayout chvl;      // att: reset by constr.
       
       if (b->toAttr()) {
@@ -274,30 +277,30 @@ void UTableView::tableDoLayout(UTableLayoutImpl& vd, UUpdateContext& ctx,
       }
       
       else if (b->toData()) {
-        UAppli::warning("UTable::doLayout",
+        Application::warning("UTable::doLayout",
         "wrong child (%s %p) in UTable (%p): a UTable can only contain UTRows",
         &b->getClassName(), b, &grp);
       }
       
       else if ((chgrp = b->toElem()) && chgrp->isShowable()) {
-        UBox* chbox = chgrp->toBox();
+        Box* chbox = chgrp->toBox();
         if (chbox) {  // QUE les Box
           
-          if ((chbox->getDisplayType() == UElem::BLOCK   // UBox or pluggin
+          if ((chbox->getDisplayType() == Element::BLOCK   // Box or pluggin
                && (chboxview = chbox->getViewInImpl(vd.view /*,&ch.child()*/)))
               ||
-              (mlist.in_softwin_list && chbox->getDisplayType() == UElem::SOFTWIN
+              (mlist.in_softwin_list && chbox->getDisplayType() == Element::SOFTWIN
                && (chboxview = chbox->getViewInImpl(vd.view /*,null*/))) //pas de ch!
               ) {
             
-            //if (chboxview->hasVMode(UView::FORCE_POS)) {
+            //if (chboxview->hasVMode(View::FORCE_POS)) {
             if (chbox->isFloating()) {
               chvl.strategy = vl.strategy;
               vd.mustLayoutAgain |= chboxview->doLayout(ctx, chvl);
             }
             
             else {  // cas normal
-              UAppli::warning("UTable::doLayout",
+              Application::warning("UTable::doLayout",
               "wrong child (%s %p) in UTable (%p): a UTable can only contain UTRows", 
               &b->getClassName(), b, &grp);
             } // end cas normal
@@ -305,7 +308,7 @@ void UTableView::tableDoLayout(UTableLayoutImpl& vd, UUpdateContext& ctx,
           } // endif(isDef(Mode::BOX) ...)
         } //endif(boxCast)
         
-        else {           // UTrow or UElem
+        else {           // UTrow or Element
           if ((dynamic_cast<UTrow*>(b))) {
             // agrandir lines si necessaire
             //if (vd.t.lcount >= vd.t.lmax) 
@@ -318,26 +321,26 @@ void UTableView::tableDoLayout(UTableLayoutImpl& vd, UUpdateContext& ctx,
             vd.t.lcount++;
           }
           
-          else {   // just an UElem
-            UUpdateContext chctx(ctx, chgrp, vd.view, null);
+          else {   // just an Element
+            UpdateContext chctx(ctx, chgrp, vd.view, null);
             tableDoLayout(vd, chctx, *chgrp, vl);  //own ctx, same vd
           }
         }
       }
     }
       
-  // la suite ne concerne pas les UElem
+  // la suite ne concerne pas les Element
   if (grp.toBox()) {
     // a la ligne final
     // Les UTable COMMENCENT et se TERMINENT par un alaligne! A COMPTER!!
     // alaligne(vl, ctx);
 
-    UPaddingSpec pad(0, 0);
+    PaddingSpec pad(0, 0);
     if (ctx.local.border) {
       ctx.local.border->getSize(ctx, pad); // !! A ETENDRE !!
     }
 
-    const USizeSpec& size = ctx.local.size;
+    const SizeSpec& size = ctx.local.size;
 
     vl.spec_w = 0.;  // redefini ensuite dans computeWidth
     //if (size.width.unit!=UAUTO && size.width.unit!=UPERCENT && size.width.unit!=UPERCENT_CTR)
@@ -386,7 +389,6 @@ void UTableView::tableDoLayout(UTableLayoutImpl& vd, UUpdateContext& ctx,
   }
 } 
 
-/* ==================================================== ======== ======= */
 // nb: la logique est la meme pour les lines
 
 static void computeSizes(vector<UViewCell>& cols, int ccur, int span,
@@ -438,7 +440,7 @@ static void computeSizes(vector<UViewCell>& cols, int ccur, int span,
 
 /* ==================================================== [Elc] ======= */
 
-static void setSizes(UView *chboxview, UUpdateContext &ctx,
+static void setSizes(View *chboxview, UpdateContext &ctx,
                      int colspan, int rowspan,
                      UTableLayoutImpl& vd, UViewLayout& chvl,
                      UViewLayout::Strategy strategy) {
@@ -455,7 +457,7 @@ static void setSizes(UView *chboxview, UUpdateContext &ctx,
     }    
   }
   else {
-    UAppli::internalError("UTrow::doLayout","wrong ViewLayout mode");
+    Application::internalError("UTrow::doLayout","wrong ViewLayout mode");
     return;
   }
   
@@ -471,26 +473,25 @@ static void setSizes(UView *chboxview, UUpdateContext &ctx,
                chvl.dim.height, chvl.min_h, chvl.max_h, chvl.spec_h);
 }
 
-/* ==================================================== ======== ======= */
 
-void UTableView::rowDoLayout(UView* row_view, UTableLayoutImpl& vd,
-                             UUpdateContext& parp, UElem& grp, UViewLayout& vl) {
-  // soit le row est un UBox et il a sa propre view soit c'est un UElem
+void UTableView::rowDoLayout(View* row_view, UTableLayoutImpl& vd,
+                             UpdateContext& parp, Element& grp, UViewLayout& vl) {
+  // soit le row est un Box et il a sa propre view soit c'est un Element
   // et il utilise celle de la table
   if (!row_view) row_view = vd.view;
-  UUpdateContext ctx(parp, &grp, row_view, null);
+  UpdateContext ctx(parp, &grp, row_view, null);
   UMultiList mlist(ctx, grp);
   ctx.rescale();
   vd.view->setScale(ctx.xyscale);
 
   vd.t.ccur = 0;
   
-  for (UChildIter ch = mlist.begin(); ch != mlist.end(); mlist.next(ch))
+  for (ChildIter ch = mlist.begin(); ch != mlist.end(); mlist.next(ch))
     if (!ch.getCond() || ch.getCond()->verifies(ctx, grp)) {
 
-      UNode* b = (*ch);
-      UView *chboxview = null;
-      UElem *chgrp = null; //!att reinit!
+      Node* b = (*ch);
+      View *chboxview = null;
+      Element *chgrp = null; //!att reinit!
       UViewLayout chvl; //att: reinit by constr.
       
       if (b->toAttr())  
@@ -503,24 +504,24 @@ void UTableView::rowDoLayout(UView* row_view, UTableLayoutImpl& vd,
         if (ch->next()) vd.chwidth += ctx.hspacing; // FAUX!
         if (chh > vd.chheight) vd.chheight = chh;  // =STD::MAX()
         */
-        UAppli::warning("UTrow::doLayout",
-        "wrong child (%s %p) in UTrow (%p): a UTrow can only contain objects that derive from UElem",
+        Application::warning("UTrow::doLayout",
+        "wrong child (%s %p) in UTrow (%p): a UTrow can only contain objects that derive from Element",
         &b->getClassName(), b, &grp);
       }
       
-      // UElem, UBoxes, UWins
+      // Element, UBoxes, UWins
       else if ((chgrp = b->toElem()) && chgrp->isShowable()) {
-        UBox* chbox = chgrp->toBox();
+        Box* chbox = chgrp->toBox();
         if (chbox) {  // QUE les Box
           
-          if ((chbox->getDisplayType() == UElem::BLOCK   // UBox or pluggin
+          if ((chbox->getDisplayType() == Element::BLOCK   // Box or pluggin
                && (chboxview = chbox->getViewInImpl(row_view /*,&ch.child()*/)))
               ||
-              (mlist.in_softwin_list && chbox->getDisplayType() == UElem::SOFTWIN
+              (mlist.in_softwin_list && chbox->getDisplayType() == Element::SOFTWIN
                && (chboxview = chbox->getViewInImpl(row_view /*,null*/))) //pas de ch!
               ) {
             
-            //if (chboxview->hasVMode(UView::FORCE_POS)) {
+            //if (chboxview->hasVMode(View::FORCE_POS)) {
             if (chbox->isFloating()) {
               chvl.strategy = vl.strategy;
               vd.mustLayoutAgain |= chboxview->doLayout(ctx, chvl);
@@ -556,9 +557,9 @@ void UTableView::rowDoLayout(UView* row_view, UTableLayoutImpl& vd,
           } // endif(isDef(Mode::BOX) ...)
         } //endif(boxCast)
         
-        // just an UElem
+        // just an Element
         else {
-          UUpdateContext chctx(ctx, chgrp, row_view, null);
+          UpdateContext chctx(ctx, chgrp, row_view, null);
           rowDoLayout(null, vd, chctx, *chgrp, vl);//own ctx, same vd
         }
       }

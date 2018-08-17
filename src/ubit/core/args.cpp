@@ -1,22 +1,29 @@
-/************************************************************************
- *
- *  uargs.cpp : class for creating argument lists ("additive notation").
- *  Ubit GUI Toolkit - Version 6
+/*
+ *  args.cpp : class for creating argument lists ("additive notation").
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE :
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION;
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
 
 #include <ubit/ubit_features.h>
 #include <ubit/udefs.hpp>
-#include <ubit/unode.hpp>
+#include <ubit/core/node.h>
 #include <ubit/ucall.hpp>
 #include <ubit/uargs.hpp>
 #include <ubit/ustr.hpp>
@@ -25,7 +32,7 @@ using namespace std;
 namespace ubit {
 
 
-const UArgs UArgs::none;
+const Args Args::none;
 
 /* test for counting creation/deletion balance
 int Ncreate, Ndelete;
@@ -34,84 +41,84 @@ UArgsChildren::~UArgsChildren() {Ndelete--;}
 */
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-UChild operator/(const UCond& cond, UNode& b) {
-  return UChild(&b, cond);
+Child operator/(const Condition& cond, Node& b) {
+  return Child(&b, cond);
 }
 
-UChild operator/(const UCond& cond, UNode* b) {
+Child operator/(const Condition& cond, Node* b) {
   if (!b) {
-    UAppli::error("UArgs::operator/","null UNode argument in / specification");
-    return UChild(null, cond);
+    Application::error("Args::operator/","null Node argument in / specification");
+    return Child(null, cond);
   }
-  else return UChild(b, cond);
+  else return Child(b, cond);
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-bool UArgs::empty() const {
+bool Args::empty() const {
   return children->empty();
 }
 
-bool UArgs::operator!() const {
+bool Args::operator!() const {
   return children->empty();
 }
 
-UArgs::~UArgs() {
+Args::~Args() {
   if (children->refcount > 1) children->refcount--;
   else if (children->refcount == 1) delete children;
 }
 
-UArgs::UArgs() {
+Args::Args() {
   children = new UArgsChildren;
   children->refcount = 1;
 }
 
-UArgs::UArgs(UNode* b) {
+Args::Args(Node* b) {
   children = new UArgsChildren;
   children->refcount = 1;
-  if (!b) UAppli::error("UArgs::UArgs","null UNode argument in arglist");
+  if (!b) Application::error("Args::Args","null Node argument in arglist");
   else children->push_back(b);
 }
   
-UArgs::UArgs(UNode& b) {
+Args::Args(Node& b) {
   children = new UArgsChildren;
   children->refcount = 1;
   children->push_back(b);
 }
 
-UArgs::UArgs(const char* s) {
+Args::Args(const char* s) {
   children = new UArgsChildren;
   children->refcount = 1;
-  children->push_back(new UStr(s));
+  children->push_back(new String(s));
 }
 
-UArgs::UArgs(const UChild& c) {
+Args::Args(const Child& c) {
   children = new UArgsChildren;
   children->refcount = 1;
-  if (!*c) UAppli::error("UArgs::UArgs","UChild argument pointing to null node");
+  if (!*c) Application::error("Args::Args","Child argument pointing to null node");
   else children->push_back(c);
 }
 
-UArgs::UArgs(const UArgs& a) : children(a.children) {
-  if (!children) {     // cas UArgs::none pas encore initialise...
+Args::Args(const Args& a) : children(a.children) {
+  if (!children) {     // cas Args::none pas encore initialise...
     children = new UArgsChildren;
     children->refcount = 0;
   }
   children->refcount++;
 }
 
-UArgs::UArgs(const UArgsImpl& a) : children(a.children) {
-  if (!children) {     // cas UArgs::none pas encore initialise...
+Args::Args(const UArgsImpl& a) : children(a.children) {
+  if (!children) {     // cas Args::none pas encore initialise...
     children = new UArgsChildren;
     children->refcount = 0;
   }
   children->refcount++;
 }
 
-UArgs& UArgs::operator+=(const UArgs& a2) {
+Args& Args::operator+=(const Args& a2) {
   // marche pas car operator* est redefini
   // children->insert(children->end(), a2.children->begin(), a2.children->end());
-  for (UChildIter i = a2.children->begin(); i != a2.children->end(); ++i)
+  for (ChildIter i = a2.children->begin(); i != a2.children->end(); ++i)
     children->push_back(i.child());
   return *this;
 }
@@ -129,7 +136,7 @@ UArgsImpl::UArgsImpl() {
 }
 
 UArgsImpl::UArgsImpl(const UArgsImpl& a) : children(a.children) {
-  if (!children) {  // cas UArgs::none pas encore initialise...
+  if (!children) {  // cas Args::none pas encore initialise...
     children = new UArgsChildren;
     children->refcount = 0;
   }
@@ -139,7 +146,7 @@ UArgsImpl::UArgsImpl(const UArgsImpl& a) : children(a.children) {
 // dans ce cas il ne faut pas augmenter a, sinon une expression comme :
 //    ubox(args + string)
 // aurait pour effet de rajouter string a args
-UArgsImpl::UArgsImpl(const UArgs& a) {
+UArgsImpl::UArgsImpl(const Args& a) {
   children = new UArgsChildren;
   *children = *a.children;   // !! la difference importante est ici !!
   children->refcount = 1;
@@ -148,58 +155,58 @@ UArgsImpl::UArgsImpl(const UArgs& a) {
 UArgsImpl::UArgsImpl(const char* s) {
   children = new UArgsChildren;
   children->refcount = 1;
-  children->push_back(new UStr(s));
+  children->push_back(new String(s));
 }
 
-UArgsImpl::UArgsImpl(UNode* b) {
+UArgsImpl::UArgsImpl(Node* b) {
   children = new UArgsChildren;
   children->refcount = 1;
-  if (!b) UAppli::error("UArgs","null argument in arglist");
+  if (!b) Application::error("Args","null argument in arglist");
   else children->push_back(b);
 }
 
-UArgsImpl::UArgsImpl(UNode& b) {
+UArgsImpl::UArgsImpl(Node& b) {
   children = new UArgsChildren;
   children->refcount = 1;
   children->push_back(b);
 }
 
-UArgsImpl::UArgsImpl(const UChild& c) {
+UArgsImpl::UArgsImpl(const Child& c) {
   children = new UArgsChildren;
   children->refcount = 1;
-  if (!*c) UAppli::error("UArgs","null UChild argument in arglist");
+  if (!*c) Application::error("Args","null Child argument in arglist");
   else children->push_back(c);
 }
 
 const UArgsImpl& operator+(const UArgsImpl& a, const char* s) {
-  a.children->push_back(new UStr(s));
+  a.children->push_back(new String(s));
   return a;
 }
 
-const UArgsImpl& operator+(const UArgsImpl& a, UNode* b) {
-  if (!b) UAppli::error("UArgs::operator+","null UNode in arglist");
+const UArgsImpl& operator+(const UArgsImpl& a, Node* b) {
+  if (!b) Application::error("Args::operator+","null Node in arglist");
   else a.children->push_back(b);
   return a;
 }
 
-const UArgsImpl& operator+(const UArgsImpl& a, UNode& b) {
+const UArgsImpl& operator+(const UArgsImpl& a, Node& b) {
   a.children->push_back(b);
   return a;
 }
 
-const UArgsImpl& operator+(const UArgsImpl& a, const UChild& c) {
-  if (!*c) UAppli::error("UArgs::operator+","null UChild in arglist");
+const UArgsImpl& operator+(const UArgsImpl& a, const Child& c) {
+  if (!*c) Application::error("Args::operator+","null Child in arglist");
   else a.children->push_back(c);
   return a;
 }
 
-// UArgsImpl + UArgs => recopie children de UArgs a la suite de ceux de UArgsImpl
-// SANS MODIFIER UArgs
+// UArgsImpl + Args => recopie children de Args a la suite de ceux de UArgsImpl
+// SANS MODIFIER Args
 //
-const UArgsImpl& operator+(const UArgsImpl& a, const UArgs& a2) {
+const UArgsImpl& operator+(const UArgsImpl& a, const Args& a2) {
   // marche pas car operator* est redefini
   //a.children->insert(a.children->end(), a2.children->begin(), a2.children->end());
-  for (UChildIter i = a2.children->begin(); i != a2.children->end(); ++i)
+  for (ChildIter i = a2.children->begin(); i != a2.children->end(); ++i)
     a.children->push_back(i.child());
   return a;
 }
@@ -224,7 +231,7 @@ _UAttrArgs::_UAttrArgs() {
 
 /*
 _UAttrArgs::_UAttrArgs(const UArgsImpl& a) : children(a.children) {
-  if (!children) {  // cas UArgs::none pas encore initialise...
+  if (!children) {  // cas Args::none pas encore initialise...
     children = new UArgsChildren;
     children->refcount = 0;
   }
@@ -232,14 +239,14 @@ _UAttrArgs::_UAttrArgs(const UArgsImpl& a) : children(a.children) {
 }
 */
 
-_UAttrArgs::_UAttrArgs(UAttr* n) {
+_UAttrArgs::_UAttrArgs(Attribute* n) {
   children = new UArgsChildren;
   children->refcount = 1;
-  if (!n) UAppli::error("UArgs","null UAttr argument in arglist");
+  if (!n) Application::error("Args","null Attribute argument in arglist");
   else children->push_back(n);
 }
 
-_UAttrArgs::_UAttrArgs(UAttr& n) {
+_UAttrArgs::_UAttrArgs(Attribute& n) {
   children = new UArgsChildren;
   children->refcount = 1;
   children->push_back(n);
@@ -248,7 +255,7 @@ _UAttrArgs::_UAttrArgs(UAttr& n) {
 _UAttrArgs::_UAttrArgs(UCall* n) {
   children = new UArgsChildren;
   children->refcount = 1;
-  if (!n) UAppli::error("UArgs","null UChild argument in arglist");
+  if (!n) Application::error("Args","null Child argument in arglist");
   else children->push_back(n);
 }
 
@@ -259,27 +266,27 @@ _UAttrArgs::_UAttrArgs(UCall& n) {
 }
 
 /*
-_UAttrArgs::_UAttrArgs(const UChild& c) {
+_UAttrArgs::_UAttrArgs(const Child& c) {
   children = new UArgsChildren;
   children->refcount = 1;
-  if (!*c) UAppli::error("UArgs::UArgs","null UChild argument in arglist");
+  if (!*c) Application::error("Args::Args","null Child argument in arglist");
   else children->push_back(c);
 }
 */
 
-const _UAttrArgs& operator,(const _UAttrArgs& a, UAttr* n) {
-  if (!n) UAppli::error("UArgs::operator,","null UAttr argument in arglist");
+const _UAttrArgs& operator,(const _UAttrArgs& a, Attribute* n) {
+  if (!n) Application::error("Args::operator,","null Attribute argument in arglist");
   else a.children->push_back(n);
   return a;
 }
 
-const _UAttrArgs& operator,(const _UAttrArgs& a, UAttr& n) {
+const _UAttrArgs& operator,(const _UAttrArgs& a, Attribute& n) {
   a.children->push_back(n);
   return a;
 }
 
 const _UAttrArgs& operator,(const _UAttrArgs& a, UCall* n) {
-  if (!n) UAppli::error("UArgs::operator,","null UCall argument in arglist");
+  if (!n) Application::error("Args::operator,","null UCall argument in arglist");
   else a.children->push_back(n);
   return a;
 }
@@ -290,8 +297,8 @@ const _UAttrArgs& operator,(const _UAttrArgs& a, UCall& n) {
 }
 
 /*
-const _UAttrArgs& operator+(const _UAttrArgs& a, const UChild& c) {
-  if (!*c) UAppli::error("UArgs::operator,","null UChild argument in arglist");
+const _UAttrArgs& operator+(const _UAttrArgs& a, const Child& c) {
+  if (!*c) Application::error("Args::operator,","null Child argument in arglist");
   else a.children->push_back(c);
   return a;
 }

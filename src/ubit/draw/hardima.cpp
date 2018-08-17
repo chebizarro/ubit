@@ -1,5 +1,4 @@
-/* ***********************************************************************
- *
+/*
  *  uhardima.cpp : native images and pixmaps
  *  Ubit GUI Toolkit - Version 6.0
  *  (C) 2008 Eric Lecolinet | ENST Paris | www.enst.fr/~elc/ubit
@@ -63,10 +62,10 @@ namespace ubit {
 
 UHardIma::~UHardIma() {}
   
-int UHardIma::read(const UStr& fname, const char* _ftype, int wmax, int hmax) {
+int UHardIma::read(const String& fname, const char* _ftype, int wmax, int hmax) {
   if (fname.empty()) return UFilestat::CannotOpen;
   
-  UStr ftype = _ftype;
+  String ftype = _ftype;
   if (ftype.empty()) ftype = fname.suffix();
   if (ftype.empty()) return UFilestat::UnknownType;
   
@@ -96,7 +95,7 @@ int UHardIma::readFromData(const char** xpm_data, int wmax, int hmax) {
 /* ==================================================== [Elc] ======= */
 #ifdef UBIT_WITH_GL
 
-UHardImaGL::UHardImaGL(UDisp* d, int w, int h, int transparency_hint) {
+UHardImaGL::UHardImaGL(Display* d, int w, int h, int transparency_hint) {
   disp = d;
   pixels = null;
   texid = 0;
@@ -104,7 +103,7 @@ UHardImaGL::UHardImaGL(UDisp* d, int w, int h, int transparency_hint) {
 }
 
 /*
-UHardImaGL::UHardImaGL(UDisp* nd, unsigned char* _glpix, int w, int h) {
+UHardImaGL::UHardImaGL(Display* nd, unsigned char* _glpix, int w, int h) {
   natdisp = nd;
   width = w;
   height = h;
@@ -125,7 +124,6 @@ bool UHardImaGL::isRealized() const {
   return (texid != 0 || pixels != null);  // ????
 }
 
-/* ==================================================== ===== ======= */
 
 void UHardImaGL::setRaster(int w, int h, int transparency_hint) {   // glcontext dependent!!!
   delete[] pixels;
@@ -166,7 +164,6 @@ void UHardImaGL::setRasterAndAdopt(unsigned char* pixbuf, int w, int h) {   // g
   }  
 }
 
-/* ==================================================== ===== ======= */
 #if WITH_2D_GRAPHICS
 
 void UHardImaGL::setRasterAndAdopt(USysIma ima, USysIma imashape) {   // glcontext dependent!!!
@@ -220,21 +217,19 @@ void UHardImaGL::setRasterAndAdopt(USysIma ima, USysIma imashape) {   // glconte
 }
 
 #endif
-/* ==================================================== ===== ======= */
 
-static UHardImaGL* _createScaledClone(UDisp* to_nd, UDisp* from_nd,
+static UHardImaGL* _createScaledClone(Display* to_nd, Display* from_nd,
                                      UHardImaGL* from_ima, float xscale, float yscale);
                                      
-UHardIma* UHardImaGL::createScaledClone(float xscale, float yscale, UDisp* to_nd) {
+UHardIma* UHardImaGL::createScaledClone(float xscale, float yscale, Display* to_nd) {
   if (!to_nd) to_nd = disp;
   if (!disp) {
-    UAppli::error("UHardIma::createScaledClone","no available display");
+    Application::error("UHardIma::createScaledClone","no available display");
     return null;
   }
   return _createScaledClone(to_nd, disp, this, xscale, yscale);
 }
 
-/* ==================================================== ===== ======= */
 
 void UHardImaGL::createTexFromPixels() const {   // glcontext dependent!!!
   if (!pixels) return;
@@ -308,7 +303,7 @@ void UHardImaGL::createTexFromPixels() const {
 /* ==================================================== [Elc] ======= */
 #if WITH_2D_GRAPHICS
 
-UHardIma2D::UHardIma2D(UDisp* d, int w, int h, int transparency_hint) {
+UHardIma2D::UHardIma2D(Display* d, int w, int h, int transparency_hint) {
   disp = d;
   sys_ima = sys_imashape = null;
   setRaster(w, h, transparency_hint);
@@ -363,10 +358,10 @@ void UHardIma2D::setRasterAndAdopt(USysIma ima, USysIma imashape) {
   }
 }
 
-UHardIma* UHardIma2D::createScaledClone(float xscale, float yscale, UDisp* to_nd) {
+UHardIma* UHardIma2D::createScaledClone(float xscale, float yscale, Display* to_nd) {
   // NB: createScaledSysIma necessite natdisp mais en fait ca devrait pas
   if (!disp) {
-    UAppli::error("UHardIma::createScaledClone","no available display");
+    Application::error("UHardIma::createScaledClone","no available display");
     return null;
   }
   if (!to_nd) to_nd = disp;
@@ -382,11 +377,9 @@ UHardIma* UHardIma2D::createScaledClone(float xscale, float yscale, UDisp* to_nd
   return ni;
 }
 
-/* ==================================================== ======== ======= */
-/* ==================================================== ======== ======= */
 //NOTE: les NatPix ne sont pas utilises en mode OpenGL
 
-UHardPix::UHardPix(UDisp* d, UHardIma2D* ima) {
+UHardPix::UHardPix(Display* d, UHardIma2D* ima) {
   disp = d;
   sys_pix = sys_pixshape = null;
   if (ima) setRasterFrom(ima->getIma(), ima->getImaShape());
@@ -408,13 +401,13 @@ UHardPix::~UHardPix() {
 }
 
 /*
- UHardPix::UHardPix(UDisp* nd, USysIma ima, USysIma imashape) {
+ UHardPix::UHardPix(Display* nd, USysIma ima, USysIma imashape) {
    natdisp = nd;
    sys_pix = sys_pixshape = USysNull;
    setRaster(ima, imashape);
  }
  
- UHardPix::UHardPix(UDisp* nd, USysPix p, USysPix m, int ww, int hh) {
+ UHardPix::UHardPix(Display* nd, USysPix p, USysPix m, int ww, int hh) {
    natdisp = nd;
    height = hh; 
    width = ww;
@@ -444,7 +437,7 @@ void UHardPix::setRasterFrom(USysIma _ima, USysIma _imashape) {
   }
   
   else if (_ima->width == 0 || _ima->height == 0) {
-    UAppli::warning("UHardPix::setRasterFrom", "Null_width_or_height");
+    Application::warning("UHardPix::setRasterFrom", "Null_width_or_height");
     // test important car X plante sur XCreatePixmap si une dimension est nulle
     return;
   }
@@ -479,14 +472,13 @@ void UHardPix::setRasterFrom(USysIma _ima, USysIma _imashape) {
 }
 
 /* ==================================================== [Elc] ======= */
-/* ==================================================== ===== ======= */
 // NOTE: this part was adapted from gifrsize.c from the Gif-Lib 
 // written by Gershon Elber (Ver 0.1, Jul. 1989)
 
 namespace I2D {
 
 struct RGBConvCopy {
-  UDisp *to_nd, *from_nd;
+  Display *to_nd, *from_nd;
   USysIma to_ima, from_ima;
   int to_ima_w, from_ima_w, to_ima_h, from_ima_h;
   
@@ -542,10 +534,9 @@ struct RGBConvCopy {
   }
 };
 
-/* ==================================================== ======== ======= */
 
 struct SimpleCopy {
-  UDisp *to_nd, *from_nd;
+  Display *to_nd, *from_nd;
   USysIma to_ima, from_ima;
   int to_ima_w, from_ima_w, to_ima_h, from_ima_h;
 
@@ -571,13 +562,12 @@ struct SimpleCopy {
 
 #endif //WITH_2D_GRAPHICS
 
-/* ==================================================== ======== ======= */
 namespace IM {
 
 #if UBIT_WITH_GL
   
 struct GlCopy {
-  UDisp *to_nd, *from_nd;
+  Display *to_nd, *from_nd;
   UHardImaGL* to_ima, *from_ima;
   int to_ima_w, from_ima_w, to_ima_h, from_ima_h;
   int to_scanline, from_scanline;
@@ -619,7 +609,6 @@ struct GlCopy {
 };
   
 #endif
-/* ==================================================== ======== ======= */
 
 template <class ND, class IMA, class COPY>
 struct ResizeAlgo : public COPY {
@@ -705,23 +694,21 @@ struct ResizeAlgo : public COPY {
 };
 
 } //end namespace
-/* ==================================================== ======== ======= */
 #if UBIT_WITH_GL
 
-static UHardImaGL* _createScaledClone(UDisp* to_nd, UDisp* from_nd,
+static UHardImaGL* _createScaledClone(Display* to_nd, Display* from_nd,
                                      UHardImaGL* from_ima, float xscale, float yscale) {
  
   UHardImaGL* clone = new UHardImaGL(to_nd, 
                                    int(from_ima->getWidth() * xscale + 0.5),
                                    int(from_ima->getHeight() * yscale + 0.5));
    
-  IM::ResizeAlgo<UDisp, UHardImaGL*, IM::GlCopy>  resalgo(to_nd, clone, from_nd, from_ima);
+  IM::ResizeAlgo<Display, UHardImaGL*, IM::GlCopy>  resalgo(to_nd, clone, from_nd, from_ima);
   resalgo.resizeImage(xscale, yscale);
   return clone;
 }
 
 #endif
-/* ==================================================== ======== ======= */
 #if WITH_2D_GRAPHICS
 
 /* NB:
@@ -729,7 +716,7 @@ static UHardImaGL* _createScaledClone(UDisp* to_nd, UDisp* from_nd,
 *   source_ima (invalid colors if the Visual or the depth are different)
 * - image depth must be <= to the NatDisp depth
 */
-USysIma UHardIma2D::createScaledSysIma(UDisp* to_nd, UDisp* from_nd,
+USysIma UHardIma2D::createScaledSysIma(Display* to_nd, Display* from_nd,
                                         USysIma from_ima, float xscale, float yscale) {
   int to_depth;
   if (from_ima->depth <= to_nd->getBpp()) to_depth = from_ima->depth;
@@ -741,40 +728,39 @@ USysIma UHardIma2D::createScaledSysIma(UDisp* to_nd, UDisp* from_nd,
                                      to_depth);
   if (!to_ima) {
     // inutile: message deja affiche par createEmptyXImage()
-    // UAppli::error("UHardIma::createScaledSysIma", "can't create image");
+    // Application::error("UHardIma::createScaledSysIma", "can't create image");
     return null;
   }
   
   if (to_nd == from_nd || to_depth == 1) {
     // if to_nd == from_nd or if depth == 1 no convertion is needed
-    IM::ResizeAlgo<UDisp, USysIma, I2D::SimpleCopy> resalgo(to_nd, to_ima, from_nd, from_ima);
+    IM::ResizeAlgo<Display, USysIma, I2D::SimpleCopy> resalgo(to_nd, to_ima, from_nd, from_ima);
     resalgo.resizeImage(xscale, yscale);
   }
   else {
     // RGB values are converted according to the characteristics of
     // to_nd and from_nd
-    IM::ResizeAlgo<UDisp, USysIma, I2D::RGBConvCopy> resalgo(to_nd, to_ima, from_nd, from_ima);
+    IM::ResizeAlgo<Display, USysIma, I2D::RGBConvCopy> resalgo(to_nd, to_ima, from_nd, from_ima);
     resalgo.resizeImage(xscale, yscale);
   }
   return to_ima;
 }
 
-/* ==================================================== ===== ======= */
 
-USysIma UHardIma2D::createEmptySysIma(UDisp* _nd, int width, int height, int depth) {
+USysIma UHardIma2D::createEmptySysIma(Display* _nd, int width, int height, int depth) {
   if (width <= 0 || height <= 0 || depth <= 0) {
-    UAppli::error("UHardIma::createEmptySysIma","null or negative size or depth");
+    Application::error("UHardIma::createEmptySysIma","null or negative size or depth");
     return null;
   }
   if (depth > _nd->getBpp()) {
-    UAppli::error("UHardIma::createEmptySysIma","requested depth %d is too large for this display", depth);
+    Application::error("UHardIma::createEmptySysIma","requested depth %d is too large for this display", depth);
     return null;
   }
   
 #if UBIT_WITH_GDK
   UDispGDK* nd = (UDispGDK*)_nd;
   USysIma ima = gdk_image_new(GDK_IMAGE_FASTEST, nd->getSysVisual(), width, height);
-  if (!ima) UAppli::error("UHardIma::createEmptySysIma","cant create this image on this display");
+  if (!ima) Application::error("UHardIma::createEmptySysIma","cant create this image on this display");
   return ima;
   
 #elif UBIT_WITH_X11
@@ -795,7 +781,7 @@ USysIma UHardIma2D::createEmptySysIma(UDisp* _nd, int width, int height, int dep
                  0); // bytes_per_line (0 : continuous scanlines=> calculated auto.
   
   if (!ima) {
-    UAppli::error("UHardIma::createEmptySysIma","cant create this image on this display");
+    Application::error("UHardIma::createEmptySysIma","cant create this image on this display");
     return null;
   }
   
@@ -812,16 +798,15 @@ USysIma UHardIma2D::createEmptySysIma(UDisp* _nd, int width, int height, int dep
   if (ima->data) 
     return ima;
   else {
-    UAppli::error("UHardIma::createEmptyXImage","No more memory");
+    Application::error("UHardIma::createEmptyXImage","No more memory");
     XDestroyImage(ima);
     return null;
   }
 #endif // X11
 }
 
-/* ==================================================== ===== ======= */
 
-bool UHardIma2D::blendSysIma(UDisp* _nd, USysIma xima1, USysPixel pixel2, float alpha) {
+bool UHardIma2D::blendSysIma(Display* _nd, USysIma xima1, USysPixel pixel2, float alpha) {
 #if UBIT_WITH_X11
   UDispX11* nd = (UDispX11*)_nd;
 #else
@@ -829,14 +814,14 @@ bool UHardIma2D::blendSysIma(UDisp* _nd, USysIma xima1, USysPixel pixel2, float 
 #endif
   
   if (xima1->depth > nd->getBpp()) {
-    UAppli::error("UHardIma2D::blendSysIma","source and destination have incompatible depths");
+    Application::error("UHardIma2D::blendSysIma","source and destination have incompatible depths");
     return false;
   }  
 
   USysVisual v = nd->getSysVisual();
 #if UBIT_WITH_X11
   if (!v || v->c_class != TrueColor) {
-    UAppli::error("UHardIma2D::blendSysIma","alpha blending requires TrueColors");
+    Application::error("UHardIma2D::blendSysIma","alpha blending requires TrueColors");
     return false;
   }
 #endif
@@ -867,23 +852,22 @@ bool UHardIma2D::blendSysIma(UDisp* _nd, USysIma xima1, USysPixel pixel2, float 
   return true;
 }
 
-/* ==================================================== ======== ======= */
 
-bool UHardIma2D::blendSysIma(UDisp* _d, USysIma xima1, USysIma xima2, float alpha) {
+bool UHardIma2D::blendSysIma(Display* _d, USysIma xima1, USysIma xima2, float alpha) {
 #if UBIT_WITH_X11
   UDispX11* d = (UDispX11*)_d;
 #else
   UDispGDK* d = (UDispGDK*)_d;
 #endif
   if (xima1->depth != xima2->depth || xima1->depth > d->getBpp()) {
-    UAppli::error("UHardIma2D::blendSysIma","source and destination have incompatible depths");
+    Application::error("UHardIma2D::blendSysIma","source and destination have incompatible depths");
     return false;
   }
   
   USysVisual v = d->getSysVisual();
 #if UBIT_WITH_X11
   if (!v || v->c_class != TrueColor) {
-    UAppli::error("UHardIma2D::blendSysIma","alpha blending requires TrueColors");
+    Application::error("UHardIma2D::blendSysIma","alpha blending requires TrueColors");
     return false;
   }
 #endif
@@ -912,12 +896,11 @@ bool UHardIma2D::blendSysIma(UDisp* _d, USysIma xima1, USysIma xima2, float alph
   return true;
 }
 
-/* ==================================================== ===== ======= */
 // essaye de tout caser dans la Colormap donnee en arg.
 // returns the convtable
 // NEW: modifie colors
 
-USysPixel* UHardIma2D::allocSysColors(UDisp* _d, USysColor* colors, int col_count) {
+USysPixel* UHardIma2D::allocSysColors(Display* _d, USysColor* colors, int col_count) {
 #if UBIT_WITH_X11
   UDispX11* d = (UDispX11*)_d;
 #else
@@ -947,7 +930,7 @@ USysPixel* UHardIma2D::allocSysColors(UDisp* _d, USysColor* colors, int col_coun
   }
 
 #ifdef UBIT_WITH_GDK
-  UAppli::error("UHardIma::allocXColors","cant find approximate colors in GDK mode: not implemented");
+  Application::error("UHardIma::allocXColors","cant find approximate colors in GDK mode: not implemented");
   return convtable;
 #else
   // -- sinon: on associe aux couleurs non-allouees la couleur la plus proche 

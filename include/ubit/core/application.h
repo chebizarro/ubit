@@ -67,7 +67,7 @@ namespace ubit {
    * These event sources can be produced by a mouse or a MIMIo on the serial port
    * or by an application running on a remote machine (see the 'uremote' program
    * in ubit/ums). Finally, Event flows can be uniquely identified in callback 
-   * functions through the getFlow() method of their UEvent& argument.
+   * functions through the getFlow() method of their Event& argument.
    *
    * Classes Timer and USource make it possible to fire callback functions after
    * a given timeout or when the application receives data on a file source
@@ -75,11 +75,11 @@ namespace ubit {
    * simplified API for using timers. postpone() is used to fire CPU intensive 
    * methods when the event loop becomes idle.
    * 
-   * Classes USocket and UServerSocket provide a simple mechanism to handle 
+   * Classes Socket and UServerSocket provide a simple mechanism to handle 
    * sockets. The are based on simple communication protocol that can be
    * implemented in non Ubit programs. In addition, asynchronous messages
    * can be exchanged between Ubit applications and the UMS server through the
-   * the UMessage protocol. See: UMessage, Application::onMessage() and 
+   * the Message protocol. See: Message, Application::onMessage() and 
    * Application::getMessagePort().
    *
    * NOTE on colors: Ubit applications may not work properly on (obsolete) X11 
@@ -153,9 +153,8 @@ namespace ubit {
     static bool isExiting();
     ///< returns true if the applicating is exiting.
     
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     
-    static void add(UWin&);
+    static void add(Window&);
     /**< adds a window (UFrame, UDialog, etc) to the Application.
      * Note that:
      * - the first UFrame that is shown or added to the Application is said to be the
@@ -166,15 +165,15 @@ namespace ubit {
      *   it is implicitely added to the the Application when its show() method is called.
      * 
      * - the size of windows is computed when their show() method is called for the
-     *   first time. It won't change afterwards excepts if UWin::adjustSize() is called.
+     *   first time. It won't change afterwards excepts if Window::adjustSize() is called.
      *
-     * @see also: UWin:show(), UWin:update() and UWin, UFrame and UDialog classes.
+     * @see also: Window:show(), Window:update() and Window, UFrame and UDialog classes.
      */ 
     
-    static void add(UWin*);
-    ///< calls add(UWin&) if the argument is not null, produces an error otherwise.
+    static void add(Window*);
+    ///< calls add(Window&) if the argument is not null, produces an error otherwise.
     
-    static void remove(UWin& win, bool auto_delete = true);
+    static void remove(Window& win, bool auto_delete = true);
     /**< removes or deletes a window from the Application.
      * this function works as follows:
      * - 1) the first occurence of 'win' is removed from the child list
@@ -184,8 +183,8 @@ namespace ubit {
      *      that have no other parents and are nor UPtr'ed are also destroyed.
      */
     
-    static void remove(UWin*, bool auto_delete = true);
-    ///< calls remove(UWin&) if the argument is not null, produces an error otherwise.
+    static void remove(Window*, bool auto_delete = true);
+    ///< calls remove(Window&) if the argument is not null, produces an error otherwise.
     
     static int start();
     /**< starts the event main loop of the application.
@@ -211,15 +210,15 @@ namespace ubit {
     static void setTitle(const String& title);
     ///< changes the title of the Main Frame (@see getMainFrame()).
     
-    static void setFocus(UView*);
+    static void setFocus(View*);
     /**< gives the input focus to this view.
      * no object gets the focus if argument is null. The focus is reset when the user 
      * clicks on a the view of widget that can handle input from the keyboard 
      */
     
-    static void updateAll(const UUpdate& mode = UUpdate::layoutAndPaint); 
+    static void updateAll(const Update& mode = Update::layoutAndPaint); 
     /**< updates all windows.
-     * see UWin::update() for details.
+     * see Window::update() for details.
      */
     
     
@@ -284,7 +283,7 @@ namespace ubit {
      *   after the specified 'delay'). The timer will be fired repeatedly
      *   until the completion of the application if ntimes is -1.
      * - 'callback' is a ucall<> expression (see UCall). It is destroyed after
-     *    completion, except if referenced by a unique_ptr<> or another node (see UNode).
+     *    completion, except if referenced by a unique_ptr<> or another node (see Node).
      * See also: postpone() and class Timer.
      */
     
@@ -294,7 +293,7 @@ namespace ubit {
      * - to postpone the execution of callbacks that take some time
      * - to request the execution of callbacks in the main thread from another thread
      * 'callback' is a ucall<> expression (see UCall). It is destroyed after
-     *  completion, except if referenced by a unique_ptr<> or another node (see UNode).
+     *  completion, except if referenced by a unique_ptr<> or another node (see Node).
      * See also: onTimeout() and Timer.
      */
     
@@ -343,7 +342,7 @@ namespace ubit {
     static const FlowList& getFlowList();
     ///< returns the list of all event flows on all displays (see getFlow()).
     
-    static USelection* getSelection(int ID = 0);
+    static Selection* getSelection(int ID = 0);
     /**< returns the text selection manager.
      * return the text selection of the native event flow of the main display
      * by default (ie. if ID = 0). However, an application may have several
@@ -366,7 +365,7 @@ namespace ubit {
     static MessagePort* findMessagePort(const String& name);
     ///< Ubit Messages: @see onMessage() and class MessagePort.
     
-    static UMessagePortMap* getMessagePortMap();
+    static MessagePortMap* getMessagePortMap();
     ///< [impl] Ubit Messages.
     
     
@@ -406,15 +405,14 @@ namespace ubit {
     static void deleteNotify(Display*);
     ///< [impl] notifies that a display is being destroyed.
     
-    static void deleteNotify(UElem*);
+    static void deleteNotify(Element*);
     ///< [impl] notifies that an element is being destroyed.
 
-    static void deleteNotify(UView*);
+    static void deleteNotify(View*);
     ///< [impl] notifies that a view is being destroyed.
   };
   
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   /** Error management.
    */
   class ErrorHandler : public Object {

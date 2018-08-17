@@ -53,11 +53,11 @@ namespace ubit {
     Background(const Background&);
     ///< creates a background from another one.
     
-    Background(const UColor&);
-    ///< creates a background prop with a solid color (the UColor argument is copied).
+    Background(const Color&);
+    ///< creates a background prop with a solid color (the Color argument is copied).
     
-    Background(UIma&);  
-    ///< creates a background prop with an image (the UIma argument is copied).
+    Background(Image&);  
+    ///< creates a background prop with an image (the Image argument is copied).
     
     Background& operator=(const Background&);
     ///< copies a background attribute from another one.
@@ -65,9 +65,9 @@ namespace ubit {
     bool operator==(const Background&);
     ///< compares two background attributes.
 
-    virtual Background& setColor(const UColor& color);
+    virtual Background& setColor(const Color& color);
     /**< changes the background color.
-     * the UColor argument is copied internally so that this background will remain
+     * the Color argument is copied internally so that this background will remain
      * valid if this argument is destroyed.
      */
     
@@ -81,37 +81,37 @@ namespace ubit {
                                       unsigned int a = 255);
     ///< changes the background color, arguments are integers in range [0,255].
 
-    virtual Background& setNamedColor(const UStr& color_name, float a = 1.);
+    virtual Background& setNamedColor(const String& color_name, float a = 1.);
     ///< changes the background color, arguments are a color name and an alpha value in range [0,1].
     
-    virtual Background& setIma(UIma& image, bool tiling = true);
+    virtual Background& setIma(Image& image, bool tiling = true);
     /**< changes the background image (WARNING: see details).
-     * WARNING: the UIma argument is NOT copied internally: this background will
+     * WARNING: the Image argument is NOT copied internally: this background will
      * NOT be valid if this argument is destroyed.
      */
     
     Background& setTiling(bool);
     ///< sets tiling on or off.
     
-    const UColor* getColor() const;
+    const Color* getColor() const;
     ///< returns the current color if any; null otherwise.
     
-    const UIma* getIma() const;
+    const Image* getIma() const;
     ///< returns the current image if any; null otherwise.
     
     bool isTiled() const;
     ///< returns true if the image is tiled.
     
     virtual void update();
-    virtual void putProp(UUpdateContext*, UElem&);
+    virtual void putProp(UpdateContext*, Element&);
         
     // - impl. - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #ifndef NO_DOC
-    Background(UColor&, UConst);
-    Background(UIma&, UConst);
+    Background(Color&, UConst);
+    Background(Image&, UConst);
   protected:
-    uptr<UColor> pcolor;
-    uptr<UIma> pima;
+    uptr<Color> pcolor;
+    uptr<Image> pima;
     float alpha;
     bool tiling;
 #endif
@@ -120,10 +120,10 @@ namespace ubit {
   inline Background& ubackground() {return *new Background();}
   ///< shortcut for *new Background().
   
-  inline Background& ubackground(const UColor& col) {return *new Background(col);}
+  inline Background& ubackground(const Color& col) {return *new Background(col);}
   ///< shortcut for *new Background(col).
 
-  inline Background& ubackground(UIma& ima) {return *new Background(ima);}
+  inline Background& ubackground(Image& ima) {return *new Background(ima);}
   ///< shortcut for *new Background(ima).
 
   // ==================================================== Ubit Toolkit =========
@@ -146,17 +146,17 @@ namespace ubit {
     ///< type conversion: returns value  which is in range [0., 1.].
     
     UAlpha& operator=(float v)         {return set(v);}
-    UAlpha& operator=(const UFloat& v) {return set(v);}
+    UAlpha& operator=(const Float& v) {return set(v);}
     UAlpha& operator=(const UAlpha& v) {return set(v.val);}
     virtual UAlpha& set(float);  
     ///< changes alpha value. must be in range [0., 1.].
     
     bool operator==(float v)         const {return val == v;}  
-    bool operator==(const UFloat& v) const {return val == v;}  
+    bool operator==(const Float& v) const {return val == v;}  
     bool operator==(const UAlpha& v) const {return val == v.val;}
     
     virtual void update();
-    virtual void putProp(UUpdateContext*, UElem&);
+    virtual void putProp(UpdateContext*, Element&);
     
   private:
     float val;

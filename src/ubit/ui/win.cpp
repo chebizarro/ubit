@@ -1,6 +1,5 @@
-/************************************************************************
- *
- *  uwin.cpp: ubit windows
+/*
+ *  win.cpp: ubit windows
  *  Ubit GUI Toolkit - Version 6
  *  (C) 2009 | Eric Lecolinet | ENST Paris | http://www.enst.fr/~elc/ubit
  *
@@ -33,31 +32,31 @@ namespace ubit {
 
 
 static const char* Unrealized_Window = 
-  "UWin object %p is not realized; check if this window has a valid parent";
+  "Window object %p is not realized; check if this window has a valid parent";
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-UStyle* UWin::createStyle() {
+UStyle* Window::createStyle() {
   UStyle* style = new UStyle;
-  style->textSeparator = new UStr("\n");
+  style->textSeparator = new String("\n");
   style->orient = UOrient::VERTICAL;
-  style->halign = UHalign::FLEX;
+  style->halign = Halign::FLEX;
   //NB: dialogs a la fois hflex et vflex
-  style->valign = UValign::FLEX;
+  style->valign = Valign::FLEX;
   style->hspacing = 1;
   style->vspacing = 1;
   style->local.padding.set(0, 0);
   style->font = null;
-  style->local.background = &UAppli::conf.default_background;
+  style->local.background = &Application::conf.default_background;
   return style;
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-UWin::UWin(UArgs a) : UBox(a) {  
+Window::Window(Args a) : Box(a) {  
   emodes.IS_SHOWABLE = false;
   memset(&wmodes, 0, sizeof(wmodes));    // init to 0 all bits
-  wmodes.IS_HARDWIN = !UAppli::conf.soft_wins;
+  wmodes.IS_HARDWIN = !Application::conf.soft_wins;
   wmodes.IS_AUTO_OPENED = true;
 }
 
@@ -67,15 +66,15 @@ UWin::UWin(UArgs a) : UBox(a) {
 // la classe du destructeur, pas la classe effective)
 // ==> toute redefinition de 'removingFrom' necessite un DESTRUCTEUR !!
 
-UWin::~UWin() {
-  //NB: removeFromParents et removeAll fait par ~UBox ou subclass
-  if (wmodes.IS_MODAL) UAppli::impl.removeModalWin(*this);
+Window::~Window() {
+  //NB: removeFromParents et removeAll fait par ~Box ou subclass
+  if (wmodes.IS_MODAL) Application::impl.removeModalWin(*this);
 
   if (views) {    
-    // views have been destroyed in UBox::deleteRelatedViews
+    // views have been destroyed in Box::deleteRelatedViews
     // except in some cases
-    UView* nextview = null;
-    for (UView* v = views; v != null; v = nextview) {
+    View* nextview = null;
+    for (View* v = views; v != null; v = nextview) {
       nextview = v->getNext();
       delete v;
     }
@@ -88,120 +87,120 @@ UWin::~UWin() {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-USoftwinImpl* UWin::softImpl() const {
+USoftwinImpl* Window::softImpl() const {
   if (!wmodes.IS_HARDWIN && wimpl.size() == 1) {
     return static_cast<USoftwinImpl*>(wimpl[0]);
   }
   else {
     if (!wmodes.IS_HARDWIN && wimpl.size() > 1)
-      UAppli::error("UWin::softImpl",
-                    "Incoherency UWin %p has multiple USoftImpl implementations",this);
+      Application::error("Window::softImpl",
+                    "Incoherency Window %p has multiple USoftImpl implementations",this);
     else
-      UAppli::error("UWin::softImpl",
-                    "UWin %p does not have a USoftImpl implementation",this);
+      Application::error("Window::softImpl",
+                    "Window %p does not have a USoftImpl implementation",this);
     return null;
   }  
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-UHardwinImpl* UWin::hardImpl() const {
+UHardwinImpl* Window::hardImpl() const {
   if (wmodes.IS_HARDWIN && wimpl.size() == 1) {
     return static_cast<UHardwinImpl*>(wimpl[0]);
   }
   else {
     if (wmodes.IS_HARDWIN && wimpl.size() > 1)
-      UAppli::error("UWin::hardImpl",
-                    "Incoherency UWin %p has multiple UHardwinImplImpl implementations",this);
+      Application::error("Window::hardImpl",
+                    "Incoherency Window %p has multiple UHardwinImplImpl implementations",this);
     else
-      UAppli::error("UWin::hardImpl",
-                    "UWin %p does not have a UHardwinImpl implementation",this);
+      Application::error("Window::hardImpl",
+                    "Window %p does not have a UHardwinImpl implementation",this);
     return null;
   }  
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// this function MUST return the same hardwin as hardImpl() WHEN the UWin is a hardwin
+// this function MUST return the same hardwin as hardImpl() WHEN the Window is a hardwin
 
-UHardwinImpl* UWin::getHardwin(UDisp* disp) const {
-  UView* winview = getWinView(disp);
+UHardwinImpl* Window::getHardwin(Display* disp) const {
+  View* winview = getWinView(disp);
   return winview ? winview->hardwin : null;
 }
 
 
-UView* UWin::getWinView(UDisp* disp) const {   // NB: disp can be null 
+View* Window::getWinView(Display* disp) const {   // NB: disp can be null 
   // hardwins have ONLY ONE shared view in the current version !!
   if (wmodes.IS_HARDWIN) return views;
   
   // default is the first view
   if (disp == null) return views; // A REVOIR!!!
   
-  for (UView* v = views; v!= null; v = v->getNext()) {
+  for (View* v = views; v!= null; v = v->getNext()) {
     if (v->getDisp() == disp) return v;
   }
   return null; // not found
 }
 
 
-void UWin::addWinView(UView* view) {
+void Window::addWinView(View* view) {
   // hardwins have ONLY ONE shared view in the current version !!
   if (wmodes.IS_HARDWIN && views) {
-    UAppli::internalError("UWin::addWinView","UWin object %p should have only one view",this);
+    Application::internalError("Window::addWinView","Window object %p should have only one view",this);
     return;
   }
-  UView* v = getWinView(view->getDisp());
-  if (v) UAppli::internalError("UWin::addWinView","UWin object %p has already only one view for UDisp %p",this,view->getDisp());
+  View* v = getWinView(view->getDisp());
+  if (v) Application::internalError("Window::addWinView","Window object %p has already only one view for Display %p",this,view->getDisp());
   view->setNext(views);
   views = view;
 }
 
 // ==================================================== [Ubit toolkit] =========
 
-//ATT: cette fct doit etre appelee a la creation de la UWin
-UWin& UWin::setSoftwin(bool state) {
+//ATT: cette fct doit etre appelee a la creation de la Window
+Window& Window::setSoftwin(bool state) {
   if (wimpl.size() > 0) {
-    UAppli::error("UWin::setSoftwin",
-                  "this method can only be called before the window are created; UWin object: %p", this);
+    Application::error("Window::setSoftwin",
+                  "this method can only be called before the window are created; Window object: %p", this);
     return *this;
   }
   wmodes.IS_HARDWIN = !state;
   return *this;
 }
 
-UView* USoftwinImpl::getActualView(UView* winviews) {
+View* USoftwinImpl::getActualView(View* winviews) {
   // si actual_view est nul ou pas dans la liste c'est qu'elle n'est plus valide
   if (!actual_view) return null;
-  for (UView* v = winviews; v != null; v = v->getNext()) {
+  for (View* v = winviews; v != null; v = v->getNext()) {
     if (v == actual_view) return actual_view;
   }
   actual_view = null; // plus valide !  // &&&ajout 13aug08
   return null;
 }
 
-void USoftwinImpl::setActualView(UView* winview) {
+void USoftwinImpl::setActualView(View* winview) {
   actual_view = winview;
 }
 
-USoftwinImpl::USoftwinImpl(UWin& win) {
+USoftwinImpl::USoftwinImpl(Window& win) {
   //NOTE: SOFTWIN => FLOATING (fait implicitement via l'ajout d'un UPos aux softwins)
   ppos = new UPos(0, 0);
   win.setAttr(*ppos);
   actual_view = null;
   
   if (win.wmodes.IS_DIALOG) {   // pas pour les menus ni les frames
-    UBox& titlebar = 
+    Box& titlebar = 
     uhbox(uhflex()
           + ulabel("---------").ignoreEvents()  // !! ICI gerer le title !!!
           + uright()
           + ubutton("X" + ucloseWin())
           );
     titlebar.addAttr((new UPosControl)->setModel(ppos)
-                     + UBackground::navy + ualpha(0.5)
-                     + UColor::white
+                     + Background::navy + ualpha(0.5)
+                     + Color::white
                      );
 
-    win.setAttr(*new UCompositeBorder(UValign::top + UHalign::flex + titlebar
-                                      //+ UValign::bottom + UHalign::right + ubutton("resize")
+    win.setAttr(*new UCompositeBorder(Valign::top + Halign::flex + titlebar
+                                      //+ Valign::bottom + Halign::right + ubutton("resize")
                                       ));
   }
 }
@@ -214,21 +213,21 @@ USoftwinImpl::~USoftwinImpl() {}
 // NOTE: les Windows sont creees une seule fois mais ouvertes par tous 
 // leurs parents
 
-void UWin::initView(UView *parview) {
+void Window::initView(View *parview) {
   initViewImpl(parview, parview->getDisp());
   if (isShowable()) show(true);
 }
 
-// optimization: les vues des enfants de la UWin seront crees ulterieurement,
-// au premier show() de la UWin, via la fonction realizeChildren()
-//att: parview n'est pas la view du parent mais du 1er parent de type UBox!
+// optimization: les vues des enfants de la Window seront crees ulterieurement,
+// au premier show() de la Window, via la fonction realizeChildren()
+//att: parview n'est pas la view du parent mais du 1er parent de type Box!
 
-//UView* UWin::initViewImpl(UChild* selflink, UView* parview, UDisp* disp) {
-UView* UWin::initViewImpl(UView* parview, UDisp* disp) {
-  UView* winview = getWinView(disp);
+//View* Window::initViewImpl(Child* selflink, View* parview, Display* disp) {
+View* Window::initViewImpl(View* parview, Display* disp) {
+  View* winview = getWinView(disp);
   
-  // optimization: les vues des enfants de la UWin sont crees plus tard
-  // au premier show() de la UWin, via la fonction realizeChildren()
+  // optimization: les vues des enfants de la Window sont crees plus tard
+  // au premier show() de la Window, via la fonction realizeChildren()
   if (winview) return winview;
   
   // Il n'y a qu'une seule winview par Window
@@ -262,7 +261,7 @@ UView* UWin::initViewImpl(UView* parview, UDisp* disp) {
   
   
   if (!hardwin) {
-    UAppli::internalError("UWin::initView","can't realize UWin object %p", this);
+    Application::internalError("Window::initView","can't realize Window object %p", this);
     return null;
   }
 
@@ -279,17 +278,17 @@ UView* UWin::initViewImpl(UView* parview, UDisp* disp) {
   // !note: winview est une var. d'instance!
   if (render) winview = (render->createView)(this, null, hardwin);
   else {
-    UAppli::internalError("UWin::initView","can't retreive object UStyle of UWin object %p",this);
-    winview = new UView(this, null, hardwin);
+    Application::internalError("Window::initView","can't retreive object UStyle of Window object %p",this);
+    winview = new View(this, null, hardwin);
   }
     
-  //if (emodes.HAS_POS) winview->addVModes(UView::FORCE_POS);
+  //if (emodes.HAS_POS) winview->addVModes(View::FORCE_POS);
   
-  if (isSubWin() || (parview && parview->hasVMode(UView::NO_DOUBLE_BUFFER))) {
-    winview->addVModes(UView::NO_DOUBLE_BUFFER);
+  if (isSubWin() || (parview && parview->hasVMode(View::NO_DOUBLE_BUFFER))) {
+    winview->addVModes(View::NO_DOUBLE_BUFFER);
   }
   
-  // NB: ne cree pas la X Window: ce sera fait ulterieurement par UWin::realize() 
+  // NB: ne cree pas la X Window: ce sera fait ulterieurement par Window::realize() 
   // qunad la fenetre apparaitra la 1ere fois
     
   addWinView(winview);   // add winview to the list of the window views
@@ -298,17 +297,17 @@ UView* UWin::initViewImpl(UView* parview, UDisp* disp) {
 
 // ==================================================== [Ubit toolkit] =========
 
-bool UWin::realize() {
+bool Window::realize() {
   if (wmodes.IS_HARDWIN) return realizeHardwin(UHardwinImpl::FRAME);  // FRAME???
   else {
-    UAppli::error("UWing::realize","can't realize window object %p",this);
+    Application::error("UWing::realize","can't realize window object %p",this);
     return false;
   }
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-bool UWin::realizeHardwin(char wintype) {
+bool Window::realizeHardwin(char wintype) {
   UHardwinImpl* hardwin = hardImpl();
   if (!hardwin) return false;
   if (hardwin->isRealized()) return true;  // deja realize'
@@ -316,27 +315,27 @@ bool UWin::realizeHardwin(char wintype) {
   hardwin->realize((UHardwinImpl::WinType)wintype, 10, 10);
   
   if (!hardwin->isRealized()) {
-    UAppli::error("UWin::realize","can't create window: UWin=%p",this);
+    Application::error("Window::realize","can't create window: Window=%p",this);
     return false;
   }
   else {
-    UView* winview = views;    // ONLY ONE screen !!
-    realizeChildren(winview);  // create the children views of the UWin
+    View* winview = views;    // ONLY ONE screen !!
+    realizeChildren(winview);  // create the children views of the Window
     return true;
   }
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-UView* UWin::realizeSoftwin(UWin* hardwin, UView* hardwin_view,
-                            UDisp* disp, bool add_to_the_end) {
+View* Window::realizeSoftwin(Window* hardwin, View* hardwin_view,
+                            Display* disp, bool add_to_the_end) {
   UHardwinImpl* hardi = hardwin->hardImpl();
   if (!hardi) return null;
   
   UWinList* softwins = hardi->obtainSoftwins();
   // est-ce que this est deja dans la softlist ?
-  UChildIter i = softwins->children().find(*this);
-  UChild* child = null;
+  ChildIter i = softwins->children().find(*this);
+  Child* child = null;
   if (i != softwins->cend()) child = &i.child();
   else {
     bool auto_up = softwins->isAutoUpdate();
@@ -347,7 +346,7 @@ UView* UWin::realizeSoftwin(UWin* hardwin, UView* hardwin_view,
   }
   
   if (!disp) disp = hardwin_view->getDisp();
-  UView* winview = getWinView(disp);
+  View* winview = getWinView(disp);
 
   // creer winview (att: l'autre version de initView() appelle show
   // ce qui provoque une boucle infinie!
@@ -364,7 +363,7 @@ UView* UWin::realizeSoftwin(UWin* hardwin, UView* hardwin_view,
 
   // initialiser disposition spatiale avant affichage
   /*surtout pas: boucle infinie
-    UUpdate upd(UUpdate::ALL/LAYOUT);
+    Update upd(Update::ALL/LAYOUT);
     upd.evenIfHidden();
     updateSoftwin(upd);
   */
@@ -376,22 +375,22 @@ UView* UWin::realizeSoftwin(UWin* hardwin, UView* hardwin_view,
 // fois, c'est a dire pour la seule WinView effectivement creee
 // (sinon on irait creer des Views inutiles dans les descendants)
 
-void UWin::realizeChildren(UView* winview) {
-  //UChild *winlink = null;
+void Window::realizeChildren(View* winview) {
+  //Child *winlink = null;
 
   if (!winview)  // || !(winlink = winview->getBoxHolder()))
-    UAppli::error("UWin::realizeChildren",Unrealized_Window,this);
+    Application::error("Window::realizeChildren",Unrealized_Window,this);
 
   // propager si pas deja fait
-  else if (!winview->hasVMode(UView::REALIZED_CHILDREN)) {
-    winview->addVModes(UView::REALIZED_CHILDREN);
-    UElem::initView(winview);   // !att: winview pas parview!
+  else if (!winview->hasVMode(View::REALIZED_CHILDREN)) {
+    winview->addVModes(View::REALIZED_CHILDREN);
+    Element::initView(winview);   // !att: winview pas parview!
   }
 }
 
 // ==================================================== [Ubit toolkit] =========
 
-UWin& UWin::setTitle(const UStr& title) {
+Window& Window::setTitle(const String& title) {
   if (isHardwin()) {
     UHardwinImpl* nw = getHardwin(null/*disp*/);
     if (nw) nw->setTitle(title);
@@ -402,7 +401,7 @@ UWin& UWin::setTitle(const UStr& title) {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-UStr UWin::getTitle() const {
+String Window::getTitle() const {
   if (!isHardwin()) return "";
   else {
     UHardwinImpl* hw = getHardwin(null/*disp*/);
@@ -412,14 +411,14 @@ UStr UWin::getTitle() const {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UWin::toFront(UDisp* disp) {
+void Window::toFront(Display* disp) {
   if (wmodes.IS_HARDWIN) {
     UHardwinImpl* hw = hardImpl();
     if (hw) hw->toFront();
   }
   else {
-    UView* winview;
-    UWin* hardwin;
+    View* winview;
+    Window* hardwin;
     UHardwinImpl* hardi;
     if (!(winview = getWinView(disp)) 
         || !(hardwin = winview->getWin())
@@ -435,7 +434,7 @@ void UWin::toFront(UDisp* disp) {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UWin::toBack(UDisp* disp) {
+void Window::toBack(Display* disp) {
   if (wmodes.IS_HARDWIN) {
     UHardwinImpl* hardi = hardImpl();
     //UNatWin* nw = hardi ? hardi->getNatWin() : null;
@@ -447,24 +446,24 @@ void UWin::toBack(UDisp* disp) {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UWin::highlight(bool state) {
-  UBox::highlight(state);
-  UWin::toFront();
+void Window::highlight(bool state) {
+  Box::highlight(state);
+  Window::toFront();
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UWin::setFullScreen(bool state, UDisp* disp) {
+void Window::setFullScreen(bool state, Display* disp) {
   //is_fullscreen = state;
   if (wmodes.IS_HARDWIN) {
-    if (!disp) disp = UAppli::getDisp();
+    if (!disp) disp = Application::getDisp();
     if (state) {
-      setSize(UDimension(disp->getScreenWidth(), disp->getScreenHeight()));
-      setScreenPos(UPoint(0, 0), disp);
+      setSize(Dimension(disp->getScreenWidth(), disp->getScreenHeight()));
+      setScreenPos(Point(0, 0), disp);
     }
     else { 
-      setSize(UDimension(-1,-1));
-      setScreenPos(UPoint((disp->getScreenWidth() - getWidth(disp)) /2,
+      setSize(Dimension(-1,-1));
+      setScreenPos(Point((disp->getScreenWidth() - getWidth(disp)) /2,
                           (disp->getScreenHeight()- getHeight(disp)) /2),
                    disp);
     }
@@ -474,11 +473,11 @@ void UWin::setFullScreen(bool state, UDisp* disp) {
 
 // ==================================================== [Ubit toolkit] =========
 
-bool UWin::isShown() const {
+bool Window::isShown() const {
   return isShown(null);
 }
 
-bool UWin::isShown(UDisp* disp) const {
+bool Window::isShown(Display* disp) const {
   if (!isShowable()) return false;
 
   if (wmodes.IS_HARDWIN) {
@@ -488,11 +487,11 @@ bool UWin::isShown(UDisp* disp) const {
   else if (disp == null) {
     // verifier si actual_view toujours dans la liste
     USoftwinImpl* softw = softImpl();
-    UView* v = softw ? softw->getActualView(views) : null;
+    View* v = softw ? softw->getActualView(views) : null;
     return v && v->isShown();
   }
   else {
-    for (UView* v = views; v != null; v = v->getNext()) {
+    for (View* v = views; v != null; v = v->getNext()) {
       if (v->getDisp() == disp && v->isShown()) return true;
     }
   }
@@ -502,8 +501,8 @@ bool UWin::isShown(UDisp* disp) const {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UWin::show(bool state, UDisp* disp) {
-  if (UAppli::isExiting()) return;
+void Window::show(bool state, Display* disp) {
+  if (Application::isExiting()) return;
   
   if (wmodes.IS_HARDWIN) 
     /*nop*/;     // hardwins have only one shared window
@@ -513,108 +512,108 @@ void UWin::show(bool state, UDisp* disp) {
     // FAUX! peut-etre pas encore realisee: USoftwinImpl* softw = softImpl();
     if (wimpl.size() == 1) {
       USoftwinImpl* softw = static_cast<USoftwinImpl*>(wimpl[0]);
-      UView* v = softw ? softw->getActualView(views) : null;
+      View* v = softw ? softw->getActualView(views) : null;
       if (v) disp = v->getDisp();
     }
   }
 
   if (state) {
     emodes.IS_SHOWABLE = true;
-    if (wmodes.IS_MODAL) UAppli::impl.addModalWin(*this);
-    doUpdate(UUpdate::SHOW, disp); 
-    UEvent e(UOn::show, this);  //UElemEvent
+    if (wmodes.IS_MODAL) Application::impl.addModalWin(*this);
+    doUpdate(Update::SHOW, disp); 
+    Event e(UOn::show, this);  //UElemEvent
     fire(e);
   }
   else {
     emodes.IS_SHOWABLE = false;
-    doUpdate(UUpdate::HIDE, disp);
-    UEvent e(UOn::hide, this);  //UElemEvent
+    doUpdate(Update::HIDE, disp);
+    Event e(UOn::hide, this);  //UElemEvent
     fire(e);
-    if (wmodes.IS_MODAL) UAppli::impl.removeModalWin(*this);
+    if (wmodes.IS_MODAL) Application::impl.removeModalWin(*this);
   }
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-int UWin::showModal(UDisp* disp) {
+int Window::showModal(Display* disp) {
   setModal(true);
   show(true, disp);
-  return UAppli::impl.startModalWinLoop(*this);
+  return Application::impl.startModalWinLoop(*this);
 }
 
-void UWin::setModal(bool state) {
+void Window::setModal(bool state) {
   wmodes.IS_MODAL = state;
 }
 
-bool UWin::isModal() const {
+bool Window::isModal() const {
   return wmodes.IS_MODAL;
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UWin::close(int status) {
-  UAppli::impl.setModalStatus(status);
-  UEvent e(UOn::close, this);  //UElemEvent
+void Window::close(int status) {
+  Application::impl.setModalStatus(status);
+  Event e(UOn::close, this);  //UElemEvent
   bool callback_fired = fire(e);
   if (!callback_fired) {
-    if (wmodes.IS_MAINFRAME) UAppli::quit(status); else show(false);
+    if (wmodes.IS_MAINFRAME) Application::quit(status); else show(false);
   }
 }
 
 // ============================================================== ====== =======
 
-void UWin::adjustSize() {
-  update(UUpdate::ADJUST_WIN_SIZE, null);
+void Window::adjustSize() {
+  update(Update::ADJUST_WIN_SIZE, null);
 }
 
-void UWin::update(const UUpdate& upd, UDisp* disp) {
-  if (UAppli::isExiting()) return;
-  UAppli::impl.addUpdateRequest(this, upd);
+void Window::update(const Update& upd, Display* disp) {
+  if (Application::isExiting()) return;
+  Application::impl.addUpdateRequest(this, upd);
 /*
-  if (UAppli::impl.isProcessingUpdateRequests()) {
+  if (Application::impl.isProcessingUpdateRequests()) {
     // do not update now, add to the update list
-    UAppli::impl.addUpdateRequest(this, upd);
+    Application::impl.addUpdateRequest(this, upd);
   }
-  else if ((upd.modes & UUpdate::NO_DELAY) || UAppli::conf.usync) {
+  else if ((upd.modes & Update::NO_DELAY) || Application::conf.usync) {
     // update objets already in the list, then proceed
-    UAppli::impl.processUpdateRequests();
+    Application::impl.processUpdateRequests();
     doUpdate(upd, disp);
   }
   else {
     // do not update now, add to the update list
-    UAppli::impl.addUpdateRequest(this, upd);   // !!! disp should be given &&&!!!
+    Application::impl.addUpdateRequest(this, upd);   // !!! disp should be given &&&!!!
   }
  */
 }
       
 // ==================================================== [Ubit toolkit] =========
   
-void UWin::doUpdate(const UUpdate& upd, UDisp* disp) {
-  if (UAppli::isExiting()) return;
+void Window::doUpdate(const Update& upd, Display* disp) {
+  if (Application::isExiting()) return;
  
   // update objets already in the list, then proceed
-  if (!UAppli::impl.isProcessingUpdateRequests()) 
-    UAppli::impl.processUpdateRequests();
+  if (!Application::impl.isProcessingUpdateRequests()) 
+    Application::impl.processUpdateRequests();
    
   if (wimpl.size() == 0) {
-    // if this win was not explicitely added to a widget or a display, add it to UAppli
+    // if this win was not explicitely added to a widget or a display, add it to Application
     if (!hasSceneGraphParent()) {
-      if (wmodes.IS_HARDWIN) UAppli::add(this);
+      if (wmodes.IS_HARDWIN) Application::add(this);
       else {
         // !!!NB: il faudrait le mainframe associé au disp si != null !!!
-        UFrame* mainframe = UAppli::getMainFrame();
+        UFrame* mainframe = Application::getMainFrame();
         if (mainframe) mainframe->add(this);
-        else warning("UWin::doUpdate","this soft window (%p) can't be displayed because it has no parent and there is no available mainframe window", this);
+        else warning("Window::doUpdate","this soft window (%p) can't be displayed because it has no parent and there is no available mainframe window", this);
       }
     }
     
-    UView* parview = null;
-    //UChild* ch = null;
+    View* parview = null;
+    //Child* ch = null;
 
     for (UParentIter p = pbegin(); p != pend(); ++p) {
       // do not take into account WINLIST parents (either modalwins or softwin_list)
-      if ((*p)->getDisplayType() != UElem::WINLIST) {
-        std::vector<UView*> parviews;
+      if ((*p)->getDisplayType() != Element::WINLIST) {
+        std::vector<View*> parviews;
         (*p)->retrieveRelatedViews(parviews);
         
         for (unsigned int k = 0; k < parviews.size(); ++k) {
@@ -638,7 +637,7 @@ void UWin::doUpdate(const UUpdate& upd, UDisp* disp) {
     hardi->doUpdate(upd, this, views);
   }
   else {
-    UView* view = null;
+    View* view = null;
     USoftwinImpl* softw = softImpl();
 
     // NB: getWinView returns a default view if disp not found
@@ -653,54 +652,54 @@ void UWin::doUpdate(const UUpdate& upd, UDisp* disp) {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void USoftwinImpl::doUpdate(const UUpdate& upd, UWin* win, UView* winview) {
-  if (UAppli::isExiting()) return;
-  UWin* hardwin = null;
+void USoftwinImpl::doUpdate(const Update& upd, Window* win, View* winview) {
+  if (Application::isExiting()) return;
+  Window* hardwin = null;
   long upd_modes = upd.getModes();
   if (!winview || !(hardwin = winview->getWin())) return;
 
   UHardwinImpl* hardi = hardwin->hardImpl();
   if (!hardi) return;
-  UDisp* disp = winview->getDisp();
+  Display* disp = winview->getDisp();
   
-  if (upd_modes & UUpdate::SHOW) {
+  if (upd_modes & Update::SHOW) {
     // mettre ou remettre 'this' en LAST position dans la softwin list
     // (addSoftwin fait un removeSoftwin(win) implicite)
     hardi->addSoftwin(win, hardwin, disp, true/*at the end*/);
     win->emodes.IS_SHOWABLE = true;
   }
 
-  else if (upd_modes & UUpdate::HIDE) {
+  else if (upd_modes & Update::HIDE) {
     //EX: hardi->removeSoftwin(win); incorrect car getActualView() 
     // renverrait null et on ne saurait pas ou reafficher au show() suivant
     win->emodes.IS_SHOWABLE = false;
   }
   
-  else if (upd_modes & UUpdate::LAYOUT) {
+  else if (upd_modes & Update::LAYOUT) {
     if (win->isShowable() || upd.isHiddenObjectsMode()) {
       if (!win->realizeSoftwin(hardwin, hardwin->getWinView(disp), disp, true)) 
         return;
     }
   }
   
-  win->UBox::doUpdate(upd, null);
+  win->Box::doUpdate(upd, null);
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UHardwinImpl::doUpdate(const UUpdate& upd, UWin* ww, UView* winview) {
-  if (UAppli::isExiting()) return;
+void UHardwinImpl::doUpdate(const Update& upd, Window* ww, View* winview) {
+  if (Application::isExiting()) return;
   if (!winview) return;
   long upd_modes = upd.getModes();
 
-  if (upd_modes & UUpdate::HIDE) {
+  if (upd_modes & Update::HIDE) {
     ww->emodes.IS_SHOWABLE = false;
     //fire(&e, UOn::hide); supprime car pas recursif: faire autrement
     show(false);	
   }
  
-  else if (upd_modes & UUpdate::SHOW) {
-    bool initialized = winview->hasVMode(UView::INITIALIZED);
+  else if (upd_modes & Update::SHOW) {
+    bool initialized = winview->hasVMode(View::INITIALIZED);
     ww->emodes.IS_SHOWABLE = true;
 
     //fire(&e, UOn::show);   supprime car pas recursif: faire autrement
@@ -712,7 +711,7 @@ void UHardwinImpl::doUpdate(const UUpdate& upd, UWin* ww, UView* winview) {
     // si la view n'est pas encore initialisee, c'est qu'elle n'a jamais
     // ete affichee et il faut donc initialiser la X Window correspondante
     if (!initialized) {            // set title when applicable
-      UTitle* title = null;
+      Title* title = null;
       ww->attributes().findClass(title);
       if (!title) ww->children().findClass(title);
       if (title) setTitle(title->value());
@@ -726,14 +725,14 @@ void UHardwinImpl::doUpdate(const UUpdate& upd, UWin* ww, UView* winview) {
     show(true);  // dans tous les cas pop up and raise
   }
  
-  else if ((upd_modes & UUpdate::PAINT) && !(upd_modes & UUpdate::LAYOUT)) {
+  else if ((upd_modes & Update::PAINT) && !(upd_modes & Update::LAYOUT)) {
     if (ww->isShowable() || upd.isHiddenObjectsMode()) 
-      ww->UBox::doUpdate(upd, null);
+      ww->Box::doUpdate(upd, null);
   }
 
-  else if (upd_modes & UUpdate::ADJUST_WIN_SIZE) {    // resize the window
+  else if (upd_modes & Update::ADJUST_WIN_SIZE) {    // resize the window
     if (!isRealized()) {if (!ww->realize()) return;}
-    winview->setSize(UDimension(-1, -1));
+    winview->setSize(Dimension(-1, -1));
     doUpdateImpl(upd, ww, winview, null);
     setSize(winview->getSize());
   }
@@ -744,7 +743,7 @@ void UHardwinImpl::doUpdate(const UUpdate& upd, UWin* ww, UView* winview) {
       // preserver la taille courante
       // NOTE:  bug dans le cas des menus ou on add/remove des objs:  !!!
       // ne changent pas de taille!                 !! A REVOIR !!
-      UDimension size = winview->getSize();
+      Dimension size = winview->getSize();
       if (size.width > 0 && size.height > 0)
         doUpdateImpl(upd, ww, winview, &size);
       else
@@ -758,13 +757,13 @@ void UHardwinImpl::doUpdate(const UUpdate& upd, UWin* ww, UView* winview) {
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //NB:impose une taille donnee en mode 'resize=true' (si les valeurs sont >0)
 
-void UHardwinImpl::doUpdateImpl(const UUpdate& upd, UWin* _win, UView* winview,
-                                const UDimension* size) {
+void UHardwinImpl::doUpdateImpl(const Update& upd, Window* _win, View* winview,
+                                const Dimension* size) {
   long upd_modes = upd.getModes();
   if (!size || size->width <= 0 || size->height <= 0) size = null;   // securite
 
   if (_win->isShowable()) {
-    if ((upd_modes & UUpdate::LAYOUT) && !(upd_modes & UUpdate::PAINT)) //LAYOUT_ONLY
+    if ((upd_modes & Update::LAYOUT) && !(upd_modes & Update::PAINT)) //LAYOUT_ONLY
       winview->updateLayout(size);
     else {  //LAYOUT_AND_PAINT
       winview->updateLayout(size, false);
@@ -774,7 +773,7 @@ void UHardwinImpl::doUpdateImpl(const UUpdate& upd, UWin* _win, UView* winview,
   
   // en mode updateWin, retailler meme si la win
   // n'est pas visisble (sinon c'est a peu pres jamis effectif)
-  else if (upd.isHiddenObjectsMode() || (upd_modes & UUpdate::ADJUST_WIN_SIZE)) {
+  else if (upd.isHiddenObjectsMode() || (upd_modes & Update::ADJUST_WIN_SIZE)) {
     //toujours faire layout (mais paint inutile) si always
     bool can_show = _win->emodes.IS_SHOWABLE;
     _win->emodes.IS_SHOWABLE = true; 
@@ -791,16 +790,16 @@ void UHardwinImpl::doUpdateImpl(const UUpdate& upd, UWin* _win, UView* winview,
 //ATT: contrairement a update(), resize() impose une taille donnee
 // (si les valeurs sont >0)
 
-void UWin::setSize(const UDimension& s, UDisp* d) {
-  UView* winview = getWinView(d);
+void Window::setSize(const Dimension& s, Display* d) {
+  View* winview = getWinView(d);
   if (!winview) {
-    UAppli::error("UWin::resize",Unrealized_Window,this);
+    Application::error("Window::resize",Unrealized_Window,this);
     return;
   }
   winview->setSize(s);
 
   if (isShowable()) {
-    UUpdate upd(UUpdate::PAINT | UUpdate::LAYOUT);
+    Update upd(Update::PAINT | Update::LAYOUT);
 
     // ici il manque la possibilite du doublebuf (trait de upd) !
     if (wmodes.IS_HARDWIN) {
@@ -814,103 +813,103 @@ void UWin::setSize(const UDimension& s, UDisp* d) {
       // pas w et h : valeurs controlees par updateImpl
       hardi->setSize(winview->getSize());
     }
-    else UBox::doUpdate(upd, null);
+    else Box::doUpdate(upd, null);
   }
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-UDimension UWin::getSize(UDisp* disp) const {
-  UView* winview = null;
+Dimension Window::getSize(Display* disp) const {
+  View* winview = null;
   
   if (!(winview = getWinView(disp))) {
-    // ajouter par defaut a UAppli (ou disp si defini)
-    UDisp* d = disp ? const_cast<UDisp*>(disp) : UAppli::getDisp();
-    d->add((UWin&)*this);
+    // ajouter par defaut a Application (ou disp si defini)
+    Display* d = disp ? const_cast<Display*>(disp) : Application::getDisp();
+    d->add((Window&)*this);
   }
   
   if (!(winview = getWinView(disp))) {
-    UAppli::error("UWin::getSize",Unrealized_Window,this);
-    return UDimension(0,0);
+    Application::error("Window::getSize",Unrealized_Window,this);
+    return Dimension(0,0);
   }
   else {
-    if (!winview->hasVMode(UView::INITIALIZED)) {
-      //UUpdate upd(UUpdate::LAYOUT | UUpdate::HIDDEN_OBJECTS | UUpdate::NO_DELAY);
-      //((UWin*)(this))->update(upd);
-      ((UWin*)(this))->doUpdate(UUpdate::LAYOUT | UUpdate::HIDDEN_OBJECTS);
+    if (!winview->hasVMode(View::INITIALIZED)) {
+      //Update upd(Update::LAYOUT | Update::HIDDEN_OBJECTS | Update::NO_DELAY);
+      //((Window*)(this))->update(upd);
+      ((Window*)(this))->doUpdate(Update::LAYOUT | Update::HIDDEN_OBJECTS);
     }
     return winview->getSize();
   }
 }
 
-float UWin::getWidth(UDisp* disp) const {
+float Window::getWidth(Display* disp) const {
   return getSize(disp).width;
 }
 
-float UWin::getHeight(UDisp* disp) const {
+float Window::getHeight(Display* disp) const {
   return getSize(disp).height;
 }
 
 // ==================================================== [Ubit toolkit] =========
 
-UPoint UWin::getPos(const UView& view) const {
-  UPoint p = getScreenPos(view.getDisp());
-  UPoint p2 = view.getScreenPos();
+Point Window::getPos(const View& view) const {
+  Point p = getScreenPos(view.getDisp());
+  Point p2 = view.getScreenPos();
   p.x -= p2.x; p.y -= p2.y;
   return p;
 }
 
-UPoint UWin::getPos(const UWin& win, UDisp* d) const {
-  UPoint p = getScreenPos(d);
-  UPoint p2 = win.getScreenPos(d);
+Point Window::getPos(const Window& win, Display* d) const {
+  Point p = getScreenPos(d);
+  Point p2 = win.getScreenPos(d);
   p.x -= p2.x; p.y -= p2.y;
   return p;
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UWin::setPos(UMouseEvent& e, float x, float y) {
-  UPoint p = e.getScreenPos();
+void Window::setPos(UMouseEvent& e, float x, float y) {
+  Point p = e.getScreenPos();
   p.x += x; p.y += y;
   setScreenPos(p, e.getDisp());
 }
 
-void UWin::setPos(const UView& view, const UPoint& p) {
-  UWin* hardw = view.getWin();
-  if (!hardw) UAppli::error("UWin::setPos", Unrealized_Window, this);
+void Window::setPos(const View& view, const Point& p) {
+  Window* hardw = view.getWin();
+  if (!hardw) Application::error("Window::setPos", Unrealized_Window, this);
   else {
-    UPoint p2(p.x + view.x, p.y + view.y);
+    Point p2(p.x + view.x, p.y + view.y);
     setPos(*hardw, p2, view.getDisp());
   }
 }
 
-void UWin::setPos(const UWin& win, const UPoint& p, UDisp* disp) {
+void Window::setPos(const Window& win, const Point& p, Display* disp) {
   if (wmodes.IS_HARDWIN) {
     // deplacer par rapport aux coords du Frame ou du Dialog et non de la SUBWIN
-    const UWin* w = null;
+    const Window* w = null;
     if (!win.isSubWin()) w = &win;
     else w = win.getWinView(disp)->getParentView()->getWin();
     if (w) {
-      UPoint p2 = w->getScreenPos(disp);
+      Point p2 = w->getScreenPos(disp);
       p2.x += p.x; p2.y += p.y;
       setScreenPos(p2, disp);
     }
   }
 
   else {   // SOFTWIN
-    UView* win_winview = win.getWinView(disp);
-    UWin* win_hardwin = null;
+    View* win_winview = win.getWinView(disp);
+    Window* win_hardwin = null;
     USoftwinImpl* softw = softImpl();
     
     if (!win_winview || !softw || !(win_hardwin = win_winview->getWin())) {
-      UAppli::error("UWin::move", Unrealized_Window, this);
+      Application::error("Window::move", Unrealized_Window, this);
       return;
     }
 
     // verifie si current_winview toujours dans la liste
-    UView* v = softw ? softw->getActualView(views) : null;
-    UWin* current_hardwin = null;
-    UView* current_hardwin_view = null;
+    View* v = softw ? softw->getActualView(views) : null;
+    Window* current_hardwin = null;
+    View* current_hardwin_view = null;
     if (v) {
       current_hardwin = v->getWin();
       current_hardwin_view = v->getWinView();
@@ -925,19 +924,19 @@ void UWin::setPos(const UWin& win, const UPoint& p, UDisp* disp) {
       if (!win_hardi) return;
       win_hardi->addSoftwin(this, win_hardwin, disp, true/*at the end*/);
     }
-    UPoint p2(p.x - win_winview->x, p.y - win_winview->y);
+    Point p2(p.x - win_winview->x, p.y - win_winview->y);
     softw->pos() = p2;
   }
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-UPoint UWin::getScreenPos(UDisp* disp) const {
-  UView* winview = getWinView(disp);
+Point Window::getScreenPos(Display* disp) const {
+  View* winview = getWinView(disp);
   UHardwinImpl* hardw = null;
-  UPoint p;
+  Point p;
   if (!winview || !(hardw = winview->getHardwin())) {
-    UAppli::error("UWin::getScreenPos", Unrealized_Window, this);
+    Application::error("Window::getScreenPos", Unrealized_Window, this);
     return p;  // p set to 0,0 when created
   }
   
@@ -954,7 +953,7 @@ UPoint UWin::getScreenPos(UDisp* disp) const {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UWin::setScreenPos(const UPoint& p, UDisp* d) {
+void Window::setScreenPos(const Point& p, Display* d) {
   if (wmodes.IS_HARDWIN) {
     UHardwinImpl* hwin = getHardwin(d);
     // si pas deja realisee, le faire maintenant
@@ -962,7 +961,7 @@ void UWin::setScreenPos(const UPoint& p, UDisp* d) {
       realize();
       hwin = getHardwin(d);
       if (!hwin || !hwin->isRealized()) {
-        UAppli::error("UWin::setScreenPos","unrealized hard window %p",this);
+        Application::error("Window::setScreenPos","unrealized hard window %p",this);
         return;
       }
     }
@@ -973,27 +972,27 @@ void UWin::setScreenPos(const UPoint& p, UDisp* d) {
   else { // SOFTWIN
     UHardwinImpl* containing_win = getHardwin(d);
     if (!containing_win) {
-      UAppli::error("UWin::setScreenPos","unrealized soft window %p",this);
+      Application::error("Window::setScreenPos","unrealized soft window %p",this);
       return;
     }
-    UPoint containing_win_pos;
+    Point containing_win_pos;
     containing_win_pos = containing_win->getScreenPos();
-    UPoint softwin_pos;
+    Point softwin_pos;
     softwin_pos.x = p.x - containing_win_pos.x;
     softwin_pos.y = p.y - containing_win_pos.y;
     softImpl()->pos() = softwin_pos;
   }
 }
 
-void UWin::centerOnScreen(UDisp* disp) {
+void Window::centerOnScreen(Display* disp) {
   if (!wmodes.IS_HARDWIN) return;
-  if (!disp) disp = UAppli::getDisp();
+  if (!disp) disp = Application::getDisp();
 
-  UDimension dim = getSize(disp);
+  Dimension dim = getSize(disp);
   if (dim.width > 0 && dim.height > 0) {
     float scr_width  = disp->getScreenWidth();
     float scr_height = disp->getScreenHeight();
-    setScreenPos(UPoint((scr_width - dim.width) / 2, (scr_height - dim.height) / 2),
+    setScreenPos(Point((scr_width - dim.width) / 2, (scr_height - dim.height) / 2),
                    disp);
   }
 }
@@ -1001,24 +1000,24 @@ void UWin::centerOnScreen(UDisp* disp) {
 // ==================================================== [Ubit toolkit] =========
 // updates object layout to get correct size when necessay
 
-static void checkUpdate(UWin* win, UDisp* disp) {
-  UDimension dim = win->getSize(disp);
+static void checkUpdate(Window* win, Display* disp) {
+  Dimension dim = win->getSize(disp);
 
   // if <= 0 must update layout to get correct sizes
   if (dim.getWidth() <= 0 || dim.getHeight() <= 0) {
-    //UUpdate upd(UUpdate::PAINT | UUpdate::LAYOUT      // 27sep06
-    //            | UUpdate::HIDDEN_OBJECTS | UUpdate::UUpdate::NO_DELAY);
+    //Update upd(Update::PAINT | Update::LAYOUT      // 27sep06
+    //            | Update::HIDDEN_OBJECTS | Update::Update::NO_DELAY);
     //win->update(upd);
-    win->doUpdate(UUpdate::PAINT | UUpdate::LAYOUT | UUpdate::HIDDEN_OBJECTS);
+    win->doUpdate(Update::PAINT | Update::LAYOUT | Update::HIDDEN_OBJECTS);
   }
 }
 
-void UWin::setPos(const UView& view, const UWinPlacement& pl) {
-  UDisp* disp = view.getDisp();
+void Window::setPos(const View& view, const UWinPlacement& pl) {
+  Display* disp = view.getDisp();
   float _x = 0, _y = 0;  // ext int
   
   if (pl.halign) {
-    if (*pl.halign == UHalign::left) {
+    if (*pl.halign == Halign::left) {
       if (pl.hoppositeBorder) {	  // a gauche de view
         // updates layout to get correct size when necessay
         checkUpdate(this, disp);
@@ -1027,7 +1026,7 @@ void UWin::setPos(const UView& view, const UWinPlacement& pl) {
       else _x += pl.hdist;  //alignes a dist pres
     }
     
-    else if (*pl.halign == UHalign::right) {
+    else if (*pl.halign == Halign::right) {
       if (pl.hoppositeBorder)	  // a droite de view
         _x += view.getWidth() + pl.hdist;
       else {
@@ -1041,7 +1040,7 @@ void UWin::setPos(const UView& view, const UWinPlacement& pl) {
   }
   
   if (pl.valign) {
-    if (*pl.valign == UValign::top) {
+    if (*pl.valign == Valign::top) {
       if (pl.voppositeBorder) {	      // au dessus de view
         checkUpdate(this, disp);
         _y -= this->getHeight(disp) + pl.vdist;
@@ -1049,7 +1048,7 @@ void UWin::setPos(const UView& view, const UWinPlacement& pl) {
       else _y += pl.vdist;  //alignes a dist pres
     }
     
-    else if (*pl.valign == UValign::bottom) {
+    else if (*pl.valign == Valign::bottom) {
       if (pl.voppositeBorder)	          // en dessous de view
         _y += view.getHeight() + pl.vdist;
       else {
@@ -1062,7 +1061,7 @@ void UWin::setPos(const UView& view, const UWinPlacement& pl) {
     // flex devrait s'dapter en hauteur(qunad plus petit que view)
   }
   
-  setPos(view, UPoint(_x, _y));
+  setPos(view, Point(_x, _y));
 }
 
 UWinPlacement::UWinPlacement() {

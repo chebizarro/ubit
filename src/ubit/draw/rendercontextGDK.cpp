@@ -1,4 +1,4 @@
-/* ***********************************************************************
+/*
 *
 *  URenderContextGDK.cpp: native GDK graphics
 *  Ubit GUI Toolkit - Version 6.0
@@ -31,7 +31,7 @@
 #define NAMESPACE_UBIT namespace ubit {
 NAMESPACE_UBIT
 
-URenderContextGDK::URenderContextGDK(UDisp* d, URenderContext* notused) : URenderContext(d)
+URenderContextGDK::URenderContextGDK(Display* d, URenderContext* notused) : URenderContext(d)
 {
   sys_disp = ((UDispGDK*)d)->getSysDisp();
   sys_gc = ....;
@@ -85,7 +85,7 @@ void URenderContextGDK::setFont(const UFontDesc& fd) {
   
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   
-  void URenderContextGDK::setColor(const UColor& c) {
+  void URenderContextGDK::setColor(const Color& c) {
     graph->color = c.getPixel(disp);
     
     GCValues gcval;        //NB: alpha pas pris en compte sous X11
@@ -94,7 +94,7 @@ void URenderContextGDK::setFont(const UFontDesc& fd) {
     SetGC(SYS_DISP, SYS_GC, GCFOREGROUND, &gcval);
   }
   
-void URenderContextGDK::setBackground(const UColor& c) {
+void URenderContextGDK::setBackground(const Color& c) {
   graph->bgcolor = c.getPixel(disp);
   GCValues gcval;
   SetBackground(gcval, bgcolor);
@@ -162,7 +162,7 @@ void URenderContextGDK::drawPolygon(const float* coords2d, int card, int polytyp
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void URenderContextGDK::drawPolygon(const std::vector<UPoint>& points, int polytype) const {
+void URenderContextGDK::drawPolygon(const std::vector<Point>& points, int polytype) const {
   int card = points.size();
   if (card <= 0) return;
   

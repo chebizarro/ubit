@@ -1,6 +1,5 @@
-/************************************************************************
- *
- *  uviewupdate.cpp
+/*
+ *  viewupdate.cpp
  *  Ubit GUI Toolkit - Version 6.0
  *  (C) 2009 | Eric Lecolinet | ENST Paris | www.enst.fr/~elc/ubit
  *
@@ -35,10 +34,10 @@ namespace ubit {
 
 // ==================================================== [Ubit Toolkit] =========
 
-inline void drawWallPaperLine(UGraph& g, UUpdateContext& ctx, float y, 
-                              bool is_htiled, const UIma* wallp, float ima_w,
-                              const URect&r, const URect&clip) {
-  URect wr = r;
+inline void drawWallPaperLine(Graph& g, UpdateContext& ctx, float y, 
+                              bool is_htiled, const Image* wallp, float ima_w,
+                              const Rectangle&r, const Rectangle&clip) {
+  Rectangle wr = r;
   wr.y = y;
   
   if (!is_htiled) {
@@ -54,9 +53,9 @@ inline void drawWallPaperLine(UGraph& g, UUpdateContext& ctx, float y,
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-static void drawWallPaper(UGraph& g, UUpdateContext& ctx, 
-                          const UIma* wallp, const UDimension& ima_dim,
-                          const URect& r, const URect& clip) {
+static void drawWallPaper(Graph& g, UpdateContext& ctx, 
+                          const Image* wallp, const Dimension& ima_dim,
+                          const Rectangle& r, const Rectangle& clip) {
   float y;
   bool is_htiled = ctx.local.background ? ctx.local.background->isTiled() : true;
   bool is_vtiled = ctx.local.background ? ctx.local.background->isTiled() : true;
@@ -75,14 +74,14 @@ static void drawWallPaper(UGraph& g, UUpdateContext& ctx,
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UViewUpdateImpl::updateBackground(UGraph& g, UUpdateContext& ctx, 
-                                       const URect& r, const URect& clip) 
+void UViewUpdateImpl::updateBackground(Graph& g, UpdateContext& ctx, 
+                                       const Rectangle& r, const Rectangle& clip) 
 {
   if (!can_paint) return;
 
   // wallpaper a afficher (s'il existe)
-  const UIma* wallp = null;
-  UDimension ima_dim(0,0);
+  const Image* wallp = null;
+  Dimension ima_dim(0,0);
 
   // pixmap a afficher en wallpaper (si on le trouve!)
   if (ctx.local.background) {
@@ -104,7 +103,7 @@ void UViewUpdateImpl::updateBackground(UGraph& g, UUpdateContext& ctx,
 
   if (ctx.local.alpha == 0.
       // pas de wallpaper (ou pas trouve) et pas de bgcolor
-      || (!wallp && ctx.bgcolor->equals(UColor::none))) {
+      || (!wallp && ctx.bgcolor->equals(Color::none))) {
     //completement transparent: on n'affiche rien
   }
   
@@ -140,8 +139,8 @@ void UViewUpdateImpl::updateBackground(UGraph& g, UUpdateContext& ctx,
 
 // ==================================================== [Ubit Toolkit] =========
 
-void UViewUpdateImpl::setPadding(UGraph& g, const UUpdateContext& ctx,
-                                 const URect& r, bool add_frame_and_padding) {
+void UViewUpdateImpl::setPadding(Graph& g, const UpdateContext& ctx,
+                                 const Rectangle& r, bool add_frame_and_padding) {
   // padding doit il etre conserve dans vd?
   pad.left = pad.right = pad.top = pad.bottom = 0;
    
@@ -169,10 +168,10 @@ void UViewUpdateImpl::setPadding(UGraph& g, const UUpdateContext& ctx,
 
 // ==================================================== [Ubit Toolkit] =========
   
-void UViewUpdateImpl::callPaintCallbacks(UElem& grp, UUpdateContext& cur_ctx) {
+void UViewUpdateImpl::callPaintCallbacks(Element& grp, UpdateContext& cur_ctx) {
   // the view has been destructed in the meanwhile: may happen if 
   // paint or resize callbacks destroys objects or views
-  if (view->hasVMode(UView::DESTRUCTED)) return;
+  if (view->hasVMode(View::DESTRUCTED)) return;
   
   if (grp.hasCallback(UOn::VIEW_PAINT_CB)) {
     UPaintEvent e(UOn::paint, view, &chclip);
@@ -183,8 +182,8 @@ void UViewUpdateImpl::callPaintCallbacks(UElem& grp, UUpdateContext& cur_ctx) {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UViewUpdateImpl::callMoveResizeCallbacks(UElem& grp, UUpdateContext& cur_ctx) {
-  if (view->hasVMode(UView::DESTRUCTED)) return;   // see above
+void UViewUpdateImpl::callMoveResizeCallbacks(Element& grp, UpdateContext& cur_ctx) {
+  if (view->hasVMode(View::DESTRUCTED)) return;   // see above
   
   if (grp.hasCallback(UOn::VIEW_CHANGE_CB)) {
     UViewChangeCallbackProp* ps = null;
@@ -214,7 +213,7 @@ void UViewUpdateImpl::callMoveResizeCallbacks(UElem& grp, UUpdateContext& cur_ct
   
 // ==================================================== [Ubit Toolkit] =========
 
-UViewUpdateImpl::UViewUpdateImpl(UView *v, const URect &r, UViewUpdate &_upmode) :
+UViewUpdateImpl::UViewUpdateImpl(View *v, const Rectangle &r, UViewUpdate &_upmode) :
 pad(0,0),                 // !! ??? pas est-il vraiment utile ??? !!!
 upmode(_upmode)
 {
@@ -228,12 +227,12 @@ upmode(_upmode)
   // necessaire pour viewport qui calcule le max des tailles
   chr.width = chr.height = 0;
   
-  if (!view->hasVMode(UView::INITIALIZED)) {
-    if (!view->hasVMode(UView::INITIALIZING))
-      view->addVModes(UView::INITIALIZING);
+  if (!view->hasVMode(View::INITIALIZED)) {
+    if (!view->hasVMode(View::INITIALIZING))
+      view->addVModes(View::INITIALIZING);
     else {
-      view->removeVModes(UView::INITIALIZING);
-      view->addVModes(UView::INITIALIZED);
+      view->removeVModes(View::INITIALIZING);
+      view->addVModes(View::INITIALIZED);
     }
   }
 
@@ -259,7 +258,7 @@ upmode(_upmode)
     break;
 
   case UViewUpdate::PAINT_DAMAGED:
-    if (view->hasVMode(UView::DAMAGED)) {
+    if (view->hasVMode(View::DAMAGED)) {
       can_paint = true;
       // on incremente le nombre de vues damaged traversees
       upmode.damaged_level++;
@@ -276,7 +275,7 @@ upmode(_upmode)
     break;
 
   case UViewUpdate::UPDATE_DATA:
-    if (view->hasVMode(UView::DAMAGED)) {
+    if (view->hasVMode(View::DAMAGED)) {
       // on incremente le nombre de vues damaged traversees
       upmode.damaged_level++;
     }
@@ -293,15 +292,15 @@ upmode(_upmode)
 UViewUpdateImpl::~UViewUpdateImpl() {
   switch (upmode.mode) {
     case UViewUpdate::PAINT_ALL:
-      view->removeVModes(UView::DAMAGED);
+      view->removeVModes(View::DAMAGED);
       // ca ne sert a rien de gerer les damaged (voir constructeur)
       break;
       
     case UViewUpdate::PAINT_DAMAGED:
     case UViewUpdate::UPDATE_DATA:
       
-      if (view->hasVMode(UView::DAMAGED)) {
-        view->removeVModes(UView::DAMAGED);
+      if (view->hasVMode(View::DAMAGED)) {
+        view->removeVModes(View::DAMAGED);
         // on decremente le nombre de vues damaged traversees
         upmode.damaged_level--;
         
@@ -312,7 +311,7 @@ UViewUpdateImpl::~UViewUpdateImpl() {
           upmode.after_damaged = true; 
         }
         else if (upmode.damaged_level < 0)
-          UAppli::internalError("~UViewUpdateImpl","unbalanced damaged_level");
+          Application::internalError("~UViewUpdateImpl","unbalanced damaged_level");
       }
       break;
       
@@ -323,20 +322,20 @@ UViewUpdateImpl::~UViewUpdateImpl() {
 
 // ==================================================== [Ubit Toolkit] =========
 
-static void nextH(UViewUpdateImpl&, const UUpdateContext&);
-static void nextV(UViewUpdateImpl&, const UUpdateContext&);
-static void nextViewport(UViewUpdateImpl&, const UUpdateContext&);
-static void layoutBorder(UViewUpdateImpl& vd, const UUpdateContext&, UChildIter,
-                         const UDimension&, UView* view);
-static void nextBorder(UViewUpdateImpl&, const UUpdateContext&);
+static void nextH(UViewUpdateImpl&, const UpdateContext&);
+static void nextV(UViewUpdateImpl&, const UpdateContext&);
+static void nextViewport(UViewUpdateImpl&, const UpdateContext&);
+static void layoutBorder(UViewUpdateImpl& vd, const UpdateContext&, ChildIter,
+                         const Dimension&, View* view);
+static void nextBorder(UViewUpdateImpl&, const UpdateContext&);
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UView::doUpdate(UUpdateContext& parctx, URect r, URect clip, UViewUpdate& vup) {
-  UBox* box = getBox();
-  if (!box) {UAppli::internalError("UView::doUpdate", "Null box!"); return ;}
+void View::doUpdate(UpdateContext& parctx, Rectangle r, Rectangle clip, UViewUpdate& vup) {
+  Box* box = getBox();
+  if (!box) {Application::internalError("View::doUpdate", "Null box!"); return ;}
 
-  //if (!hasVMode(UView::FORCE_POS)) {
+  //if (!hasVMode(View::FORCE_POS)) {
   if (!box->isFloating()) {
     // toujours initialiser les coords meme si objet cache par autre chose,
     // sinon des objets theoriquement non visibles vont se retrouver dans 
@@ -350,7 +349,7 @@ void UView::doUpdate(UUpdateContext& parctx, URect r, URect clip, UViewUpdate& v
   }
 
   UViewUpdateImpl vd(this, r, vup);
-  UUpdateContext ctx(parctx, box, this,  &vd);
+  UpdateContext ctx(parctx, box, this,  &vd);
   doUpdate2(vd, *box, ctx, r, clip, vup);
 
   // NB: finalisation par destructeur de UViewUpdateImpl
@@ -358,16 +357,16 @@ void UView::doUpdate(UUpdateContext& parctx, URect r, URect clip, UViewUpdate& v
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  
-bool UView::updatePos(UViewUpdateImpl& vd, UElem& grp, UUpdateContext& ctx,
-                      URect& r, URect& clip, UViewUpdate& vup) 
+bool View::updatePos(UViewUpdateImpl& vd, Element& grp, UpdateContext& ctx,
+                      Rectangle& r, Rectangle& clip, UViewUpdate& vup) 
 {
   UPos* pos = ctx.pos;
     
   // U3Dpos is a special case: just check we are in 3D mode and return
   if (pos && pos->is3Dpos()) {
-    UGraph* g = ctx.getGraph();   // g can be null!
+    Graph* g = ctx.getGraph();   // g can be null!
     if (g && !g->in_3d_mode)
-      UAppli::error("UView::updatePos","widgets having a U3Dpos must be in a U3Dcanvas");
+      Application::error("View::updatePos","widgets having a U3Dpos must be in a U3Dcanvas");
     return true;
   }
     
@@ -377,7 +376,7 @@ bool UView::updatePos(UViewUpdateImpl& vd, UElem& grp, UUpdateContext& ctx,
   if (vup.mode < UViewUpdate::FIND_DATA_POS) {
  
     if (!ctx.parent_ctx || !ctx.parent_ctx->view_impl) {
-      UAppli::error("UView::updatePos","UPos ignored because this widget has no parent");
+      Application::error("View::updatePos","UPos ignored because this widget has no parent");
       return false;
     }
     
@@ -409,7 +408,7 @@ bool UView::updatePos(UViewUpdateImpl& vd, UElem& grp, UUpdateContext& ctx,
     ctx.pos = null; // eviter possible recursion infinie (a cause de content)
     
     // specifie que les coords ont ete mises a jour
-    removeVModes(UView::POS_HAS_CHANGED);
+    removeVModes(View::POS_HAS_CHANGED);
   }
 
   if (clip.doIntersection(r) == 0) return false;
@@ -445,12 +444,12 @@ bool UView::updatePos(UViewUpdateImpl& vd, UElem& grp, UUpdateContext& ctx,
 // - clip est passe en valeur, pas r
 // - noter que coords de r et views sont != dans le cas des UWIn INBOX
 
-void UView::doUpdate2(UViewUpdateImpl& vd, UElem& grp, UUpdateContext& ctx,
-                      URect& r, URect& clip, UViewUpdate& vup) {
+void View::doUpdate2(UViewUpdateImpl& vd, Element& grp, UpdateContext& ctx,
+                      Rectangle& r, Rectangle& clip, UViewUpdate& vup) {
   UMultiList mlist(ctx, grp);
   
-  bool is_border = grp.getDisplayType() == UElem::BORDER;
-  UGraph* g = ctx.getGraph();   // g can be null !
+  bool is_border = grp.getDisplayType() == Element::BORDER;
+  Graph* g = ctx.getGraph();   // g can be null !
   bool is_pane = false;
 
   if (ctx.xyscale != 1.) ctx.rescale();
@@ -460,7 +459,7 @@ void UView::doUpdate2(UViewUpdateImpl& vd, UElem& grp, UUpdateContext& ctx,
     if (!updatePos(vd, grp, ctx, r, clip, vup)) return;
   }
   
-  const USizeSpec& size = ctx.local.size;
+  const SizeSpec& size = ctx.local.size;
   
   if (size.width.unit==UPERCENT || size.width.unit==UPERCENT_CTR)
     width = vd.width = 
@@ -482,7 +481,7 @@ void UView::doUpdate2(UViewUpdateImpl& vd, UElem& grp, UUpdateContext& ctx,
       // subwindows must NOT be painted recursively:
       // - if the paint request is on a 1st level window, dont repaint its subwindows
       // - if the paint request is on a subwindow, it is repainted as hw==g->hardwin
-      UHardwinImpl* hw = ((UWin*)&grp)->getHardwin(g->disp);
+      UHardwinImpl* hw = ((Window*)&grp)->getHardwin(g->disp);
       if (!hw || hw != g->hardwin) vd.can_paint = false;
     }
     //else
@@ -531,20 +530,20 @@ void UView::doUpdate2(UViewUpdateImpl& vd, UElem& grp, UUpdateContext& ctx,
   // (this is for instance used for adding list-item markers and checkboxes)
 
   if (ctx.local.content) {
-    UElem* content = ctx.local.content; // same ctx, same vd
+    Element* content = ctx.local.content; // same ctx, same vd
     ctx.local.content = null;	// avoid infinite recursion
     doUpdate2(vd, *content, ctx, r, clip, vup);
   }
 
-  for (UChildIter ch = mlist.begin(); ch != mlist.end(); mlist.next(ch))
+  for (ChildIter ch = mlist.begin(); ch != mlist.end(); mlist.next(ch))
     if (!ch.getCond() || ch.getCond()->verifies(ctx, grp)) {
 
-      UNode* b = *ch;
-      UData* data = null; 
-      UElem* chgrp = null;
-      UBox* chbox = null;
-      UView* chview = null;
-      UDimension dim(0,0);
+      Node* b = *ch;
+      Data* data = null; 
+      Element* chgrp = null;
+      Box* chbox = null;
+      View* chview = null;
+      Dimension dim(0,0);
       
       // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       // attribute
@@ -620,14 +619,14 @@ void UView::doUpdate2(UViewUpdateImpl& vd, UElem& grp, UUpdateContext& ctx,
             // !att: il faut que e->data_props soit =!null
             // on pourrait s'arreter de cherche qunad true est renvoye'
             // mais attention, il faut tout depiler dans ce cas (il peut
-            // y avoir des UElem emboites suivis d'autres dataents
+            // y avoir des Element emboites suivis d'autres dataents
             
             if (vup.mode == UViewUpdate::FIND_DATA_POS) {
               if (vd.orient == UOrient::HORIZONTAL) {
                 if (vd.view->findDataH(ctx, ch, mlist.end(), vd.chr, vup))
 				  ;
                 // goto END; FAUX: car on saute l'increment qui
-                // est necessaire si ubox( UElem(data1) + data2 ) 
+                // est necessaire si ubox( Element(data1) + data2 ) 
               }
               else {
                 if (vd.view->findDataV(ctx, ch, mlist.end(), vd.chr, vup));
@@ -650,11 +649,11 @@ void UView::doUpdate2(UViewUpdateImpl& vd, UElem& grp, UUpdateContext& ctx,
       } // endif dataCast()
       
       // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-      // UElem
+      // Element
       
       else if ((chgrp = b->toElem()) && !chgrp->toBox()) {  // element NOT box
         if (chgrp->isShowable()) {
-          UUpdateContext chctx(ctx, chgrp, vd.view, &vd);   // own ctx, same vd
+          UpdateContext chctx(ctx, chgrp, vd.view, &vd);   // own ctx, same vd
           
           if (vd.tabview  && dynamic_cast<UTrow*>(chgrp)) {  // tables
             // normalement lines[].d contient la valeur effective
@@ -671,24 +670,24 @@ void UView::doUpdate2(UViewUpdateImpl& vd, UElem& grp, UUpdateContext& ctx,
       }
       
       // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-      // UBox
+      // Box
 
       else if 
         (chgrp && (chbox = chgrp->toBox()) && chbox->isShowable()
          && 
-         ((chbox->getDisplayType() == UElem::BLOCK   // boxes and subwins
+         ((chbox->getDisplayType() == Element::BLOCK   // boxes and subwins
           && (chview = (chbox)->getViewInImpl(vd.view, /*&ch.child(),*/ dim)))
           ||
-           (mlist.in_softwin_list && chgrp->getDisplayType() == UElem::SOFTWIN
+           (mlist.in_softwin_list && chgrp->getDisplayType() == Element::SOFTWIN
            && (chview = (chbox)->getViewInImpl(vd.view, /*null,*/ dim)))
           )
          ) {
           
         // 1) floating boxes (boxes that have an UPos)
-        //if (chview->hasVMode(UView::FORCE_POS)) {
+        //if (chview->hasVMode(View::FORCE_POS)) {
         if (chbox->isFloating()) {
           // fl_chr pour ne pas abimer vd.chr qui est cumulatif en x ou en y
-          URect fl_chr;
+          Rectangle fl_chr;
           fl_chr.width  = dim.width;
           fl_chr.height = dim.height;
           // !att: on rajoute la MARGE: les coords sont locales 
@@ -760,7 +759,7 @@ void UView::doUpdate2(UViewUpdateImpl& vd, UElem& grp, UUpdateContext& ctx,
       float xx, yy;
       g->getWinOffset(xx,yy);
       g->setWinOffset(xx + r.x, yy + r.y);
-      ctx.local.border->paint(*g, ctx, URect(0,0,r.width,r.height));
+      ctx.local.border->paint(*g, ctx, Rectangle(0,0,r.width,r.height));
       g->setWinOffset(xx,yy);
     }
     
@@ -769,7 +768,7 @@ void UView::doUpdate2(UViewUpdateImpl& vd, UElem& grp, UUpdateContext& ctx,
     // paint border frame datas
     // en fait faudrait dessiner les bords APRES (surtout si superposes!)
     UViewBorderProp* vb = null;
-    UElem* chgrp = null;
+    Element* chgrp = null;
 
     if ((chgrp = ctx.local.border->getSubGroup()) && vd.view->getProp(vb)) {
       // pad special qui ne prend en compte ni le border frame ni le padding interne
@@ -778,7 +777,7 @@ void UView::doUpdate2(UViewUpdateImpl& vd, UElem& grp, UUpdateContext& ctx,
       // NB: att au CLIP: doit etre celui de la view tt entiere !
       vd.chclip.setRect(vd.x, vd.y, vd.width, vd.height);
       if (vd.chclip.doIntersection(clip) != 0) {
-        UUpdateContext chctx(ctx, chgrp, vd.view, &vd);
+        UpdateContext chctx(ctx, chgrp, vd.view, &vd);
         doUpdate2(vd, *chgrp, chctx, r, clip, vup);
       }
     }
@@ -789,7 +788,7 @@ void UView::doUpdate2(UViewUpdateImpl& vd, UElem& grp, UUpdateContext& ctx,
 
 // ==================================================== [Ubit Toolkit] =========
 
-void UView::initLayoutH(UViewUpdateImpl& vd, const UUpdateContext& ctx, const URect& r) 
+void View::initLayoutH(UViewUpdateImpl& vd, const UpdateContext& ctx, const Rectangle& r) 
 {
    // !!TOUTES CES OPTIONS DEVRAIENT ETRE RE-TESTEES POUR **CHAQUE** DATAENT!!
   vd.hflex_space = 0;
@@ -803,25 +802,25 @@ void UView::initLayoutH(UViewUpdateImpl& vd, const UUpdateContext& ctx, const UR
   }
   
   else switch (ctx.halign) {
-  case UHalign::LEFT:
+  case Halign::LEFT:
   default:   // cas d'erreur: comme LEFT
     // NB: default se produit en particulier qd il y a une deconnade entre
-    //  doLayout et doUpdate et que flexCount==0 avec UView::HFLEX
+    //  doLayout et doUpdate et que flexCount==0 avec View::HFLEX
     // (ca vient du fait que toutes les options qui precedent devraient
     // etre retestees pour chaque element)
     vd.chr.x = vd.x + vd.view->edit_shift;  // edit_shift scrolle le texte edite
     break;
     
-  case UHalign::CENTER:
+  case Halign::CENTER:
     // ajouter espace restant a vd.x
     vd.chr.x = vd.x + (vd.width-vd.view->chwidth)/2 + vd.view->edit_shift;
 
-    // si trop grand alors mettre en UHalign::LEFT pour que le debut
+    // si trop grand alors mettre en Halign::LEFT pour que le debut
     // apparaisse et ne soit pas clipe (en part quand il y a du texte)
     if (vd.chr.x < vd.x && vd.view->edit_shift == 0) vd.chr.x = vd.x;
     break;
 
-  case UHalign::RIGHT:     
+  case Halign::RIGHT:     
     // ajouter espace restant a vd.x
     // reste centre (et clipe) si trop grand (peut deborder!)
     // a revoir: cf CENTER !!!
@@ -832,7 +831,7 @@ void UView::initLayoutH(UViewUpdateImpl& vd, const UUpdateContext& ctx, const UR
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UView::initLayoutV(UViewUpdateImpl& vd, const UUpdateContext& ctx, const URect& r) 
+void View::initLayoutV(UViewUpdateImpl& vd, const UpdateContext& ctx, const Rectangle& r) 
 {
   // !!TOUTES CES OPTIONS DEVRAIENT ETRE RE-TESTEES POUR **CHAQUE** DATAENT!!
   vd.vflex_space = 0;
@@ -846,21 +845,21 @@ void UView::initLayoutV(UViewUpdateImpl& vd, const UUpdateContext& ctx, const UR
   }
   
   else switch (ctx.valign) {
-  case UValign::TOP:
+  case Valign::TOP:
   default:  // cas d'erreur: comme TOP
     vd.chr.y = vd.y;
     break;
 	
-  case UValign::CENTER:
+  case Valign::CENTER:
     // ajouter espace restant a vd.y
     vd.chr.y = vd.y + (vd.height-vd.view->chheight)/2;
     
-    // si trop grand alors mettre en UHalign::TOP pour que le haut
+    // si trop grand alors mettre en Halign::TOP pour que le haut
     // apparaisse et ne soit pas clipe (en part quand il y a du texte)
     if (vd.chr.y < vd.y) vd.chr.y = vd.y;
     break;
 
-  case UValign::BOTTOM:
+  case Valign::BOTTOM:
     // ajouter espace restant a vd.y
     // reste centre (et clipe) si trop grand (peut deborder!)
     // a revoir: cf CENTER !!!
@@ -871,10 +870,10 @@ void UView::initLayoutV(UViewUpdateImpl& vd, const UUpdateContext& ctx, const UR
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UView::initLayoutViewport(UViewUpdateImpl& vd, const UUpdateContext& ctx, const URect& r) {
+void View::initLayoutViewport(UViewUpdateImpl& vd, const UpdateContext& ctx, const Rectangle& r) {
   UPaneView* paneview = dynamic_cast<UPaneView*>(vd.view);
   if (!paneview) {
-    UAppli::internalError("initLayoutViewport","null UPaneView"); //fatal
+    Application::internalError("initLayoutViewport","null UPaneView"); //fatal
     return;
   }
   paneview->setPadding(vd.pad);
@@ -882,36 +881,36 @@ void UView::initLayoutViewport(UViewUpdateImpl& vd, const UUpdateContext& ctx, c
 
 // ==================================================== [Ubit Toolkit] =========
 
-void UView::layoutH(UViewUpdateImpl& vd, const UUpdateContext& ctx, UChildIter link,
-                    const UDimension& dim, UElem* chgrp, UView* chview) {
+void View::layoutH(UViewUpdateImpl& vd, const UpdateContext& ctx, ChildIter link,
+                    const Dimension& dim, Element* chgrp, View* chview) {
   char valign = ctx.valign;
-  if (valign == UValign::FLEX) {
+  if (valign == Valign::FLEX) {
     // pour les Datas FLEX est identique a CENTER
-    if (!chview) valign = UValign::CENTER;
+    if (!chview) valign = Valign::CENTER;
     // pour les CANT_RESIZE_HEIGHT, FLEX est identique a TOP
-    else if (!chgrp->isHeightResizable()) valign = UValign::TOP;
+    else if (!chgrp->isHeightResizable()) valign = Valign::TOP;
   }
   
   switch (valign) {
-  case UValign::TOP:
+  case Valign::TOP:
     vd.chr.y = vd.y;
     vd.chr.height = dim.height;
     break;
 
-  case UValign::FLEX:
+  case Valign::FLEX:
     vd.chr.y = vd.y;
     vd.chr.height = vd.height;
     break;
     
-  case UValign::CENTER:
+  case Valign::CENTER:
     vd.chr.y = vd.y + (vd.height-dim.height)/2;    // ajouter moitie espace restant a vd.y
     vd.chr.height = dim.height;
-    // si trop grand alors faire comme UHalign::TOP pour que le haut
+    // si trop grand alors faire comme Halign::TOP pour que le haut
     // apparaisse et ne soit pas clipe (en part quand il y a du texte)
     if (vd.chr.y < vd.y) vd.chr.y = vd.y;
     break;
 
-  case UValign::BOTTOM:
+  case Valign::BOTTOM:
     vd.chr.y = vd.y + (vd.height-dim.height);    // ajouter espace restant a vd.y
     vd.chr.height = dim.height;
     break;
@@ -919,43 +918,43 @@ void UView::layoutH(UViewUpdateImpl& vd, const UUpdateContext& ctx, UChildIter l
   
   // flexible horizontal object  ==>  add flexible width space
   // !!==> sauf pour les Datas qui sont jamais flexibles
-  if (chview && ctx.halign == UHalign::FLEX && chgrp->isWidthResizable())
+  if (chview && ctx.halign == Halign::FLEX && chgrp->isWidthResizable())
     vd.chr.width = dim.width + vd.hflex_space;
   else vd.chr.width = dim.width;
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UView::layoutV(UViewUpdateImpl& vd, const UUpdateContext& ctx, UChildIter link,
-                    const UDimension& dim, UElem* chgrp, UView* chview) {
+void View::layoutV(UViewUpdateImpl& vd, const UpdateContext& ctx, ChildIter link,
+                    const Dimension& dim, Element* chgrp, View* chview) {
   char halign = ctx.halign;
-  if (halign == UHalign::FLEX) {
+  if (halign == Halign::FLEX) {
     // pour les Datas, FLEX est identique a CENTER
-    if (!chview) halign = UHalign::CENTER;
+    if (!chview) halign = Halign::CENTER;
     // pour CANT_RESIZE_WIDTH, FLEX est identique a LEFT (pas CENTER, incohrent ds qq cas)
-    else if (!chgrp->isWidthResizable()) halign = UHalign::LEFT;
+    else if (!chgrp->isWidthResizable()) halign = Halign::LEFT;
   }
 
   switch (halign) {
-  case UHalign::LEFT:
+  case Halign::LEFT:
     vd.chr.x = vd.x + vd.view->edit_shift;
     vd.chr.width = dim.width;
     break;
     
-  case UHalign::FLEX:
+  case Halign::FLEX:
     vd.chr.x = vd.x;
     vd.chr.width = vd.width;
     break;
     
-  case UHalign::CENTER:
+  case Halign::CENTER:
     vd.chr.x = vd.x + (vd.width-dim.width)/2;    // ajouter moitie espace restant a vd.x
     vd.chr.width = dim.width;
-    // si trop grand alors faire comme UHalign::LEFT pour que le debut
+    // si trop grand alors faire comme Halign::LEFT pour que le debut
     // apparaisse et ne soit pas clipe (en part quand il y a du texte)
     if (vd.chr.x < vd.x && vd.view->edit_shift == 0) vd.chr.x = vd.x;
     break;
     
-  case UHalign::RIGHT:
+  case Halign::RIGHT:
     vd.chr.x = vd.x + (vd.width-dim.width);    // ajouter espace restant a vd.x
     vd.chr.width = dim.width;
     break; 
@@ -963,30 +962,30 @@ void UView::layoutV(UViewUpdateImpl& vd, const UUpdateContext& ctx, UChildIter l
   
   // flexible vertical object  ==>  add flexible height space
   // !!==> sauf pour les Datas qui sont jamais flexibles
-  if (chview && ctx.valign == UValign::FLEX && chgrp->isHeightResizable()) 
+  if (chview && ctx.valign == Valign::FLEX && chgrp->isHeightResizable()) 
     vd.chr.height = dim.height + vd.vflex_space;
   else vd.chr.height = dim.height;
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UView::layoutViewport(UViewUpdateImpl& vd, const UUpdateContext& ctx,
-                           UChildIter link, const UDimension& dim, UView* chview) {
+void View::layoutViewport(UViewUpdateImpl& vd, const UpdateContext& ctx,
+                           ChildIter link, const Dimension& dim, View* chview) {
   if (!chview) {
-    UAppli::warning("UView::doUpdate","a UPane can only contain UBox(es) in its central area");
+    Application::warning("View::doUpdate","a UPane can only contain Box(es) in its central area");
     return;
   }
 
   UPaneView* paneview = dynamic_cast<UPaneView*>(vd.view);
   if (!paneview) {
-    UAppli::internalError("UView::doUpdate","null UPaneView"); //fatal
+    Application::internalError("View::doUpdate","null UPaneView"); //fatal
     return;
   }
   UScrollpane* pane = null;
   UCardbox* card = null;
   if (!(pane = dynamic_cast<UScrollpane*>(ctx.obj))
       && !(card =  dynamic_cast<UCardbox*>(ctx.obj))) {
-    UAppli::internalError("UView::doUpdate","null UPane"); //fatal
+    Application::internalError("View::doUpdate","null UPane"); //fatal
     return;
   }
   
@@ -1018,30 +1017,30 @@ void UView::layoutViewport(UViewUpdateImpl& vd, const UUpdateContext& ctx,
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-static void layoutBorder(UViewUpdateImpl& vd, const UUpdateContext& ctx,
-                         UChildIter link, const UDimension& dim, UView*) {
+static void layoutBorder(UViewUpdateImpl& vd, const UpdateContext& ctx,
+                         ChildIter link, const Dimension& dim, View*) {
   UViewBorderProp* vb = null;
   if (!vd.view->getProp(vb)) {
-    UAppli::internalError("UView::doUpdate","null frame view"); //fatal
+    Application::internalError("View::doUpdate","null frame view"); //fatal
     return;
   }
-  UPaddingSpec& frame = *vb;
+  PaddingSpec& frame = *vb;
 
   // !!!!!!  A COMPLETER !!! prendre en compte les Units du padding !!!!!!!
 
   switch (ctx.valign) {
-  case UValign::TOP:
+  case Valign::TOP:
     vd.chr.y = vd.y;
     vd.chr.height = frame.top.val;
     break;
 	    
-  case UValign::BOTTOM:
+  case Valign::BOTTOM:
     vd.chr.y = vd.y + vd.height - frame.bottom.val;
     vd.chr.height = frame.bottom.val;
     break;
 	    
-  case UValign::CENTER: // ne s'adapte PAS a la taille du Pane
-  case UValign::FLEX: // Middle adaptatif: s'adapte a la taille du Pane
+  case Valign::CENTER: // ne s'adapte PAS a la taille du Pane
+  case Valign::FLEX: // Middle adaptatif: s'adapte a la taille du Pane
     vd.chr.y = vd.y + frame.top.val;
 	    
 #if EXX
@@ -1058,18 +1057,18 @@ static void layoutBorder(UViewUpdateImpl& vd, const UUpdateContext& ctx,
   }
 	  
   switch(ctx.halign) {
-  case UHalign::LEFT:
+  case Halign::LEFT:
     vd.chr.x = vd.x;
     vd.chr.width = frame.left.val;
     break;
     
-  case UHalign::RIGHT:
+  case Halign::RIGHT:
     vd.chr.x = vd.x + vd.width - frame.right.val;
     vd.chr.width = frame.right.val;
     break;
 	    
-  case UHalign::CENTER: // ne s'adapte PAS a la taille du Pane
-  case UHalign::FLEX: // Center adaptatif: s'adapte a la taille du Pane
+  case Halign::CENTER: // ne s'adapte PAS a la taille du Pane
+  case Halign::FLEX: // Center adaptatif: s'adapte a la taille du Pane
     vd.chr.x = vd.x + frame.left.val;
 
 #if EXX
@@ -1088,22 +1087,22 @@ static void layoutBorder(UViewUpdateImpl& vd, const UUpdateContext& ctx,
 
 // ==================================================== [Ubit Toolkit] =========
 
-static void nextH(UViewUpdateImpl& vd, const UUpdateContext& ctx) {
+static void nextH(UViewUpdateImpl& vd, const UpdateContext& ctx) {
   // increment vd.chr.x in all cases
   vd.chr.x += vd.chr.width + ctx.hspacing;
 }
 
-static void nextV(UViewUpdateImpl& vd, const UUpdateContext& ctx) {
+static void nextV(UViewUpdateImpl& vd, const UpdateContext& ctx) {
   // increment vd.chr.y in all cases
   vd.chr.y += vd.chr.height + ctx.vspacing;
 }
 
-static void nextViewport(UViewUpdateImpl& vd, const UUpdateContext& ctx) {
+static void nextViewport(UViewUpdateImpl& vd, const UpdateContext& ctx) {
   //NB: les children s'affiche les uns sur les autres (ce qui a un sens
   // s'ils sont transparents ou si on veut faire un cardbox
 }
 
-static void nextBorder(UViewUpdateImpl& vd, const UUpdateContext& ctx) {
+static void nextBorder(UViewUpdateImpl& vd, const UpdateContext& ctx) {
   // nop
 }
 

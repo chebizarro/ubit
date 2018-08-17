@@ -1,6 +1,5 @@
-/************************************************************************
- *
- *  uglcanvas.cpp: a widget for rendering OpenGL graphics (requires X11 and OpenGL)
+/*
+ *  glcanvas.cpp: a widget for rendering OpenGL graphics (requires X11 and OpenGL)
  *  Ubit GUI Toolkit - Version 6.0
  *  (C) 2008 | Eric Lecolinet | ENST Paris | www.enst.fr/~elc/ubit
  *
@@ -23,7 +22,7 @@
 #include <ubit/ucall.hpp>
 #include <ubit/uwin.hpp>
 #include <ubit/uview.hpp>
-#include <ubit/uevent.hpp>
+#include <ubit/core/event.h>
 #include <ubit/ustyle.hpp>
 #include <ubit/utimer.hpp>
 #include <ubit/uappli.hpp>
@@ -37,7 +36,7 @@ namespace ubit {
 
 
 
-UGlcanvas::UGlcanvas(UArgs a) :
+UGlcanvas::UGlcanvas(Args a) :
 USubwin(a), is_init(false), share_glresources(false)
 {
   addAttr(UOn::paint / ucall(this, &UGlcanvas::paintImpl));
@@ -74,7 +73,7 @@ void disableClips() {
 
 bool UGlcanvas::realize() {
   if (! wmodes.IS_HARDWIN) {
-    UAppli::error("UGlcanvas::realize","can't be a SOFTWIN: can't realize object %p",this);
+    Application::error("UGlcanvas::realize","can't be a SOFTWIN: can't realize object %p",this);
     return false;
   }
   if (! USubwin::realize()) return false;
@@ -141,7 +140,7 @@ void UGlcanvas::paintImpl(UPaintEvent& e)
     disableClips();
 
     paintGL(e);
-    //if (is_autoswap) swapBuffers(); // fait dans ~UGraph
+    //if (is_autoswap) swapBuffers(); // fait dans ~Graph
     
     // glFlush() sinon ce qui a ete tracé avec le precedent glcontext n'apparait pas
     glFlush();

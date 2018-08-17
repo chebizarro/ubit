@@ -1,6 +1,5 @@
-/************************************************************************
- *
- *  uselection.cpp: Text Selection
+/*
+ *  selection.cpp: Text Selection
  *  Ubit GUI Toolkit - Version 6.0
  *  (C) 2008 | Eric Lecolinet | ENST Paris | www.enst.fr/~elc/ubit
  *
@@ -22,67 +21,66 @@
 #include <ubit/ufont.hpp>
 #include <ubit/uelem.hpp>
 #include <ubit/uupdate.hpp>
-#include <ubit/uevent.hpp>
-#include <ubit/uselection.hpp>
+#include <ubit/core/event.h>
+#include <ubit/Selection.hpp>
 #include <ubit/uappli.hpp>
 using namespace std;
 namespace ubit {
 
 // !!! ATT: cette implementation est DANGEREUSE car il n'est pas sur que les
 // iterateurs puissent tjrs etre initialises a null (cf aussi uchild.hpp)
-const UChildIter USelection::null_link;
+const ChildIter Selection::null_link;
 
-/* ==================================================== ===== ======= */
 
-USelection::USelection(const UColor* fg, const UColor* bg,
+Selection::Selection(const Color* fg, const Color* bg,
                                const UFont* f) {
-  pcolor   = fg ? new UColor(*fg) : null;
-  pbgcolor = bg ? new UColor(*bg) : null;
+  pcolor   = fg ? new Color(*fg) : null;
+  pbgcolor = bg ? new Color(*bg) : null;
   pfont    = f ? new UFont(*f) : null;
   rec_sel  = true;
   in_obj   = null;
   clear();
 }
 
-USelection::~USelection() {}
+Selection::~Selection() {}
 
-void USelection::copyText(UStr& res) {
+void Selection::copyText(String& res) {
   res.clear();
   perform(&res, false);
 }
 
-void USelection::cutText(UStr& res) {
+void Selection::cutText(String& res) {
   res.clear();
   perform(&res, true);
   clear();
 }
 
-void USelection::deleteText() {
+void Selection::deleteText() {
   perform(null, true);
   clear();
 }
 
-void USelection::clear() {
+void Selection::clear() {
   being_selected = false;
-  pressLink = oldLink = UChildIter();
-  endPressLink = UChildIter();
+  pressLink = oldLink = ChildIter();
+  endPressLink = ChildIter();
   pressPos = oldPos = 0;
-  fromLink = toLink = UChildIter();
+  fromLink = toLink = ChildIter();
   fromPos  = toPos = 0;
   update(null);
   in_obj = null;
 }
 
-void USelection::setObj(UElem* obj) {
+void Selection::setObj(Element* obj) {
   in_obj = obj;
 }
 
 /* ==================================================== [Elc] ======= */
 
-void USelection::update(UDataContext* p) {
+void Selection::update(UDataContext* p) {
   if (!in_obj) return;
   
-  UChildren::iterator newLink = UChildIter(), endLink = UChildIter();
+  Children::iterator newLink = ChildIter(), endLink = ChildIter();
   long newPos = 0;
   
   if (p) {
@@ -104,7 +102,7 @@ void USelection::update(UDataContext* p) {
     
     else {
       bool found = false;
-      for (UChildren::iterator c = pressLink; c != endPressLink; ++c) {
+      for (Children::iterator c = pressLink; c != endPressLink; ++c) {
         if (c == newLink) {
           found = true;
           fromLink = pressLink;
@@ -116,7 +114,7 @@ void USelection::update(UDataContext* p) {
       }
       
       if (!found) {
-        for (UChildren::iterator c = newLink; c != endLink; ++c) {
+        for (Children::iterator c = newLink; c != endLink; ++c) {
           if (c == pressLink) {
             fromLink = newLink;
             fromPos  = newPos;
@@ -163,21 +161,20 @@ void USelection::update(UDataContext* p) {
 }
 
 /* ==================================================== [Elc] ======= */
-/* ==================================================== ===== ======= */
 // NB: cette fonction change egalement le mode IN_TEXTSEL des elems
 
-void USelection::paint(long refreshFromPos, long refreshToPos) {
+void Selection::paint(long refreshFromPos, long refreshToPos) {
   bool initial_state = false;
   paintImpl(in_obj, initial_state, refreshFromPos, refreshToPos); //recursive);
 }
 
-void USelection::paintImpl(UElem* obj, bool state,
+void Selection::paintImpl(Element* obj, bool state,
                            long refreshFromPos, long refreshToPos) {
 
-  for (UChildIter c = obj->cbegin(); c != obj->cend(); ++c) {
+  for (ChildIter c = obj->cbegin(); c != obj->cend(); ++c) {
     if (c == fromLink) state = true;
-    UData* data = null;
-    UElem* chgrp = null;
+    Data* data = null;
+    Element* chgrp = null;
     
     if ((data = (*c)->toData())) {
           
@@ -186,12 +183,12 @@ void USelection::paintImpl(UElem* obj, bool state,
         data->omodes.IS_IN_SELECTION = state;
         
         // NO_DELAY evite le flicking (sinon maj faite a posteriori)
-        //UUpdate upd(UUpdate::PAINT|UUpdate::NO_DELAY);
-        UUpdate upd(UUpdate::PAINT);
+        //Update upd(Update::PAINT|Update::NO_DELAY);
+        Update upd(Update::PAINT);
     
         // ATT: il faut egalement reafficher les zones qui redeviennent 
         // non selectionneees et repassent en noir        
-        UStr* str = data->toStr();
+        String* str = data->toStr();
         
         if (!str) upd.setPaintData(data);
         else {
@@ -226,28 +223,28 @@ void USelection::paintImpl(UElem* obj, bool state,
 
 /* ==================================================== [Elc] ======= */
 
-static void xxx(UStr* copy, bool del, UStr* str, long frompos, long len) {
+static void xxx(String* copy, bool del, String* str, long frompos, long len) {
   if (copy) copy->insert(-1, *str, frompos, len);
   if (del) str->remove(frompos, len);
 }
 
-void USelection::perform(UStr* copy, bool del) {
+void Selection::perform(String* copy, bool del) {
   bool state = false;
   int refreshFromPos = fromPos, refreshToPos = toPos;
   if (!in_obj) return;
   
-  const UStr* sep = in_obj->getTextSeparator();
+  const String* sep = in_obj->getTextSeparator();
   if (sep && sep->length() <= 0) sep = null;
 
-  for (UChildIter c = in_obj->cbegin(); c != in_obj->cend(); ++c) {
+  for (ChildIter c = in_obj->cbegin(); c != in_obj->cend(); ++c) {
     if (c == fromLink) state = true;
     
     if (state) {
-      UNode* ch = *c;
-      UElem* chgrp = null;
+      Node* ch = *c;
+      Element* chgrp = null;
 
       if (ch->toData()) {
-        UStr* str = ch->toStr();
+        String* str = ch->toStr();
         // NB: cas (data && !str) pas traite!
         if (str) {
           if (c == fromLink && c == toLink) {
@@ -281,8 +278,8 @@ void USelection::perform(UStr* copy, bool del) {
 
 /* ==================================================== [Elc] ======= */
 
-void USelection::start(UMouseEvent& e) {
-  if (e.getSource() && e.getButton() == UAppli::conf.getMouseSelectButton()) {
+void Selection::start(UMouseEvent& e) {
+  if (e.getSource() && e.getButton() == Application::conf.getMouseSelectButton()) {
     
     // effacer selection courante (ce qui necessite ancien obj)
     clear();
@@ -302,9 +299,8 @@ void USelection::start(UMouseEvent& e) {
   }
 }
 
-/* ==================================================== ======== ======= */
 
-void USelection::extend(UMouseEvent& e) {
+void Selection::extend(UMouseEvent& e) {
   if (!in_obj || e.getSource() != in_obj) return;
   // si on a localise une string, changer la selection (sinon on ne fait rien
   // pour ne pas abimer inutilement la selection precedente)
@@ -312,23 +308,20 @@ void USelection::extend(UMouseEvent& e) {
   if (e.getStr(dc)) update(&dc);
 }
 
-/* ==================================================== ======== ======= */
 
-bool USelection::complete(UMouseEvent& e) {
+bool Selection::complete(UMouseEvent& e) {
   being_selected = false;   // on n'est plus en train de selectionner le texte
 
   return (in_obj && fromLink != in_obj->cend() && toLink != in_obj->cend()
           && (fromLink != toLink || fromPos != toPos));
 }
 
-/* ==================================================== ======== ======= */
 
-void USelection::keyPress(UKeyEvent& e) {
+void Selection::keyPress(UKeyEvent& e) {
   // toute entree clavier qui renvoie un char efface la selection
   // et paste doit virer la selection (ou du moins la remplacer)
   if (e.getKeyChar()) clear();
 }
 
 }
-/* ==================================================== [TheEnd] ======= */
 

@@ -1,24 +1,31 @@
-/************************************************************************
- *
- *  ucall.cpp: Callback Object
- *  Ubit GUI Toolkit - Version 6
+/*
+ *  call.cpp: Callback Object
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE :
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION;
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
 
 #include <ubit/ubit_features.h>
 #include <ubit/ucall.hpp>
 #include <ubit/uon.hpp>
 #include <ubit/ubox.hpp>
-#include <ubit/uevent.hpp>
+#include <ubit/core/event.h>
 #include <ubit/uwin.hpp>
 #include <ubit/uview.hpp>
 #include <ubit/umenu.hpp>
@@ -35,62 +42,62 @@ void UCall::wrongEventType(const char* evname, const char* callname) {
          "To solve this problem, put a breakpoint in ubit::UCall::wrongEventType()",         evname, callname);
 }
 
-void UCall::addingTo(UChild& child, UElem& parent) {
+void UCall::addingTo(Child& child, Element& parent) {
   // sert a specifier la condition par defaut
   if (!child.getCond()) child.setCond(UOn::action);
-  UNode::addingTo(child, parent);
+  Node::addingTo(child, parent);
 }
 
 /*
- void UCall::removingFrom(UChild *selflink, UElem *parent) {
+ void UCall::removingFrom(Child *selflink, Element *parent) {
  // ne PAS faire " par->setCmodes(on, false) " car il peut y avoir
  // plusieurs callbacks avec la meme condition
  // (et de toute facon ce n'est pas une erreur, juste un peu plus long)
- UNode::removingFrom(selflink, parent);
+ Node::removingFrom(selflink, parent);
  }
  */
 
-UCall& ucloseWin(int stat) {return ucall(stat, &UElem::closeWin);}
+UCall& ucloseWin(int stat) {return ucall(stat, &Element::closeWin);}
 
 /* TEST
  template <class A, class R> 
  class Truc_F1 {
- const UCond& cond;
+ const Condition& cond;
  R (*fun)(A);
  public:
- Truc_F1(const UCond& c, R(*f)(A)) : cond(c), fun(f) {}
- UChild operator()(A a) {return UChild(new UCall_F1<A,R>(fun,a), cond);}
+ Truc_F1(const Condition& c, R(*f)(A)) : cond(c), fun(f) {}
+ Child operator()(A a) {return Child(new UCall_F1<A,R>(fun,a), cond);}
  };
  
  template <class A, class R, class E> 
  class Truc_F1E {
- const UCond& cond;
+ const Condition& cond;
  R (*fun)(E&,A);
  public:
- Truc_F1E(const UCond& c, R(*f)(E&,A)) : cond(c), fun(f) {}
- UChild operator()(A a) {return UChild(new UCall_F1E<A,R,E>(fun,a), cond);}
+ Truc_F1E(const Condition& c, R(*f)(E&,A)) : cond(c), fun(f) {}
+ Child operator()(A a) {return Child(new UCall_F1E<A,R,E>(fun,a), cond);}
  };
  
  - - - - - - 
  
  template <class A1, class A2, class R> 
  class Truc_F2 {
- const UCond& cond;
+ const Condition& cond;
  R (*fun)(A1,A2);
  public:
- Truc_F2(const UCond& c, R(*f)(A1,A2)) : cond(c), fun(f) {}
- UChild operator()(A1 a1, A2 a2) 
- {return UChild(new UCall_F2<A1,A2,R>(fun,a1,a2), cond);}
+ Truc_F2(const Condition& c, R(*f)(A1,A2)) : cond(c), fun(f) {}
+ Child operator()(A1 a1, A2 a2) 
+ {return Child(new UCall_F2<A1,A2,R>(fun,a1,a2), cond);}
  };
  
  template <class A1, class A2, class R, class E> 
  class Truc_F2E {
- const UCond& cond;
+ const Condition& cond;
  R (*fun)(E&,A1,A2);
  public:
- Truc_F2E(const UCond& c, R(*f)(E&,A1,A2)) : cond(c), fun(f) {}
- UChild operator()(A1 a1, A2 a2) 
- {return UChild(new UCall_F2E<A1,A2,R,E>(fun,a1,a2), cond);}
+ Truc_F2E(const Condition& c, R(*f)(E&,A1,A2)) : cond(c), fun(f) {}
+ Child operator()(A1 a1, A2 a2) 
+ {return Child(new UCall_F2E<A1,A2,R,E>(fun,a1,a2), cond);}
  };
  */
 
@@ -98,7 +105,7 @@ UCall& ucloseWin(int stat) {return ucall(stat, &UElem::closeWin);}
  //UCall& ucompactEvents(UCall& c) {return c;}
  
  UCompactEvents::UCompactEvents(UCall& c) :
- postponed_event(*new UEvent(UEvent::timer, null, null, null)),
+ postponed_event(*new Event(Event::timer, null, null, null)),
  timer(*new UTimer()),
  pcall(c),
  delay(0) {
@@ -110,7 +117,7 @@ UCall& ucloseWin(int stat) {return ucall(stat, &UElem::closeWin);}
  delete &postponed_event;
  }
  
- void UCompactEvents::operator()(UEvent& e) {
+ void UCompactEvents::operator()(Event& e) {
  //postponed_event.copy(e);
  postponed_event = e;
  timer.start(delay,1,false);

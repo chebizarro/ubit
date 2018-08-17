@@ -1,22 +1,31 @@
-/************************************************************************
- *
- *  usubwin.hpp
- *  Ubit GUI Toolkit - Version 6
+/*
+ *  subwin.hpp
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE :
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION;
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
 
 #ifndef _usubwin_hpp_
 #define	_usubwin_hpp_ 1
+
 #include <ubit/uwin.hpp>
+
 namespace ubit {
   
   /** Subwindow: a hard window that is embedded inside another window.
@@ -26,15 +35,15 @@ namespace ubit {
    * see UGlcanvas) but should be avoided in the general case because it breaks
    * certain graphical properties of the toolkit, such as the possibility to have
    * transparent windows and menus (they must then be created as "hard windows",
-   * see UWin, otherwise they won't appear if they are on top of a Subwindow)
+   * see Window, otherwise they won't appear if they are on top of a Subwindow)
    *
    * @see also subclass: UGlcanvas.
    */
-  class USubwin : public UWin {
+  class USubwin : public Window {
   public:
     UCLASS(USubwin)
     
-    USubwin(UArgs = UArgs::none);
+    USubwin(Args = Args::none);
     
     virtual bool isSubWin() const {return true;}
     
@@ -46,7 +55,7 @@ namespace ubit {
     virtual bool realize();
     
   protected:
-    virtual void initView(UView* parent_view);
+    virtual void initView(View* parent_view);
     // must be redefined to init parent view properly.
     
     virtual void motionImpl(UViewEvent&);

@@ -1,6 +1,5 @@
-/************************************************************************
- *
- *  ugeom.cpp: Geometry
+/*
+ *  geom.cpp: Geometry
  *  Ubit GUI Toolkit - Version 6
  *  (C) 2009 | Eric Lecolinet | ENST Paris | www.enst.fr/~elc/ubit
  *
@@ -25,49 +24,49 @@ using namespace std;
 namespace ubit {
 
 
-const UUnit 
-UPX(UUnit::PX),
-UEM(UUnit::EM),
-UEX(UUnit::EX),
-UPERCENT(UUnit::PERCENT),
-UPERCENT_CTR(UUnit::PERCENT_CTR),
-UIN(UUnit::IN),
-UCM(UUnit::CM),
-UMM(UUnit::MM),
-UPT(UUnit::PT),
-UPC(UUnit::PC);
+const Unit 
+UPX(Unit::PX),
+UEM(Unit::EM),
+UEX(Unit::EX),
+UPERCENT(Unit::PERCENT),
+UPERCENT_CTR(Unit::PERCENT_CTR),
+UIN(Unit::IN),
+UCM(Unit::CM),
+UMM(Unit::MM),
+UPT(Unit::PT),
+UPC(Unit::PC);
 
-const ULength
-UAUTO(0., UUnit(UUnit::AUTO)),
-UIGNORE(0., UUnit(UUnit::IGNORE));
+const Length
+UAUTO(0., Unit(Unit::AUTO)),
+UIGNORE(0., Unit(Unit::IGNORE));
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-ostream& operator<<(ostream& s, const ULength& l) {
+ostream& operator<<(ostream& s, const Length& l) {
   return (s << l.toString());
 }
 
-bool ULength::operator==(const ULength& l) const {
+bool Length::operator==(const Length& l) const {
   return val == l.val && unit.type == l.unit.type && modes.val == l.modes.val;
 }
 
-bool ULength::operator!=(const ULength& l) const {
+bool Length::operator!=(const Length& l) const {
   return val != l.val || unit.type != l.unit.type || modes.val != l.modes.val;
 } 
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-ULength::ULength(const UStr& spec) : val(0), unit(UPX), modes(0) {
+Length::Length(const String& spec) : val(0), unit(UPX), modes(0) {
   set(spec);
 }
 
-ULength& ULength::set(const UStr& spec) {
+Length& Length::set(const String& spec) {
   val = 0.;
   unit = UPX;
   modes.val = 0;
   
   if (spec.empty()) {
-    UAppli::error("ULength:","empty textual specification");
+    Application::error("Length:","empty textual specification");
     return *this;
   }
   
@@ -76,9 +75,9 @@ ULength& ULength::set(const UStr& spec) {
   return setUnit(u);
 }
 
-ULength& ULength::setUnit(const char* spec) {
+Length& Length::setUnit(const char* spec) {
   if (!spec || !*spec) {
-    unit.type = UUnit::PX;
+    unit.type = Unit::PX;
     return *this;
   }
   
@@ -87,34 +86,34 @@ ULength& ULength::setUnit(const char* spec) {
   
   switch (u0) {
     case 'a':
-      if (u1 == 'u' || u1 == 0) unit.type = UUnit::AUTO;
+      if (u1 == 'u' || u1 == 0) unit.type = Unit::AUTO;
       else goto ERROR;
       break;
     case 'p':
-      if (u1 == 'x') unit.type = UUnit::PX;
-      else if (u1 == 't') unit.type = UUnit::PT;
-      else if (u1 == 'c') unit.type = UUnit::PC;
+      if (u1 == 'x') unit.type = Unit::PX;
+      else if (u1 == 't') unit.type = Unit::PT;
+      else if (u1 == 'c') unit.type = Unit::PC;
       else goto ERROR;
       break;
     case '%':
-      if (u1 == 0) unit.type = UUnit::PERCENT;
+      if (u1 == 0) unit.type = Unit::PERCENT;
       else goto ERROR;
       break;
     case 'e':
-      if (u1 == 'x') unit.type = UUnit::EX;
-      else if (u1 == 'm') unit.type = UUnit::EM;
+      if (u1 == 'x') unit.type = Unit::EX;
+      else if (u1 == 'm') unit.type = Unit::EM;
       else goto ERROR;
       break;
     case 'i':
-      if (u1 == 'n') unit.type = UUnit::IN;
+      if (u1 == 'n') unit.type = Unit::IN;
       else goto ERROR;
       break;
     case 'm':
-      if (u1 == 'm') unit.type = UUnit::MM;
+      if (u1 == 'm') unit.type = Unit::MM;
       else goto ERROR;
       break;
     case 'c':
-      if (u1 == 'm') unit.type = UUnit::CM;
+      if (u1 == 'm') unit.type = Unit::CM;
       else goto ERROR;
       break;
     default:
@@ -124,52 +123,52 @@ ULength& ULength::setUnit(const char* spec) {
   return *this;
   
 ERROR: 
-  UAppli::error("ULength::setUnit","invalid unit");
+  Application::error("Length::setUnit","invalid unit");
   return *this;
 }
 
 
-float ULength::toPixels(UDisp* disp, const UFontDesc& fd, 
+float Length::toPixels(Display* disp, const UFontDesc& fd, 
                         float view_len, float parview_len) const {
   float pixlen = 0;
   switch (unit.type) {
-    //case ULength::Unit::AUTO:
+    //case Length::Unit::AUTO:
       //...;
       //break
-    case UUnit::PX:
+    case Unit::PX:
       pixlen = val;
       break;
-    case UUnit::PERCENT:
+    case Unit::PERCENT:
       pixlen = val * parview_len / 100.; // percentages of the parent size 
       break;
-    case UUnit::PERCENT_CTR:
+    case Unit::PERCENT_CTR:
       // the size of this view is removed from the parent size
       pixlen = val * (parview_len - view_len) / 100.;
       break;
-    case UUnit::EX:
+    case Unit::EX:
       pixlen = val * fd.actual_size * 0.5 * disp->PT_TO_PX;
       break;      
-    case UUnit::EM:      
+    case Unit::EM:      
       //pixlen = val * UFontMetrics(fd, disp).getHeight();
       pixlen = val * fd.actual_size * disp->PT_TO_PX;
       break;
-    case UUnit::IN:
+    case Unit::IN:
       pixlen = val * disp->IN_TO_PX;
       break;
-    case UUnit::MM:
+    case Unit::MM:
       pixlen = val * disp->MM_TO_PX;
       break;      
-    case UUnit::CM:
+    case Unit::CM:
       pixlen = val * disp->CM_TO_PX;
       break;
-    case UUnit::PT:
+    case Unit::PT:
       pixlen = val * disp->PT_TO_PX;
       break;
-    case UUnit::PC:
+    case Unit::PC:
       pixlen = val * disp->PC_TO_PX;
       break;
     default:
-      UAppli::error("ULength::toPixels","invalid unit");
+      Application::error("Length::toPixels","invalid unit");
       return 0;
   }
   
@@ -178,45 +177,45 @@ float ULength::toPixels(UDisp* disp, const UFontDesc& fd,
 } 
 
 
-UStr ULength::toString() const {
-  UStr s;
+String Length::toString() const {
+  String s;
   s.setFloat(val);
 
   switch (unit.type) {
-    case UUnit::AUTO:
+    case Unit::AUTO:
       s = "auto";
       break;
-     case UUnit::PX:
+     case Unit::PX:
       s &= "px";
       break;
-    case UUnit::PERCENT:
+    case Unit::PERCENT:
       s &= "%";
       break;
-    case UUnit::PERCENT_CTR:
+    case Unit::PERCENT_CTR:
       s &= "%c";
       break;
-    case UUnit::EX:
+    case Unit::EX:
       s &= "ex";
       break;      
-    case UUnit::EM:      
+    case Unit::EM:      
       s &= "em";
       break;
-    case UUnit::IN:
+    case Unit::IN:
       s &= "in";
       break;
-    case UUnit::MM:
+    case Unit::MM:
       s &= "mm";
       break;      
-    case UUnit::CM:
+    case Unit::CM:
       s &= "cm";
       break;
-    case UUnit::PT:
+    case Unit::PT:
       s &= "pt";
       break;
-    case UUnit::PC:
+    case Unit::PC:
       s &= "pc";
       break;
-    default: //case UUnit::IGNORE:
+    default: //case Unit::IGNORE:
       s = "none";
       break;
   }
@@ -225,18 +224,18 @@ UStr ULength::toString() const {
 
 // =========================================================== [Elc] ===========
 /*
- void UPaddingSpec::setH(float l_margin, float r_margin) {
+ void PaddingSpec::setH(float l_margin, float r_margin) {
  left = l_margin;
  right = r_margin;
  }
  
- void UPaddingSpec::setV(float t_margin, float b_margin) {
+ void PaddingSpec::setV(float t_margin, float b_margin) {
  top = t_margin;
  bottom = b_margin;
  }
  */
 
-void UPaddingSpec::add(const UPaddingSpec& p2) {
+void PaddingSpec::add(const PaddingSpec& p2) {
   // !!! A COMPLETER !!! prendre en compte les Units !!!!!!
   top.val    += p2.top.val; 
   bottom.val += p2.bottom.val;

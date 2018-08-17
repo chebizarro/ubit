@@ -1,6 +1,5 @@
-/************************************************************************
- *
- *  ugeom.cpp: Geometry
+/*
+ *  geom.cpp: Geometry
  *  Ubit GUI Toolkit - Version 6.0
  *  (C) 2009 | Eric Lecolinet | ENST Paris | www.enst.fr/~elc/ubit
  *
@@ -64,30 +63,30 @@ using namespace std;
 #define NAMESPACE_UBIT namespace ubit {
 NAMESPACE_UBIT
 
-ostream& operator<<(ostream& s, const UPoint& p) {
+ostream& operator<<(ostream& s, const Point& p) {
   return (s << p.x << " " << p.y);
 }
   
-istream& operator>>(istream& s, UPoint& p) {
+istream& operator>>(istream& s, Point& p) {
   return (s >> p.x >> p.y);
 }
 
-ostream& operator<<(ostream& s, const UDimension& d) {
+ostream& operator<<(ostream& s, const Dimension& d) {
   return (s << d.width << " " << d.height);
 }
   
-istream& operator>>(istream& s, UDimension& d) {
+istream& operator>>(istream& s, Dimension& d) {
   return (s >> d.width >> d.height);
 }
 
 // =========================================================== [Elc] ===========
 
-void ULine::draw(const UGraph& g) const {
+void Line::draw(const Graph& g) const {
   g.drawLine(p1.x, p1.y, p2.x, p2.y);
 }
-//void ULine::fill(const UGraph& g) const {} in header
+//void Line::fill(const Graph& g) const {} in header
 
-URect ULine::getBounds() const {
+Rectangle Line::getBounds() const {
   float x, y, w, h;
   if (p1.x < p2.x) {
     x = p1.x;
@@ -106,11 +105,11 @@ URect ULine::getBounds() const {
     y = p2.y;
     h = p1.y - p2.y;
   }
-  return URect(x, y, w, h);
+  return Rectangle(x, y, w, h);
 }
 
 /* pas de sens
-void ULine::setFrame(const URect& r) {
+void Line::setFrame(const Rectangle& r) {
   p1.x = r.x;
   p1.y = r.y;
   p2.x = r.x + r.width;
@@ -118,24 +117,24 @@ void ULine::setFrame(const URect& r) {
 }
 */
   
-bool ULine::intersects(const URect& r) const {
+bool Line::intersects(const Rectangle& r) const {
   return r.intersectsLine(*this);
 }
 
-bool ULine::intersectsLine(const ULine& l) const {
+bool Line::intersectsLine(const Line& l) const {
   return linesIntersect(l.p1, l.p2, p1, p2);
 }
 
-bool ULine::linesIntersect(const UPoint& a, const UPoint& b, const UPoint& c, const UPoint& d) {
+bool Line::linesIntersect(const Point& a, const Point& b, const Point& c, const Point& d) {
   return ((relativeCCW(a, b, c) * relativeCCW(a, b, d) <= 0)
           && (relativeCCW(c, d, a) * relativeCCW(c, d, b) <= 0));
 }
  
-int ULine::relativeCCW(const UPoint& p) const {
+int Line::relativeCCW(const Point& p) const {
   return relativeCCW(p1, p2, p);
 }
 
-int ULine::relativeCCW(UPoint p1, UPoint p2, UPoint p) {
+int Line::relativeCCW(Point p1, Point p2, Point p) {
   p2.x -= p1.x;
   p2.y -= p1.y;
   p.x -= p1.x;
@@ -166,42 +165,40 @@ int ULine::relativeCCW(UPoint p1, UPoint p2, UPoint p) {
   return (ccw < 0.0) ? -1 : ((ccw > 0.0) ? 1 : 0);
 }
 
-/* ==================================================== ===== ======= */
-/* ==================================================== ===== ======= */
  
-void URect::draw(const UGraph& g) const {
+void Rectangle::draw(const Graph& g) const {
   g.drawRect(x, y, width, height);
 }  
 
-void URect::fill(const UGraph& g) const {
+void Rectangle::fill(const Graph& g) const {
   g.fillRect(x, y, width, height);
 } 
 
-void URect::setRect(float _x, float _y, float _w, float _h) {
+void Rectangle::setRect(float _x, float _y, float _w, float _h) {
   x = _x, y = _y, width = _w, height = _h;
 }
 
-void URect::setRect(const UPoint& p1, const UPoint& p2) {
+void Rectangle::setRect(const Point& p1, const Point& p2) {
   x = min(p1.x, p2.x);
   y = min(p1.y, p2.y);
   width  = max(p1.x, p2.x) - x;
   height = max(p1.y, p2.y) - y;
 }
 
-bool URect::contains(const UPoint& p) const {
+bool Rectangle::contains(const Point& p) const {
   if (isEmpty()) return false;
   return (p.x >= x && p.y >= y 
           && p.x < (float)x + width && p.y < (float)y + height); 
 }
 
-bool URect::contains(const URect& r) const {
+bool Rectangle::contains(const Rectangle& r) const {
   if (isEmpty() || r.width <= 0 || r.height <= 0) return false;
   return (r.x >= x && r.y >= y 
           && (float)r.x + r.width  < (float)x + width 
           && (float)r.y + r.height < (float)y + height); 
 }
 
-bool URect::intersects(const URect& r) const {
+bool Rectangle::intersects(const Rectangle& r) const {
   if (isEmpty() || r.width <= 0 || r.height <= 0) return false;
   return (r.x + (float)r.width > x && r.y + (float)r.height > y 
           && r.x < x + (float)width && r.y < y + (float)height);
@@ -213,7 +210,7 @@ bool URect::intersects(const URect& r) const {
 // * false si pas d'intersection (region inchangee)
 // * true sinon si region est incluse dans clip (ie. clipping inutile)
 
-bool URect::doIntersection(const URect& clip2) {
+bool Rectangle::doIntersection(const Rectangle& clip2) {
   bool stat = false;
   
   // *** en x
@@ -304,7 +301,7 @@ bool URect::doIntersection(const URect& clip2) {
 }
 
 // les regions vides ne sont pas prises en compte !
-void URect::doUnion(const URect& clip2) {
+void Rectangle::doUnion(const Rectangle& clip2) {
   if (width <= 0 || height <= 0) {
     *this = clip2;
   }
@@ -322,7 +319,7 @@ void URect::doUnion(const URect& clip2) {
   }
 }
 
-bool URect::intersectsLine(const ULine& l) const {
+bool Rectangle::intersectsLine(const Line& l) const {
   int out1, out2;
    
   if ((out2 = outcode(l.p2)) == 0) return true;
@@ -353,7 +350,7 @@ bool URect::intersectsLine(const ULine& l) const {
   return true;
 }
 
-int URect::outcode(const UPoint& p) const {
+int Rectangle::outcode(const Point& p) const {
   /*
    * Note on casts to float below. If the arithmetic of
    * x+w or y+h is done in float, then some bits may be
@@ -380,39 +377,37 @@ int URect::outcode(const UPoint& p) const {
   return out;
 }
 
-/* ==================================================== ===== ======= */
-/* ==================================================== ===== ======= */
 
-void UEllipse::draw(const UGraph& g) const {
+void Ellipse::draw(const Graph& g) const {
   g.drawEllipse(x, y, width, height);
 }
 
-void UEllipse::fill(const UGraph& g) const {
+void Ellipse::fill(const Graph& g) const {
   g.drawEllipse(x, y, width, height);
 }  
 
-UEllipse::UEllipse() 
+Ellipse::Ellipse() 
 : x(0), y(0), width(0), height(0) {}
 
-UEllipse::UEllipse(float _x, float _y, float _w, float _h) 
+Ellipse::Ellipse(float _x, float _y, float _w, float _h) 
 : x(_x), y(_y), width(_w), height(_h) {}
 
-UEllipse::UEllipse(const URect& r) 
+Ellipse::Ellipse(const Rectangle& r) 
 : x(r.x), y(r.y), width(r.width), height(r.height) {}
 
-URect UEllipse::getBounds() const {
-  return URect(x,y,width,height);
+Rectangle Ellipse::getBounds() const {
+  return Rectangle(x,y,width,height);
 }
 
-void UEllipse::setFrame(const URect& r) {
+void Ellipse::setFrame(const Rectangle& r) {
   x = r.x, y = r.y, width = r.width, height = r.height;
 }
 
-void UEllipse::setFrame(float _x, float _y, float _w, float _h) {
+void Ellipse::setFrame(float _x, float _y, float _w, float _h) {
   x = _x, y = _y, width = _w, height = _h;
 }
 
-bool UEllipse::contains(float xx, float yy) const {
+bool Ellipse::contains(float xx, float yy) const {
   // Normalize the coordinates compared to the ellipse
   // having a center at 0,0 and a radius of 0.5.
   if (width <= 0.0) return false;
@@ -424,18 +419,18 @@ bool UEllipse::contains(float xx, float yy) const {
   return (normx * normx + normy * normy) < 0.25;
 }
 
-bool UEllipse::contains(const UPoint& p) const {
+bool Ellipse::contains(const Point& p) const {
   return contains(p.x, p.y);
 }
   
-bool UEllipse::contains(const URect& r) const {
+bool Ellipse::contains(const Rectangle& r) const {
   return (contains(r.x, r.y)
           && contains(r.x + r.width, y)
           && contains(r.x, r.y + r.height) 
           && contains(r.x + r.width, r.y + r.height));
 }
 
-bool UEllipse::intersects(const URect& r) const {
+bool Ellipse::intersects(const Rectangle& r) const {
   if (r.width <= 0.0 || r.height <= 0.0) return false;
         
   // Normalize the rectangular coordinates compared to the ellipse
@@ -468,24 +463,23 @@ bool UEllipse::intersects(const URect& r) const {
   return (nearx * nearx + neary * neary) < 0.25;
 }
 
-/* ==================================================== ===== ======= */
 #if 0  // REVOIR contains() et intersects()
 
-struct UArc : public UShape {
+struct UArc : public Shape {
   float x, y, width, height, start, extent;
   
   UCLASS("uarc", UArc, new UArc)
   int getShapeType() const {return ARC;}  
   
   UArc();
-  UArc(const URect&, float start, float extent, int type = 0);
+  UArc(const Rectangle&, float start, float extent, int type = 0);
   UArc(float _x, float _y, float _w, float _h, float _s, float _e, int _t);
   
-  URect getBounds() const;
+  Rectangle getBounds() const;
   bool isEmpty() const {return width <= 0.0f || height <= 0.0;}
   
-  void setFrame(const URect&);
-  void setArc(const URect&, float start, float extent, int closure = 0);
+  void setFrame(const Rectangle&);
+  void setArc(const Rectangle&, float start, float extent, int closure = 0);
   void setArc(float _x, float _y, float _w, float _h, float _s, float _e, int _t);
   
   float getStart()  const {return start;}
@@ -493,41 +487,41 @@ struct UArc : public UShape {
   void setStart(float angle)  {start = angle;}
   void setExtent(float angle) {extent = angle;}
   
-  bool contains(const UPoint&) const;
-  bool contains(const URect&) const;
-  bool intersects(const URect&) const; 
+  bool contains(const Point&) const;
+  bool contains(const Rectangle&) const;
+  bool intersects(const Rectangle&) const; 
   
-  virtual void draw(const UGraph&) const;
-  virtual void fill(const UGraph&) const;
+  virtual void draw(const Graph&) const;
+  virtual void fill(const Graph&) const;
 };
 
 
 UArc::UArc() 
 : x(0), y(0), width(0), height(0), start(0), extent(0) {}
 
-UArc::UArc(const URect& r, float _s, float _e, int _t) 
+UArc::UArc(const Rectangle& r, float _s, float _e, int _t) 
 : x(r.x), y(r.y), width(r.width), height(r.height), start(_s), extent(_e) {}
 
 UArc::UArc(float _x, float _y, float _w, float _h, float _s, float _e, int _t) 
 : x(_x), y(_y), width(_w), height(_h), start(_s), extent(_e) {}
 
-URect UArc::getBounds() const {
-  return URect(x,y,width,height);
+Rectangle UArc::getBounds() const {
+  return Rectangle(x,y,width,height);
 }
 
 /*
-void UArc::set(const UPoint& p1, const UPoint& p2, float _s, float _e, int _t) {
-  URect r(p1, p2);
+void UArc::set(const Point& p1, const Point& p2, float _s, float _e, int _t) {
+  Rectangle r(p1, p2);
   x = r.x, y = r.y, width = r.width, height = r.height;
   start = _s, extent = _e;
 }
 */
 
-void UArc::setFrame(const URect& r) {
+void UArc::setFrame(const Rectangle& r) {
   x = r.x, y = r.y, width = r.width, height = r.height;
 }
 
-void UArc::setArc(const URect& r, float _s, float _e, int closure) {
+void UArc::setArc(const Rectangle& r, float _s, float _e, int closure) {
   x = r.x, y = r.y, width = r.width, height = r.height , start = _s, extent = _e;
 }
 
@@ -536,71 +530,69 @@ void UArc::setArc(float _x, float _y, float _w, float _h, float _s, float _e, in
 }
   
 // FAUX !!!!
-bool UArc::contains(const UPoint& p) const {
+bool UArc::contains(const Point& p) const {
   return (p.x >= x && p.y >= y && p.x < x+width && p.y < y+height); 
 }
 
-bool UArc::contains(const URect& r) const {
+bool UArc::contains(const Rectangle& r) const {
   return (r.x >= x && r.y >= y 
           && r.x+r.width-1 < x+width && r.y+r.height-1 < y+height); 
 }
 
-void UArc::draw(const UGraph& g) const {
+void UArc::draw(const Graph& g) const {
   g.drawArc(x, y, width, height, start, extent);
 }
 
-void UArc::fill(const UGraph& g) const {
+void UArc::fill(const Graph& g) const {
   g.fillArc(x, y, width, height, start, extent);
 }
 
 #endif
-/* ==================================================== ===== ======= */
-/* ==================================================== ===== ======= */
 
 // A big number, but not so big it can't survive a few float operations.
 static const float BIG_VALUE = FLT_MAX / 10.0;
 
-void UPolygon::draw(const UGraph& g) const {
-  if (closed) g.drawPolygon(points, npoints, UGraph::LINE_LOOP);
-  else g.drawPolygon(points, npoints, UGraph::LINE_STRIP);
+void Polygon::draw(const Graph& g) const {
+  if (closed) g.drawPolygon(points, npoints, Graph::LINE_LOOP);
+  else g.drawPolygon(points, npoints, Graph::LINE_STRIP);
 }  
 
-void UPolygon::fill(const UGraph& g) const {
-  g.drawPolygon(points, npoints, UGraph::FILLED);
+void Polygon::fill(const Graph& g) const {
+  g.drawPolygon(points, npoints, Graph::FILLED);
 } 
   
-UPolygon::UPolygon(bool _closed)
+Polygon::Polygon(bool _closed)
 : npoints(0), memsize(4), closed(_closed), points(new float[memsize]) {
 }
 
-UPolygon::UPolygon(const std::vector<UPoint>& _points, bool _closed)
+Polygon::Polygon(const std::vector<Point>& _points, bool _closed)
 : npoints(0), memsize(0), closed(_closed), points(null) {
   addPoints(_points);
 }
 
-UPolygon::UPolygon(const UPolygon& p2)
+Polygon::Polygon(const Polygon& p2)
 : npoints(0), memsize(0), closed(p2.closed), points(null) {
   addPoints(p2.points, p2.npoints);
 }
 
-UPolygon::~UPolygon() {
+Polygon::~Polygon() {
   delete [] points;
 }
 
-void UPolygon::reset() {
+void Polygon::reset() {
   npoints = 0, memsize = 0, closed = true;
   bounds.setRect(0,0,0,0);
   delete [] points;
 }
 
-UPolygon& UPolygon::operator=(const UPolygon& p2) {
+Polygon& Polygon::operator=(const Polygon& p2) {
   reset();
   closed = p2.closed;
   addPoints(p2.points, p2.npoints);
   return *this;
 }
 
-void UPolygon::augment(int n) {
+void Polygon::augment(int n) {
   int npoints2 = npoints*2;  // the array contains x0, y0, x1, y1, x2, y2...
   int n2 = n*2;
   
@@ -615,7 +607,7 @@ void UPolygon::augment(int n) {
   }
 }
 
-void UPolygon::updateBounds(float x, float y) {
+void Polygon::updateBounds(float x, float y) {
   if (npoints == 1) {
     bounds.x = x;
     bounds.y = y;
@@ -638,7 +630,7 @@ void UPolygon::updateBounds(float x, float y) {
   }  
 }
 
-UPolygon& UPolygon::addPoint(const UPoint& p) {
+Polygon& Polygon::addPoint(const Point& p) {
   augment(1);
   points[npoints*2] = p.x;
   points[npoints*2 +1] = p.y;
@@ -647,7 +639,7 @@ UPolygon& UPolygon::addPoint(const UPoint& p) {
   return *this;
 }
 
-UPolygon& UPolygon::addPoints(const std::vector<UPoint>& _points) {
+Polygon& Polygon::addPoints(const std::vector<Point>& _points) {
   augment(_points.size());
   for (unsigned int k = 0, kk = npoints*2; k < _points.size(); ++k, kk += 2) {
     points[kk] = _points[k].x;
@@ -658,7 +650,7 @@ UPolygon& UPolygon::addPoints(const std::vector<UPoint>& _points) {
   return *this;
 }
 
-UPolygon& UPolygon::addPoints(const float* _points, int _npoints) {
+Polygon& Polygon::addPoints(const float* _points, int _npoints) {
   augment(_npoints);
   unsigned int _npoints2 = _npoints*2;
   for (unsigned int k = 0, kk = npoints *2; k < _npoints2; k += 2, kk += 2) {
@@ -671,13 +663,13 @@ UPolygon& UPolygon::addPoints(const float* _points, int _npoints) {
 }
 
 /*
-void UPolygon::setFrame(const URect& r) {
+void Polygon::setFrame(const Rectangle& r) {
   points[0] = r.x;
   points[1] = r.y;
 }
 */
   
-void UPolygon::translate(float dx, float dy) {
+void Polygon::translate(float dx, float dy) {
   int npoints2 = npoints*2;  // the array contains x0, y0, x1, y1, x2, y2...
   for (int k = 0; k < npoints2; k += 2) { 
     points[k] += dx;
@@ -688,7 +680,7 @@ void UPolygon::translate(float dx, float dy) {
 }
 
 /*
-URect UPolygon::getBounds() const {
+Rectangle Polygon::getBounds() const {
   if (bounds == null) {
     if (npoints == 0) return bounds = new Rectangle();
     int i = npoints - 1;
@@ -709,7 +701,7 @@ URect UPolygon::getBounds() const {
 }
 */
 
-bool UPolygon::contains(const UPoint& p) const {
+bool Polygon::contains(const Point& p) const {
  return closed && (evaluateCrossings(p.x, p.y, false, BIG_VALUE) & 1) != 0;
 }
   
@@ -717,7 +709,7 @@ bool UPolygon::contains(const UPoint& p) const {
 * true if all points in the rectangle are in the shape. This implementation
 * is precise.
 */
-bool UPolygon::contains(const URect& r) const {
+bool Polygon::contains(const Rectangle& r) const {
   if (!closed || !getBounds().intersects(r)) return false;
   
   // Does any edge intersect?
@@ -734,7 +726,7 @@ bool UPolygon::contains(const URect& r) const {
   return false;
 }
   
-bool UPolygon::intersects(const URect& r) const {
+bool Polygon::intersects(const Rectangle& r) const {
   // does any edge intersect?
   if (evaluateCrossings(r.x, r.y, false, r.width) != 0 /* top */
     || evaluateCrossings(r.x, r.y + r.height, false, r.width) != 0 /* bottom */
@@ -752,7 +744,7 @@ bool UPolygon::intersects(const URect& r) const {
 * between the polygon and a line extending from the point (x, y) along
 * the positive X, or Y axis, within a given interval. return the winding number.
 */
-int UPolygon::evaluateCrossings(float x, float y, bool useYaxis, float distance) const {
+int Polygon::evaluateCrossings(float x, float y, bool useYaxis, float distance) const {
   int XX = 0, YY = 1;
    
   if (useYaxis) {   // the roles of X and Y are inverted
@@ -762,7 +754,7 @@ int UPolygon::evaluateCrossings(float x, float y, bool useYaxis, float distance)
   
   // Get a value which is small but not insignificant relative the path.
   float epsilon = 1E-7;
-  UPoint p0, p1;
+  Point p0, p1;
   int crossings = 0;
 
   p0.x = points[0 + XX] - x;
@@ -778,7 +770,7 @@ int UPolygon::evaluateCrossings(float x, float y, bool useYaxis, float distance)
     if (p1.y == 0.0) p1.y -= epsilon;
     
     if (p0.y * p1.y < 0) {
-      if (ULine::linesIntersect(p0, p1, UPoint(epsilon, 0.0), UPoint(distance, 0.0))) {
+      if (Line::linesIntersect(p0, p1, Point(epsilon, 0.0), Point(distance, 0.0))) {
         ++crossings;
         //cerr << " HIT "<<crossings;
       }
@@ -796,7 +788,7 @@ int UPolygon::evaluateCrossings(float x, float y, bool useYaxis, float distance)
   //cerr << "p0 " << p0.x << " " <<p0.y << " p1 " << p1.x << " " <<p1.y;
 
   if (p0.y * p1.y < 0) {
-    if (ULine::linesIntersect(p0, p1, UPoint(epsilon, 0.0), UPoint(distance, 0.0))) {
+    if (Line::linesIntersect(p0, p1, Point(epsilon, 0.0), Point(distance, 0.0))) {
       ++crossings;
       //cerr << " HIT "<<crossings;
     }

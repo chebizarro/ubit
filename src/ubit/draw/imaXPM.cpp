@@ -1,18 +1,26 @@
-/* ***********************************************************************
- *
+/*
  *  uimaXPM.cpp : glue with the XPM library.
- *  Ubit GUI Toolkit - Version 6.0
- *  (C) 2008 Eric Lecolinet | ENST Paris | www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE : 
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE 
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. 
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU 
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION; 
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
+ *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
+
 
 #include <ubit/ubit_features.h>
 #include <iostream>
@@ -60,9 +68,9 @@ static const char* nextWord(const char* s, char* word, int wordsize) {
 }
 
 
-int UImaXPM::read(UHardIma& natima, const UStr& path, int maxw, int maxh) {
-  //UAppli::error("UImaXPM::read","Not available with this implementation");
-  UStr fname = path.expand();
+int UImaXPM::read(UHardIma& natima, const String& path, int maxw, int maxh) {
+  //Application::error("UImaXPM::read","Not available with this implementation");
+  String fname = path.expand();
   if (fname.empty()) return UFilestat::CannotOpen;
   
   ifstream in(fname.c_str());
@@ -160,7 +168,7 @@ int UImaXPM::readFromData(UHardIma& natima, const char** xpmdata, int maxw, int 
           transpcolor = icode;
         else {
           URgba c;
-          UColor::parseColor(value, c);
+          Color::parseColor(value, c);
           coltab[icode].r = c.getRedI(); 
           coltab[icode].g = c.getGreenI();
           coltab[icode].b = c.getBlueI();
@@ -216,7 +224,7 @@ int UImaXPM::readFromData(UHardIma& natima, const char** xpmdata, int maxw, int 
 // -----------------------------------------------------------------------------
 #elif (UBIT_WITH_X11 && UBIT_WITH_XPM)
 
-static void initXPMattributes(UDisp* _d, XpmAttributes& a, XpmColorSymbol& sy) {
+static void initXPMattributes(Display* _d, XpmAttributes& a, XpmColorSymbol& sy) {
   UDispX11* d = (UDispX11*)_d;
   
   // cherche couleurs approchees avec une large tolerance
@@ -224,7 +232,7 @@ static void initXPMattributes(UDisp* _d, XpmAttributes& a, XpmColorSymbol& sy) {
   a.closeness = 100000;
   
   // specifier la bonne combinaison depth / visual / colormap c'est-a-dire
-  // celle qui est definie par de UDisp
+  // celle qui est definie par de Display
   a.depth = d->getBpp();
   a.colormap = d->getSysColormap();
   a.valuemask = XpmExactColors | XpmCloseness | XpmDepth | XpmColormap;
@@ -259,7 +267,7 @@ static int decodeXPMstatus(int stat) {
   }
 }
 
-int UImaXPM::read(UHardIma& natima, const UStr& path, int maxw, int maxh) {
+int UImaXPM::read(UHardIma& natima, const String& path, int maxw, int maxh) {
   UDispX11* d = (UDispX11*)natima.getDisp();
   XpmAttributes attr;
   XpmColorSymbol symbol;  
@@ -292,7 +300,7 @@ int UImaXPM::readFromData(UHardIma& natima, const char** xpmdata,
 // -----------------------------------------------------------------------------
 #elif UBIT_WITH_GDK
 
-int UImaXPM::read(UHardIma& natima, const UStr& path, int maxw, int maxh) {
+int UImaXPM::read(UHardIma& natima, const String& path, int maxw, int maxh) {
   UDispGDK* d = (UDispGDK*)natima.getDisp();
   // !! VRAIMENT BIZARRE: on cree un pixmap puis une image qui sera convertie plus tard en pixmap!!
   GdkBitmap *pixshape = null;

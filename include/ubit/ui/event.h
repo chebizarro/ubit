@@ -1,24 +1,34 @@
-/************************************************************************
- *
- *  uevent.hpp
- *  Ubit GUI Toolkit - Version 6
+/*
+ *  event.hpp
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE : 
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE 
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. 
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU 
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION; 
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
+
 
 #ifndef uevent_hpp
 #define	uevent_hpp  1
+
 #include <ubit/ubox.hpp>
 #include <ubit/ugeom.hpp>
 #include <ubit/ukey.hpp>
+
 namespace ubit {
   
   class UDataContext;
@@ -27,13 +37,13 @@ namespace ubit {
    * note that this class inherits from class UModifier that defines modifier masks
    * such as LeftButton, RightButton, etc. 
    */
-  class UEvent {
+  class Event {
   public:
-    UEvent(const UCond& c, UObject* source, UObject* aux = null);
+    Event(const Condition& c, UObject* source, UObject* aux = null);
     
-    virtual ~UEvent();
+    virtual ~Event();
     
-    const UCond& getCond() const {return *cond;}
+    const Condition& getCond() const {return *cond;}
     /**< returns the event condition that detected this event.
      * e.g.: returns 'UOn::change' if the expression was: UOn::change / ucall(...)
      */
@@ -52,43 +62,42 @@ namespace ubit {
     virtual UViewEvent*    toViewEvent()   {return null;}
     virtual UPaintEvent*   toPaintEvent()  {return null;}
     virtual UResizeEvent*  toResizeEvent() {return null;}  
-    virtual UTimerEvent*   toTimerEvent()  {return null;}
+    virtual TimerEvent*   toTimerEvent()  {return null;}
     virtual UWinEvent*     toWinEvent()    {return null;}
-    virtual UMessageEvent* toMessageEvent(){return null;}  
+    virtual MessageEvent* toMessageEvent(){return null;}  
     virtual USysWMEvent*   toSysWMEvent()  {return null;}  
-    virtual UUserEvent*    toUserEvent()   {return null;}
+    virtual UserEvent*    toUserEvent()   {return null;}
     
-    void setCond(const UCond&);
+    void setCond(const Condition&);
     
   protected:
-    const UCond* cond;  // event condition
+    const Condition* cond;  // event condition
     UObject* source;    // the object that produced this event
     UObject* aux;       // auxilliary data
   };
   
 
-  // =============================================================================
   /** Base class for UMouseEvent and UKeyEvent
    * Note that this class inherits from class UModifier that defines modifier masks 
    * such as LeftButton, RightButton... 
    */
-  class UInputEvent : public UEvent, public UModifier {     
+  class UInputEvent : public Event, public UModifier {     
   public:
-    UInputEvent(const UCond&, UView* source_view, UEventFlow*, 
+    UInputEvent(const Condition&, View* source_view, UEventFlow*, 
                 unsigned long when, int state);
 
      virtual UInputEvent* toInputEvent() {return this;}
     
-    virtual UElem* getSource() const;  
+    virtual Element* getSource() const;  
     ///< returns the object that received this event.
     
-    UView* getView() const {return source_view;}
+    View* getView() const {return source_view;}
     /**< returns the object's view that received this event.
-     * if getSource() derives from UBox, getView() returns the box's view where
+     * if getSource() derives from Box, getView() returns the box's view where
      * this event occured. null is returned otherwise.
      */
     
-    UView* getViewOf(const UBox& box) const;
+    View* getViewOf(const Box& box) const;
     /**< returns the view of 'box' that (indirectly) received this event.
      * returns the view of 'box' that contains getView() if any (null otherwise)
      */
@@ -98,15 +107,15 @@ namespace ubit {
     
     virtual int getModifiers() const;
     /**< returns an ORed mask of mouse buttons and modifiers that are pressed.
-     * Modifier masks are defined in class UModifier. They are inherited by UEvent,
+     * Modifier masks are defined in class UModifier. They are inherited by Event,
      * and thus, UInputEvent. Exemple:
      * <pre>
-     * void callbackFunc(UEvent& e) {
+     * void callbackFunc(Event& e) {
      *    if (e.getModifiers() & (e.LeftButton | e.ControlDown))
      *        // done when the left mouse button AND the control key are pressed
      * }
      * </pre>
-     * alternatively, UEvent::LeftButton or UModifier::LeftButton can be used 
+     * alternatively, Event::LeftButton or UModifier::LeftButton can be used 
      * instead of e.LeftButton
      */
     
@@ -116,24 +125,24 @@ namespace ubit {
     bool isAltDown() const;
     bool isAltGraphDown() const;
     
-    UWin* getWin() const;
+    Window* getWin() const;
     ///< returns the hard window that received this event.
     
-    UView* getWinView() const;
+    View* getWinView() const;
     ///< returns the view of the hard window that received this event.
     
     UEventFlow* getFlow() const {return eflow;}
     /**< returns the Event Flow that received this event (for two-handed interaction or groupware).
      * a Ubit application can manage 1 or several Event Flows. This is useful 
      * for two-handed interaction or groupware (each user controlling his own 
-     * pointer on the screen(s)). @see UAppli and UAppli::getFlow().
+     * pointer on the screen(s)). @see Application and Application::getFlow().
      */
     
-    UDisp* getDisp() const;
+    Display* getDisp() const;
     /**< returns the display that received this event.
      * A Ubit application can open windows on multiple displays.
-     * The default display is the UAppli.
-     * @see UAppli and UAppli::getDisp().
+     * The default display is the Application.
+     * @see Application and Application::getDisp().
      */
     
     bool dontCloseMenu() const {return modes.DONT_CLOSE_MENU;}
@@ -142,9 +151,9 @@ namespace ubit {
     // - - - Impl. - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #ifndef NO_DOC
   protected:
-    friend class UElem;
+    friend class Element;
     friend class UEventFlow;
-    friend class UView;
+    friend class View;
     friend class UFlowView;
     friend class UViewFind;
     
@@ -159,20 +168,19 @@ namespace ubit {
         
     int state;
     unsigned long when;
-    UView* source_view;    // the view that contains the mouse
+    View* source_view;    // the view that contains the mouse
     UEventFlow* eflow;     // the event flow that produced this event
-    UElem* event_observer;
+    Element* event_observer;
 #endif
   };
   
-  // =============================================================================
   /** mouse events
    * @see UOn::mpress, UOn::mrelease, UOn::mdrag, UOn::mmove for explanations.
    */
   class UMouseEvent : public UInputEvent {
   public:
-    UMouseEvent(const UCond&, UView* source, UEventFlow*, unsigned long time, int state,
-                const UPoint& pos, const UPoint& abs_pos, int btn);
+    UMouseEvent(const Condition&, View* source, UEventFlow*, unsigned long time, int state,
+                const Point& pos, const Point& abs_pos, int btn);
     
     virtual UMouseEvent* toMouseEvent() {return this;}
     
@@ -182,21 +190,21 @@ namespace ubit {
     float getY() const {return pos.y;}
     ///< returns the Y coordinate of the mouse in getView().
     
-    const UPoint& getPos() const {return pos;}
+    const Point& getPos() const {return pos;}
     ///< returns the coordinates of the mouse in getView().
     
-    const UPoint& getScreenPos() const {return abs_pos;}
+    const Point& getScreenPos() const {return abs_pos;}
     ///< returns the screen coordinates of the mouse.
     
-    UPoint getPosIn(const UView& view) const;
+    Point getPosIn(const View& view) const;
     ///< returns the coordinates of this event in this 'view'.
     
-    UPoint getPosIn(const UBox& parent_box) const;
+    Point getPosIn(const Box& parent_box) const;
     /**< returns the coordinates of this event in parent_box.
      * returns point (0,0) if the mouse is not located inside 'parent_box'.
      */
     
-    UPoint getPosAndViewIn(const UBox& parent, UView*& parent_view) const;
+    Point getPosAndViewIn(const Box& parent, View*& parent_view) const;
     /**< returns the coordinates of this event in 'parent' and the corresponding 'parent's view.
      * returns point (0,0) and 'parent_view' == null if the mouse is not located inside 'parent'.
      */
@@ -206,7 +214,7 @@ namespace ubit {
     
     int getButton() const {return button;}
     /**< returns the button that was just pressed or released.
-     * returns one of: UEvent::LeftButton, MidButton, RightButton for UOn::mpress 
+     * returns one of: Event::LeftButton, MidButton, RightButton for UOn::mpress 
      * and UOn::mrelease events. Returns 0 for UOn::mmove or UOn::mdrag events.
      * Example:
      *
@@ -233,8 +241,8 @@ namespace ubit {
     
     int getButtons() const;
     /**< returns an ORed mask of mouse buttons *after* the event occured.
-     * button mask are UEvent::LeftButton, MidButton, RightButton. They are defined
-     * in class UModifier and inherited by UEvent.
+     * button mask are Event::LeftButton, MidButton, RightButton. They are defined
+     * in class UModifier and inherited by Event.
      * see UInputEvent::getModifiers() for examples.
      */
     
@@ -242,28 +250,27 @@ namespace ubit {
     ///< translates the mouse position.
     
     void propagate() {modes.PROPAGATE = true;}
-    ///< propagates events in children: @see UElem::catchEvents().
+    ///< propagates events in children: @see Element::catchEvents().
     
     void setFirstDrag(bool s)  {modes.IS_FIRST_MDRAG = s;}
     bool isFirstDrag() const   {return modes.IS_FIRST_MDRAG;}
     bool isBrowsing()  const   {return modes.IS_BROWSING;}
     
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+      
+    String* getStr();
+    ///< returns the String object that is under the mouse (@see getData(UDataContext&)).
     
-    UStr* getStr();
-    ///< returns the UStr object that is under the mouse (@see getData(UDataContext&)).
+    String* getStr(UDataContext&);
+    ///< returns the String object that is under the mouse and related properties (@see getData(UDataContext&)).
     
-    UStr* getStr(UDataContext&);
-    ///< returns the UStr object that is under the mouse and related properties (@see getData(UDataContext&)).
+    Data* getData();
+    ///< returns the Data object that is under the mouse (@see getData(UDataContext&)).
     
-    UData* getData();
-    ///< returns the UData object that is under the mouse (@see getData(UDataContext&)).
-    
-    UData* getData(UDataContext&);
-    /**< returns the UData object that is under the mouse and related properties.
-     * - returns null if no UData object was under the mouse when this event was generated
+    Data* getData(UDataContext&);
+    /**< returns the Data object that is under the mouse and related properties.
+     * - returns null if no Data object was under the mouse when this event was generated
      * - the UDataContext argument is filled with useful info on the retreived object.
-     * - use getStr() if you are only interested in UData objects that are strings.
+     * - use getStr() if you are only interested in Data objects that are strings.
      * @see also: UDataContext
      */
     
@@ -271,15 +278,14 @@ namespace ubit {
 #ifndef NO_DOC
   protected:
     friend class UEventFlow;
-    friend class UElem;
-    friend class UView;
+    friend class Element;
+    friend class View;
     friend class UFlowView;
     int button, click_count;
-    UPoint pos, abs_pos;
+    Point pos, abs_pos;
 #endif
   };
   
-  // =============================================================================
   /** wheel events
    * @see UOn::wheel;
    */
@@ -287,9 +293,9 @@ namespace ubit {
   public:
     enum {WHEEL_DELTA = 120};
     
-    UWheelEvent(const UCond&, UView* source, UEventFlow*,
+    UWheelEvent(const Condition&, View* source, UEventFlow*,
                 unsigned long time, int state, 
-                const UPoint& pos, const UPoint& abs_pos,
+                const Point& pos, const Point& abs_pos,
                 int wheel_btn, int wheel_delta);
     
     virtual UWheelEvent* toWheelEvent() {return this;}
@@ -309,13 +315,12 @@ namespace ubit {
     int delta;
   };
   
-  // =============================================================================
   /** keyboard events
    * @see UOn::kpress, UOn::krelease, UOn::ktype for explanations.
    */
   class UKeyEvent : public UInputEvent {
   public:
-    UKeyEvent(const UCond&, UView* source, UEventFlow*, 
+    UKeyEvent(const Condition&, View* source, UEventFlow*, 
               unsigned long time, int state, 
               int keycode, short keychar);
     
@@ -336,157 +341,150 @@ namespace ubit {
     ///< changes the key code (@see UKey constants).
     
   private:
-    friend class UElem;
+    friend class Element;
     int keycode;
     short keychar;
   };
   
-  // =============================================================================
   /** view event: base class for UPaintEvent and UResizeEvent.
    */
-  class UViewEvent : public UEvent {
+  class UViewEvent : public Event {
   public:
-    UViewEvent(const UCond&, UView* source_view);
+    UViewEvent(const Condition&, View* source_view);
     virtual UViewEvent* toViewEvent() {return this;}
     
-    UBox* getSource() const;
+    Box* getSource() const;
     ///< returns the widget that received this event.
     
-    UView* getView() const {return source_view;}
+    View* getView() const {return source_view;}
     ///< returns the view of getSource() that received this event.
     
-    UDisp* getDisp() const;
+    Display* getDisp() const;
     /**< returns the display that received this event.
      * A Ubit application can open windows on multiple displays.
-     * The default display is the UAppli.
-     * @see UAppli and UAppli::getDisp().
+     * The default display is the Application.
+     * @see Application and Application::getDisp().
      */
     
   protected:
-    UView* source_view;
+    View* source_view;
   };
   
-  // =============================================================================
   /** Paint event.
    * @see:
    * - condition UOn::paint that triggers callback functions when the view is
    *   repainted. These functions can have an optional UPaintEvent argument
-   * - UGraph for drawing Ubit graphics in these callback functions
-   * - UGraph::Glpaint drawing OpenGL graphics in these callback functions
+   * - Graph for drawing Ubit graphics in these callback functions
+   * - Graph::Glpaint drawing OpenGL graphics in these callback functions
    */
   class UPaintEvent : public UViewEvent {
   public:
-    UPaintEvent(const UCond&, UView* source_view, const URect* win_clip = null);
+    UPaintEvent(const Condition&, View* source_view, const Rectangle* win_clip = null);
     
     virtual UPaintEvent* toPaintEvent() {return this;}  
 
     bool isClipSet() {return is_clip_set;}
     ///< true if the clipping zone is vaild.
     
-    void getClip(URect& r) const;
+    void getClip(Rectangle& r) const;
     /**< returns the drawing zone relatively to the origin of getView().
      * returns (0, 0, getView()->width, getView()->height) if isClipSet() is false.
      * and and empty rectangle if getView() is null
      */
     
-    const URect getClip() const {URect r; getClip(r); return r;}
-    ///< shortcut for getClip(URect& r).
+    const Rectangle getClip() const {Rectangle r; getClip(r); return r;}
+    ///< shortcut for getClip(Rectangle& r).
     
 #ifndef NO_DOC
-    virtual bool setSourceAndProps(UView*);
-    void setContext(UUpdateContext& c) {current_context = &c;}
+    virtual bool setSourceAndProps(View*);
+    void setContext(UpdateContext& c) {current_context = &c;}
     
   protected:
-    friend class UBox;
-    friend class UDisp;
-    friend class UGraph;
+    friend class Box;
+    friend class Display;
+    friend class Graph;
     
     bool is_clip_set;   // is redraw_clip valid ?
-    URect  redraw_clip;       // in window coordinates!
-    UUpdateContext* current_context;
-    UView* layout_view;
+    Rectangle  redraw_clip;       // in window coordinates!
+    UpdateContext* current_context;
+    View* layout_view;
     
     virtual void setProps(const class UViewContext&);
 #endif
   };
   
-  // =============================================================================
   /** Resize event.
    * @see:
    * - condition UOn::resize that triggers callback functions with this argument
    */
   class UResizeEvent : public UViewEvent {
   public:
-    UResizeEvent(const UCond&, UView* source_view);
+    UResizeEvent(const Condition&, View* source_view);
     virtual UResizeEvent* toResizeEvent() {return this;}  
   };
     
-  // =============================================================================
   
-  class UWinEvent : public UEvent {
+  class UWinEvent : public Event {
   public:
-    UWinEvent(const UCond&, UView* source_view, int type, int state);
+    UWinEvent(const Condition&, View* source_view, int type, int state);
     
     virtual UWinEvent* toWinEvent() {return this;}
   
-    UView* getView() const {return source_view;}    
+    View* getView() const {return source_view;}    
     int getType()  const {return type;}
     int getState() const {return state;}
     
   private:
-    UView* source_view;
+    View* source_view;
     int type, state;
   };
   
-  // =============================================================================
   /** Platform-dependent window manager events.
    */
-  class USysWMEvent : public UEvent {
+  class USysWMEvent : public Event {
   public:
-    USysWMEvent(const UCond&, UView* source_view, void* system_event);
+    USysWMEvent(const Condition&, View* source_view, void* system_event);
     
     virtual USysWMEvent* toSysWMEvent() {return this;}
     
-    UView* getView() const {return source_view;}
+    View* getView() const {return source_view;}
     void* getSysEvent() {return sys_event;}
     
   private:
-    UView* source_view;
+    View* source_view;
     void* sys_event;
   };
   
-  // =============================================================================
   /** Ubit Message events.
-   * @see UAppli::onMessage()
+   * @see Application::onMessage()
    */
-  class UMessageEvent : public UEvent {
+  class MessageEvent : public Event {
   public:
-    UMessageEvent(const UCond&, UMessagePort* port);
+    MessageEvent(const Condition&, MessagePort* port);
     
-    virtual UMessageEvent* toMessageEvent() {return this;}
+    virtual MessageEvent* toMessageEvent() {return this;}
     
     //virtual UObject* getSource() const {return (UObject*)port;}
     
-    const UStr* getMessage() const;
+    const String* getMessage() const;
     ///< returns the message string.
     
-    UMessagePort* getMessagePort() const {return (UMessagePort*)source;}
+    MessagePort* getMessagePort() const {return (MessagePort*)source;}
     ///< returns the corresponding messagge port.
     
   private:
-    friend class UMessagePortMap;
-    //UMessagePort* port;
+    friend class MessagePortMap;
+    //MessagePort* port;
   };
   
-  // =============================================================================
   /** timer event.
    * @see UTimer;
    */
-  class UTimerEvent : public UEvent {
+  class TimerEvent : public Event {
   public:
-    UTimerEvent(const UCond&, UTimer* timer, unsigned long when);
+    TimerEvent(const Condition&, UTimer* timer, unsigned long when);
     
-    virtual UTimerEvent* toTimerEvent() {return this;}
+    virtual TimerEvent* toTimerEvent() {return this;}
     
     //virtual UObject* getSource() const {return (UObject*)timer;}
     UTimer* getTimer() const {return (UTimer*)source;}
@@ -497,15 +495,14 @@ namespace ubit {
     unsigned long when;
   };
   
-  // =============================================================================
   /** User events.
    * this class is intented to be subclassed.
    */
-  class UUserEvent : public UEvent {
+  class UserEvent : public Event {
   public:
-    UUserEvent(const UCond&, UObject* source, int type, void* data);
+    UserEvent(const Condition&, UObject* source, int type, void* data);
     
-    virtual UUserEvent* toUserEvent() {return this;}
+    virtual UserEvent* toUserEvent() {return this;}
     
     //virtual UObject* getSource() const {return source;}
     int   getType() const {return type;}
@@ -517,29 +514,27 @@ namespace ubit {
     void* data;  
   };
   
-  /* ==================================================== [(c)Elc] ======= */
-  /** information on UData objects that are being retrieved 
-   *  by UEvent::getData() or UEvent::getStr().
+  /** information on Data objects that are being retrieved 
+   *  by Event::getData() or Event::getStr().
    */
   class UDataContext {
   public:
     UDataContext();
     ~UDataContext();
     
-    URect getBounds() const;
+    Rectangle getBounds() const;
     ///< return the location and the size of the data object relatively to e.getView().
     
-    // - - impl - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -   
 # ifndef NO_DOC
   //private:
-    friend class UBox;
-    friend class UView;
+    friend class Box;
+    friend class View;
     friend class UFlowView;
     friend class UEdit;
-    friend class USelection;
+    friend class Selection;
      
-    URect win_clip;
-    // in the case of multine UStr objects, the region does not contain the entire
+    Rectangle win_clip;
+    // in the case of multine String objects, the region does not contain the entire
     // string but just the line that is beneath the mouse
     
     bool exact_match;
@@ -547,20 +542,20 @@ namespace ubit {
     // false if this data is the last data object before the Mouse position
     
     long strpos, strpos2;
-    // strpos = position of the mouse in the string if data is an UStr.
+    // strpos = position of the mouse in the string if data is an String.
     
-    UChildIter it, it2;
+    ChildIter it, it2;
     // points to the data object that is located under the mouse when calling 
     // UMouseEvent::getData() or UMouseEvent::getStr().
     
-    UData* data;
-    UView* source_view;
-    UPoint win_eventpos;
+    Data* data;
+    View* source_view;
+    Point win_eventpos;
 
-    void set(UUpdateContext&, UData*, UChildIter data_iter, UChildIter end_iter, 
-             const URect&, int _strpos, bool exact_match);
-    void merge(UUpdateContext&, UData*, UChildIter data_iter, UChildIter end_iter, 
-               const URect&, bool exact_match);    
+    void set(UpdateContext&, Data*, ChildIter data_iter, ChildIter end_iter, 
+             const Rectangle&, int _strpos, bool exact_match);
+    void merge(UpdateContext&, Data*, ChildIter data_iter, ChildIter end_iter, 
+               const Rectangle&, bool exact_match);    
 # endif
   };
   

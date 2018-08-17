@@ -1,24 +1,33 @@
-/************************************************************************
- *
- *  uflag.hpp
- *  (see also UAttrs.hpp for UAttr subclasses)
- *  Ubit GUI Toolkit - Version 6
+/*
+ *  flag.hpp
+ *  (see also UAttrs.hpp for Attribute subclasses)
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE :
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION;
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
 
 #ifndef _uflag_hpp_
 #define	_uflag_hpp_ 1
+
 #include <ubit/uattr.hpp>
 #include <ubit/ucond.hpp>
+
 namespace ubit {
   
   /** Flagging conditions.
@@ -28,38 +37,38 @@ namespace ubit {
    * <pre>
    * const UFlag showStores, showMuseums;
    * 
-   *   UBox& stores = ...;  // whatever
-   *   UBox& museums = ...; // whatever
-   *   UBox& scene = ubox( showStores/stores + showMuseums/museums );
+   *   Box& stores = ...;  // whatever
+   *   Box& museums = ...; // whatever
+   *   Box& scene = ubox( showStores/stores + showMuseums/museums );
    *   
    *   // the stores appear in this box (the museums are ignored)
-   *   UBox& scene_with_stores  = ubox( uflagdef(showStores) + scene);
+   *   Box& scene_with_stores  = ubox( uflagdef(showStores) + scene);
    *
    *   // the museums appear in this box (the stores are ignored)
-   *   UBox& scene_with_museums = ubox( uflagdef(showMuseums) + scene);
+   *   Box& scene_with_museums = ubox( uflagdef(showMuseums) + scene);
    * </pre>
    *
    * !Warning: UFlag objects must not be deleted!
    * See also: UFlagdef, UPropdef.
    */
-  class UFlag : public UCond {
+  class UFlag : public Condition {
   public:
     static const UFlag none;
     
     UFlag() {}
-    virtual bool verifies(const UUpdateContext&, const UElem&) const;
+    virtual bool verifies(const UpdateContext&, const Element&) const;
   };
   
 
   // ==================================================== Ubit Toolkit =========
   /** [impl] negation of a UFlag condition.
-   * see also: UCond& operator!(const UCond&)
+   * see also: Condition& operator!(const Condition&)
    */
-  class UNotFlag : public UCond {
+  class UNotFlag : public Condition {
   public:
     const UFlag& cond;
     UNotFlag(const UFlag& c) : cond(c) {}
-    virtual bool verifies(const UUpdateContext&, const UElem&) const;
+    virtual bool verifies(const UpdateContext&, const Element&) const;
   };
   
   /** negation of a UFlag condition.
@@ -71,7 +80,7 @@ namespace ubit {
   /* [impl] Defines a flag that is inherited in the scene graph.
    *  See: UFlag.
    */
-  class UFlagdef : public UAttr {
+  class UFlagdef : public Attribute {
   public:
     UCLASS(UFlagdef)
     
@@ -86,7 +95,7 @@ namespace ubit {
     const UFlag* getFlag() const {return flag;}
     
     virtual void update();
-    virtual void putProp(UUpdateContext*, UElem&);
+    virtual void putProp(UpdateContext*, Element&);
     
   protected:
     const UFlag* flag;
@@ -105,25 +114,24 @@ namespace ubit {
     UCLASS(UPropdef)
     UPropdef();
     UPropdef(const UFlag&);
-    UPropdef(const UFlag&, UAttr&);
+    UPropdef(const UFlag&, Attribute&);
     
     virtual UPropdef& set(const UFlag&);
-    virtual UPropdef& set(UAttr&);
-    virtual UPropdef& set(const UFlag&, UAttr&);
+    virtual UPropdef& set(Attribute&);
+    virtual UPropdef& set(const UFlag&, Attribute&);
     virtual UPropdef& clear();
     
-    UAttr* getProp() const {return prop;}
-    virtual void putProp(UUpdateContext*, UElem&);
+    Attribute* getProp() const {return prop;}
+    virtual void putProp(UpdateContext*, Element&);
     
   private:
-    uptr<UAttr> prop;
+    uptr<Attribute> prop;
   };
   
-  /* ==================================================== ===== ======= */
   /* [impl] gets the value of an inherited property.
    * use UPropdef to define a property in a (direct or indirect) parent.
    */
-  class UPropval : public UAttr {
+  class UPropval : public Attribute {
   public:
     UCLASS(UPropval)
     UPropval();
@@ -132,7 +140,7 @@ namespace ubit {
     const UFlag* getFlag() const {return flag;}
     
     virtual void update();
-    virtual void putProp(UUpdateContext*, UElem&);
+    virtual void putProp(UpdateContext*, Element&);
     
   private:
     const UFlag* flag;

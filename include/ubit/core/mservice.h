@@ -1,30 +1,38 @@
-/* ==================================================== ======== ======= *
- *
- *  umservice.hpp: acess to the UMS (Ubit Mouse/Message Server) services 
- *  Ubit GUI Toolkit - Version 6
+/*
+ *  umservice.h: acess to the UMS (Ubit Mouse/Message Server) services 
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE :
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION;
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
 
 #ifndef _umservice_hpp_
 #define	_umservice_hpp_
 #include <ubit/udefs.hpp>
 #include <ubit/usocket.hpp>
+
 namespace ubit {
   
-  /** UMService: Ubit Mouse/Message Service.
+  /** MessageService: Ubit Mouse/Message Service.
    */
-  class UMService : public USocket {
+  class MessageService : public Socket {
   public:
-    UMService(const UStr& host, int port = 0);
+    MessageService(const String& host, int port = 0);
     /**< opens a connection with a remote UMS server (Ubit Mouse/Message Server).
      * This makes it possible to control the pointer(s) of a remote X display,
      * to send text or events to the windows that are located on this display,
@@ -40,16 +48,16 @@ namespace ubit {
      *  the (local or remote) host. umsd can be found in directory ubit/ums
      */
     
-    ~UMService();
+    ~MessageService();
     
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     
     /** see browseUMServers().*/
     struct BrowseReply {
-      BrowseReply(UMessageEvent&);
+      BrowseReply(MessageEvent&);
       int  flags, errorCode;
       long interfaceIndex;
-      UStr serviceName, serviceType, replyDomain;
+      String serviceName, serviceType, replyDomain;
       int  status;
       bool isRemoved() {return status == false;}
       bool isAdded()   {return status == true;}
@@ -63,8 +71,8 @@ namespace ubit {
      // such as foo(), can have 0 to 2 args)
      ums->browseUMServers( ucall(o, a, &Obj::foo) );
      ....
-     void Obj::foo(UEvent& e, Arg a) {
-     UMService::BrowseReply r(e);
+     void Obj::foo(Event& e, Arg a) {
+     MessageService::BrowseReply r(e);
      cerr << "browse: " << r.serviceName << endl;
      if (r.isAdded())
      ....;    // this UMS server has been added
@@ -77,14 +85,14 @@ namespace ubit {
     
     /** see resolveUMServer().*/
     struct ResolveReply {
-      ResolveReply(UMessageEvent&);
+      ResolveReply(MessageEvent&);
       int  flags, errorCode;
       long interfaceIndex;
-      UStr fullname, hosttarget; //, txtRecord;
+      String fullname, hosttarget; //, txtRecord;
       int  port;
     };
     
-    bool resolveUMServer(const UStr& name, UCall& callback);
+    bool resolveUMServer(const String& name, UCall& callback);
     /**< resolves a UMS server name into a IP address by using ZeroConf/Rendezvous.
      * Args:
      * - 'name' : the UMS server name to resolve
@@ -97,8 +105,8 @@ namespace ubit {
      // such as foo(), can have 0 to 2 args)
      ums->resolveUMServer(name, ucall(o, a, &Obj::foo));
      ....
-     void Obj::foo(UEvent& e, Arg a) {
-     UMService::ResolveReply r(e);
+     void Obj::foo(Event& e, Arg a) {
+     MessageService::ResolveReply r(e);
      // r.hosttarget = IP address / r.port = the port (9666 by default)
      cerr << "resolve: " << r.hosttarget << " " << r.port << endl;
      }
@@ -109,7 +117,7 @@ namespace ubit {
     
     bool browseUMSNeighbors(UCall& callback);
     /**< browse the neigbors of this UMS.
-     *  use UMService::ResolveReply in the callback function.
+     *  use MessageService::ResolveReply in the callback function.
      *  flags indicates the position and is one of 't', 'b', 'l', 'r'.
      */
     
@@ -127,7 +135,7 @@ namespace ubit {
      * args:
      * - event_flow = 0 identifies the native X event flow
      * - event_flow > 0 are alternate mouse event flows
-     * - button_mask is one of UEvent::MButton1, MButton2, MButton3...
+     * - button_mask is one of Event::MButton1, MButton2, MButton3...
      * - x and y are screen coordinates if 'absolute_coords' is true
      *   and relative to the previous location of the mouse otherwise.
      * notes:
@@ -153,13 +161,13 @@ namespace ubit {
      * Args:
      * - target = see sendMessage()
      * - x and y are relative to the target window
-     * - 'button_mask' is one of UEvent::MButton1, MButton2, MButton3...
+     * - 'button_mask' is one of Event::MButton1, MButton2, MButton3...
      * Notes:
      * - press and release events MUST be balanced.
      * - only ONE mouse button at a time (button_mask should not be ORed)
      */
     
-    bool sendMessage(const char* target, const UStr& message);
+    bool sendMessage(const char* target, const String& message);
     bool sendMessage(const char* target, const char* message);
     /**< sends a message to a target window located on the display managed by this UMS server.
      * window = name or X ID of the window, can be one of:
@@ -169,13 +177,13 @@ namespace ubit {
      * - hexadecimal ID (0x1234a)
      */
     
-    bool sendRequest(int ums_request, const UStr& data);
+    bool sendRequest(int ums_request, const String& data);
     bool sendRequest(int ums_request, const char* data = null);
     ///< sends a request to the UMS server (see UMSrequest).
     
     // - - - impl. - - - - - - - - - - - - - - - - - - - - - - - - - - -
     
-    UMService(const UStr& host, int port, const char* client_name);
+    MessageService(const String& host, int port, const char* client_name);
     ///< [impl].
     
     virtual void inputCallback();

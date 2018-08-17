@@ -1,25 +1,36 @@
-/*************************************************************************
+/**
  *
- *  ugraph.hpp: Graphics Layer
- *  Ubit GUI Toolkit - Version 6
+ *  ugraph.h: Graphics Layer
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE : 
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE 
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. 
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU 
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION; 
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
+
 
 #ifndef _ugraph_hpp_
 #define	_ugraph_hpp_ 1
+
 #include <vector>
 #include <ubit/udefs.hpp>
 #include <ubit/ucolor.hpp>
 #include <ubit/ugeom.hpp>
+
 namespace ubit {
   
   
@@ -36,21 +47,21 @@ struct UGraphAttributes {
 
   
 /** class for drawing on widgets.
-  * Widgets inherit from UBox. A box can manage one or several views. UGraph makes
+  * Widgets inherit from Box. A box can manage one or several views. Graph makes
   * it possible to draw graphic primitives on these views.
   *
-  * @see also: UBox, UView.
+  * @see also: Box, View.
  */
-class UGraph : public UGraphAttributes {
+class Graph : public UGraphAttributes {
 public:
   /** for client GL Graphics.
    */
   class Glpaint {
   public:
     Glpaint(UPaintEvent&, bool _push_attrib);
-    Glpaint(UView*, bool _push_attrib);
+    Glpaint(View*, bool _push_attrib);
     virtual ~Glpaint();
-    virtual void begin(UView*, bool _push_attrib);
+    virtual void begin(View*, bool _push_attrib);
     virtual void end();
   protected:
     static int count;
@@ -60,21 +71,21 @@ public:
   };
   
   
-  UGraph(UPaintEvent&);
+  Graph(UPaintEvent&);
   /**< constructor for drawing in a UOn::paint callback method.
    * Example:
    * <pre>
    *   void MyObj::paintCB(UPaintEvent& e) {
-    *       UGraph g(e);
-    *       g.setColor(UColor::red);  // predefined red
+    *       Graph g(e);
+    *       g.setColor(Color::red);  // predefined red
     *       g.drawRect(10, 10, 50, 50);
-    *       g.setColor(UColor(0, 0, 255, 128));  // semi-transparent blue
+    *       g.setColor(Color(0, 0, 255, 128));  // semi-transparent blue
     *       g.drawLine(10, 10, 10+50, 10+50);
     *   }
     *
     *   int main() {
     *       MyObj* obj = new MyObj();
-    *       UBox* box = new UBox();
+    *       Box* box = new Box();
     *       box->add(UOn::paint / ucall(obj, &MyObj::paintCB));
     *       .....
     *   }
@@ -85,48 +96,48 @@ public:
    * @see UCall for more details.
    *
    * The paintCB() method has a UPaintEvent& parameter that can be passed to 
-   * the UGraph constructor. This will initialize the UGraph object with appropriate
+   * the Graph constructor. This will initialize the Graph object with appropriate
    * attributes and the redraw clip corresponding to this paint event.
    *
-   * Note that UGraph objects should always be created in this way, so that they 
-   * are implicitely destroyed when the function returns. UGraph objects may not
+   * Note that Graph objects should always be created in this way, so that they 
+   * are implicitely destroyed when the function returns. Graph objects may not
    * be copied nor stored for future use.
    *
-   * font, colors, and other attributes are undefined when the UGraph object
+   * font, colors, and other attributes are undefined when the Graph object
    * is created, they must be specified by using the appropriate functions
-   * (such as UGraph::setFont(), setColor(), etc.
+   * (such as Graph::setFont(), setColor(), etc.
    *
-   * Ubit objects that derive from UBox can have multiple UView(s). The callback
+   * Ubit objects that derive from Box can have multiple View(s). The callback
    * function is then fired once for each view (and the UPaintEvent parameter
    * is set accordingly for each view)
    *
-   * Note that this constr. raises an exception if the corresponding UView is null
+   * Note that this constr. raises an exception if the corresponding View is null
    */
   
-  virtual ~UGraph();
+  virtual ~Graph();
     
-  UBox* getBox() const;
-  /**< returns the widget where this UGraph can draw on.
+  Box* getBox() const;
+  /**< returns the widget where this Graph can draw on.
     * this function is a shortcut for: getView()->getBox().
     * @see: getView().
     */
   
-  UView* getView() const {return boxview;}
-  /**< returns the view of the widget where this UGraph can draw on.
-    * widgets inherit from UBox. A box can manage one or several views.
-    * view->getBox() returns the box that owns this view (@see UView::getBox()).
+  View* getView() const {return boxview;}
+  /**< returns the view of the widget where this Graph can draw on.
+    * widgets inherit from Box. A box can manage one or several views.
+    * view->getBox() returns the box that owns this view (@see View::getBox()).
     */
   
-  UDisp* getDisp() const {return disp;}
-  ///< returns the display that is related to this UGraph.
+  Display* getDisp() const {return disp;}
+  ///< returns the display that is related to this Graph.
 
-  URect getClip() const {URect r; getClip(r); return r;}
+  Rectangle getClip() const {Rectangle r; getClip(r); return r;}
   ///< returns the drawing zone relatively to the origin of getView().
   
-  void getClip(URect&) const;
+  void getClip(Rectangle&) const;
   ///< returns the drawing zone relatively to the origin of getView().
 
-  void setClip(const URect&);
+  void setClip(const Rectangle&);
   ///< changes the drawing zone relatively to the origin of getView().
 
   // ==== Attributes ===========================================================
@@ -139,7 +150,7 @@ public:
     * @see: setXORMode(), setColor(), setBackground().
     */
     
-  void setXORMode(const UColor& background_color);
+  void setXORMode(const Color& background_color);
   /** sets the drawing mode in XOR mode.
     * In "XOR mode", drawing primitives alternates the paint and the background 
     * colors, which must be set by calling setColor() and setBackground().
@@ -154,32 +165,32 @@ public:
     * see setXORMode()
     */
   
-  void setColor(const UColor&);
+  void setColor(const Color&);
   /**< changes the paint color (which can have an alpha component).
     * The paint color is used by all drawing primitives. Example:
     * <pre>
     *   void paintCB(UPaintEvent& e) {
-    *       UGraph g(e);
-    *       g.setColor(UColor::red);  // predefined red
+    *       Graph g(e);
+    *       g.setColor(Color::red);  // predefined red
     *       g.drawRect(10, 10, 50, 50);
-    *       g.setColor(UColor(0, 0, 255, 128));  // semi-transparent blue
+    *       g.setColor(Color(0, 0, 255, 128));  // semi-transparent blue
     *       g.drawLine(10, 10, 10+50, 10+50);
     *   }
     * </pre>
     * @see also: setPaintMode(), setXORMode(), setBackground().
     */
     
-  void setColor(const UColor&, float alpha);
+  void setColor(const Color&, float alpha);
   /**< changes the paint color (forces this alpha component, in range [0,1]).
-   * @see setColor(const UColor&).
+   * @see setColor(const Color&).
    */
   
-  void setColor(const UColor&, unsigned int alpha);
+  void setColor(const Color&, unsigned int alpha);
   /**< changes the paint color (forces this alpha component, in range [0,255]).
-   * @see setColor(const UColor&).
+   * @see setColor(const Color&).
     */
     
-  void setBackground(const UColor&);
+  void setBackground(const Color&);
   /**< changes the background color.
    */
   
@@ -210,10 +221,10 @@ public:
 
   // ==== Drawing routines =====================================================
      
-  void draw(const UShape&) const;
+  void draw(const Shape&) const;
   ///< draws a shape.
   
-  void fill(const UShape&) const;
+  void fill(const Shape&) const;
   ///< fills a shape.
 
   void drawArc(double x, double y, double width, double height, 
@@ -234,18 +245,18 @@ public:
   void fillEllipse(double x, double y, double width, double height) const; 
   ///< fills an ellipse or a circle that fits in this rectangle.
   
-  void drawIma(const UIma&, double x, double y, double scale = 1.) const;
+  void drawIma(const Image&, double x, double y, double scale = 1.) const;
   ///< draws this image with this scale.
 
   void drawLine(double x1, double y1, double x2, double y2) const;
   ///< draws a line.
   
-  void drawLine(const UPoint& p1, const UPoint& p2) const;
+  void drawLine(const Point& p1, const Point& p2) const;
   ///< draws a line.
   
   static const int LINE_STRIP, LINE_LOOP, FILLED;
 
-  void drawPolygon(const std::vector<UPoint>& points, int type = LINE_LOOP) const;
+  void drawPolygon(const std::vector<Point>& points, int type = LINE_LOOP) const;
   /**< draws a polyline, polygon or a filled polygon depending on 'type'.
     * type is one of LINE_STRIP (polyline), LINE_LOOP (polygon), FILLED (filled polygon).
     */
@@ -256,10 +267,10 @@ public:
     * type is one of LINE_STRIP (polyline), LINE_LOOP (polygon), FILLED (filled polygon).
     */
      
-  void drawPolyline(const std::vector<UPoint>& points) const {drawPolygon(points, LINE_STRIP);}
+  void drawPolyline(const std::vector<Point>& points) const {drawPolygon(points, LINE_STRIP);}
   ///< draws a polyline.
      
-  void fillPolygon(const std::vector<UPoint>& points) const {drawPolygon(points, FILLED);}
+  void fillPolygon(const std::vector<Point>& points) const {drawPolygon(points, FILLED);}
   ///< fills a polygon (that must be convex).
   
   void drawRect(double x, double y, double width, double height) const;
@@ -278,7 +289,7 @@ public:
                      double arc_w, double arc_h) const;
   ///< fills a round-cornered rectangle; same arguments as fillRect(), drawRoundRect().
   
-  void drawString(const UStr& string, double x, double y) const;
+  void drawString(const String& string, double x, double y) const;
   ///< draw a character string (the current Font is used: @see setFont()).
 
   void drawString(const char* string, int length, double x, double y) const;
@@ -299,23 +310,23 @@ public:
   // === Impl. =================================================================
 #ifndef NO_DOC
 
-  UGraph(UView*);
+  Graph(View*);
   /**< constructor for drawing in a view.
-   * see UGraph(UPaintEvent&) for details.
-   * This constr. raises an exception if the UView is null
+   * see Graph(UPaintEvent&) for details.
+   * This constr. raises an exception if the View is null
    */
   
   UHardwinImpl* getHardwin() const {return hardwin;}
-  /* [Impl] returns the hard window where this UGraph can draw on.
-   * Ubit Windows (UWin and subclasses) can either be hard (system windows) or
+  /* [Impl] returns the hard window where this Graph can draw on.
+   * Ubit Windows (Window and subclasses) can either be hard (system windows) or
    * soft (simulated), in which case they are drawn on the top of a hard window.
    * getHardwin() always returns the hard window.
    */
   
-  void getHardwinClip(URect&) const; 
+  void getHardwinClip(Rectangle&) const; 
   ///< [Impl] returns the drawing zone relatively to the current hard window.
   
-  void setHardwinClip(const URect&);
+  void setHardwinClip(const Rectangle&);
   ///< [Impl] changes the drawing zone relatively to the current hard window.
   
   void set3Dmode(bool state);
@@ -326,18 +337,18 @@ public:
   static void setViewportOrtho(UHardwinImpl*);
 
 private:
-  UGraph(UGraph&);
-  UGraph& operator=(const UGraph&);
+  Graph(Graph&);
+  Graph& operator=(const Graph&);
 protected:
-  friend class UView;
+  friend class View;
   friend class U3DcanvasView;
   friend class UPaintEvent;
   friend class UFontMetrics;
   friend class URenderContext;
   friend class UGlcontext;
   friend class UX11context;
-  UDisp* disp;         // display 
-  UView* boxview;      // view where the graphics are drawn
+  Display* disp;         // display 
+  View* boxview;      // view where the graphics are drawn
   UHardwinImpl* hardwin;   // corresponding hard window 
   UHardFont* font;     // native font that is currently used
   URenderContext* rc;  // corresponding rendering context

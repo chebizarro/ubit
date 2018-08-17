@@ -1,18 +1,25 @@
-/************************************************************************
- *
- *  ucursor.cpp: Cursor Attribute
- *  Ubit GUI Toolkit - Version 6
+/*
+ *  cursor.cpp: Cursor Attribute
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE :
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION;
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
 
 #include <ubit/ubit_features.h>
 #include <ubit/ucall.hpp>
@@ -20,10 +27,11 @@
 #include <ubit/ubox.hpp>
 #include <ubit/ucolor.hpp>
 #include <ubit/uview.hpp>
-#include <ubit/uevent.hpp>
+#include <ubit/core/event.h>
 #include <ubit/uupdatecontext.hpp>
 #include <ubit/ucursor.hpp>
 #include <ubit/uappli.hpp>
+
 namespace ubit {
 
 UCursor UCursor::none(-1, UCONST);
@@ -34,11 +42,10 @@ UCursor UCursor::none(-1, UCONST);
   * ...etc...
   */
   
-/* ==================================================== ===== ======= */
 
 UCursor::UCursor(const UCursor& c) : cursor_type(c.cursor_type) {}
 UCursor::UCursor(int ctype) : cursor_type(ctype) {}
-UCursor::UCursor(int ctype, UConst m): UAttr(m), cursor_type(ctype) {}
+UCursor::UCursor(int ctype, UConst m): Attribute(m), cursor_type(ctype) {}
 
 UCursor& UCursor::set(const UCursor& c) {
   if (checkConst()) return *this;
@@ -52,36 +59,35 @@ bool UCursor::equals(const UCursor &c) const {
   return (cursor_type == c.cursor_type);
 }
 
-/* ==================================================== ===== ======= */
 
-void UCursor::addingTo(UChild& c, UElem& parent) {
-  UAttr::addingTo(c, parent);
+void UCursor::addingTo(Child& c, Element& parent) {
+  Attribute::addingTo(c, parent);
   //if (parent->isDef(0, UMode::HAS_CURSOR)) 
-  //  UAppli::warning("UCursor::addingTo","multiple UCursor bricks in object:", parent->cname());
+  //  Application::warning("UCursor::addingTo","multiple UCursor bricks in object:", parent->cname());
   // rendre parent sensitif aux events ad hoc
   parent.emodes.HAS_CURSOR = true;
 }
 
-void UCursor::removingFrom(UChild& c, UElem& parent) {
+void UCursor::removingFrom(Child& c, Element& parent) {
   // tant pis s'il y a plusieurs Cursors: de tt facon c'est une erreur
   parent.emodes.HAS_CURSOR = false;
-  UAttr::removingFrom(c, parent);
+  Attribute::removingFrom(c, parent);
 }
 
-void UCursor::putProp(UUpdateContext* ctx, UElem&) {
+void UCursor::putProp(UpdateContext* ctx, Element&) {
   ctx->cursor = this;
 }
 
 UCursor::~UCursor() {
-  if (UAppli::isExiting()) return;
+  if (Application::isExiting()) return;
   for (int k = 0; k < (int)cimpl.size(); ++k) {
-    UDisp* d = UAppli::getDisp(k);
+    Display* d = Application::getDisp(k);
     if (d) d->deleteCursorImpl(cimpl[k]);
   }
   destructs();
 }
 
-UCursorImpl* UCursor::getCursorImpl(UDisp* d) const {
+UCursorImpl* UCursor::getCursorImpl(Display* d) const {
   int id = d->getID();
   if (id < (int)cimpl.size() && cimpl[id] != null) return cimpl[id];
   else {
@@ -94,5 +100,3 @@ UCursorImpl* UCursor::getCursorImpl(UDisp* d) const {
 
 
 }
-/* ==================================================== [TheEnd] ======= */
-/* ==================================================== [(c)Elc] ======= */

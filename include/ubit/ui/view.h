@@ -1,25 +1,34 @@
-/************************************************************************
- *
- *  uview.hpp : UBox views
- *  Ubit GUI Toolkit - Version 6
+/*
+ *  view.hpp : Box views
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE :
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION;
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
 
 #ifndef _uview_hpp_
 #define	_uview_hpp_ 1
+
 #include <list>
 #include <ubit/uelem.hpp>
-#include <ubit/uevent.hpp>
+#include <ubit/core/event.h>
 #include <ubit/ugeom.hpp>
+
 namespace ubit {
   
   class UFlowView;
@@ -36,40 +45,38 @@ namespace ubit {
   class UViewProp;
   //struct UViewContext;
   
-  /* ==================================================== ===== ======= */
-  /** Specifies the View Style of an UBox.
+  /** Specifies the View Style of an Box.
    */
-  class UViewStyle : public UAttr {
+  class UViewStyle : public Attribute {
   public:
     UCLASSDEF("UViewStyle", UViewStyle, null)
 
-    UViewStyle(UView* (*)(UBox*, UView*, UHardwinImpl*), UConst);
+    UViewStyle(View* (*)(Box*, View*, UHardwinImpl*), UConst);
     virtual ~UViewStyle() {destructs();}
     
-    UView* (*createView)(UBox*, UView* parview, UHardwinImpl*);
-    ///< pointer to the corresponding UView::createView static constructor.
+    View* (*createView)(Box*, View* parview, UHardwinImpl*);
+    ///< pointer to the corresponding View::createView static constructor.
     
-    virtual void addingTo(UChild&, UElem& parent);
-    virtual void removingFrom(UChild&, UElem& parent);
+    virtual void addingTo(Child&, Element& parent);
+    virtual void removingFrom(Child&, Element& parent);
     ///< NOTE that this function require a specific destructor.
   };
   
-  /* ==================================================== ===== ======= */
   /** Box View.
-   *  UBox objects (and subclasses except UWin) can have several views.
-   *  these views can be retrieved by methods UBox::getView(), UBox::getViews(), etc.
+   *  Box objects (and subclasses except Window) can have several views.
+   *  these views can be retrieved by methods Box::getView(), Box::getViews(), etc.
    *  
-   *  Note: UWin objects (and subclasses) have only onse (shared) view that
+   *  Note: Window objects (and subclasses) have only onse (shared) view that
    *  is called the "window view".
    */
-  class UView : public URect {
+  class View : public Rectangle {
   public:
-    UCLASSDEF("UView", UView, null)
+    UCLASSDEF("View", View, null)
     
     static UViewStyle style;
     
-    UView(UBox*, UView* parview, UHardwinImpl*);
-    virtual ~UView();
+    View(Box*, View* parview, UHardwinImpl*);
+    virtual ~View();
     
     virtual UFlowView*  toFlowView()  {return null;}
     virtual UTableView* toTableView() {return null;}
@@ -87,19 +94,19 @@ namespace ubit {
     float getHeight() const {return height;}
     ///< returns the height of the view.
     
-    UDimension getSize() const;
+    Dimension getSize() const;
     ///< returns the size of the view.
     
-    void setSize(const UDimension&);
+    void setSize(const Dimension&);
     /**< changes the size of the view (see details).
      * Note that most box views are layed out automatically. Calling setSize()
      * on such views won't have the expected effect because their size is 
      * controlled by the layout manager.
      */
     
-    static UPoint convertPosTo(const UView& to, const UView& from, const UPoint& pos_in_from);
+    static Point convertPosTo(const View& to, const View& from, const Point& pos_in_from);
     /**< converts position in 'from' view to position in 'to' view.
-     * both views must be on the same UDisp. returns false if the conversion failed.
+     * both views must be on the same Display. returns false if the conversion failed.
      */
     
     float getX() const;
@@ -108,22 +115,22 @@ namespace ubit {
     float getY() const;
     ///< returns the y position of the view relatively to its parent origin. 
     
-    UPoint getPos() const;
+    Point getPos() const;
     ///< returns the position of the view relatively to its parent origin. 
     
-    UPoint getPosIn(UView& ref_view) const;
+    Point getPosIn(View& ref_view) const;
     ///< returns the position of the view relatively to the view given as an argument. 
 
-    UPoint getScreenPos() const;
+    Point getScreenPos() const;
     ///< returns the position of the view relatively to the screen origin. 
     
-    UPoint getGLPos() const;
+    Point getGLPos() const;
     /**< returns the position of the view relatively to its hard window in GL coordinates.
      * y is relative to the BOTTOM left corner.
      * @see getHardwinPos() to obtain x,y in 'normal' coordinates
      */
     
-    UPoint getHardwinPos() const;
+    Point getHardwinPos() const;
     /**< returns the position of the view relatively to its hard window. 
      * y is relative to the TOP left corner
      * - @see getGLPos() to obtain x,y in OpenGL coordinates
@@ -145,52 +152,52 @@ namespace ubit {
      * returns false if the conversion did not succeeded.
      */
     
-    UBox* getBox() const {return box;}
+    Box* getBox() const {return box;}
     ///< returns the widget that controls this view.
     
-    UBox* getBoxParent() const;
-    ///< returns the closest UBox parent of getBox() (which is not necessarily a direct parent).
+    Box* getBoxParent() const;
+    ///< returns the closest Box parent of getBox() (which is not necessarily a direct parent).
     
-    UView* getParentView() const {return parview;}
+    View* getParentView() const {return parview;}
     ///< returns the parent view (if any, null for window views).
     
-    UDisp* getDisp() const;
+    Display* getDisp() const;
     ///< returns the Display where this view is displayed.
     
-    UWin* getWin() const;
+    Window* getWin() const;
     ///< returns the Window where this view is displayed.
     
-    UView* getWinView() const;
+    View* getWinView() const;
     ///< returns the view of the Window where this view is displayed.
     
     UHardwinImpl* getHardwin() const {return hardwin;}
     ///< returns the hard window that contains this view.
         
-    bool isChildOf(const std::vector<UView*>& parent_views);
+    bool isChildOf(const std::vector<View*>& parent_views);
     
     // - - - Impl - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  
 
-    virtual bool containsWC(const UPoint& pos_in_win);
+    virtual bool containsWC(const Point& pos_in_win);
     ///< returns true if this point (in window coordinates) in contained in this view.
     
-    virtual void updateLayout(const UDimension* force_size, bool upd_paint_data = true);
+    virtual void updateLayout(const Dimension* force_size, bool upd_paint_data = true);
     ///< [Impl] updates layout coordinates.
 
-    virtual void updatePaintData(const URect* region = null);
+    virtual void updatePaintData(const Rectangle* region = null);
     /**< [Impl] updates paint data (but does not paint).
      * certain coordinates (related to scrolling etc.) are updated while painting.
      * this function updates them without acutally painting
      */
     
-    virtual void updatePaint(const URect* region = null);
+    virtual void updatePaint(const Rectangle* region = null);
     /**< [Impl] paints this view or a part of this view.
      * note that 'region', must be in window coordinates if provided.
      */         
 
-    virtual UView* findSource(UViewFind&, UPoint& pos_in_src);
+    virtual View* findSource(UViewFind&, Point& pos_in_src);
     ///< [Impl].
     
-    virtual UView* findSourceNext(UViewFind&, UPoint& pos_in_src);
+    virtual View* findSourceNext(UViewFind&, Point& pos_in_src);
     ///< [Impl].
     
     enum FindMode {FIND_CLIP, FIND_VIEW_CONTEXT, FIND_PARENT_CONTEXT};
@@ -198,8 +205,8 @@ namespace ubit {
     virtual bool findContext(UViewContext&, FindMode);
     ///< [Impl].
     
-    virtual UData* findData(UDataContext&, const UPoint& pos,
-                            const UData* searched_data, int strpos1, int strpos2);
+    virtual Data* findData(UDataContext&, const Point& pos,
+                            const Data* searched_data, int strpos1, int strpos2);
     ///< [Impl].
 
 #ifndef NO_DOC
@@ -223,7 +230,7 @@ namespace ubit {
     
     typedef std::list<UViewProp*> UViewProps;
     
-    static UView* createView(UBox*, UView* parview, UHardwinImpl*);
+    static View* createView(Box*, View* parview, UHardwinImpl*);
     // createView() is a static constructor used by UViewStyle to make a new view.
     
     void operator delete(void*);
@@ -244,7 +251,7 @@ namespace ubit {
     virtual UViewStyle* getViewStyle() {return &style;}
     // returns the default view style.
     
-    UView* getNext() {return next;}
+    View* getNext() {return next;}
     // returns the next view in the list (if any, null otherwise).
     
     template <typename T> T* getProp(T*& p) { 
@@ -264,8 +271,8 @@ namespace ubit {
     void incrVFlexCount() {++vflex_count;}
     void setScale(float s) {scale = s;}
     
-    virtual bool doLayout(UUpdateContext&, UViewLayout&);
-    virtual void doUpdate(UUpdateContext&, URect r, URect clip, UViewUpdate&);
+    virtual bool doLayout(UpdateContext&, UViewLayout&);
+    virtual void doUpdate(UpdateContext&, Rectangle r, Rectangle clip, UViewUpdate&);
 
   protected:
     int vmodes;              // modes of this view
@@ -273,76 +280,76 @@ namespace ubit {
     float chwidth, chheight; // size occupied by children
     float edit_shift;        // for UEdit
     unsigned short hflex_count, vflex_count; // number of horiz and vert flexible children
-    UView* parview;          // parent view
-    UBox* box;               // corresponding UBox
+    View* parview;          // parent view
+    Box* box;               // corresponding Box
     UHardwinImpl* hardwin;   // hard window 
-    UView* next;	           // next view
+    View* next;	           // next view
     UViewProps props;
     
-    void setParentView(UView* parent_view);
-    void setNext(UView* v) {next = v;}
+    void setParentView(View* parent_view);
+    void setNext(View* v) {next = v;}
             
-    virtual void doLayout2(UViewLayoutImpl&, UElem&, UUpdateContext&, UViewLayout&);
+    virtual void doLayout2(UViewLayoutImpl&, Element&, UpdateContext&, UViewLayout&);
     
-    virtual void doUpdate2(UViewUpdateImpl&, UElem&, UUpdateContext&,
-                           URect& r, URect& clip, UViewUpdate&);
+    virtual void doUpdate2(UViewUpdateImpl&, Element&, UpdateContext&,
+                           Rectangle& r, Rectangle& clip, UViewUpdate&);
     
-    virtual bool updatePos(UViewUpdateImpl&, UElem&, UUpdateContext& curctx,
-                           URect& r, URect& clip, UViewUpdate&);
+    virtual bool updatePos(UViewUpdateImpl&, Element&, UpdateContext& curctx,
+                           Rectangle& r, Rectangle& clip, UViewUpdate&);
     
-    virtual void beginUpdate3d(UViewUpdateImpl&, UElem&, UUpdateContext& curctx);
-    virtual void endUpdate3d(UViewUpdateImpl&, UElem&, UUpdateContext& curctx);
+    virtual void beginUpdate3d(UViewUpdateImpl&, Element&, UpdateContext& curctx);
+    virtual void endUpdate3d(UViewUpdateImpl&, Element&, UpdateContext& curctx);
     
-    virtual UView* findInBox(UBox*, const UPoint& winpos, const UUpdateContext&, UViewFind&);
-    virtual UView* findInGroup(UElem*, const UPoint& winpos, const UUpdateContext&, UViewFind&);
-    virtual UView* findInChildren(UElem*, const UPoint& winpos, const UUpdateContext&, UViewFind&);
+    virtual View* findInBox(Box*, const Point& winpos, const UpdateContext&, UViewFind&);
+    virtual View* findInGroup(Element*, const Point& winpos, const UpdateContext&, UViewFind&);
+    virtual View* findInChildren(Element*, const Point& winpos, const UpdateContext&, UViewFind&);
     
-    virtual bool findDataV(UUpdateContext&, UChildIter data_iter, UChildIter end_iter, 
-                           const URect&, UViewUpdate&);
-    virtual bool findDataH(UUpdateContext&, UChildIter data_iter, UChildIter end_iter, 
-                           const URect&, UViewUpdate&);
-    virtual bool findDataPtr(UUpdateContext&, UChildIter data_iter, UChildIter end_iter, 
-                             const URect&, UViewUpdate&);
+    virtual bool findDataV(UpdateContext&, ChildIter data_iter, ChildIter end_iter, 
+                           const Rectangle&, UViewUpdate&);
+    virtual bool findDataH(UpdateContext&, ChildIter data_iter, ChildIter end_iter, 
+                           const Rectangle&, UViewUpdate&);
+    virtual bool findDataPtr(UpdateContext&, ChildIter data_iter, ChildIter end_iter, 
+                             const Rectangle&, UViewUpdate&);
     
-    static void initLayoutH(UViewUpdateImpl& vd, const UUpdateContext& curp, const URect& r);
-    static void initLayoutV(UViewUpdateImpl& vd, const UUpdateContext& curp, const URect& r);
-    static void initLayoutViewport(UViewUpdateImpl& vd, const UUpdateContext& curp, const URect& r);
-    static void layoutH(UViewUpdateImpl& vd, const UUpdateContext& curp, UChildIter link,
-                        const UDimension& dim, UElem* chgrp, UView* chview);
-    static void layoutV(UViewUpdateImpl& vd, const UUpdateContext& curp, UChildIter link,
-                        const UDimension& dim, UElem* chgrp, UView* chview);
-    static void layoutViewport(UViewUpdateImpl& vd, const UUpdateContext& curp,
-                               UChildIter link, const UDimension& dim, UView* chview);
+    static void initLayoutH(UViewUpdateImpl& vd, const UpdateContext& curp, const Rectangle& r);
+    static void initLayoutV(UViewUpdateImpl& vd, const UpdateContext& curp, const Rectangle& r);
+    static void initLayoutViewport(UViewUpdateImpl& vd, const UpdateContext& curp, const Rectangle& r);
+    static void layoutH(UViewUpdateImpl& vd, const UpdateContext& curp, ChildIter link,
+                        const Dimension& dim, Element* chgrp, View* chview);
+    static void layoutV(UViewUpdateImpl& vd, const UpdateContext& curp, ChildIter link,
+                        const Dimension& dim, Element* chgrp, View* chview);
+    static void layoutViewport(UViewUpdateImpl& vd, const UpdateContext& curp,
+                               ChildIter link, const Dimension& dim, View* chview);
 #endif
   private:
-    friend class UBox;
-    friend class UWin;
+    friend class Box;
+    friend class Window;
     friend class UHardwinImpl;
     friend class USubwin;
-    friend class UChild;
+    friend class Child;
     friend class UViewLayoutImpl;
     friend class UViewUpdateImpl;
     friend class UAppliImpl;
     friend class UInputEvent;
     friend class UEventFlow;
     friend class U3DcanvasView;
-    UView(const UView&);
-    UView& operator=(const UView&);  // assigment is forbidden
+    View(const View&);
+    View& operator=(const View&);  // assigment is forbidden
   };
   
   // ==================================================== ===== ======= //
   
-  class UFlowView: public UView {
+  class UFlowView: public View {
   public:
     UCLASSDEF("UFlowView", UFlowView, null)
 
     static UViewStyle style;  // renderer
     virtual UViewStyle* getViewStyle() {return &style;}
     
-    UFlowView(UBox*, UView* parview, UHardwinImpl*);
+    UFlowView(Box*, View* parview, UHardwinImpl*);
     virtual ~UFlowView();
     
-    static UView* createView(UBox*, UView* parview, UHardwinImpl*);
+    static View* createView(Box*, View* parview, UHardwinImpl*);
     
     virtual UFlowView* toFlowView() {return this;}
     ///< pseudo dynamic cast: returns this object if it a a UFlowView.
@@ -350,8 +357,8 @@ namespace ubit {
     virtual bool caretPosToXY(long caret_pos, int& xcol, int& yline) const; // ex int
     virtual bool xyToCaretPos(int xcol, int yline, long& caret_pos) const;
     
-    virtual bool doLayout(UUpdateContext& parent_context, UViewLayout&);
-    virtual void doUpdate(UUpdateContext& parent_context, URect r, URect clip, UViewUpdate&);
+    virtual bool doLayout(UpdateContext& parent_context, UViewLayout&);
+    virtual void doUpdate(UpdateContext& parent_context, Rectangle r, Rectangle clip, UViewUpdate&);
     
     float getMaxWidth() const;
     
@@ -365,17 +372,17 @@ namespace ubit {
     int alloc_line_count, alloc_cell_count;
     
     //NB: pour des raiason historiquesflowview utilise des fonctions differentes
-    // de sa superclasse UView
-    void flowDoLayout(UFlowLayoutImpl&, UElem&, UUpdateContext&, UMultiList&);
-    void flowDoUpdate(UFlowUpdateImpl&, UUpdateContext&, UElem&, UMultiList&,
-                      const URect& r, URect& clip, UViewUpdate&);
+    // de sa superclasse View
+    void flowDoLayout(UFlowLayoutImpl&, Element&, UpdateContext&, UMultiList&);
+    void flowDoUpdate(UFlowUpdateImpl&, UpdateContext&, Element&, UMultiList&,
+                      const Rectangle& r, Rectangle& clip, UViewUpdate&);
     
     //NB: NOT virtual: these functions are used instead of findDataV, findDataH, findDataPtr
-    bool flowFindDataPos(UUpdateContext&, UChildIter data_it, UChildIter end_it, 
-                         UFlowCell*, const URect&, UViewUpdate&);
+    bool flowFindDataPos(UpdateContext&, ChildIter data_it, ChildIter end_it, 
+                         UFlowCell*, const Rectangle&, UViewUpdate&);
     
-    bool flowFindDataPtr(UUpdateContext&, UChildIter data_it, UChildIter end_it,
-                         UFlowCell*, const URect&, UViewUpdate&);
+    bool flowFindDataPtr(UpdateContext&, ChildIter data_it, ChildIter end_it,
+                         UFlowCell*, const Rectangle&, UViewUpdate&);
   };
   
   

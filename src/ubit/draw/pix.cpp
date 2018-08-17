@@ -1,18 +1,26 @@
-/* ***********************************************************************
- *
+/*
  *  uima.cpp: Images
- *  Ubit GUI Toolkit - Version 6.0
- *  (C) 2008 Eric Lecolinet | ENST Paris | www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE : 
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE 
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. 
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU 
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION; 
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
+ *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
+
 
 #include <ubit/ubit_features.h>
 #include <list>
@@ -26,7 +34,7 @@
 #include <ubit/ustr.hpp>
 #include <ubit/uxpm.hpp>
 #include <ubit/upix.hpp>
-#include <ubit/uevent.hpp>
+#include <ubit/core/event.h>
 #include <ubit/uappli.hpp>
 #include <ubit/uwin.hpp>
 #include <ubit/uupdate.hpp>
@@ -36,31 +44,30 @@ using namespace std;
 namespace ubit {
 
 
-//NOTE: en mode OpenGL UPix == UIma (et de toute facon, asupprimer a terme)
+//NOTE: en mode OpenGL UPix == Image (et de toute facon, asupprimer a terme)
 
-/* ==================================================== ===== ======= */
 
-UPix::UPix(const char* file_name, bool load_now) : UIma(file_name) {
+UPix::UPix(const char* file_name, bool load_now) : Image(file_name) {
   show_unknown_ima = true;
   if (load_now) loadNow();
 }
 
-UPix::UPix(const UStr& file_name, bool load_now)  : UIma(file_name) {
+UPix::UPix(const String& file_name, bool load_now)  : Image(file_name) {
   show_unknown_ima = true;
   if (load_now) loadNow();
 }
 
-UPix::UPix(const char** xpm_data, bool load_now) : UIma(xpm_data) {
+UPix::UPix(const char** xpm_data, bool load_now) : Image(xpm_data) {
   show_unknown_ima = true;
   if (load_now) loadNow();
 }
 
-UPix::UPix(const char** xpm_data, UConst c) : UIma(xpm_data, c) {
+UPix::UPix(const char** xpm_data, UConst c) : Image(xpm_data, c) {
   show_unknown_ima = true;
 }
 
 UPix::~UPix() {
-  //!att: appel necessaire car ~UIma appelara le cleanCache de UIma
+  //!att: appel necessaire car ~Image appelara le cleanCache de Image
   // (l'appel des fct virtuelles ne l'est dans dans les destructeurs!)
   cleanCache();
 }
@@ -72,21 +79,20 @@ void UPix::cleanCache() {
   }
   natpixs.clear();
 #endif
-  UIma::cleanCache();
+  Image::cleanCache();
 }
 
 
-void UPix::getSize(UUpdateContext& props, UDimension& dim) const {
-  UIma::getSize(props, dim);
+void UPix::getSize(UpdateContext& props, Dimension& dim) const {
+  Image::getSize(props, dim);
 }
 
-/* ==================================================== ======== ======= */
 
-void UPix::paint(UGraph& g, UUpdateContext& props, const URect& r) const {
-  if (UAppli::isUsingGL()) {
-    // en mode GL on utilise le paint() de UIma, donc UGraph::drawGLIma()
+void UPix::paint(Graph& g, UpdateContext& props, const Rectangle& r) const {
+  if (Application::isUsingGL()) {
+    // en mode GL on utilise le paint() de Image, donc Graph::drawGLIma()
     // les UHardPix ne sont donc jamais utilises dans ce cas
-    UIma::paint(g, props, r);
+    Image::paint(g, props, r);
     return;  // !! on sort!
   }
   
@@ -114,10 +120,9 @@ void UPix::paint(UGraph& g, UUpdateContext& props, const URect& r) const {
 */
 }
 
-/* ==================================================== ======== ======= */
 #if WITH_2D_GRAPHICS
 
-UHardPix* UPix::getOrCreatePix(UDisp* d, float scale) const {
+UHardPix* UPix::getOrCreatePix(Display* d, float scale) const {
   unsigned int did = d->getID();
   
   // on n'utilise le pixmap tel quel QUE SI il a la meme taille 
@@ -126,7 +131,7 @@ UHardPix* UPix::getOrCreatePix(UDisp* d, float scale) const {
     return natpixs[did];
   }
 
-  UHardIma* ni = UIma::getOrCreateIma(d, scale);
+  UHardIma* ni = Image::getOrCreateIma(d, scale);
   if (ni) {
     // agrandir liste
     for (unsigned int k = natpixs.size(); k <= did; k++) natpixs.push_back(null);
@@ -136,7 +141,7 @@ UHardPix* UPix::getOrCreatePix(UDisp* d, float scale) const {
     if (dynamic_cast<UHardIma2D*>(ni)) 
       natpixs[did] = new UHardPix(d, (UHardIma2D*)ni);
     else
-      UAppli::internalError("UPix::getOrCreatePix","Wrong UHardIma type");
+      Application::internalError("UPix::getOrCreatePix","Wrong UHardIma type");
 
     if (natpixs[did]) {  	// cas normal: draw the natpix
       natpixs[did]->scale = scale;
@@ -696,7 +701,6 @@ const char *UXpm::metal[] = {
 "VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVOVVVOVOSVOQSROUOVOOVOUOOVOOOUOOSOOOOOOOOOOOOOOOOOPOOOSOOOOOOOOOOOOOMKNMNIOHOOHLOHOHOHHHOHHHHHHHJHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHGFHAGBHAHEHAHHHAHFCFHAHHHCHHHHHHHHHHHHHHHHHLHIHOHKHOHLKLOHOLKLKOOHOOOHOHOHOOHOHOHOHOHKLOJOMOOOOOOOOOOOOOOOOOOOOOOOOOOTOVOPQSQTOVOVOPVOVOVOVORVOVOVQTQVTUVTVVVVVVVVVVVVVVVVVVVVVVV",
 "VVVVVVVVVVVVVVRQOROOOOOOOPOOOOROOOOVOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOLOKOINMKOLJMOHKMNKLIHOHHJHHOHHHHHHHOHHHHHHHHHHHHHHHHHHHGBHHGHAHHHBGAHEAHAAEAAAGAAAGAAAAAAAAAAABAEAAEAHAAHAAAHCAAHAGDAHAHAFAHAHAHHGHHHHHHHHHGHHHHHHHHHHHHHHHHHHHHHHHJHLHHHHKHHHMHJHLHHHHHHHHLHHKHHOHOHOHOHOOOOOOOOOOJOMOOOOOOOOOOOOOSOOOSOOOOVOOOTOOQOPOUOVORVVVVVVVVVVVVVVVVVVV",
 };
-/* ==================================================== ======== ======= */
 
 const char *UXpm::velin[] = {
   "40 40 2 1",
@@ -744,7 +748,6 @@ const char *UXpm::velin[] = {
   "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
 };
 
-/* ==================================================== ===== ======= */
 
 const char* UXpm::hslider[] = {
 "36 15 38 1",
@@ -963,7 +966,6 @@ const char * UXpm::stop[] = {
   "    OOOOOOOO.   "
 };
 
-/* ==================================================== ======== ======= */
 // predefined Pixmaps with transparent (ie. shaped) background
  
 UPix UPix::folder(UXpm::folder, UCONST);

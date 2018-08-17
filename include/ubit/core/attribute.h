@@ -53,7 +53,7 @@ namespace ubit {
    *    class Demo {
    *    public:
    *       void colorCB(Color* c);
-   *       void boxCB(UEvent& e);
+   *       void boxCB(Event& e);
    *       ....
    *    };
    *
@@ -89,11 +89,11 @@ namespace ubit {
    *
    * will call d->boxCB(event) when the value of any property of btn is changed.
    * In this case, color is the only property, and boxCB is fired when color
-   * is modified. The UEvent& argument of boxCB() makes it possible to retrieve
+   * is modified. The Event& argument of boxCB() makes it possible to retrieve
    * the color property as follows:
    * 
    * <pre>
-   *    void Demo::boxCB(UEvent& e) {
+   *    void Demo::boxCB(Event& e) {
    *      Color* c = null;
    *      if (e.getTarget()) c = dynamic_cast<Color*>(e.getTarget());
    *      ....
@@ -133,11 +133,10 @@ namespace ubit {
      * does nothing if not applicable for a given subclass.
      */
     
-    virtual void initNode(UDoc*, Element* parent) {}
+    virtual void initNode(Document*, Element* parent) {}
     ///< called when the document is created.
 
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    
+      
     virtual Attribute& onChange(UCall&);
     /**< adds a callback that is fired when the value of the property is modified.
      * @see an example in the Attribute doc.
@@ -152,8 +151,8 @@ namespace ubit {
      * parents' UOn::propChange callbacks
      */
     
-    virtual void putProp(UUpdateContext*, Element&) {}
-    ///< [impl] changes corresponding value in the UUpdateContext
+    virtual void putProp(UpdateContext*, Element&) {}
+    ///< [impl] changes corresponding value in the UpdateContext
     
   protected:
     friend class Box;

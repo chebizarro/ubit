@@ -1,24 +1,33 @@
-/************************************************************************
- *
- *  uviewImpl.hpp : internal implementation of UView
- *  Ubit GUI Toolkit - Version 6
+/*
+ *  viewImpl.hpp : internal implementation of View
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE :
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION;
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
 
 #ifndef _uviewImpl_hpp_
 #define	_uviewImpl_hpp_ 1
-#include <ubit/uevent.hpp>
+
+#include <ubit/core/event.h>
 #include <ubit/uborder.hpp>
 #include <ubit/uupdatecontext.hpp>
+
 namespace ubit {
   
   class U3DcanvasView;
@@ -37,8 +46,8 @@ namespace ubit {
     bool SOURCE_IN_MENU;   ///< is the source (indirectly) included in a menu?.
     bool DONT_CLOSE_MENU;     ///< the source does not close menus.
     const UCursor* cursor;
-    UElem* browsing_group;
-    UBox* event_observer;
+    Element* browsing_group;
+    Box* event_observer;
   };
   
   // ==================================================== ===== =======
@@ -51,8 +60,8 @@ namespace ubit {
   
   // used by motion/resize callbacks to check if pos/size has changed.
   struct UViewChangeCallbackProp : public UViewProp {
-    UPoint pos;
-    UDimension size;
+    Point pos;
+    Dimension size;
   };
   
   // used by the keep size mode of USize
@@ -62,8 +71,8 @@ namespace ubit {
   };
   
   // border padding of this view.
-  struct UViewBorderProp : public UViewProp, public UPaddingSpec {
-    UViewBorderProp() : UPaddingSpec(0,0) {}
+  struct UViewBorderProp : public UViewProp, public PaddingSpec {
+    UViewBorderProp() : PaddingSpec(0,0) {}
   };
   
   // used by to force position.
@@ -79,11 +88,11 @@ namespace ubit {
   public:
     UViewContext();
     ~UViewContext();    
-    UView::FindMode find_mode;
+    View::FindMode find_mode;
     bool is_clip_set;    // is clip valid ?
-    URect clip;
-    UUpdateContext* upd_context;  // set if get_upd_context is true
-    UView* layout_view;  // layout should take place from this view.
+    Rectangle clip;
+    UpdateContext* upd_context;  // set if get_upd_context is true
+    View* layout_view;  // layout should take place from this view.
   };
   
   // ==================================================== ===== =======
@@ -91,20 +100,20 @@ namespace ubit {
   
   class UViewFind {
   public:
-    UViewFind(UView* win_view, const UPoint pos_in_win,
+    UViewFind(View* win_view, const Point pos_in_win,
               UBehavior::InputType intype, unsigned char catch_mask);
-    void updateProps(UView*, UElem*, const UUpdateContext& cur_ctx);
+    void updateProps(View*, Element*, const UpdateContext& cur_ctx);
     
-    UView* ref_view;             // window or 3Dwidget view (if canvas_view != null)
-    UPoint ref_pos;              // pos in ref_view (whatever it is)
+    View* ref_view;             // window or 3Dwidget view (if canvas_view != null)
+    Point ref_pos;              // pos in ref_view (whatever it is)
     U3DcanvasView* canvas_view;  // != null if the source is in a 3Dwidget
     U3Dpos* refpos_in_canvas;    // 3Dpos of the 3Dwidget in canvas_view (if it is != null)
     
     UWinUpdateContext win_ctx;
-    UUpdateContext found_ctx;
+    UpdateContext found_ctx;
     unsigned char CATCH_MASK;
-    UBox* catched;
-    UBox* uncatchable;
+    Box* catched;
+    Box* uncatchable;
     UBehavior bp;
   };
   
@@ -114,7 +123,7 @@ namespace ubit {
   class UViewLayout {
   public:
     enum Strategy {BOXVIEW, GET_HINTS, IMPOSE_WIDTH, NESTED} strategy;
-    UDimension dim;
+    Dimension dim;
     float spec_w, min_w, max_w;
     float spec_h, min_h, max_h;
     UViewLayout() : strategy(BOXVIEW) {}
@@ -122,14 +131,14 @@ namespace ubit {
   
   class UViewLayoutImpl {
   public:
-    UViewLayoutImpl(UView*);
-    void computeWidth(const UUpdateContext& curp, const UPaddingSpec&,
+    UViewLayoutImpl(View*);
+    void computeWidth(const UpdateContext& curp, const PaddingSpec&,
                       UViewLayout&, bool minmax_defined);
-    void computeHeight(const UUpdateContext& curp, const UPaddingSpec&,
+    void computeHeight(const UpdateContext& curp, const PaddingSpec&,
                        UViewLayout&, bool minmax_defined);
     
-    UView* view;
-    int visibleElemCount;  // UBox or UData (not UElem, not a PosBox)
+    View* view;
+    int visibleElemCount;  // Box or Data (not Element, not a PosBox)
     float chwidth, pos_chwidth, chheight, pos_chheight;  // ex int
     unsigned char orient;
     bool mustLayoutAgain;
@@ -148,8 +157,8 @@ namespace ubit {
       //evntuellement superposees, voir note dans UViewUpdateData ci-dessous)
       //PAINT_CHANGED, // Just paint objects whose size or pos has changed
       UPDATE_DATA,     // Just update data, do not paint
-      FIND_DATA_POS,   // Locate an UData from its pos - do NOT paint it
-      FIND_DATA_PTR    // Locate an UData from a link or a pointer
+      FIND_DATA_POS,   // Locate an Data from its pos - do NOT paint it
+      FIND_DATA_PTR    // Locate an Data from a link or a pointer
     };
     
     Mode mode;
@@ -175,21 +184,21 @@ namespace ubit {
   };
   
   
-  class UViewUpdateImpl : public URect {
+  class UViewUpdateImpl : public Rectangle {
   public:
-    UViewUpdateImpl(UView*, const URect& r, UViewUpdate&);
+    UViewUpdateImpl(View*, const Rectangle& r, UViewUpdate&);
     virtual ~UViewUpdateImpl();
     
-    virtual void updateBackground(UGraph&, UUpdateContext&, 
-                                  const URect &r, const URect& clip);
-    virtual void setPadding(UGraph&, const UUpdateContext&, 
-                            const URect &r, bool add_frame_and_paddind);
-    virtual void callPaintCallbacks(UElem&, UUpdateContext&);
-    virtual void callMoveResizeCallbacks(UElem&, UUpdateContext&);
+    virtual void updateBackground(Graph&, UpdateContext&, 
+                                  const Rectangle &r, const Rectangle& clip);
+    virtual void setPadding(Graph&, const UpdateContext&, 
+                            const Rectangle &r, bool add_frame_and_paddind);
+    virtual void callPaintCallbacks(Element&, UpdateContext&);
+    virtual void callMoveResizeCallbacks(Element&, UpdateContext&);
     
-    UView* view;
-    UPaddingSpec pad;
-    URect chr, chclip;
+    View* view;
+    PaddingSpec pad;
+    Rectangle chr, chclip;
     float vflex_space, hflex_space;
     bool can_paint;
     unsigned char orient;
@@ -204,20 +213,20 @@ namespace ubit {
   public:
     static const int MAXCOUNT = 2;
     
-    // parses the child list of grp, finds the 1st visible element (UData or UElem)
+    // parses the child list of grp, finds the 1st visible element (Data or Element)
     // and adds it (and its followers) as a sublist
     // also checks HARDWIN and SOFTWIN_LIST
-    UMultiList(UUpdateContext&, UElem&);
+    UMultiList(UpdateContext&, Element&);
     
-    UChildIter begin() {return sublists[current = 0].begin;}
-    UChildIter end() {return sublists[current].end;}
+    ChildIter begin() {return sublists[current = 0].begin;}
+    ChildIter end() {return sublists[current].end;}
     // att: end() doit etre celui de current car cette valeur est utilisee ds le code.
     
-    void next(UChildIter& c);
-    void addChildList(UChildIter begin, UChildIter end);
+    void next(ChildIter& c);
+    void addChildList(ChildIter begin, ChildIter end);
     
     //private:
-    struct SubList {UChildIter begin, end;};
+    struct SubList {ChildIter begin, end;};
     SubList sublists[MAXCOUNT];
     int card, current;
     bool in_softwin_list;

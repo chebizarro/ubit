@@ -1,6 +1,5 @@
-/************************************************************************
- *
- *  u3d.cpp: 3D Widgets
+/*
+ *  3d.cpp: 3D Widgets
  *  Ubit GUI Toolkit - Version 6 - Matthieu Nottale, Eric Lecolinet
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
  *
@@ -16,10 +15,12 @@
 
 #ifndef _u3d_hpp_
 #define	_u3d_hpp_ 1
+
 #include <ubit/uattr.hpp>
 #include <ubit/ubox.hpp>
 #include <ubit/uctlmenu.hpp>
 #include <ubit/uview.hpp>
+
 namespace ubit {
   
   /** [Instable/OpenGL] 3D canvas: makes it possible to display children in 3D space.
@@ -28,11 +29,11 @@ namespace ubit {
    *  
    * Note: the displayed view is a 60° wide perspective.
    */
-  class U3Dcanvas: public UBox {
+  class U3Dcanvas: public Box {
   public:
     UCLASS(U3Dcanvas)
     
-    U3Dcanvas(UArgs a = UArgs::none);
+    U3Dcanvas(Args a = Args::none);
     ///< creates a new 3D canvas; @see also shortcut: u3dcanvas().
     
     virtual ~U3Dcanvas();
@@ -54,7 +55,7 @@ namespace ubit {
     float fovy, aspect, near, far;
   };
   
-  inline U3Dcanvas& u3dcanvas(UArgs a = UArgs::none) {return *new U3Dcanvas(a);}
+  inline U3Dcanvas& u3dcanvas(Args a = Args::none) {return *new U3Dcanvas(a);}
   ///< shortcut function that creates a new U3Dcanvas.
   
   /* ==================================================== ==== ======= */
@@ -70,11 +71,11 @@ namespace ubit {
    *
    * Requires OpenGL. @see: U3Dcanvas, U3Dpos.
    */
-  class U3Dbox : public UBox {
+  class U3Dbox : public Box {
   public:
     UCLASS(U3Dbox)
     
-    U3Dbox(UArgs = UArgs::none);
+    U3Dbox(Args = Args::none);
     ///< creates a new 3D box; @see also shortcut: u3dbox().
     
     static UStyle* createStyle();
@@ -93,7 +94,7 @@ namespace ubit {
     uptr<U3Dpos> ppos;
   };
   
-  inline U3Dbox& u3dbox(UArgs a = UArgs::none) {return *new U3Dbox(a);}
+  inline U3Dbox& u3dbox(Args a = Args::none) {return *new U3Dbox(a);}
   ///< shortcut function that creates a new U3Dbox.
   
   /* ==================================================== ==== ======= */
@@ -103,22 +104,22 @@ namespace ubit {
   public:
     UCLASS(U3Dwin)
     
-    U3Dwin(UArgs = UArgs::none);
+    U3Dwin(Args = Args::none);
     ///< creates a new 3D window; @see also shortcut: u3dwin().
     
     static UStyle* createStyle();
     
   protected:
-    virtual UBox& createTitleBar(const UStr& title);
+    virtual Box& createTitleBar(const String& title);
   };
   
-  inline U3Dwin& u3dwin(UArgs a = UArgs::none) {return *new U3Dwin(a);}
+  inline U3Dwin& u3dwin(Args a = Args::none) {return *new U3Dwin(a);}
   ///< shortcut function that creates a new U3Dwin.
   
   /* ==================================================== ==== ======= */
   /** [Instable/OpenGL] 3D position.
    *
-   * This attribute controls the position of a UBox in 3D space [i.e. the x,y,z translation
+   * This attribute controls the position of a Box in 3D space [i.e. the x,y,z translation
    * and the rotations around x,y,z] relatively to the origin of its parent.
    *
    * All widgets that are orientated in 3D space (ie. all widgets that have a U3Dpos)
@@ -148,15 +149,14 @@ namespace ubit {
     virtual bool is3Dpos() const {return true;}
     ///< returns true if this is a U3Dpos.
     
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     
     virtual void setImpl(float _x, float _y, bool upd);
     virtual void setImpl(float _x, float _y, float _z, bool upd);
     virtual void update();
-    virtual void putProp(UUpdateContext*, UElem&);
+    virtual void putProp(UpdateContext*, Element&);
     
   private:
-    friend class UView;
+    friend class View;
     friend class U3DcanvasView;
     float z, x_rot, y_rot, z_rot;
   };
@@ -164,28 +164,27 @@ namespace ubit {
   inline U3Dpos& u3dpos(float x, float y, float z) {return *new U3Dpos(x, y, z);}
   ///< shortcut function that creates a new U3Dpos.
   
-  /* ==================================================== ===== ======= */
   /* [Impl] U3Dcanvas' view.
    *
    * Mouse and paint coordinates are transformed by U3DcanvasView when passed 
    * to its children to make geometrical transformations transparent for them.
    */
-  class U3DcanvasView: public UView {
+  class U3DcanvasView: public View {
   public:
     static  UViewStyle style;  // renderer
     virtual UViewStyle* getViewStyle() {return &style;}
     
-    U3DcanvasView(UBox* _box, UView* _parview, UHardwinImpl* hw) : UView(_box, _parview, hw) {}
+    U3DcanvasView(Box* _box, View* _parview, UHardwinImpl* hw) : View(_box, _parview, hw) {}
     
-    static UView* createView(UBox* box, UView* parv, UHardwinImpl* hw) {
+    static View* createView(Box* box, View* parv, UHardwinImpl* hw) {
       return new U3DcanvasView(box, parv, hw);
     }
     
-    virtual void doUpdate(UUpdateContext&, URect r, URect clip, class UViewUpdate&);
-    virtual UView* findInChildren(UElem*, const UPoint& winpos, 
-                                  const UUpdateContext&, UViewFind&);
+    virtual void doUpdate(UpdateContext&, Rectangle r, Rectangle clip, class UViewUpdate&);
+    virtual View* findInChildren(Element*, const Point& winpos, 
+                                  const UpdateContext&, UViewFind&);
     
-    bool unproject(const U3Dpos* pos3d, const UPoint& winpos, UPoint& convpos);
+    bool unproject(const U3Dpos* pos3d, const Point& winpos, Point& convpos);
   };
   
 }

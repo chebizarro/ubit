@@ -1,4 +1,4 @@
-/************************************************************************
+/*
 *
 *  uxmlgrammar.cpp
 *  Ubit GUI Toolkit - Version 6.0
@@ -22,11 +22,11 @@
 using namespace std;
 namespace ubit {
 
-void UXmlGrammars::addGrammar(const UXmlGrammar& g) {
+void XmlGrammars::addGrammar(const XmlGrammar& g) {
   glist.push_back(&g);
 }
 
-void UXmlGrammars::addGrammars(const UXmlGrammars& grammars) {
+void XmlGrammars::addGrammars(const XmlGrammars& grammars) {
   const GrammarList& glist2 = grammars.glist;
 
   for (int k = 0; k < int(glist2.size()); ++k) {
@@ -34,23 +34,23 @@ void UXmlGrammars::addGrammars(const UXmlGrammars& grammars) {
   }
 }
 
-const UClass* UXmlGrammars::getAttrClass(const UStr& classname) const {
+const Class* XmlGrammars::getAttrClass(const String& classname) const {
   for (int k = int(glist.size()-1); k >= 0; --k) {
-    const UClass* c = glist[k]->getAttrClass(classname);
+    const Class* c = glist[k]->getAttrClass(classname);
     if (c) return c;
   }
   return null;
 }
 
-const UClass* UXmlGrammars::getElementClass(const UStr& classname) const {
+const Class* XmlGrammars::getElementClass(const String& classname) const {
   for (int k = int(glist.size()-1); k >= 0; --k) {
-    const UClass* c = glist[k]->getElementClass(classname);
+    const Class* c = glist[k]->getElementClass(classname);
     if (c) return c;
   }
   return null;
 }
 
-unsigned short UXmlGrammars::getCharEntityRef(const UStr& entity_name) const {
+unsigned short XmlGrammars::getCharEntityRef(const String& entity_name) const {
   for (int k = int(glist.size()-1); k >= 0; --k) {
     unsigned short r = glist[k]->getCharEntityRef(entity_name);
     if (r) return r;
@@ -59,68 +59,64 @@ unsigned short UXmlGrammars::getCharEntityRef(const UStr& entity_name) const {
 }
 
 /* ==================================================== [Elc] ======= */
-/* ==================================================== ===== ======= */
 
-UXmlGrammar::UXmlGrammar() {
+XmlGrammar::XmlGrammar() {
   // create ISO Character entity references
   createDefaultCharEntityRefs();
 }
 
 // ne detruit PLUS les classes: elles ont leur autonomie propre
 // et continuent a exister
-UXmlGrammar::~UXmlGrammar() {}
+XmlGrammar::~XmlGrammar() {}
 
-/* ==================================================== ===== ======= */
 
-const UClass* UXmlGrammar::getElementClass(const UStr& classname) const {
+const Class* XmlGrammar::getElementClass(const String& classname) const {
   return element_classes.findClass(classname);
 }
 
-const UClass* UXmlGrammar::getAttrClass(const UStr& classname) const {
+const Class* XmlGrammar::getAttrClass(const String& classname) const {
   return attr_classes.findClass(classname);
 }
 
-void UXmlGrammar::addAttrClass(const UClass& c) {
+void XmlGrammar::addAttrClass(const Class& c) {
   attr_classes.addClass(c);
 }
 
-void UXmlGrammar::addElementClass(const UClass& c) {
+void XmlGrammar::addElementClass(const Class& c) {
   element_classes.addClass(c);
 }
 
-/* ==================================================== ===== ======= */
 
-UXmlGrammar& UXmlGrammar::getSharedUndefGrammar() { // !!! A REVOIR !!!
-  static UXmlGrammar& undef_grammar = *new UXmlGrammar();
+XmlGrammar& XmlGrammar::getSharedUndefGrammar() { // !!! A REVOIR !!!
+  static XmlGrammar& undef_grammar = *new XmlGrammar();
   return undef_grammar;
 }
 
-UClass* UXmlGrammar::addUndefElementClass(const UStr& cname) {
-  UClass* c = new UDefaultInlineElement::MetaClass(cname);  // !!! A REVOIR !!!
+Class* XmlGrammar::addUndefElementClass(const String& cname) {
+  Class* c = new UDefaultInlineElement::MetaClass(cname);  // !!! A REVOIR !!!
   getSharedUndefGrammar().addElementClass(*c); 
   return c;
 }
 
-UClass* UXmlGrammar::addUndefAttrClass(const UStr& cname) {
-  UClass* c = new UDefaultAttribute::MetaClass(cname);  // !!! A REVOIR !!!
+Class* XmlGrammar::addUndefAttrClass(const String& cname) {
+  Class* c = new UDefaultAttribute::MetaClass(cname);  // !!! A REVOIR !!!
   getSharedUndefGrammar().addAttrClass(*c); 
   return c;
 }
 
-/* ==================================================== ===== ======= */
 
-unsigned short UXmlGrammar::getCharEntityRef(const UStr& name) const {
+unsigned short XmlGrammar::getCharEntityRef(const String& name) const {
   CharEntityRefMap::const_iterator k = char_entity_refs.find(&name);
   if (k == char_entity_refs.end()) return 0;
   else return k->second;
 }
 
-void UXmlGrammar::addCharEntityRef(const UStr& _name, unsigned short _value) {
+void XmlGrammar::addCharEntityRef(const String& _name, unsigned short _value) {
   char_entity_refs[&ustr(_name)] = _value;
 }
 
-void UXmlGrammar::createDefaultCharEntityRefs() {
-  struct CharEntityRef {UStr name; unsigned short value;};
+void XmlGrammar::createDefaultCharEntityRefs() {
+  struct CharEntityRef {String name; unsigned short value;};
 
   // ISO 8859-1 characters
   static CharEntityRef tab[] = {

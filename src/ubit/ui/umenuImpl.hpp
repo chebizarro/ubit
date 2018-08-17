@@ -1,22 +1,32 @@
-/* ==================================================== ======== ======= *
- *
+/*
  *  umenuImpl.hpp
- *  Ubit GUI Toolkit - Version 6
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE : 
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE 
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. 
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU 
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION; 
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
+
 
 #ifndef _umenuImpl_hpp_
 #define	_umenuImpl_hpp_ 1
+
 #include <vector>
+
 namespace ubit {
 
 /** [Implementation] manages the stack of menus that are currently opened on a given EventFlow.
@@ -32,7 +42,7 @@ public:
   bool contains(UMenu* menu) const;
   // returns true if this menu is in the menu stack.
 
-  bool contains(UView*) const;
+  bool contains(View*) const;
   // returns true if this view is contained in a menu in the menu stack.
 
   void closeAllMenus(bool clear_top_menu);
@@ -41,11 +51,11 @@ public:
   void closeSubMenus(UMenu* from_menu, bool including_this_menu);
   ///< closes the submenus of this menu (calls closeAllMenus if menu is not found).
 
-  void openMenu(UView* opener, UMenu*, UDisp*);
+  void openMenu(View* opener, UMenu*, Display*);
   void openMenuAfterDelay();
   void closeMenuAfterDelay();
 
-  void menuChildCB(UInputEvent&, UBox* menu_or_menubar);
+  void menuChildCB(UInputEvent&, Box* menu_or_menubar);
  
 protected:
   friend class UMenu;
@@ -53,16 +63,14 @@ protected:
   friend class UEventFlow;
   std::vector<UMenu*> menustack;  // stack of menus that are currently being grabbed
   int menu_count;
-  UDisp* disp;
+  Display* disp;
   UEventFlow& eflow; 
-  UView *active_opener, *possible_opener, *possible_closer;
+  View *active_opener, *possible_opener, *possible_closer;
   UMenu *active_menu, *possible_opener_menu, *possible_closer_menu;
   uptr<UTimer> kk_open_timer, kk_close_timer;  // uptr: dont destroy Timers  $$$
-  UBox* top_menu;
+  Box* top_menu;
 };
 
 }
 #endif
-/* ==================================================== [TheEnd] ======= */
-/* ==================================================== [(c)Elc] ======= */
 

@@ -1,33 +1,42 @@
-/************************************************************************
- *
- *  ufont.hpp: Font Attribute
- *  Ubit GUI Toolkit - Version 6
+/*
+ *  font.h: Font Attribute
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE :
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION;
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
 
 #ifndef _ufont_hpp_
 #define	_ufont_hpp_ 1
+
 #include <ubit/uattr.hpp>
 #include <ubit/ustr.hpp>
+
 namespace ubit {
   
-  /** Font of a UElem or UBox container.
-   * this property specifies the font in a UElem or a UBox. It is inherited
+  /** Font of a Element or Box container.
+   * this property specifies the font in a Element or a Box. It is inherited
    * by children, except if they have their own UFont, or if their UStyle
    * specifies another font.
-   * As other UAttr(s), a UScale instance must be added to the attribute list
-   * or child list of the container: @see: UAttr.
+   * As other Attribute(s), a UScale instance must be added to the attribute list
+   * or child list of the container: @see: Attribute.
    */
-  class UFont : public UAttr {
+  class UFont : public Attribute {
   public:
     UCLASS(UFont)
     
@@ -102,10 +111,10 @@ namespace ubit {
     UFont& setFamily(const UFontFamily&);
     ///< changes the font family.
     
-    UFont& setFamily(const UStr& font_families);
+    UFont& setFamily(const String& font_families);
     ///< changes the font family (takes the closest one in a comma separated list).
     
-    UFont& setSize(const UStr& size);
+    UFont& setSize(const String& size);
     ///< changes the font size.
     
     UFont& setPixelSize(float pixel_size);
@@ -148,18 +157,18 @@ namespace ubit {
     
     // - impl. - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     
-    virtual void realize(UDisp*);
+    virtual void realize(Display*);
     /**< [impl] allocates physical resources.
      * this function is automatically called when this font is used
      * for the first time. There no need to call it in client code except
      * for loading fonts in advance.
-     * - note: the argument can be the UAppli (the Application Context)
+     * - note: the argument can be the Application (the Application Context)
      */
     
-    virtual void putProp(UUpdateContext*, UElem&);
+    virtual void putProp(UpdateContext*, Element&);
     
   private:
-    friend class UDisp;
+    friend class Display;
     friend class UFontDesc;
     const UFontFamily* family;
     //short size;
@@ -172,7 +181,6 @@ namespace ubit {
   ///< shortcut for *new UFont(font).
   
   
-  /* ==================================================== ===== ======= */
   /** A Font Family represents a collection of fonts for all possible sizes and styles.
    * Note that actual fonts are only loaded when necessary
    */
@@ -183,15 +191,15 @@ namespace ubit {
     
     static UFontFamily defaults;
     /**< specifies default characteristics used when FontFamilies can't be found
-     * should be changed before creating the UAppli
+     * should be changed before creating the Application
      */
     
-    UFontFamily(const UStr& logical_name);
+    UFontFamily(const String& logical_name);
     ///< create a new font family.
     
     UFontFamily& operator=(const UFontFamily&);  
     
-    const UStr& getName() const {return name;}
+    const String& getName() const {return name;}
     
     void setFamily(const char* native_families);
     ///< changes font characteristics for this family (args are coma separated lists).
@@ -221,7 +229,7 @@ namespace ubit {
   protected:
     friend class UFontDesc;  
     friend class UHardFont;  
-    friend class UDisp;  
+    friend class Display;  
     
     UFontFamily(const char* logical_name, UConst);  // private constr
     UFontFamily(const UFontFamily&); // forbidden
@@ -232,10 +240,10 @@ namespace ubit {
     static int family_count;
     mutable int ffindex;
     mutable bool ready;
-    UStr name;
+    String name;
     mutable std::vector<int> fsizes;
     struct Defs {
-      UStr
+      String
       families, 
       normal_style,
       italic_style,

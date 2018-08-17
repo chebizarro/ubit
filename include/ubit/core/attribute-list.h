@@ -50,29 +50,29 @@ namespace ubit {
      */
     
     virtual void update();
-    virtual void putProp(UUpdateContext*, Element&);  
+    virtual void putProp(UpdateContext*, Element&);  
   };
 
 
   /** Window Title.
    */
-  class UTitle: public Attribute {
+  class Title: public Attribute {
   public:
-    UCLASS(UTitle)
+    UCLASS(Title)
     
-    UTitle(const char* = "");
+    Title(const char* = "");
     /**< create a new Window Title (the argument is duplicated internally).
      * example:  udialog( utitle("Debug Window") + ... )
      */
     
-    UTitle(const String&);
+    Title(const String&);
     /**< create a new Window Title (the argument is duplicated internally).
     * example:  udialog( utitle("Debug Window") + ... )
     */
     
     String& value() {return *pstring;}
     /** returns the value.
-    * - example: UTitle t; t.value() = "Main Win"; String s = t.value();
+    * - example: Title t; t.value() = "Main Win"; String s = t.value();
     * - value() can be shared (but can't be deleted!)
     */
     
@@ -83,8 +83,8 @@ namespace ubit {
   };
   
   
-  inline UTitle& utitle(const char*_s) {return *new UTitle(_s);}
-  inline UTitle& utitle(const String&_s) {return *new UTitle(_s);}
+  inline Title& utitle(const char*_s) {return *new Title(_s);}
+  inline Title& utitle(const String&_s) {return *new Title(_s);}
 
 }
 #endif // UBIT_CORE_ATTRIBUTE_LIST_H_

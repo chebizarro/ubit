@@ -1,6 +1,5 @@
-/************************************************************************
- *
- *  ukeyGLUT.cpp: key symbols for GLUT
+/*
+ *  keyGLUT.cpp: key symbols for GLUT
  *  Ubit GUI Toolkit - Version 6.0
  *  (C) 2008 | Eric Lecolinet | ENST Paris | www.enst.fr/~elc/ubit
  *
@@ -19,6 +18,7 @@
 
 #include <ubit/ugl.hpp>
 #include <ubit/ukey.hpp>
+
 namespace ubit {
 
 const int 
@@ -100,11 +100,9 @@ const int
   UKey::F23 = 23,
   UKey::F24 = 24;
 
-void UModifier::mapKeys(UDisp* nd) { }
-void UKey::mapKeys(UDisp* nd) { }
+void UModifier::mapKeys(Display* nd) { }
+void UKey::mapKeys(Display* nd) { }
 
 }
 #endif
-/* ==================================================== [TheEnd] ======= */
-/* ==================================================== [(c)Elc] ======= */
 

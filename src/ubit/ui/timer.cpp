@@ -1,18 +1,26 @@
-/************************************************************************
- *
- *  utimer.cpp
- *  Ubit GUI Toolkit - Version 6
+/*
+ *  timer.cpp
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE : 
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE 
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. 
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU 
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION; 
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
+
 
 #include <ubit/ubit_features.h>
 #include <iostream>
@@ -39,7 +47,7 @@ namespace impl {
 #if UBIT_WITH_GLUT          // !!! bug si uptr<UTimer> et ptr mis a null
 
 static void _timerCB(int timer_no) {
-  UTimerImpl::Timers& timers = UAppli::impl.timer_impl.timers;
+  UTimerImpl::Timers& timers = Application::impl.timer_impl.timers;
   
   if (timer_no < 0 || timer_no >= (int)timers.size()) return;
   UTimer* t = timers[timer_no];
@@ -51,7 +59,7 @@ static void _timerCB(int timer_no) {
   }
     
   bool valid = t->timerCB();
-  UAppli::impl.processPendingRequests();
+  Application::impl.processPendingRequests();
 
   if (valid  && t->isRunning())  // il faut alors rappeler timerCB
     glutTimerFunc(t->getDelay(), _timerCB, timer_no);
@@ -62,7 +70,7 @@ static void _timerCB(int timer_no) {
 static gboolean _timerCB(gpointer timer) {
   UTimer* t = (UTimer*)timer;
   bool valid = t->timerCB();
-  UAppli::impl.processPendingRequests();
+  Application::impl.processPendingRequests();
   if (valid  && t->isRunning())  // il faut alors rappeler timerCB
     return true;   // indique a GDK de rappeler timerCB
   else 
@@ -76,7 +84,7 @@ bool UTimer::timerCB() {
   if (isDestructed()) return false;
   
   if (is_running) {
-    UTimerEvent e(UOn::action, this, UAppli::getTime());
+    TimerEvent e(UOn::action, this, Application::getTime());
     fire(e);
   }
   
@@ -95,7 +103,7 @@ bool UTimer::timerCB() {
 }
 
 void UTimer::removeTimer() {
-  UTimerImpl::Timers& timers = UAppli::impl.timer_impl.timers;
+  UTimerImpl::Timers& timers = Application::impl.timer_impl.timers;
   if (timer_no >= 0 && timer_no < (int)timers.size()) timers[timer_no] = null;
   timer_no = -1;
 }
@@ -121,7 +129,7 @@ void UTimer::setDelay(unsigned long d) {
   if (!is_running) return;
   
   int num = -1;
-  UTimerImpl::Timers& timers = UAppli::impl.timer_impl.timers;
+  UTimerImpl::Timers& timers = Application::impl.timer_impl.timers;
   if (timer_no >= 0 && timer_no < (int)timers.size()) {
 #ifndef UBIT_WITH_GLUT
     // dans le cas GLUT on ne peut pas recuperer cet element tu tableau car il
@@ -201,7 +209,7 @@ UTimer::~UTimer() {
 }
 
 void UTimer::onAction(UCall& c) {
-  UChild* l = new UChild(&c);
+  Child* l = new Child(&c);
   l->setCond(UOn::action);
   _addAttr(*l);
 }

@@ -1,29 +1,38 @@
-/************************************************************************
- *
- *  uslider.hpp
- *  Ubit GUI Toolkit - Version 6
+/*
+ *  slider.hpp
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE :
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION;
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
 
 #ifndef _uslider_hpp_
 #define	_uslider_hpp_ 1
+
 #include <ubit/unumber.hpp>
 #include <ubit/ubox.hpp>
 #include <ubit/ustyle.hpp>
+
 namespace ubit {
   
   struct USliderStyle : public UStyle {
     USliderStyle();
-    const UStyle& getStyle(UUpdateContext* ctx) const;
+    const UStyle& getStyle(UpdateContext* ctx) const;
     // default is hstyle
     UStyle vstyle;
   };
@@ -41,18 +50,18 @@ namespace ubit {
    *  - UOn::action (default callback) is fired when the value is changed
    *  - UOn::change is fired continuously while the knob is dragged
    */
-  class USlider: public UBox {
+  class USlider: public Box {
   public:
     UCLASS(USlider)
     
-    USlider(const UArgs& = UArgs::none);
-    /**< creates a new slider (@see also shortcut uslider(UArgs&)).
+    USlider(const Args& = Args::none);
+    /**< creates a new slider (@see also shortcut uslider(Args&)).
      * Default orientation is horizontal. new USlider(UOrient::vertical) creates
      * a vertical slider. The slider's value is in the range [0., 100.]
      */
     
-    USlider(UFloat& value, const UArgs& = UArgs::none);
-    /**< creates a new slider with a model value (@see also shortcut uslider(UFloat&, UArgs&)).
+    USlider(Float& value, const Args& = Args::none);
+    /**< creates a new slider with a model value (@see also shortcut uslider(Float&, Args&)).
      * the slider is synchronized with this value. Several widgets (eg. sliders)
      * that share the same value are synchronized.
      * Default orientation is horizontal. new USlider(value, UOrient::vertical) creates
@@ -68,7 +77,7 @@ namespace ubit {
      * the value is changed (see class USlider).
      */
     
-    UFloat& value() {return *pvalue;}
+    Float& value() {return *pvalue;}
     /**< return the internal value model.
      * UOn::change and UOn::action callbacks are fired when
      * the value is changed (see class USlider).
@@ -80,35 +89,35 @@ namespace ubit {
     static UStyle* createStyle() {return createSliderStyle();}
     static USliderStyle* createSliderStyle() {return new USliderStyle;}
     
-    virtual UBox* createKnob();
+    virtual Box* createKnob();
     ///< [impl] creates the knob; may be redefined by subclasses.
     
-    virtual UBox* createRail();
+    virtual Box* createRail();
     ///< [impl] creates the rail; may be redefined by subclasses.
     
   protected:
-    uptr<UFloat> pvalue;        // corresponding value (percent)
-    uptr<UBox> prail, pknob;
+    uptr<Float> pvalue;        // corresponding value (percent)
+    uptr<Box> prail, pknob;
     uptr<UPos> pknob_pos;
     uptr<class UPosControl> pknob_ctrl;
     
     void constructs();
     virtual void gotoPosCB(UMouseEvent&);
-    virtual void actionCB(UEvent&);  //UNodeEvent
-    virtual void changeCB(UEvent&);  //UNodeEvent
+    virtual void actionCB(Event&);  //UNodeEvent
+    virtual void changeCB(Event&);  //UNodeEvent
   };
   
   
-  USlider& uslider(const UArgs& a = UArgs::none);
+  USlider& uslider(const Args& a = Args::none);
   ///< shortcut that creates a new slider (that is horizontal by default).
   
-  USlider& uslider(UFloat& value, const UArgs& a = UArgs::none);
+  USlider& uslider(Float& value, const Args& a = Args::none);
   ///< shortcut that creates a new slider (that is horizontal by default) with a model value.
   
-  USlider& uhslider(const UArgs& a = UArgs::none);
+  USlider& uhslider(const Args& a = Args::none);
   ///< shortcut that creates a new horizontal slider.
   
-  USlider& uvslider(const UArgs& a = UArgs::none);
+  USlider& uvslider(const Args& a = Args::none);
   ///< shortcut that creates a new vertical slider.
   
 }

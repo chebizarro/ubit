@@ -1,6 +1,5 @@
-/************************************************************************
- *
- *  uevent.cpp: Ubit Event
+/*
+ *  event.cpp: Ubit Event
  *  Ubit GUI Toolkit - Version 6.0
  *  (C) 2009 | Eric Lecolinet | ENST Paris | www.enst.fr/~elc/ubit
  *
@@ -42,27 +41,27 @@ static const int _BUTTONS =
 /*
 class UNodeEvent : public UAnyEvent {
 public:
-  UNodeEvent(const UCond&, UNode* source, UNode* target = null);  
+  UNodeEvent(const Condition&, Node* source, Node* target = null);  
   
   virtual UNodeEvent* toNodeEvent() {return this;}  
   
-  virtual UNode* getSource() const {return source;}  
-  UNode* getTarget() const {return target;}
+  virtual Node* getSource() const {return source;}  
+  Node* getTarget() const {return target;}
   
 protected:
-  UNode* source;      // the object that produced this event
-  UNode* target;
+  Node* source;      // the object that produced this event
+  Node* target;
 };
 
 class UElemEvent : public UAnyEvent {
 public:
-  UElemEvent(const UCond&, UElem* source, UNode* target = null);  
+  UElemEvent(const Condition&, Element* source, Node* target = null);  
   
   virtual UElemEvent* toElemEvent() {return this;}
   
-  virtual UElem* getSource() const {return source;}  
+  virtual Element* getSource() const {return source;}  
   
-  UNode* getTarget() const {return target;}
+  Node* getTarget() const {return target;}
   **< returns an object that is related to this event (or null).
    * the returned object depends on the event condition (@see getCond()).
    * Examples: for UOn::change/add/remove returns the object that was 
@@ -70,19 +69,19 @@ public:
    *
 
 protected:
-  UElem* source;
-  UNode* target;
+  Element* source;
+  Node* target;
 };
 
- class UEvent : public UAnyEvent, public UModifier {
+ class Event : public UAnyEvent, public UModifier {
 protected:
-  UEvent(const UCond& c) : UAnyEvent(c) {} 
+  Event(const Condition& c) : UAnyEvent(c) {} 
   
 public:
-  virtual UElem* getSource() const = 0;
+  virtual Element* getSource() const = 0;
   ///< returns the object that received this event.  
   
- //void UEvent::goThrough(UBox* _obj, bool _go_through_children) {
+ //void Event::goThrough(Box* _obj, bool _go_through_children) {
  //  aux = _obj;
  //  if (_go_through_children) sp.modes |=  UEventProps::GO_THROUGH_CHILDREN;
  //  else sp.modes |=  UEventProps::GO_THROUGH;
@@ -100,25 +99,25 @@ public:
   const UPropdef* getPropdef(const UFlag&) const;
   ///< [advanced] returns the flagprop associated to this flag (if any); see: UFlag.
   
-  // void goThrough(UBox*, bool go_through_children = true);
+  // void goThrough(Box*, bool go_through_children = true);
   // events will go through this object.
   
   std::vector<const UFlagdef*>flagdefs;   // event flags
 #endif
 };
 
- void UEvent::addFlagdef(const UFlagdef* f) {
+ void Event::addFlagdef(const UFlagdef* f) {
  flagdefs.push_back(f);
  }
  
- const class UFlagdef* UEvent::getFlagdef(const UFlag &f) const {
+ const class UFlagdef* Event::getFlagdef(const UFlag &f) const {
  for (unsigned int k = 0; k < flagdefs.size(); ++k) {
  if ((flagdefs)[k]->getFlag() == &f) return flagdefs[k];
  }
  return null;  // not found
  }
  
- const UPropdef* UEvent::getPropdef(const UFlag& f) const {
+ const UPropdef* Event::getPropdef(const UFlag& f) const {
  const UPropdef* last_pdef = null;
  // att: comme il peut y avoir plusieurs propdef empilees il faut
  // toujours prendre la derniere
@@ -137,48 +136,48 @@ public:
  */
 // ==================================================== ======== ===============
 
-UEvent::UEvent(const UCond& c, UObject* s, UObject* a)
+Event::Event(const Condition& c, UObject* s, UObject* a)
 : cond(&c), source(s), aux(a) {} 
 
-UEvent::~UEvent() {}
+Event::~Event() {}
  
-void UEvent::setCond(const UCond& c) {cond = &c;}
+void Event::setCond(const Condition& c) {cond = &c;}
 
-//UNodeEvent::UNodeEvent(const UCond& c, UNode* s, UNode* t) 
+//UNodeEvent::UNodeEvent(const Condition& c, Node* s, Node* t) 
 //: UAnyEvent(c), source(s), target(t) {}
 
 // ==================================================== ======== ===============
 /*
-UElemEvent::UElemEvent(const UCond& _c, UElem* _src, UNode* _target)
+UElemEvent::UElemEvent(const Condition& _c, Element* _src, Node* _target)
 : UAnyEvent(_c), source(_src), target(_target) {}
   */
 
-UWinEvent::UWinEvent(const UCond& c, UView* v, int t, int s) : 
-UEvent(c, (v? v->getBox(): null)), 
+UWinEvent::UWinEvent(const Condition& c, View* v, int t, int s) : 
+Event(c, (v? v->getBox(): null)), 
 source_view(v), 
 type(t), 
 state(s) {
 }
 
-//UBox* UWinEvent::getSource() const {
+//Box* UWinEvent::getSource() const {
 //  return source_view ? source_view->getBox() : null;
 //}
 
-USysWMEvent::USysWMEvent(const UCond& c, UView* v, void* sev) : 
-UEvent(c, (v? v->getBox(): null)), 
+USysWMEvent::USysWMEvent(const Condition& c, View* v, void* sev) : 
+Event(c, (v? v->getBox(): null)), 
 source_view(v), 
 sys_event(sev) {
 }
 
-//UBox* USysWMEvent::getSource() const {
+//Box* USysWMEvent::getSource() const {
 //  return source_view ? source_view->getBox() : null;
 //}
   
 // ==================================================== ======== ===============
 
-UInputEvent::UInputEvent(const UCond& c, UView* v, UEventFlow* f, 
+UInputEvent::UInputEvent(const Condition& c, View* v, UEventFlow* f, 
                          unsigned long time, int st) : 
-UEvent(c, (v? v->getBox(): null)), 
+Event(c, (v? v->getBox(): null)), 
 state(st), 
 when(time),
 source_view(v),
@@ -189,23 +188,23 @@ event_observer(null) {
   = modes.DONT_CLOSE_MENU = modes.SOURCE_IN_MENU = false;
 } 
 
-UElem* UInputEvent::getSource() const {
+Element* UInputEvent::getSource() const {
   return source_view ? source_view->getBox() : null;
 }
 
-UView* UInputEvent::getViewOf(const UBox& box) const {
+View* UInputEvent::getViewOf(const Box& box) const {
   return box.getView(*this);
 }
 
-UView* UInputEvent::getWinView() const {
+View* UInputEvent::getWinView() const {
   return source_view ? source_view->getWinView() : null;
 }
   
-UWin* UInputEvent::getWin() const {
+Window* UInputEvent::getWin() const {
   return (source_view && source_view->hardwin) ? source_view->hardwin->win : null;
 }
 
-UDisp* UInputEvent::getDisp() const {
+Display* UInputEvent::getDisp() const {
   return (source_view && source_view->hardwin) ? source_view->hardwin->disp : null;
 }
   
@@ -232,9 +231,9 @@ bool UInputEvent::isAltGraphDown() const
 
 // ==================================================== ======== ===============
   
-UMouseEvent::UMouseEvent(const UCond& c, UView* source, UEventFlow* f, 
+UMouseEvent::UMouseEvent(const Condition& c, View* source, UEventFlow* f, 
                          unsigned long time, int state,
-                         const UPoint& pos, const UPoint& abs_pos, int btn) :
+                         const Point& pos, const Point& abs_pos, int btn) :
 UInputEvent(c, source, f, time, state), 
 button(btn), click_count(0),
 pos(pos), abs_pos(abs_pos) {
@@ -249,57 +248,57 @@ void UMouseEvent::translatePos(float x, float y) {  // NB: change pas source !
   abs_pos.x += x; abs_pos.y += y;
 }
 
-UPoint UMouseEvent::getPosIn(const UView& view) const {
-  if (!source_view) return UPoint(0,0);
-  else return UView::convertPosTo(view, *source_view, pos);
+Point UMouseEvent::getPosIn(const View& view) const {
+  if (!source_view) return Point(0,0);
+  else return View::convertPosTo(view, *source_view, pos);
 }
 
-UPoint UMouseEvent::getPosIn(const UBox& parent) const {
-  if (!source_view) return UPoint(0,0);
-  UView* v = parent.getViewContaining(*source_view);
-  if (v) return UView::convertPosTo(*v, *source_view, pos);
-  else return UPoint(0,0);
+Point UMouseEvent::getPosIn(const Box& parent) const {
+  if (!source_view) return Point(0,0);
+  View* v = parent.getViewContaining(*source_view);
+  if (v) return View::convertPosTo(*v, *source_view, pos);
+  else return Point(0,0);
 }
 
-UPoint UMouseEvent::getPosAndViewIn(const UBox& parent, UView*& parent_view) const {
-  if (!source_view) return UPoint(0,0);
+Point UMouseEvent::getPosAndViewIn(const Box& parent, View*& parent_view) const {
+  if (!source_view) return Point(0,0);
   parent_view = parent.getViewContaining(*source_view);
-  if (parent_view) return UView::convertPosTo(*parent_view, *source_view, pos);
-  else return UPoint(0,0);
+  if (parent_view) return View::convertPosTo(*parent_view, *source_view, pos);
+  else return Point(0,0);
 }
 
 // ==================================================== ======== ===============
 
-UData* UMouseEvent::getData() {
+Data* UMouseEvent::getData() {
   if (!source_view) return null;
   UDataContext dc;
   return source_view->findData(dc, pos, null, 0, -1);
 }
 
-UData* UMouseEvent::getData(UDataContext& dc) {
+Data* UMouseEvent::getData(UDataContext& dc) {
   if (!source_view) return null;
   return source_view->findData(dc, pos, null, 0, -1);
 }
 
 // same as findData() but discards UDatas that are not Strings
-UStr* UMouseEvent::getStr() {
+String* UMouseEvent::getStr() {
   if (!source_view) return null;
   UDataContext dc;
-  UData* data = getData(dc);
+  Data* data = getData(dc);
   return (data ? data->toStr() : null);
 }
 
-UStr* UMouseEvent::getStr(UDataContext& dc) {
+String* UMouseEvent::getStr(UDataContext& dc) {
   if (!source_view) return null;
-  UData* data = getData(dc);
+  Data* data = getData(dc);
   return (data ? data->toStr() : null);
 }
 
 // ==================================================== ======== ===============
 
-UWheelEvent::UWheelEvent(const UCond& c, UView* source, UEventFlow* f, 
+UWheelEvent::UWheelEvent(const Condition& c, View* source, UEventFlow* f, 
                          unsigned long time, int state,
-                         const UPoint& pos, const UPoint& abs_pos, 
+                         const Point& pos, const Point& abs_pos, 
                          int wheel_btn, int wheel_delta) :
 UMouseEvent(c, source, f, time, state, pos, abs_pos, wheel_btn), 
 delta(wheel_delta) {
@@ -307,7 +306,7 @@ delta(wheel_delta) {
     
 // ==================================================== ======== ===============
 
-UKeyEvent::UKeyEvent(const UCond& c, UView* source, UEventFlow* f, unsigned long when, 
+UKeyEvent::UKeyEvent(const Condition& c, View* source, UEventFlow* f, unsigned long when, 
                      int mods, int kcode, short kchar)
 : UInputEvent(c, source, f, when, mods), keycode(kcode), keychar(kchar) {}
 
@@ -316,16 +315,16 @@ void UKeyEvent::setKeyCode(int ks) {keycode = ks;}
 
 // ==================================================== ======== ===============
 
-UViewEvent::UViewEvent(const UCond& c, UView* v) : 
-UEvent(c, (v? v->getBox(): null)), 
+UViewEvent::UViewEvent(const Condition& c, View* v) : 
+Event(c, (v? v->getBox(): null)), 
 source_view(v) {
 }
   
-UBox* UViewEvent::getSource() const {
+Box* UViewEvent::getSource() const {
   return source_view ? source_view->getBox() : null;
 }
 
-UDisp* UViewEvent::getDisp() const {
+Display* UViewEvent::getDisp() const {
   UHardwinImpl* hw = null;
   if (source_view && (hw = source_view->getHardwin())) return hw->getDisp();
   else return null;
@@ -333,28 +332,28 @@ UDisp* UViewEvent::getDisp() const {
 
 // ==================================================== ======== ===============
 
-UTimerEvent::UTimerEvent(const UCond& c, UTimer* t, unsigned long w) 
-: UEvent(c, t), /*timer(t),*/ when(w) {}
+TimerEvent::TimerEvent(const Condition& c, UTimer* t, unsigned long w) 
+: Event(c, t), /*timer(t),*/ when(w) {}
 
-UUserEvent::UUserEvent(const UCond& c, UObject* s, int t, void* d) 
-: UEvent(c, s), /*source(s),*/ type(t), data(d) {}
+UserEvent::UserEvent(const Condition& c, UObject* s, int t, void* d) 
+: Event(c, s), /*source(s),*/ type(t), data(d) {}
 
-UMessageEvent::UMessageEvent(const UCond& c, UMessagePort* p) 
-: UEvent(c, p) /*,port(p)*/ {}
+MessageEvent::MessageEvent(const Condition& c, MessagePort* p) 
+: Event(c, p) /*,port(p)*/ {}
 
-const UStr* UMessageEvent::getMessage() const {
+const String* MessageEvent::getMessage() const {
   //if (port) return &port->getValue(); else return null;
-  if (source) return &((UMessagePort*)source)->getValue(); 
+  if (source) return &((MessagePort*)source)->getValue(); 
   else return null;
 }
 
 // ==================================================== ======== ===============
 
-UResizeEvent::UResizeEvent(const UCond& c, UView* v) : UViewEvent(c, v) {} 
+UResizeEvent::UResizeEvent(const Condition& c, View* v) : UViewEvent(c, v) {} 
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-UPaintEvent::UPaintEvent(const UCond& c, UView* v, const URect* winclip) : 
+UPaintEvent::UPaintEvent(const Condition& c, View* v, const Rectangle* winclip) : 
 UViewEvent(c, v),
 current_context(null),
 layout_view(null)
@@ -369,9 +368,9 @@ layout_view(null)
   }
 } 
  
-bool UPaintEvent::setSourceAndProps(UView* v) {
+bool UPaintEvent::setSourceAndProps(View* v) {
   UViewContext vc;
-  bool stat = v->findContext(vc, UView::FIND_CLIP);
+  bool stat = v->findContext(vc, View::FIND_CLIP);
   source_view = v;
   setProps(vc);
   return stat;
@@ -383,7 +382,7 @@ void UPaintEvent::setProps(const UViewContext& vc) {
   layout_view = vc.layout_view;
 }
   
-void UPaintEvent::getClip(URect& r) const {
+void UPaintEvent::getClip(Rectangle& r) const {
   if (source_view && is_clip_set) {
     r.x = redraw_clip.x - source_view->x;
     r.y = redraw_clip.x - source_view->y;
@@ -402,26 +401,25 @@ void UPaintEvent::getClip(URect& r) const {
 }
     
 /*
-URect UPaintEvent::getGLClip() const {
-  URect r;
+Rectangle UPaintEvent::getGLClip() const {
+  Rectangle r;
   getHardwinClip(r);       // pas tres clair: on veut le clip, ou la vue entiere
-  UDimension s; hardwin->getSize(s);   // pour faire glviewport ?
+  Dimension s; hardwin->getSize(s);   // pour faire glviewport ?
   r.y = s.height - r.height - r.y;
   return r;
 }
 */
-/* ==================================================== [(c)Elc] ======= */
 
-URect UDataContext::getBounds() const {
-  if (!source_view) return URect();
-  else return URect(win_clip.x - source_view->x,  //- dataContext->getView()->x, 
+Rectangle UDataContext::getBounds() const {
+  if (!source_view) return Rectangle();
+  else return Rectangle(win_clip.x - source_view->x,  //- dataContext->getView()->x, 
                     win_clip.y - source_view->y,  //- dataContext->getView()->y, 
                     win_clip.width, win_clip.height);
 }
 
 UDataContext::UDataContext() {
   data = null;
-  it = it2 = UChildIter();
+  it = it2 = ChildIter();
   strpos = -1;
   strpos2 = -1;       // !must be se to -1 if unused
   exact_match = false;
@@ -439,23 +437,23 @@ UDataContext::~UDataContext() {
 // -- merge_regions = true  : region 'r' is merged with the previous 'region'
 //                    false : region 'r' replaces the previous value of 'region'
 //
-void UDataContext::set(UUpdateContext& ctx, UData* d, UChildIter _it, UChildIter end,
-                       const URect& r, int _strpos, bool _exact_match) {
+void UDataContext::set(UpdateContext& ctx, Data* d, ChildIter _it, ChildIter end,
+                       const Rectangle& r, int _strpos, bool _exact_match) {
   data = d;
   it = _it;
   it2 = end;
   strpos = _strpos;   //don't change strpos2!
-  //if (!dataContext) dataContext = new UUpdateContext(ctx);
+  //if (!dataContext) dataContext = new UpdateContext(ctx);
   exact_match = _exact_match;
   win_clip = r;
 }
 
-void UDataContext::merge(UUpdateContext& ctx, UData* d, UChildIter _it, UChildIter end,
-                       const URect& r, bool _exact_match) {
+void UDataContext::merge(UpdateContext& ctx, Data* d, ChildIter _it, ChildIter end,
+                       const Rectangle& r, bool _exact_match) {
   data = d;
   it = _it;
   it2 = end;  //don't change strpos and strpos2!
-  //if (!dataContext) dataContext = new UUpdateContext(ctx);
+  //if (!dataContext) dataContext = new UpdateContext(ctx);
   exact_match = _exact_match;
   win_clip.doUnion(r);
 }

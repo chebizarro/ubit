@@ -1,6 +1,5 @@
-/************************************************************************
- *
- *  uicon.cpp: Icon widget
+/*
+ *  icon.cpp: Icon widget
  *  Ubit GUI Toolkit - Version 6.0
  *  (C) 2008 | Eric Lecolinet | ENST Paris | www.enst.fr/~elc/ubit
  *
@@ -27,16 +26,16 @@ NAMESPACE_UBIT
 
 UStyle* UIconbox::createStyle() {
   //UStyle* style = UVbox::createStyle();
-  UStyle* style = UBox::createStyle();
+  UStyle* style = Box::createStyle();
   return style;
 }
 
-UIconbox::UIconbox(UArgs args) : UDocbox(), show_parent_dir(true) {
+UIconbox::UIconbox(Args args) : UDocbox(), show_parent_dir(true) {
   filetime = 0;
   icon_hspacing = new UHspacing(5);
   icon_vspacing = new UVspacing(5);
-  ppathname = new UStr;
-  ptitle = new UStr;
+  ppathname = new String;
+  ptitle = new String;
   titlebar().addAttr(upadding(3,2) + uhspacing(3) + UFont::italic);
   titlebar().add(*ptitle);
 
@@ -78,12 +77,12 @@ void UIconbox::removeAllIcons(bool auto_delete) {
 }
 
 void UIconbox::okBehavior(UInputEvent& _e) {  // A REVOIR
-  UEvent e2(UOn::action, this, _e.getSource());  //UElemEvent
+  Event e2(UOn::action, this, _e.getSource());  //UElemEvent
   fire(e2);
 }
 
 UIcon* UIconbox::getSelectedIcon() {
-  UElem* i = choice().getSelectedItem();
+  Element* i = choice().getSelectedItem();
   return i ? dynamic_cast<UIcon*>(i) : null;
 }
 
@@ -91,8 +90,8 @@ void UIconbox::selectIcon(UIcon& i) {
   choice().setSelectedItem(i);
 }
 
-void UIconbox::selectIcon(const UStr& name) {
-  for (UChildIter i = picons->cbegin(); i != picons->cend(); ++i) {
+void UIconbox::selectIcon(const String& name) {
+  for (ChildIter i = picons->cbegin(); i != picons->cend(); ++i) {
     UIcon* icon = dynamic_cast<UIcon*>(*i);
     if (icon && icon->getName() == name) {
       choice().setSelectedItem(*icon);
@@ -126,14 +125,14 @@ UIcon* UIconbox::getNextIcon() {
 }
 
 UIcon* UIconbox::getIcon(int index) const {
-  UBox* item = choice().getSelectableItem(index);
+  Box* item = choice().getSelectableItem(index);
   return item ? dynamic_cast<UIcon*>(item) : null;
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-int UIconbox::readDir(const UStr& _pathname, bool remote_dir) {
-  UStr prefix, filter;
+int UIconbox::readDir(const String& _pathname, bool remote_dir) {
+  String prefix, filter;
   bool want_dotfiles = false;
   pathname() = _pathname;
   title() = _pathname;
@@ -167,7 +166,6 @@ int UIconbox::readDir(const UStr& _pathname, bool remote_dir) {
   return UFilestat::Opened;
 }
 
-/* ==================================================== ===== ======= */
 
 static const int CONTENT_WIDTH = 55, CONTENT_HEIGHT = 55;
 
@@ -177,9 +175,9 @@ UStyle* UIcon::createStyle() {
   
 UIcon::~UIcon() {}
 
-UIcon::UIcon(const UStr& name, UArgs content) {
+UIcon::UIcon(const String& name, Args content) {
   is_dir = false;  
-  pname = new UStr(name);
+  pname = new String(name);
 
   text_box = &uhbox(*pname);
   text_box->ignoreEvents();
@@ -200,27 +198,27 @@ UIcon::UIcon(const UStr& name, UArgs content) {
 }
 
 /*
-void UIcon::set(const UStr& _name, UData&  _content) {
+void UIcon::set(const String& _name, Data&  _content) {
   *pname = _name;
   //ima_box->setAutoUpdate(false);
   ima_box->removeAll();
   ima_box->add(_content);
   //ima_box->setAutoUpdate(true);
   //ima_box->update();  // pour layout
-  //update(UUpdate::paint);  // pour affichage
+  //update(Update::paint);  // pour affichage
 }
 */
 
-int UIcon::loadImage(const UStr& ima_path) { 
-  UStr fext = ima_path.suffix();
+int UIcon::loadImage(const String& ima_path) { 
+  String fext = ima_path.suffix();
   int stat = false;
   
-  if (fext.equals("gif",true/*ignore case*/)    // !!! A REVOIR (UIma devrait faire ca) !!!@@@
+  if (fext.equals("gif",true/*ignore case*/)    // !!! A REVOIR (Image devrait faire ca) !!!@@@
       || fext.equals("jpg",true)
       || fext.equals("jpeg",true)
       || fext.equals("xpm",true)
       ) {
-    uptr<UIma> ima = new UIma;
+    uptr<Image> ima = new Image;
     stat = ima->read(ima_path, CONTENT_WIDTH, CONTENT_HEIGHT);
 
     //delete full_ima; automatic deletion

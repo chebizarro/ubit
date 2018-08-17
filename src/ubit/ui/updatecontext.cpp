@@ -1,6 +1,5 @@
-/************************************************************************
- *
- *  uupdatecontext.cpp: [implementation] stack context
+/*
+ *  updatecontext.cpp: [implementation] stack context
  *  Ubit GUI Toolkit - Version 6.0
  *  (C) 2008 | Eric Lecolinet | ENST Paris | www.enst.fr/~elc/ubit
  *
@@ -27,8 +26,8 @@ namespace ubit {
 
 
 
-UUpdateContext::UUpdateContext(const UUpdateContext& parctx, 
-                               UElem* elm, UView* v, UViewUpdateImpl* vi) :
+UpdateContext::UpdateContext(const UpdateContext& parctx, 
+                               Element* elm, View* v, UViewUpdateImpl* vi) :
 parent_ctx(&parctx),
 win_ctx(parctx.win_ctx),
 flag_count(parctx.flag_count),
@@ -44,8 +43,8 @@ graph(parctx.graph)
   obj->emodes.IS_HEIGHT_UNRESIZABLE=(local.size.height.modes.val & USize::UNRESIZABLE.val);
   
   xyscale = parctx.xyscale;
-  boxIsVFlex = (parctx.valign == UValign::FLEX);
-  boxIsHFlex = (parctx.halign == UHalign::FLEX);
+  boxIsVFlex = (parctx.valign == Valign::FLEX);
+  boxIsHFlex = (parctx.halign == Halign::FLEX);
 
   // si pas de spec de l'orient prendre celle du style par defaut
   /*
@@ -57,10 +56,10 @@ graph(parctx.graph)
   }
    */
   const UStyle& style = *obj_style;
-  valign = (style.valign == UValign::INHERIT ? parctx.valign : style.valign);
-  halign = (style.halign == UHalign::INHERIT ? parctx.halign : style.halign);
+  valign = (style.valign == Valign::INHERIT ? parctx.valign : style.valign);
+  halign = (style.halign == Halign::INHERIT ? parctx.halign : style.halign);
 
-  // diviser par /xyscale car sera multiplie par UUpdateContext::rescale() 
+  // diviser par /xyscale car sera multiplie par UpdateContext::rescale() 
   vspacing = (style.vspacing == UVspacing::INHERIT ? parctx.vspacing/xyscale : style.vspacing);
   hspacing = (style.hspacing == UHspacing::INHERIT ? parctx.hspacing/xyscale : style.hspacing);
   cursor = (style.cursor ? style.cursor : parctx.cursor);
@@ -68,10 +67,10 @@ graph(parctx.graph)
   edit = parctx.edit;  // !!!ATT un button dans un textarea va etre editable A REVOIR !!!
 
   color = style.getColor(*obj);
-  if (!color || color == &UColor::inherit) color = parctx.color;
+  if (!color || color == &Color::inherit) color = parctx.color;
 
   bgcolor = style.getBgcolor(*obj);
-  if (!bgcolor || bgcolor == &UColor::inherit) bgcolor = parctx.bgcolor;
+  if (!bgcolor || bgcolor == &Color::inherit) bgcolor = parctx.bgcolor;
   
   // les fontes s'AJOUTENT et c'est pourquoi il faut toujours recopier parp->fontdesc
   // (les autres champs pouvant etre modifies ensuite)
@@ -87,18 +86,17 @@ graph(parctx.graph)
   }
 }
 
-/* ==================================================== ===== ======= */
 // creates the first layer of the context stack
 // !Warning: 'win_view' must be a valid (not null) window view!
 
-UWinUpdateContext::UWinUpdateContext(UView* win_view, UGraph* g) :
-UUpdateContext(win_view) {
+UWinUpdateContext::UWinUpdateContext(View* win_view, Graph* g) :
+UpdateContext(win_view) {
   win_ctx = this;
   graph = g;
 }
 
 
-UUpdateContext::UUpdateContext(UView* win_view) :
+UpdateContext::UpdateContext(View* win_view) :
 parent_ctx(null),
 win_ctx(null),   // init in UWinUpdateContext
 flag_count(0),
@@ -133,8 +131,8 @@ graph(null)
    */
   
   const UStyle& style = *obj_style;
-  valign = (style.valign == UValign::INHERIT ? 0 : style.valign);
-  halign = (style.halign == UHalign::INHERIT ? 0 : style.halign);
+  valign = (style.valign == Valign::INHERIT ? 0 : style.valign);
+  halign = (style.halign == Halign::INHERIT ? 0 : style.halign);
   vspacing = (style.vspacing == UVspacing::INHERIT ? 0 : style.vspacing);
   hspacing = (style.hspacing == UHspacing::INHERIT ? 0 : style.hspacing);
   cursor = style.cursor;
@@ -142,22 +140,21 @@ graph(null)
   edit = null;
   
   color = style.getColor(*obj); 
-  if (!color || color == &UColor::inherit) color = &UColor::black;
+  if (!color || color == &Color::inherit) color = &Color::black;
   
   bgcolor = style.getBgcolor(*obj);  
-  if (!bgcolor || bgcolor == &UColor::inherit) bgcolor = &UColor::none;
+  if (!bgcolor || bgcolor == &Color::inherit) bgcolor = &Color::none;
   
-  xyscale = UAppli::conf.scale;  // set by UDisp::UDisp  
-  fontdesc.set(*UAppli::conf.default_font);   // cant be null!
+  xyscale = Application::conf.scale;  // set by Display::Display  
+  fontdesc.set(*Application::conf.default_font);   // cant be null!
   
   // c'est un ajout de caracteristiques: n'ecrase pas forcement tous les champs
   if (style.font) fontdesc.merge(*style.font);
   fontdesc.setScale(xyscale);
 }
 
-/* ==================================================== ===== ======= */
 
-void UUpdateContext::rescale() {  
+void UpdateContext::rescale() {  
   vspacing = vspacing * xyscale;
   hspacing = hspacing * xyscale;
   
@@ -170,29 +167,28 @@ void UUpdateContext::rescale() {
 }
 
 
-void UUpdateContext::addFlagdef(const UFlagdef* flagdef) {
+void UpdateContext::addFlagdef(const UFlagdef* flagdef) {
   win_ctx->flags.push_back(flagdef);
   flag_count++;
 }
 
-const UFlagdef* UUpdateContext::getFlagdef(const UFlag& f) const {
+const UFlagdef* UpdateContext::getFlagdef(const UFlag& f) const {
   return getFlagdef(&f);
 }
 
-const UFlagdef* UUpdateContext::getFlagdef(const UFlag* f) const {
+const UFlagdef* UpdateContext::getFlagdef(const UFlag* f) const {
   for (int k = 0; k < flag_count; k++) {
     if (win_ctx->flags[k]->getFlag() == f) return win_ctx->flags[k];
   }
   return null;  // not found
 }
 
-/* ==================================================== ===== ======= */
 
-const UPropdef* UUpdateContext::getPropdef(const UFlag& f) const {
+const UPropdef* UpdateContext::getPropdef(const UFlag& f) const {
   return getPropdef(&f);
 }
   
-const UPropdef* UUpdateContext::getPropdef(const UFlag* f) const {
+const UPropdef* UpdateContext::getPropdef(const UFlag* f) const {
   // att: comme il peut y avoir plusieurs propdef empilees il faut
   // toujours prendre la derniere
   const UPropdef* last_pdef = null;

@@ -1,7 +1,6 @@
-/************************************************************************
- *
- *  uboxgeom.cpp: Attributes for controlling UBox geometry
- *  (see also UAttr.hpp for UAttr base class)
+/*
+ *  boxgeom.cpp: Attributes for controlling Box geometry
+ *  (see also Attribute.hpp for Attribute base class)
  *  Ubit GUI Toolkit - Version 6
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
  *
@@ -33,7 +32,7 @@ NAMESPACE_UBIT
 
 
 UScale::UScale(float v) : value(v) {}
-UScale::UScale(const UFloat& v) : value(v.floatValue()) {}
+UScale::UScale(const Float& v) : value(v.floatValue()) {}
 
 void UScale::set(float v) {
   if (checkConst()) return;
@@ -54,27 +53,27 @@ void UScale::div(float v) {
   changed();
 }
 
-void UScale::putProp(UUpdateContext *props, UElem&) {
+void UScale::putProp(UpdateContext *props, Element&) {
   props->xyscale *= value;
   props->fontdesc.setScale(props->xyscale);
 }
 
 void UScale::update() {
-  updateAutoParents(UUpdate::LAYOUT_PAINT);
+  updateAutoParents(Update::LAYOUT_PAINT);
 }
 
 /* ==================================================== [Elc] ======= */
 // NB: ne marchera pas si inclus dans un proplist car addingTo n'est pas
 // execute dans ce cas
 
-const ULength::Modes 
+const Length::Modes 
 UPos::TOP(0), 
 UPos::LEFT(0), 
 UPos::RIGHT(1), 
 UPos::BOTTOM(1);
 
-void UPos::addingTo(UChild& c, UElem& parent) {
-  UAttr::addingTo(c, parent);
+void UPos::addingTo(Child& c, Element& parent) {
+  Attribute::addingTo(c, parent);
   
   if (parent.emodes.IS_FLOATING) {    // !!! ce n'est plus tout a fait vrai: cf plus bas
     warning("UPos::addingTo",
@@ -82,43 +81,43 @@ void UPos::addingTo(UChild& c, UElem& parent) {
             this, &parent.getClassName());
   }
   
-  UBox* par = parent.toBox();
+  Box* par = parent.toBox();
   if (!par) {
     warning("UPos::addingTo",
-            "This UPos instance is being added to a container (%s %p) that does not derive from UBox",
+            "This UPos instance is being added to a container (%s %p) that does not derive from Box",
             this, &parent.getClassName());
   }
   else par->emodes.IS_FLOATING = isFloating();
 }
 
-void UPos::removingFrom(UChild& c, UElem& parent) {
-  UBox* par = parent.toBox();
+void UPos::removingFrom(Child& c, Element& parent) {
+  Box* par = parent.toBox();
   if (par) par->emodes.IS_FLOATING = false;
-  UAttr::removingFrom(c, parent);
+  Attribute::removingFrom(c, parent);
 }
 
-bool UPos::equals(const ULength& _x, const ULength& _y) const {
+bool UPos::equals(const Length& _x, const Length& _y) const {
   return _x==x && _y==y;
 }
 
 void UPos::update()  {
   //hum, c'est pas le layout qui change mais la position...!
-  updateAutoParents(UUpdate::LAYOUT_PAINT);
+  updateAutoParents(Update::LAYOUT_PAINT);
 }
 
-void UPos::putProp(UUpdateContext *props, UElem&) {
+void UPos::putProp(UpdateContext *props, Element&) {
   props->pos = this;  // pos peut etre proportionnelle etc.
 }
 
 bool UPos::isFloating() const {
-  return (x.unit.type != UUnit::AUTO && x.unit.type != UUnit::IGNORE
-          && y.unit.type != UUnit::AUTO && y.unit.type != UUnit::IGNORE);
+  return (x.unit.type != Unit::AUTO && x.unit.type != Unit::IGNORE
+          && y.unit.type != Unit::AUTO && y.unit.type != Unit::IGNORE);
 }
 
-UPos& UPos::set(const ULength& newx, const ULength& newy) {
+UPos& UPos::set(const Length& newx, const Length& newy) {
   if (checkConst()) return *this;
 
-  ULength _x = newx, _y = newy;
+  Length _x = newx, _y = newy;
   bool xpercent = false, ypercent = false;
 
   if (_x.unit == UPERCENT || _x.unit == UPERCENT_CTR) {
@@ -132,24 +131,24 @@ UPos& UPos::set(const ULength& newx, const ULength& newy) {
   
   if (x == _x && y == _y) return *this;
 
-  UUpdate upd(UUpdate::PAINT);
+  Update upd(Update::PAINT);
   upd.setMove(_x.val - x.val, _y.val - y.val, xpercent, ypercent);
   x = _x;
   y = _y;
   
   // POS_HAS_CHANGED indique que les coords des views ne sont plus a jour
-  // updateAutoParents() fait ensuite la mise a jour (via UView::updatePos())
+  // updateAutoParents() fait ensuite la mise a jour (via View::updatePos())
     
   bool is_floating = isFloating();
   for (UParentIter p = pbegin(); p != pend(); ++p) {
-    UBox* box = *p ? (*p)->toBox() : null;
+    Box* box = *p ? (*p)->toBox() : null;
     if (box) {
       box->emodes.IS_FLOATING = is_floating;
-      for (UView* v = box->getView(0); v != null; v = v->getNext()) {
-        v->addVModes(UView::POS_HAS_CHANGED); 
+      for (View* v = box->getView(0); v != null; v = v->getNext()) {
+        v->addVModes(View::POS_HAS_CHANGED); 
       }
     }
-    //UElem* grp = *p;
+    //Element* grp = *p;
     //if (grp && !grp->omodes.DONT_AUTO_UPDATE) grp->update(upmode);
   }
   updateAutoParents(upd);
@@ -158,14 +157,13 @@ UPos& UPos::set(const ULength& newx, const ULength& newy) {
   return *this;
 }
 
-/* ==================================================== [(c)Elc] ======= */
 
 
-const ULength USize::INITIAL(-1);                 // !!!   A REVOIR !!!!!!  
-const ULength::Modes USize::UNRESIZABLE(1);       // !!!   A REVOIR !!!!!!  
+const Length USize::INITIAL(-1);                 // !!!   A REVOIR !!!!!!  
+const Length::Modes USize::UNRESIZABLE(1);       // !!!   A REVOIR !!!!!!  
 
 
-USize& USize::set(const ULength& w, const ULength& h) {
+USize& USize::set(const Length& w, const Length& h) {
   if (checkConst()) return *this;
   if (width == w && height == h) return *this;
   width = w;
@@ -174,16 +172,16 @@ USize& USize::set(const ULength& w, const ULength& h) {
   return *this;
 }
 
-bool USize::equals(const ULength& w, const ULength& h) const {
+bool USize::equals(const Length& w, const Length& h) const {
   return width==w && height==h;
 }
 
 void USize::update()  {
-  _parents.setParentsViewsModes(UView::SIZE_HAS_CHANGED, true);
-  updateAutoParents(UUpdate::LAYOUT_PAINT);
+  _parents.setParentsViewsModes(View::SIZE_HAS_CHANGED, true);
+  updateAutoParents(Update::LAYOUT_PAINT);
 }
 
-void USize::putProp(UUpdateContext* props, UElem& obj) {
+void USize::putProp(UpdateContext* props, Element& obj) {
   //props->local.size = *this;
   if (width != UIGNORE) {
     props->local.size.width = width;
@@ -197,7 +195,7 @@ void USize::putProp(UUpdateContext* props, UElem& obj) {
 
 // ==================================================== Ubit Gui Toolkit =======
 
-UPadding& UPadding::setWidth(ULength l) {
+UPadding& UPadding::setWidth(Length l) {
   if (checkConst() || (val.left == l && val.right == l)) return *this;
   val.left = l;
   val.right = l;
@@ -205,7 +203,7 @@ UPadding& UPadding::setWidth(ULength l) {
   return *this;
 }
 
-UPadding& UPadding::setHeight(ULength l) {
+UPadding& UPadding::setHeight(Length l) {
   if (checkConst() || (val.top == l && val.bottom == l)) return *this;
   val.top = l;
   val.bottom = l;
@@ -213,28 +211,28 @@ UPadding& UPadding::setHeight(ULength l) {
   return *this;
 }
 
-UPadding& UPadding::setLeft(ULength l) {
+UPadding& UPadding::setLeft(Length l) {
   if (checkConst() || val.left == l) return *this;
   val.left = l;
   changed();
   return *this;
 }
 
-UPadding& UPadding::setRight(ULength l) {
+UPadding& UPadding::setRight(Length l) {
   if (checkConst() || val.right == l) return *this;
   val.right = l;
   changed();
   return *this;
 }
 
-UPadding& UPadding::setTop(ULength l) {
+UPadding& UPadding::setTop(Length l) {
   if (checkConst() || val.top == l) return *this;
   val.top = l;
   changed();
   return *this;
 }
 
-UPadding& UPadding::setBottom(ULength l) {
+UPadding& UPadding::setBottom(Length l) {
   if (checkConst() || val.bottom == l) return *this;
   val.bottom = l;
   changed();
@@ -242,10 +240,10 @@ UPadding& UPadding::setBottom(ULength l) {
 }
 
 void UPadding::update() {
-  updateAutoParents(UUpdate::LAYOUT_PAINT);
+  updateAutoParents(Update::LAYOUT_PAINT);
 }
 
-void UPadding::putProp(UUpdateContext* props, UElem&) {
+void UPadding::putProp(UpdateContext* props, Element&) {
  if (val.top != UIGNORE)    props->local.padding.top = val.top;
  if (val.right != UIGNORE)  props->local.padding.right = val.right;
  if (val.bottom != UIGNORE) props->local.padding.bottom = val.bottom;
@@ -259,14 +257,14 @@ UOrient UOrient::horizontal(HORIZONTAL, UCONST);
 
 UOrient::UOrient() : value(VERTICAL) {}
 UOrient::UOrient(const UOrient& v) : value(v.value) {}
-UOrient::UOrient(char v, UConst c) : UAttr(c), value(v) {}
+UOrient::UOrient(char v, UConst c) : Attribute(c), value(v) {}
 
-void UOrient::addingTo(UChild& c, UElem& parent) {
-  UAttr::addingTo(c, parent);
+void UOrient::addingTo(Child& c, Element& parent) {
+  Attribute::addingTo(c, parent);
   
   // ca ne va pas: messages absurdes !!
   //if (parent->hasBMode(UMode::HAS_ORIENT)) {
-  // UAppli::warning("UOrient::addingTo","This UOrient object (%p) has a parent (%s %p) that contains another UOrient object", this, parent->getTypeName(), parent);
+  // Application::warning("UOrient::addingTo","This UOrient object (%p) has a parent (%s %p) that contains another UOrient object", this, parent->getTypeName(), parent);
   //}
   
   parent.emodes.HAS_ORIENT = true;
@@ -274,11 +272,11 @@ void UOrient::addingTo(UChild& c, UElem& parent) {
   else parent.emodes.IS_VERTICAL = false;
 }
 
-void UOrient::removingFrom(UChild& c, UElem& parent) {
+void UOrient::removingFrom(Child& c, Element& parent) {
   //parent.removeBModes(UMode::HAS_ORIENT | UMode::IS_VERTICAL);
   parent.emodes.HAS_ORIENT = false; 
   parent.emodes.IS_VERTICAL = false;
-  UAttr::removingFrom(c, parent);
+  Attribute::removingFrom(c, parent);
 }
 
 UOrient& UOrient::operator=(const UOrient &o) {
@@ -290,10 +288,10 @@ UOrient& UOrient::operator=(const UOrient &o) {
 }
 
 void UOrient::update() {
-  updateAutoParents(UUpdate::SHOW);   // pourquoi show ???
+  updateAutoParents(Update::SHOW);   // pourquoi show ???
 }
 
-void UOrient::putProp(UUpdateContext* props, UElem& par) {
+void UOrient::putProp(UpdateContext* props, Element& par) {
   // nb: inherited => ne fait rien
   //if (value == VERTICAL) par.addBModes(UMode::IS_VERTICAL);
   //else if (value == HORIZONTAL) par.removeBModes(UMode::IS_VERTICAL);
@@ -304,16 +302,16 @@ void UOrient::putProp(UUpdateContext* props, UElem& par) {
 
 // ==================================================== Ubit Gui Toolkit =======
 
-UValign UValign::top(TOP, UCONST);
-UValign UValign::bottom(BOTTOM, UCONST);
-UValign UValign::center(CENTER, UCONST);
-UValign UValign::flex(FLEX, UCONST);
+Valign Valign::top(TOP, UCONST);
+Valign Valign::bottom(BOTTOM, UCONST);
+Valign Valign::center(CENTER, UCONST);
+Valign Valign::flex(FLEX, UCONST);
 
-UValign::UValign() : value(TOP) {}
-UValign::UValign(const UValign& v) : value(v.value) {}
-UValign::UValign(char v, UConst c) : UAttr(c), value(v) {}
+Valign::Valign() : value(TOP) {}
+Valign::Valign(const Valign& v) : value(v.value) {}
+Valign::Valign(char v, UConst c) : Attribute(c), value(v) {}
 
-UValign& UValign::operator=(const UValign& obj) {
+Valign& Valign::operator=(const Valign& obj) {
   if (checkConst()) return *this;
   if (value == obj.value) return *this;
   value = obj.value;
@@ -321,27 +319,27 @@ UValign& UValign::operator=(const UValign& obj) {
   return *this;
 }
 
-void UValign::update() {
+void Valign::update() {
   // box size won't change but children layout must be updated
-  updateAutoParents(UUpdate::LAYOUT_PAINT);
+  updateAutoParents(Update::LAYOUT_PAINT);
 }
 
-void UValign::putProp(UUpdateContext *props, UElem&) {
+void Valign::putProp(UpdateContext *props, Element&) {
   props->valign = value;
 }
 
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
-UHalign UHalign::left(LEFT, UCONST);
-UHalign UHalign::right(RIGHT, UCONST);
-UHalign UHalign::center(CENTER, UCONST);
-UHalign UHalign::flex(FLEX, UCONST);
+Halign Halign::left(LEFT, UCONST);
+Halign Halign::right(RIGHT, UCONST);
+Halign Halign::center(CENTER, UCONST);
+Halign Halign::flex(FLEX, UCONST);
 
-UHalign::UHalign() : value(LEFT) {}
-UHalign::UHalign(const UHalign& v) : value(v.value) {}
-UHalign::UHalign(char v, UConst c) : UAttr(c), value(v) {}
+Halign::Halign() : value(LEFT) {}
+Halign::Halign(const Halign& v) : value(v.value) {}
+Halign::Halign(char v, UConst c) : Attribute(c), value(v) {}
 
-UHalign& UHalign::operator=(const UHalign& o) {
+Halign& Halign::operator=(const Halign& o) {
   if (checkConst()) return *this;
   if (value == o.value) return *this;
   value = o.value;
@@ -349,12 +347,12 @@ UHalign& UHalign::operator=(const UHalign& o) {
   return *this;
 }
 
-void UHalign::update() {
+void Halign::update() {
   // box size won't change but children layout must be updated
-  updateAutoParents(UUpdate::LAYOUT_PAINT);
+  updateAutoParents(Update::LAYOUT_PAINT);
 }
 
-void UHalign::putProp(UUpdateContext *props, UElem&) {
+void Halign::putProp(UpdateContext *props, Element&) {
   props->halign = value;
 }
 
@@ -377,10 +375,10 @@ UHspacing& UHspacing::operator=(const UHspacing& v) {
 }
 
 void UHspacing::update() {
-  updateAutoParents(UUpdate::LAYOUT_PAINT);
+  updateAutoParents(Update::LAYOUT_PAINT);
 }
 
-void UHspacing::putProp(UUpdateContext *props, UElem&) {
+void UHspacing::putProp(UpdateContext *props, Element&) {
   props->hspacing = value;
 }
 
@@ -403,10 +401,10 @@ UVspacing& UVspacing::operator=(const UVspacing& v) {
 }
 
 void UVspacing::update() {
-  updateAutoParents(UUpdate::LAYOUT_PAINT);
+  updateAutoParents(Update::LAYOUT_PAINT);
 }
 
-void UVspacing::putProp(UUpdateContext *props, UElem&) {
+void UVspacing::putProp(UpdateContext *props, Element&) {
   props->vspacing = value;
 }
 
@@ -420,17 +418,17 @@ posAttr(p) {}
 
 UPosControl::~UPosControl() {}
 
-void UPosControl::addingTo(UChild& c, UElem& parent) {
-  UAttr::addingTo(c, parent);
+void UPosControl::addingTo(Child& c, Element& parent) {
+  Attribute::addingTo(c, parent);
   //parent.addAttr(UOn::mdrag/callbacks + UOn::mpress/callbacks + UOn::mrelease/callbacks);
-  UMultiCond& mcond = *new UMultiCond;
+  MultiCondition& mcond = *new MultiCondition;
   mcond.add(UOn::mdrag).add(UOn::mpress).add(UOn::mrelease);
   parent.addAttr(mcond / *callbacks);
 }
 
-void UPosControl::removingFrom(UChild& c, UElem& parent) {
+void UPosControl::removingFrom(Child& c, Element& parent) {
   parent.removeAttr(*callbacks);
-  UAttr::removingFrom(c, parent);
+  Attribute::removingFrom(c, parent);
 }
 
 UPosControl& UPosControl::setModel(UPos* p) 
@@ -460,8 +458,8 @@ void UPosControl::pressCB(UMouseEvent& e) {
   // !! cannot change the position simultaneously  
   moved_view = null;
 
-  UView* pos_boxview = posAttr->getParentView(e);
-  UView* paneview = null;
+  View* pos_boxview = posAttr->getParentView(e);
+  View* paneview = null;
   if (!pos_boxview 
       || !(moved_view = pos_boxview->getParentView())
       || !(paneview = moved_view->getParentView())
@@ -479,10 +477,10 @@ void UPosControl::releaseCB(UMouseEvent& e) {
 }
 
 void UPosControl::dragCB(UMouseEvent& e) {
-  UView* paneview = null;
+  View* paneview = null;
   if (!moved_view || !(paneview = moved_view->getParentView())) return;
 
-  UPoint pt_in_pane = e.getPosIn(*paneview);  
+  Point pt_in_pane = e.getPosIn(*paneview);  
   if (pt_in_pane.x < MARGIN) pt_in_pane.x = MARGIN;
   else if(pt_in_pane.x > paneview->width - MARGIN) pt_in_pane.x = paneview->width - MARGIN;
   if (pt_in_pane.y < MARGIN) pt_in_pane.y = MARGIN;
@@ -507,7 +505,7 @@ void UPosControl::dragCB(UMouseEvent& e) {
      // margin = MARGIN;
     }
     
-    /* UView* handle = e.getView();
+    /* View* handle = e.getView();
     if (-xnew > handle->getWidth() -margin) 
       xnew = -(handle->getWidth() -margin);
     else if (xnew > moved_view->getWidth() -margin) 
@@ -529,7 +527,7 @@ void UPosControl::dragCB(UMouseEvent& e) {
       //margin = MARGIN;
     }
     
-    /* UView* handle = e.getView();
+    /* View* handle = e.getView();
     if (-ynew > handle->getHeight() -margin) ynew = -(handle->getHeight() -margin);
      else if (ynew > moved_view->getHeight() -margin) ynew = moved_view->getHeight() -margin; 
      */
@@ -538,7 +536,7 @@ void UPosControl::dragCB(UMouseEvent& e) {
   }
   
   //posAttr->set(xnew|pos->x.unit, ynew|pos->y.unit);
-  posAttr->set(ULength(xnew, posAttr->x.unit), ULength(ynew, posAttr->y.unit));
+  posAttr->set(Length(xnew, posAttr->x.unit), Length(ynew, posAttr->y.unit));
 }
 
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
@@ -556,7 +554,7 @@ void UMagicLensControl::dragCB(UMouseEvent& e) {
   if (!posAttr || !pane) return;
   UPosControl::dragCB(e);
   
-  UView* moved = posAttr->getParentView(e);
+  View* moved = posAttr->getParentView(e);
   UPaneView* pane_view = (UPaneView*)pane->getFirstViewInside(*moved);
   if (pane_view) {
     float xpane_in_moved = pane_view->x - moved->x;
@@ -575,17 +573,17 @@ psize(s) {}
 
 USizeControl::~USizeControl() {}
 
-void USizeControl::addingTo(UChild& c, UElem& parent) {
-  UAttr::addingTo(c, parent);
+void USizeControl::addingTo(Child& c, Element& parent) {
+  Attribute::addingTo(c, parent);
   //parent.addAttr(UOn::mdrag/callbacks + UOn::mpress/callbacks + UOn::mrelease/callbacks);
-  UMultiCond& mcond = *new UMultiCond;
+  MultiCondition& mcond = *new MultiCondition;
   ((mcond += UOn::mdrag) += UOn::mpress) += UOn::mrelease;
   parent.addAttr(mcond / *callbacks);
 }
 
-void USizeControl::removingFrom(UChild& c, UElem& parent) {
+void USizeControl::removingFrom(Child& c, Element& parent) {
   parent.removeAttr(*callbacks);
-  UAttr::removingFrom(c, parent);
+  Attribute::removingFrom(c, parent);
 }
 
 USizeControl& USizeControl::setModel(USize* s) 
@@ -643,42 +641,42 @@ void USizeControl::dragCB(UMouseEvent& e) {
 // ==================================================== Ubit Gui Toolkit =======
 #if 0
 
-class UShape : public UAttr {
-  friend class UView;
+class Shape : public Attribute {
+  friend class View;
   const UPix *pix;
 public:
   // The shape of the component will adapt to the shape of the UPix argument
-  UShape(const UPix&);
-  friend UShape& ushape(UPix&);
+  Shape(const UPix&);
+  friend Shape& ushape(UPix&);
   
   void set(const UPix*);
   void set(const UPix&);
   
   virtual void update();
-  virtual void putProp(UUpdateContext*, UElem&);
+  virtual void putProp(UpdateContext*, Element&);
 };
 
 
-UShape& ushape(UPix &pix) {
-  return *(new UShape(pix));
+Shape& ushape(UPix &pix) {
+  return *(new Shape(pix));
 }
 
-UShape::UShape(const UPix &_pix, long m) : UAttr(m){
+Shape::Shape(const UPix &_pix, long m) : Attribute(m){
   pix = &_pix;
 }
 
-void UShape::set(const UPix *_pix) {
+void Shape::set(const UPix *_pix) {
   if (pix == _pix) return;
   pix = _pix;
   changed();
 }
-void UShape::set(const UPix &_pix) {set(&_pix);}
+void Shape::set(const UPix &_pix) {set(&_pix);}
 
-void UShape::update() {
-  updateAutoParents(UUpdate::all);
+void Shape::update() {
+  updateAutoParents(Update::all);
 }
 
-void UShape::putProp(UUpdateContext *props, UElem&){
+void Shape::putProp(UpdateContext *props, Element&){
   props->local.shape = this;
 }
 
@@ -691,14 +689,14 @@ class UWidthChooser: public UWidth {
 public:
   UBIT_CLASS(UWidthChooser)
   
-  UWidthChooser(ULength _width);
+  UWidthChooser(Length _width);
   virtual ~UWidthChooser();
   
 #ifndef NO_DOC
-  void addingTo(UChild&, UElem& parent);
-  void removingFrom(UChild&, UElem& parent);
+  void addingTo(Child&, Element& parent);
+  void removingFrom(Child&, Element& parent);
 protected:
-  uptr<UBox> phandle;
+  uptr<Box> phandle;
   float curpos;
   virtual void press(UMouseEvent&);
   virtual void drag(UMouseEvent&);
@@ -713,14 +711,14 @@ class UHeightChooser: public UHeight {
 public:
   UBIT_CLASS(UHeightChooser)
   
-  UHeightChooser(ULength height);
+  UHeightChooser(Length height);
   virtual ~UHeightChooser();
   
 #ifndef NO_DOC
-  void addingTo(UChild&, UElem& parent);
-  void removingFrom(UChild&, UElem& parent);
+  void addingTo(Child&, Element& parent);
+  void removingFrom(Child&, Element& parent);
 protected:
-  uptr<UBox> phandle;
+  uptr<Box> phandle;
   float curpos;
   virtual void press(UMouseEvent&);
   virtual void drag(UMouseEvent&);
@@ -728,8 +726,8 @@ protected:
 };
 
 
-UWidthChooser::UWidthChooser(ULength w) : UWidth(w) {
-  phandle = ubox(uwidth(3) + UBorder::shadowIn + UCursor::hresize);
+UWidthChooser::UWidthChooser(Length w) : UWidth(w) {
+  phandle = ubox(uwidth(3) + Border::shadowIn + UCursor::hresize);
   phandle->addAttr(UOn::mdrag / ucall(this, &UWidthChooser::drag));
   phandle->addAttr(UOn::mpress / ucall(this, &UWidthChooser::press));
 }
@@ -737,28 +735,28 @@ UWidthChooser::UWidthChooser(ULength w) : UWidth(w) {
 // removingFrom() requires a destructor 
 UWidthChooser::~UWidthChooser() {destructs();}
 
-void UWidthChooser::addingTo(UChild& c, UElem& parent) {
-  UAttr::addingTo(c, parent);
-  UBox* box = parent.toBox();
+void UWidthChooser::addingTo(Child& c, Element& parent) {
+  Attribute::addingTo(c, parent);
+  Box* box = parent.toBox();
   if (!box) {
-    UAppli::warning("UWidthChooser::addingTo","parent should be a UBox");
+    Application::warning("UWidthChooser::addingTo","parent should be a Box");
     return;
   }
-  UBorder* border = box->getBorder(true);
+  Border* border = box->getBorder(true);
   border->add(uvcenter() + uright() + *phandle);
 }
 
-void UWidthChooser::removingFrom(UChild& c, UElem& p) {
-  //UBox* box = parent->boxCast();
+void UWidthChooser::removingFrom(Child& c, Element& p) {
+  //Box* box = parent->boxCast();
   //if (box) {                               // completement faux !!!!
-  //  UBorder* border = box->getBorder();
+  //  Border* border = box->getBorder();
   //  if (border) box->removeAttrNC(border); // !!! faudrait enlever sur les 2 listes
   //}
-  UAttr::removingFrom(c, p);
+  Attribute::removingFrom(c, p);
 }
 
 void UWidthChooser::press(UMouseEvent& e) {
-  UView *v, *parv;
+  View *v, *parv;
   if ((v = e.getView()) && (parv = e.getView()->getParentView())) {
     //curpos = e.getWinX();
     curpos = e.getScreenPos().x;
@@ -769,7 +767,7 @@ void UWidthChooser::press(UMouseEvent& e) {
 }
 
 void UWidthChooser::drag(UMouseEvent& e) {
-  UView *v, *parv;
+  View *v, *parv;
   if ((v = e.getView()) && (parv = e.getView()->getParentView())) {
     float new_w = width.val + (e.getScreenPos().x - curpos);
     if (new_w < v->getWidth()) return;    // la handle doit rester entierement visible
@@ -781,8 +779,8 @@ void UWidthChooser::drag(UMouseEvent& e) {
 }
 
 
-UHeightChooser::UHeightChooser(ULength h) : UHeight(h) {
-  phandle = ubox(uwidth(3) + UBorder::shadowIn + UCursor::vresize);
+UHeightChooser::UHeightChooser(Length h) : UHeight(h) {
+  phandle = ubox(uwidth(3) + Border::shadowIn + UCursor::vresize);
   phandle->addAttr(UOn::mdrag / ucall(this, &UHeightChooser::drag));
   phandle->addAttr(UOn::mpress / ucall(this, &UHeightChooser::press));
 }
@@ -790,24 +788,24 @@ UHeightChooser::UHeightChooser(ULength h) : UHeight(h) {
 // removingFrom() requires a destructor 
 UHeightChooser::~UHeightChooser() {destructs();}
 
-void UHeightChooser::addingTo(UChild&c, UElem& parent) {
-  UAttr::addingTo(c, parent);
-  UBox* box = parent.toBox();
+void UHeightChooser::addingTo(Child&c, Element& parent) {
+  Attribute::addingTo(c, parent);
+  Box* box = parent.toBox();
   if (!box) {
-    UAppli::warning("UHeightChooser::addingTo","parent should be a UBox");
+    Application::warning("UHeightChooser::addingTo","parent should be a Box");
     return;
   }
-  UBorder* border = box->getBorder(true);
+  Border* border = box->getBorder(true);
   border->add(uhcenter() + ubottom() + *phandle);
 }
 
-void UHeightChooser::removingFrom(UChild& c, UElem& p) {
+void UHeightChooser::removingFrom(Child& c, Element& p) {
   // ....
-  UAttr::removingFrom(c, p);
+  Attribute::removingFrom(c, p);
 }
 
 void UHeightChooser::press(UMouseEvent& e) {
-  UView *v, *parv;
+  View *v, *parv;
   if ((v = e.getView()) && (parv = e.getView()->getParentView())) {
     //curpos = e.getWinY();
     curpos = e.getScreenPos().y;
@@ -818,7 +816,7 @@ void UHeightChooser::press(UMouseEvent& e) {
 }
 
 void UHeightChooser::drag(UMouseEvent& e) {
-  UView *v, *parv;
+  View *v, *parv;
   if ((v = e.getView()) && (parv = e.getView()->getParentView())) {
     float new_h = height.val + (e.getScreenPos().y - curpos);
     // la handle doit rester entierement visible

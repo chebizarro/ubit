@@ -1,46 +1,55 @@
-/************************************************************************
- *
- *  upalette.hpp: movable palette box (internal frame)
- *  Ubit GUI Toolkit - Version 6
+/*
+ *  palette.h: movable palette box (internal frame)
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE :
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION;
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
 
 #ifndef _upalette_hpp_
 #define	_upalette_hpp_ 1
+
 #include <ubit/ubox.hpp>
+
 namespace ubit {
   
   /** movable palette box (internal frame).
    */
-  class UPalette : public UBox {
+  class UPalette : public Box {
   public:
     UCLASS(UPalette)
     static UStyle* createStyle();
 
-    UPalette(UArgs content_args = UArgs::none);
+    UPalette(Args content_args = Args::none);
 
-    UBox& content()  {return *pcontent;}
+    Box& content()  {return *pcontent;}
     ///< returns the content (the working area of the palette).
 
-    UElem& title()    {return *ptitle;}
+    Element& title()    {return *ptitle;}
     ///< returns the title (located in the left hand part of the titlebar()).
 
-    UElem& controls() {return *pcontrols;}
+    Element& controls() {return *pcontrols;}
     ///< returns the controls area (located in the right hand part of the titlebar()).
         
-    UBox& titleBar()  {return *ptitle_bar;}
+    Box& titleBar()  {return *ptitle_bar;}
     ///< returns the title bar (which includes a title() and a controls() area).
     
-    UBox& resizeBtn() {return *presize_btn;}
+    Box& resizeBtn() {return *presize_btn;}
     ///<returns the resize button (not show by default, resizeBtn().show() to make it appear).
 
     UPos&   pos()   {return *ppos;}
@@ -56,14 +65,14 @@ namespace ubit {
     uptr<USize> psize;
     uptr<USizeControl> psize_ctrl;
     uptr<UScale> pcontent_scale;
-    uptr<UBox> pcontent;
-    uptr<UElem> ptitle;
-    uptr<UElem> pcontrols;
-    uptr<UBox> ptitle_bar;
-    uptr<UBox> presize_btn;
+    uptr<Box> pcontent;
+    uptr<Element> ptitle;
+    uptr<Element> pcontrols;
+    uptr<Box> ptitle_bar;
+    uptr<Box> presize_btn;
   };
   
-  inline UPalette& upalette(UArgs content = UArgs::none) {return *new UPalette(content);}
+  inline UPalette& upalette(Args content = Args::none) {return *new UPalette(content);}
   ///< shortcut function that returns *new UPalette(content).
 
 }

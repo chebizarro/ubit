@@ -1,6 +1,5 @@
-/************************************************************************
- *
- *  uinteractors.cpp
+/*
+ *  interactors.cpp
  *  Ubit GUI Toolkit - Version 6.0
  *  (C) 2009 | Eric Lecolinet | ENST Paris | www.enst.fr/~elc/ubit
  *
@@ -23,13 +22,13 @@ NAMESPACE_UBIT
 
 struct USeparStyle : public UStyle {
   USeparStyle();
-  virtual const UStyle& getStyle(UUpdateContext*) const;
+  virtual const UStyle& getStyle(UpdateContext*) const;
 private:
   UStyle vstyle;
 };
 
-const UStyle& USeparStyle::getStyle(UUpdateContext* ctx) const {
-  UBox* parent = null;
+const UStyle& USeparStyle::getStyle(UpdateContext* ctx) const {
+  Box* parent = null;
   if (ctx && (parent = ctx->getBoxParent()) && parent->isVertical())
     return vstyle; 
   else return *this;
@@ -37,29 +36,29 @@ const UStyle& USeparStyle::getStyle(UUpdateContext* ctx) const {
 
 USeparStyle::USeparStyle() {
   orient = UOrient::HORIZONTAL;
-  halign = UHalign::FLEX;
-  valign = UValign::CENTER;
+  halign = Halign::FLEX;
+  valign = Valign::CENTER;
   local.padding.set(0, 0);
-  local.border = &UBorder::shadowIn;
+  local.border = &Border::shadowIn;
   // len = -1 means "keep initial size"
   // UNRESIZABLE prevents a uhflex/uvflex to resize the widget
-  local.size.width = ULength(-1, UPX, USize::UNRESIZABLE);
+  local.size.width = Length(-1, UPX, USize::UNRESIZABLE);
 
   vstyle.orient = UOrient::VERTICAL;
-  vstyle.halign = UHalign::CENTER;
-  vstyle.valign = UValign::FLEX;
+  vstyle.halign = Halign::CENTER;
+  vstyle.valign = Valign::FLEX;
   vstyle.local.padding.set(0, 0);
-  vstyle.local.border = &UBorder::shadowIn;
+  vstyle.local.border = &Border::shadowIn;
   // len = -1 means "keep initial size"
   // UNRESIZABLE prevents a uhflex/uvflex to resize the widget
-  vstyle.local.size.height = ULength(-1, UPX, USize::UNRESIZABLE);
+  vstyle.local.size.height = Length(-1, UPX, USize::UNRESIZABLE);
 }
 
 UStyle* USepar::createStyle() {
   return new USeparStyle();
 }
 
-USepar::USepar() : UBox() {
+USepar::USepar() : Box() {
   //setCloseMenuMode(ElementModes::CANNOT_CLOSE_MENU);
 }
 
@@ -68,15 +67,15 @@ USepar::USepar() : UBox() {
 UStyle* ULabel::createStyle() {
   UStyle* style = new UStyle();
   style->orient = UOrient::HORIZONTAL;
-  style->halign = UHalign::LEFT;
-  style->valign = UValign::CENTER;
+  style->halign = Halign::LEFT;
+  style->valign = Valign::CENTER;
   style->hspacing = 1;
   style->vspacing = 1;
   style->setPadding(2, 2);
   return style;
 }
 
-ULabel::ULabel(int nbchars, UArgs a) : UBox(a) {
+ULabel::ULabel(int nbchars, Args a) : Box(a) {
   obtainAttr<USize>().setWidth(nbchars|UEX);
 }
 
@@ -84,35 +83,35 @@ ULabel::ULabel(int nbchars, UArgs a) : UBox(a) {
 
 UStyle* UTextfield::createStyle() {
   UStyle& s = *new UStyle();
-  s.setColors(UColor::inherit, UColor::white);
-  //s.setBgcolors(UColor::none, UColor::blue);
-  s.setBgcolors(UColor::white, UColor::blue);
-  s.setColor(UOn::DISABLED, UColor::disabled);
-  s.setBgcolor(UOn::DROP_ENTERED,UColor::blue);
+  s.setColors(Color::inherit, Color::white);
+  //s.setBgcolors(Color::none, Color::blue);
+  s.setBgcolors(Color::white, Color::blue);
+  s.setColor(UOn::DISABLED, Color::disabled);
+  s.setBgcolor(UOn::DROP_ENTERED,Color::blue);
   s.orient = UOrient::HORIZONTAL;
-  s.halign = UHalign::LEFT;
-  s.valign = UValign::CENTER;
+  s.halign = Halign::LEFT;
+  s.valign = Valign::CENTER;
   s.hspacing = 0;
   s.vspacing = 3;
   s.setPadding(3,2); 
-  static UBorder* border = 
-  new URoundBorder(UBorder::LINE, UColor::darkgrey, UColor::white,1,1,15,15);
+  static Border* border = 
+  new URoundBorder(Border::LINE, Color::darkgrey, Color::white,1,1,15,15);
   s.setBorder(border);
-  //s.local.border = &UBorder::shadowIn;
+  //s.local.border = &Border::shadowIn;
   
   //style->cursor = &UCursor::text;  // done by UEdit
   s.setSize(USize::INITIAL, USize::INITIAL);
   return &s;
 }
 
-UTextfield::UTextfield(UArgs a) : UBox(a) {
+UTextfield::UTextfield(Args a) : Box(a) {
   obtainAttr<UEdit>();
   emodes.IS_TEXT_SELECTABLE = true;     // also added by uedit
   emodes.HAS_CURSOR = true;
   disableMenuClosing();
 }
 
-UTextfield::UTextfield(int nbchars, UArgs a) : UBox(a) {
+UTextfield::UTextfield(int nbchars, Args a) : Box(a) {
   obtainAttr<USize>().setWidth(nbchars|UEX);
   obtainAttr<UEdit>();
   emodes.IS_TEXT_SELECTABLE = true;     // also added by uedit
@@ -137,19 +136,19 @@ bool UTextfield::isEditable() const {
 UStyle* UTextarea::createStyle() {
   UStyle& s = *new UStyle();
   s.viewStyle = &UFlowView::style;
-  s.textSeparator = new UStr("\n");
+  s.textSeparator = new String("\n");
   s.orient = UOrient::HORIZONTAL;
-  s.halign = UHalign::FLEX;
-  s.valign = UValign::CENTER;
+  s.halign = Halign::FLEX;
+  s.valign = Valign::CENTER;
   
-  s.setColors(UColor::inherit, UColor::white);
-  s.setBgcolors(UColor::white, UColor::blue);
-  s.setColor(UOn::DISABLED, UColor::disabled);
-  s.setBgcolor(UOn::DROP_ENTERED,UColor::blue);
+  s.setColors(Color::inherit, Color::white);
+  s.setBgcolors(Color::white, Color::blue);
+  s.setColor(UOn::DISABLED, Color::disabled);
+  s.setBgcolor(UOn::DROP_ENTERED,Color::blue);
   s.hspacing = 0;
   s.vspacing = 3;
   s.local.padding.set(3,2);
-  s.local.border = &UBorder::shadowIn;
+  s.local.border = &Border::shadowIn;
   //style->cursor = &UCursor::text;  // fait par UEdit
   
   // width does not depend on content, but height does! otherwise the box
@@ -160,63 +159,62 @@ UStyle* UTextarea::createStyle() {
   return &s;
 }
 
-/* ==================================================== ===== ======= */
 
 class UButtonStyle : public UStyle {
 public:
   UStyle menu, bar, tab;
   UButtonStyle();
-  virtual const UStyle& getStyle(UUpdateContext*) const;
+  virtual const UStyle& getStyle(UpdateContext*) const;
 };
 
 UButtonStyle::UButtonStyle() {
   orient = UOrient::HORIZONTAL;
-  halign = UHalign::LEFT;
-  valign = UValign::CENTER;
+  halign = Halign::LEFT;
+  valign = Valign::CENTER;
   hspacing = 2;
   vspacing = 2;
   setPadding(2, 2);
-  local.border = &UBorder::shadowOut;
+  local.border = &Border::shadowOut;
   /*
-  setAttributes(UOn::select/UColor::grey
-                  + UOn::enter/UColor::lightgrey
-                  + UOn::arm/UColor::grey);
+  setAttributes(UOn::select/Color::grey
+                  + UOn::enter/Color::lightgrey
+                  + UOn::arm/Color::grey);
    */
-  setBgcolors(UColor::none, UColor::grey);
-  setBgcolor(UOn::ENTERED, UColor::lightgrey);
-  setBgcolor(UOn::ARMED, UColor::grey);
-  setBgcolor(UOn::DROP_ENTERED, UColor::grey);
+  setBgcolors(Color::none, Color::grey);
+  setBgcolor(UOn::ENTERED, Color::lightgrey);
+  setBgcolor(UOn::ARMED, Color::grey);
+  setBgcolor(UOn::DROP_ENTERED, Color::grey);
 
   tab = *this;
-  tab.halign = UHalign::CENTER;
-  tab.valign = UValign::CENTER;
+  tab.halign = Halign::CENTER;
+  tab.valign = Valign::CENTER;
   tab.setPadding(2, 4);
-  tab.setColors(UColor::black, UColor::white);
-  tab.setBgcolors(UColor::none, UColor::blue);
+  tab.setColors(Color::black, Color::white);
+  tab.setBgcolors(Color::none, Color::blue);
   
   menu = *this;
   menu.setPadding(10,4);
   menu.local.border = null;
-  menu.setBgcolors(UColor::none, UColor::grey);
-  menu.setColor(UOn::ENTERED, UColor::white);
-  menu.setBgcolor(UOn::ENTERED, UColor::blue);
-  menu.setColor(UOn::ARMED, UColor::white);  
-  menu.setBgcolor(UOn::ARMED, UColor::blue);
-  menu.setBgcolor(UOn::DROP_ENTERED, UColor::grey);
+  menu.setBgcolors(Color::none, Color::grey);
+  menu.setColor(UOn::ENTERED, Color::white);
+  menu.setBgcolor(UOn::ENTERED, Color::blue);
+  menu.setColor(UOn::ARMED, Color::white);  
+  menu.setBgcolor(UOn::ARMED, Color::blue);
+  menu.setBgcolor(UOn::DROP_ENTERED, Color::grey);
   
   bar = *this;
   bar.orient = UOrient::VERTICAL;
-  bar.halign = UHalign::CENTER;
-  bar.valign = UValign::CENTER;
+  bar.halign = Halign::CENTER;
+  bar.valign = Valign::CENTER;
   bar.setPadding(5,3);
   bar.local.border = null;
-  bar.setBgcolors(UColor::none, UColor::grey);
-  bar.setBgcolor(UOn::ENTERED, UColor::lightgrey);
-  bar.setBgcolor(UOn::ARMED, UColor::grey);
-  bar.setBgcolor(UOn::DROP_ENTERED, UColor::grey);
+  bar.setBgcolors(Color::none, Color::grey);
+  bar.setBgcolor(UOn::ENTERED, Color::lightgrey);
+  bar.setBgcolor(UOn::ARMED, Color::grey);
+  bar.setBgcolor(UOn::DROP_ENTERED, Color::grey);
 };
 
-const UStyle& UButtonStyle::getStyle(UUpdateContext* ctx) const {
+const UStyle& UButtonStyle::getStyle(UpdateContext* ctx) const {
   if (!ctx) return *this;
   
   UButton* btn = dynamic_cast<UButton*>(ctx->getObj());
@@ -229,7 +227,7 @@ const UStyle& UButtonStyle::getStyle(UUpdateContext* ctx) const {
     }
   }
   else {
-    UBox* parent = null;
+    Box* parent = null;
     if ((parent = ctx->getBoxParent())) {
       // faudrait separer les 2 cas et rajouter listbox
       if (dynamic_cast<const UMenu*>(parent) || dynamic_cast<const UMenubar*>(parent))
@@ -245,7 +243,7 @@ const UStyle& UButtonStyle::getStyle(UUpdateContext* ctx) const {
 
 UStyle* UButton::createStyle() {return new UButtonStyle;}
 
-UButton::UButton(UArgs a) {
+UButton::UButton(Args a) {
   button_type = AUTO;
   emodes.IS_ARMABLE = true;
   emodes.IS_CROSSABLE = true;
@@ -254,7 +252,7 @@ UButton::UButton(UArgs a) {
   add(a);
 }
 
-UButton::UButton(int btype, UArgs a) {
+UButton::UButton(int btype, Args a) {
   button_type = btype;
   emodes.IS_ARMABLE = true;
   emodes.IS_CROSSABLE = true;
@@ -263,14 +261,14 @@ UButton::UButton(int btype, UArgs a) {
   add(a);
 }
 
-UButton& uflatbutton(UArgs a) {
+UButton& uflatbutton(Args a) {
   UButton* b = new UButton;
-  b->setAttr(UBorder::line);    // !!! A REVOIR avec styles 
+  b->setAttr(Border::line);    // !!! A REVOIR avec styles 
   b->add(a);
   return *b;
 }
 
-UButton& utabbutton(UArgs a) {
+UButton& utabbutton(Args a) {
   return *new UButton(UButton::TAB, a);
 }
 
@@ -278,7 +276,7 @@ UButton& utabbutton(UArgs a) {
 class UTabbutton: public UButton {
 public:
   UCLASS("utabbutton", UTabbutton, new UTabbutton)
-  UTabbutton(const UArgs& a = UArgs::none);
+  UTabbutton(const Args& a = Args::none);
   static UStyle* createStyle();
 };
 
@@ -289,7 +287,7 @@ public:
 class UFlatbutton: public UButton {
 public:
   UCLASS("uflatbutton", UFlatbutton, new UFlatbutton)
-  UFlatbutton(const UArgs& a = UArgs::none);
+  UFlatbutton(const Args& a = Args::none);
     static UStyle* createStyle();
 };
 */
@@ -299,64 +297,63 @@ public:
 UStyle* UItem::createStyle() {
   UStyle& s = *new UStyle();
   s.orient = UOrient::HORIZONTAL;
-  s.halign = UHalign::LEFT;
-  s.valign = UValign::FLEX;
+  s.halign = Halign::LEFT;
+  s.valign = Valign::FLEX;
   s.hspacing = 2;
   s.hspacing = 2;
   s.setPadding(1, 1);
   /*
-   s.setAttributes(UOn::select/UColor::white
-   + UOn::select/UBackground::blue
-   + UOn::arm/UColor::white
-   + UOn::arm/UBackground::blue);
-   + UOn::drop/UColor::white
-   + UOn::drop/UBackground::blue);
+   s.setAttributes(UOn::select/Color::white
+   + UOn::select/Background::blue
+   + UOn::arm/Color::white
+   + UOn::arm/Background::blue);
+   + UOn::drop/Color::white
+   + UOn::drop/Background::blue);
    */
-  s.setColors(UColor::inherit, UColor::white);
-  s.setBgcolors(UColor::none, UColor::blue);
-  s.setColor(UOn::ARMED, UColor::white);
-  s.setBgcolor(UOn::ARMED, UColor::blue);
-  s.setColor(UOn::DROP_ENTERED, UColor::white);
-  s.setBgcolor(UOn::DROP_ENTERED, UColor::blue);
+  s.setColors(Color::inherit, Color::white);
+  s.setBgcolors(Color::none, Color::blue);
+  s.setColor(UOn::ARMED, Color::white);
+  s.setBgcolor(UOn::ARMED, Color::blue);
+  s.setColor(UOn::DROP_ENTERED, Color::white);
+  s.setBgcolor(UOn::DROP_ENTERED, Color::blue);
   return &s;
 }
 
-UItem::UItem(UArgs a): UBox() {
+UItem::UItem(Args a): Box() {
   emodes.IS_ARMABLE = true;
   // this object auto opens dialog children because it is ARMable
   // !att: pour que ca marche faut ajouter a APRES!
   add(a);
 }
 
-/* ==================================================== ===== ======= */
 
 UStyle* ULinkbutton::createStyle() {
   UStyle& s = *new UStyle;
   s.orient = UOrient::HORIZONTAL;
-  s.halign = UHalign::LEFT;
-  s.valign = UValign::CENTER;
+  s.halign = Halign::LEFT;
+  s.valign = Valign::CENTER;
   s.hspacing = 1;
   s.vspacing = 1;
   s.local.padding.set(1, 1);
   s.local.border = null;
   s.cursor = &UCursor::hand;
   s.font = &UFont::underline;
-  s.setColors(UColor::navy, UColor::red);
-  s.setBgcolors(UColor::none, UColor::none);  
-  s.setColor(UOn::DISABLED, UColor::disabled);
-  s.setBgcolor(UOn::ENTERED, UColor::grey);
-  s.setColor(UOn::ARMED, UColor::red);
-  s.setColor(UOn::ACTIONED, UColor::red);
-  s.setColor(UOn::DROP_ENTERED, UColor::blue);
+  s.setColors(Color::navy, Color::red);
+  s.setBgcolors(Color::none, Color::none);  
+  s.setColor(UOn::DISABLED, Color::disabled);
+  s.setBgcolor(UOn::ENTERED, Color::grey);
+  s.setColor(UOn::ARMED, Color::red);
+  s.setColor(UOn::ACTIONED, Color::red);
+  s.setColor(UOn::DROP_ENTERED, Color::blue);
   return &s;
 }
 
-ULinkbutton::ULinkbutton(UArgs a) : UButton(a) {
+ULinkbutton::ULinkbutton(Args a) : UButton(a) {
   emodes.HAS_CURSOR = true; // le style suffit pas !
 }
 
-UStr ULinkbutton::getHRef() const {        // pas tres efficace!
-  UStr val;
+String ULinkbutton::getHRef() const {        // pas tres efficace!
+  String val;
   getAttrValue(val,"href"); 
   return val;
 }
@@ -367,13 +364,13 @@ UStyle* UCheckbox::createStyle() {
   UButtonStyle& s = *new UButtonStyle;
   s.orient = s.menu.orient = s.bar.orient = UOrient::HORIZONTAL;
   s.local.border = s.menu.local.border = s.bar.local.border = null;
-  s.local.content = s.menu.local.content = s.bar.local.content = new UElem(USymbol::check);
-  s.setBgcolors(UColor::none, UColor::none);
-  s.setBgcolor(UOn::DROP_ENTERED, UColor::grey);
-  s.bar.setBgcolors(UColor::none, UColor::none);
-  s.bar.setBgcolor(UOn::DROP_ENTERED, UColor::grey);
-  s.menu.setBgcolors(UColor::none, UColor::none);
-  s.menu.setBgcolor(UOn::DROP_ENTERED, UColor::grey);
+  s.local.content = s.menu.local.content = s.bar.local.content = new Element(USymbol::check);
+  s.setBgcolors(Color::none, Color::none);
+  s.setBgcolor(UOn::DROP_ENTERED, Color::grey);
+  s.bar.setBgcolors(Color::none, Color::none);
+  s.bar.setBgcolor(UOn::DROP_ENTERED, Color::grey);
+  s.menu.setBgcolors(Color::none, Color::none);
+  s.menu.setBgcolor(UOn::DROP_ENTERED, Color::grey);
   return &s;
 }
 
@@ -381,47 +378,47 @@ UStyle* URadiobutton::createStyle() {
   UButtonStyle& s = *new UButtonStyle;
   s.orient = s.menu.orient = s.bar.orient = UOrient::HORIZONTAL;
   s.local.border = s.menu.local.border = s.bar.local.border = null;
-  s.local.content = s.menu.local.content = s.bar.local.content = new UElem(USymbol::radio);
-  s.setBgcolors(UColor::none, UColor::none);
-  s.setBgcolor(UOn::DROP_ENTERED, UColor::grey);
-  s.bar.setBgcolors(UColor::none, UColor::none);
-  s.bar.setBgcolor(UOn::DROP_ENTERED, UColor::grey);
-  s.menu.setBgcolors(UColor::none, UColor::none);
-  s.menu.setBgcolor(UOn::DROP_ENTERED, UColor::grey);
+  s.local.content = s.menu.local.content = s.bar.local.content = new Element(USymbol::radio);
+  s.setBgcolors(Color::none, Color::none);
+  s.setBgcolor(UOn::DROP_ENTERED, Color::grey);
+  s.bar.setBgcolors(Color::none, Color::none);
+  s.bar.setBgcolor(UOn::DROP_ENTERED, Color::grey);
+  s.menu.setBgcolors(Color::none, Color::none);
+  s.menu.setBgcolor(UOn::DROP_ENTERED, Color::grey);
   return &s;
 }
 
-UCheckbox::UCheckbox(UArgs a) : UButton(a) {
+UCheckbox::UCheckbox(Args a) : UButton(a) {
   emodes.IS_SELECTABLE = true;
   emodes.IS_CROSSABLE = false;
 }
 
-URadiobutton::URadiobutton(UArgs a) : UButton(a) {
+URadiobutton::URadiobutton(Args a) : UButton(a) {
   emodes.IS_SELECTABLE = true;
   emodes.IS_CROSSABLE = false;
 }
 
 /* ==================================================== [Elc] ======= */
 
-USpinbox::USpinbox(UArgs a) : 
-pvalue(*new UInt(0)),
-pstr(*new UStr),
+USpinbox::USpinbox(Args a) : 
+pvalue(*new Int(0)),
+pstr(*new String),
 increment(1) {
   constructs(a);
 }
 
-USpinbox::USpinbox(UInt& _value, UArgs a) : 
+USpinbox::USpinbox(Int& _value, Args a) : 
 pvalue(_value),
-pstr(*new UStr),
+pstr(*new String),
 increment(1) {
   constructs(a);
 }
 
 UStyle* USpinbox::createStyle() {
-  return UBox::createStyle();
+  return Box::createStyle();
 }
 
-void USpinbox::constructs(const UArgs& a) {
+void USpinbox::constructs(const Args& a) {
   ptextfield = new UTextfield;
   ptextfield->addAttr(UOn::action / ucall(this, 0, &USpinbox::updateValue)
                       + UOn::leave  / ucall(this, 0, &USpinbox::updateValue));
@@ -434,10 +431,10 @@ void USpinbox::constructs(const UArgs& a) {
   // value change -> mise a jour de la string
   pvalue->onChange(ucall(this, &USpinbox::changed));
 
-  UBox& up_btn = ubox
+  Box& up_btn = ubox
     (USymbol::up + UOn::arm/ucall(this,+1,&USpinbox::updateValue));
 
-  UBox& down_btn = ubox
+  Box& down_btn = ubox
     (USymbol::down + UOn::arm/ucall(this,-1,&USpinbox::updateValue));
 
   //up_btn.setAutoRepeat(true);
@@ -449,7 +446,6 @@ void USpinbox::constructs(const UArgs& a) {
       );
 }
 
-/* ==================================================== ======== ======= */
 
 void USpinbox::setValue(int v) {*pvalue = v;}
 void USpinbox::setIncrement(int v) {increment = v;}
@@ -463,10 +459,10 @@ void USpinbox::updateValue(int dir) {
 
 void USpinbox::changed() {
   pstr->setInt(*pvalue);  // reset string format
-  UEvent e1(UOn::change, this, pvalue);  //UElemEvent
+  Event e1(UOn::change, this, pvalue);  //UElemEvent
   fire(e1);
 
-  UEvent e2(UOn::action, this, pvalue);  //UElemEvent
+  Event e2(UOn::action, this, pvalue);  //UElemEvent
   fire(e2);
 }
 

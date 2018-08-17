@@ -1,18 +1,25 @@
-/************************************************************************
- *
- *  ufinder.cpp: UFinder element
- *  Ubit GUI Toolkit - Version 6
+/*
+ *  finder.cpp: UFinder element
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE :
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION;
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
 
 #include <ubit/ubit_features.h>
 #include <cmath>
@@ -66,12 +73,11 @@ static const char *doc_xpm[] = {       // moins large que UPix::doc
 };
 UPix& UFinder::doc_pix = *new UPix(doc_xpm, UObject::UCONST);
 
-/* ==================================================== ======== ======= */
 
 UFinder::Options::Options() :
   clone_frame_size(600,450),
-  default_background(UColor::white),
-  default_color(UColor::black),
+  default_background(Color::white),
+  default_color(Color::black),
   //controls_width(100),
   //controls_folder_height(125),
   show_icon_images(true) {
@@ -91,7 +97,7 @@ void UFinder::setTracking(bool doc_track, bool icon_track) {
 
 //void UFinder::showDocGlass(bool state) {docglass->show(state);}
 
-void UFinder::showAlert(const UStr& msg) {alertbox->showMsg(msg);}
+void UFinder::showAlert(const String& msg) {alertbox->showMsg(msg);}
 
 void UFinder::hideAlert() {alertbox->show(false);}
 
@@ -109,7 +115,7 @@ UFinder::~UFinder() {
 delete local_ums;
 }
 
-UFinder::UFinder(const UStr& _pathname) :
+UFinder::UFinder(const String& _pathname) :
 mode(NoMode),
 is_tracking(false), 
 open_in_fullwin(false),
@@ -122,22 +128,22 @@ remote_ums(null),
 pdocument(null),
 pdocbox(new UDocbox()),
 piconbox(null),
-//docglass(new UBox()),
+//docglass(new Box()),
 last_direntry(null),
 last_preview_request(null),
 last_preview(null),
 preview_timer(new UTimer(false)) 
 {
   preview_timer->onAction(ucall(this, &UFinder::showIconPreviews));
-  UAppli::onMessage("next",    ucall(this, &UFinder::nextEntry));
-  UAppli::onMessage("previous",ucall(this, &UFinder::previousEntry));
-  UAppli::onMessage("parent",  ucall(this, &UFinder::openParent));
-  UAppli::onMessage("file",    ucall(this, &UFinder::openMsg));
-  UAppli::onMessage("open",    ucall(this, &UFinder::openMsg));
-  UAppli::onMessage("clone",   ucall(this, &UFinder::createCloneRequest));
-  //UAppli::onMessage("put",     ucall(this, &UFinder::sendFileMessage)); 
+  Application::onMessage("next",    ucall(this, &UFinder::nextEntry));
+  Application::onMessage("previous",ucall(this, &UFinder::previousEntry));
+  Application::onMessage("parent",  ucall(this, &UFinder::openParent));
+  Application::onMessage("file",    ucall(this, &UFinder::openMsg));
+  Application::onMessage("open",    ucall(this, &UFinder::openMsg));
+  Application::onMessage("clone",   ucall(this, &UFinder::createCloneRequest));
+  //Application::onMessage("put",     ucall(this, &UFinder::sendFileMessage)); 
   /*
-  docglass->addAttr(UBackground::none);
+  docglass->addAttr(Background::none);
   docglass->addAttr(upos(0,0));
   docglass->addAttr(usize(50000,100000)); // a revoir
   docpane->content().add(*docglass);
@@ -148,16 +154,16 @@ preview_timer(new UTimer(false))
   alertbox->addAttr(upos(0,0) + usize(100|UPERCENT,100|UPERCENT));
   alertbox->show(false);
 
-  ask_dialog_msg = new UStr(); 
+  ask_dialog_msg = new String(); 
   ask_dialog = new UDialog
   (uhcenter() + uvflex()
    + upadding(15,20) + uvspacing(20)
    + UFont::bold + UFont::large
-   + uhbox(UColor::orange + "Remote Request")
-   + uhbox(UColor::navy + ask_dialog_msg)
+   + uhbox(Color::orange + "Remote Request")
+   + uhbox(Color::navy + ask_dialog_msg)
    + uhcenter()
-   + uhbox(ubutton("  OK " + ucall(1, &UElem::closeWin))
-           + ubutton(" Cancel " + ucall(0, &UElem::closeWin)))
+   + uhbox(ubutton("  OK " + ucall(1, &Element::closeWin))
+           + ubutton(" Cancel " + ucall(0, &Element::closeWin)))
    );
 
   // doit toujours rester une hardwin, meme en mode -group et
@@ -171,7 +177,7 @@ preview_timer(new UTimer(false))
   initOptbox();
   optbox.show(false);
 
-  toolbar.addAttr(UBackground::metal + UFont::xx_large + UFont::bold);
+  toolbar.addAttr(Background::metal + UFont::xx_large + UFont::bold);
   toolbar
   .add(*optbox_btn
        + ubutton(uhcenter() + UPix::bigUp + ucall(this, &UFinder::openParent))
@@ -185,7 +191,7 @@ preview_timer(new UTimer(false))
   
   mainbox.addAttr(UOrient::vertical + uvflex() + uvflex());
   
-  addAttr(UBackground::white); 
+  addAttr(Background::white); 
   add(UOrient::vertical 
       + utop() + toolbar
       + uvflex()
@@ -205,7 +211,6 @@ preview_timer(new UTimer(false))
   addHost("localhost");
 }
 
-/* ==================================================== [(c)Elc] ======= */
 
 void UFinder::showSideBar(bool state) {
   optbox_btn->setSelected(state);
@@ -217,13 +222,13 @@ void UFinder::initOptbox() {
           + UOn::select   / ushow(optbox, true)
           + UOn::deselect / ushow(optbox, false)
           );
-  optbox.addAttr(UOrient::vertical + UBackground::velin
+  optbox.addAttr(UOrient::vertical + Background::velin
                  + usize(120,UAUTO) + upadding(6,9).setRight(2) + utop());
 
   // - - - HISTORY - - - -
   
   folderlist.addAttr(UOrient::vertical + utop() + uchoice());
-  UBox& folders = uscrollpane(true, false, folderlist);
+  Box& folders = uscrollpane(true, false, folderlist);
   folders.addAttr(usize(UAUTO,100) + upadding().setLeft(15)); 
   folders.show(false);
 
@@ -239,22 +244,22 @@ void UFinder::initOptbox() {
   
   // - - - HOSTS - - - -
  
-  UStr* host_str = new UStr;
+  String* host_str = new String;
   UMenu& new_host_menu = 
   umenu(UOrient::horizontal
         + "Host Name: "
         + utextfield(usize(150) + host_str
-                     + ucall(this, (const UStr*)host_str, &UFinder::addHostCB)
-                     + ucall(0, &UElem::closeWin))
+                     + ucall(this, (const String*)host_str, &UFinder::addHostCB)
+                     + ucall(0, &Element::closeWin))
         + ubutton(" Add "
-                  + ucall(this, (const UStr*)host_str, &UFinder::addHostCB)
-                  + ucall(0, &UElem::closeWin))
+                  + ucall(this, (const String*)host_str, &UFinder::addHostCB)
+                  + ucall(0, &Element::closeWin))
         );
   
   hostlist.addAttr(UOrient::vertical + utop());
   hostlist.add(uitem(UFont::italic + " Add Host" + new_host_menu));
 
-  UBox& hosts = uscrollpane(true, false, hostlist);
+  Box& hosts = uscrollpane(true, false, hostlist);
   hosts.addAttr(usize(UAUTO,100) + upadding().setLeft(15));
   hosts.show(false);
 
@@ -330,7 +335,7 @@ void UFinder::showDirBox() {
 
 /* ==================================================== [Elc] ======= */
 
-void UFinder::open(const UStr& path) {
+void UFinder::open(const String& path) {
   if (path.empty()) return;
 
   int path_type = UFileInfo::parsePrefix(path);
@@ -342,9 +347,9 @@ void UFinder::open(const UStr& path) {
 }
 
 
-void UFinder::openImpl(const UStr& path_name, int path_mode, int path_type) {
+void UFinder::openImpl(const String& path_name, int path_mode, int path_type) {
   if (path_name.empty()) return;
-  UStr path = path_name;
+  String path = path_name;
 
   // local file or dir  
   if (path[0] == '~' && (path[1] == '/' || path[1] == 0)) {
@@ -381,7 +386,7 @@ void UFinder::openImpl(const UStr& path_name, int path_mode, int path_type) {
 /* ==================================================== [Elc] ======= */
 
 void UFinder::openParent() {
-  UStr name;
+  String name;
   if (piconbox) name = piconbox->pathname();
   else name = ".";
 
@@ -398,12 +403,12 @@ void UFinder::openParent() {
 }
 
 void UFinder::openFBox(UFilebox& openbox) {
-  UStr path = openbox.getPath();
+  String path = openbox.getPath();
   open(path);
 }
 
-void UFinder::openMsg(UMessageEvent& e) {
-  const UStr* file = e.getMessage();
+void UFinder::openMsg(MessageEvent& e) {
+  const String* file = e.getMessage();
   if (!file || file->empty()) openEntry();
   else {
     // d'abord ouvrir le directory pour que next/prev fonctionne
@@ -417,7 +422,7 @@ void UFinder::openMsg(UMessageEvent& e) {
 namespace impl {
 
   struct CMenu : public UCtlmenu {
-    UElem * mopener;
+    Element * mopener;
     CMenu() {}
   };
   
@@ -434,11 +439,11 @@ namespace impl {
     
     ZoomAction(CMenu& _c, UFinder& _b) :  cmenu(_c), browser(_b) {}
     
-    virtual void operator()(UEvent& event) {
+    virtual void operator()(Event& event) {
       UMouseEvent& e = (UMouseEvent&)event;
       
       if (e.isFirstDrag()) {
-        UElem* source = cmenu.mopener;
+        Element* source = cmenu.mopener;
         scale = null;
         
         if (source == browser.getIconbox())
@@ -474,8 +479,7 @@ namespace impl {
   // eventuellement (mais pas forcement) le meme ZOOM_QUANTUM que zZ
   const float ZoomAction::ZOOM_QUANTUM = 1.10;
   
-  /* ==================================================== ======== ======= */
-  
+    
   struct ScrollAction : public UScrollAction {
     CMenu& cmenu;
     UFinder& f;
@@ -485,7 +489,7 @@ namespace impl {
     
     virtual void mdrag(UMouseEvent& e, UCtlmenu&) {
       if (e.isFirstDrag()) {
-        UElem* source = cmenu.mopener;
+        Element* source = cmenu.mopener;
         if (source == f.getIconbox()) setPane(f.getIconbox()->scrollpane());
         else if (source == f.getDocbox()) setPane(f.getDocbox()->scrollpane());
       }
@@ -493,7 +497,6 @@ namespace impl {
     }  
   };
   
-/* ==================================================== ======== ======= */
 
   void mpressCB(UMouseEvent& e, CMenu* m) {
     // open menu if RightButton ou CTRL-LeftButton
@@ -509,7 +512,7 @@ namespace impl {
 }  // endof nested namespace
 
   
-void UFinder::openContextMenuIn(UBox& box) {  
+void UFinder::openContextMenuIn(Box& box) {  
   // mpressCB() opens menu if RightButton or CTRL-LeftButton and propagates events
   // to children otherwise
   box.catchEvents(UOn::mpress / ucall((impl::CMenu*)ctlmenu(), impl::mpressCB));
@@ -519,9 +522,9 @@ UCtlmenu& UFinder::createContextMenu() {
   impl::CMenu* cmenu = new impl::CMenu();
   
   impl::ZoomAction* za = new impl::ZoomAction(*cmenu, *this);
-  cmenu->item(4).add(UFont::xx_large + UFont::bold + UColor::red + " Z- " 
+  cmenu->item(4).add(UFont::xx_large + UFont::bold + Color::red + " Z- " 
                       + UOn::mdrag/za);
-  cmenu->item(0).add(UFont::xx_large + UFont::bold + UColor::red + " Z+ "
+  cmenu->item(0).add(UFont::xx_large + UFont::bold + Color::red + " Z+ "
                       + UOn::mdrag/za);
   
   impl::ScrollAction* sa = new impl::ScrollAction(*cmenu, *this);

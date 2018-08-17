@@ -1,6 +1,5 @@
-/************************************************************************
- *
- *  uviewlayout.cpp
+/*
+ *  viewlayout.cpp
  *  Ubit GUI Toolkit - Version 6
  *  (C) 2009 | Eric Lecolinet | ENST Paris | http://www.enst.fr/~elc/ubit
  *
@@ -28,7 +27,7 @@ using namespace std;
 namespace ubit {
 
 
-UViewLayoutImpl::UViewLayoutImpl(UView *v) {
+UViewLayoutImpl::UViewLayoutImpl(View *v) {
   view = v;
   view->hflex_count = view->vflex_count = 0; 
   visibleElemCount = 0;
@@ -38,12 +37,11 @@ UViewLayoutImpl::UViewLayoutImpl(UView *v) {
   mustLayoutAgain = false;
 }
 
-/* ==================================================== ======== ======= */
 
-void UViewLayoutImpl::computeWidth(const UUpdateContext& ctx,
-                                   const UPaddingSpec& padding,
+void UViewLayoutImpl::computeWidth(const UpdateContext& ctx,
+                                   const PaddingSpec& padding,
                                    UViewLayout& vl, bool minmax_defined) {
-  const USizeSpec& size = ctx.local.size;
+  const SizeSpec& size = ctx.local.size;
   
   // !!!!!!  A COMPLETER !!! prendre en compte les Units du padding !!!!!!!
 
@@ -88,7 +86,7 @@ void UViewLayoutImpl::computeWidth(const UUpdateContext& ctx,
     // (a combination of layout+update+layout is necessary for correct init)
     UViewKeepSizeProp* ks = null;
     
-    if (view->width<=0 || !view->hasVMode(UView::INITIALIZED) || !view->getProp(ks)) {
+    if (view->width<=0 || !view->hasVMode(View::INITIALIZED) || !view->getProp(ks)) {
       view->obtainProp(ks);
       ks->width = auto_width / ctx.xyscale;
       // ce qui suit permet de calculer la taille (max) d'une liste d'objets
@@ -109,11 +107,11 @@ void UViewLayoutImpl::computeWidth(const UUpdateContext& ctx,
   }
 
   if (mode == ADJUST) {
-    view->removeVModes(UView::FIXED_WIDTH);
+    view->removeVModes(View::FIXED_WIDTH);
     view->width = auto_width;
   }
   else {			// keepSize ou fixedSize
-    view->addVModes(UView::FIXED_WIDTH);
+    view->addVModes(View::FIXED_WIDTH);
     // NB: the fixedSize can be changed by client or zoom => always reset width
     view->width = spec_width;
   }
@@ -132,12 +130,11 @@ void UViewLayoutImpl::computeWidth(const UUpdateContext& ctx,
   else vl.dim.width = vl.min_w = vl.max_w = view->width; 
 }
 
-/* ==================================================== ======== ======= */
 
-void UViewLayoutImpl::computeHeight(const UUpdateContext& ctx,
-                                    const UPaddingSpec& padding,
+void UViewLayoutImpl::computeHeight(const UpdateContext& ctx,
+                                    const PaddingSpec& padding,
                                     UViewLayout& vl, bool minmax_defined) {
-  const USizeSpec& size = ctx.local.size;
+  const SizeSpec& size = ctx.local.size;
 
   // !!!!!!  A COMPLETER !!! prendre en compte les Units du padding !!!!!!!
 
@@ -163,7 +160,7 @@ void UViewLayoutImpl::computeHeight(const UUpdateContext& ctx,
   if (mode == KEEP_SIZE) {
     UViewKeepSizeProp* ks = null;
     
-    if (view->height<=0 || !view->hasVMode(UView::INITIALIZED) || !view->getProp(ks)) {
+    if (view->height<=0 || !view->hasVMode(View::INITIALIZED) || !view->getProp(ks)) {
       view->obtainProp(ks);
       ks->height = auto_height / ctx.xyscale;
       //float hh = auto_height / ctx.xyscale
@@ -181,11 +178,11 @@ void UViewLayoutImpl::computeHeight(const UUpdateContext& ctx,
   }
   
   if (mode == ADJUST) {
-    view->removeVModes(UView::FIXED_HEIGHT);
+    view->removeVModes(View::FIXED_HEIGHT);
     view->height = auto_height;
   }
   else {			// KEEP_SIZE ou FIXED_SIZE
-    view->addVModes(UView::FIXED_HEIGHT);
+    view->addVModes(View::FIXED_HEIGHT);
     view->height = spec_height;
   }
 
@@ -203,12 +200,12 @@ void UViewLayoutImpl::computeHeight(const UUpdateContext& ctx,
 
 /* ==================================================== [Elc] ======= */
 
-bool UView::doLayout(UUpdateContext& parp, UViewLayout& vl) {
+bool View::doLayout(UpdateContext& parp, UViewLayout& vl) {
   UViewLayoutImpl vd(this); 
-  UBox* box = getBox();
-  if (!box) {UAppli::internalError("UView::doLayout", "Null box!"); return false;}
+  Box* box = getBox();
+  if (!box) {Application::internalError("View::doLayout", "Null box!"); return false;}
 
-  UUpdateContext curp(parp, box, this, null);
+  UpdateContext curp(parp, box, this, null);
   
   if (vl.strategy == UViewLayout::IMPOSE_WIDTH) {
     //imposer la taille donnee par parent
@@ -225,44 +222,43 @@ bool UView::doLayout(UUpdateContext& parp, UViewLayout& vl) {
 };
 
 
-static void hintElemVert(UViewLayoutImpl& vd, const UUpdateContext& curp,
-                         const UViewLayout& chvl, UElem* box);
-static void hintElemHoriz(UViewLayoutImpl& vd, const UUpdateContext& curp,
-                          const UViewLayout& chvl, UElem* box);
-static void hintElemViewport(UViewLayoutImpl& vd, const UUpdateContext& curp,
-                             const UViewLayout& chvl, UElem* box);
-static void hintElemBorder(UViewLayoutImpl& vd, const UUpdateContext& curp,
-                           const UViewLayout& chvl, UElem* box);
+static void hintElemVert(UViewLayoutImpl& vd, const UpdateContext& curp,
+                         const UViewLayout& chvl, Element* box);
+static void hintElemHoriz(UViewLayoutImpl& vd, const UpdateContext& curp,
+                          const UViewLayout& chvl, Element* box);
+static void hintElemViewport(UViewLayoutImpl& vd, const UpdateContext& curp,
+                             const UViewLayout& chvl, Element* box);
+static void hintElemBorder(UViewLayoutImpl& vd, const UpdateContext& curp,
+                           const UViewLayout& chvl, Element* box);
 
-/* ==================================================== ======== ======= */
 
-void UView::doLayout2(UViewLayoutImpl& vd, UElem& grp, UUpdateContext& curp, UViewLayout& vl) {
+void View::doLayout2(UViewLayoutImpl& vd, Element& grp, UpdateContext& curp, UViewLayout& vl) {
   UMultiList mlist(curp, grp);
   if (curp.xyscale != 1.) curp.rescale();
   scale = curp.xyscale;
   
   bool is_pane  = dynamic_cast<UScrollpane*>(&grp);  // !!!@@@ A REVOIR !!!
-  bool is_border = grp.getDisplayType() == UElem::BORDER; // !!!@@@ A REVOIR !!!
-  UNode* b = null;
-  UElem* chgrp = null;
-  UView* chboxview = null;
+  bool is_border = grp.getDisplayType() == Element::BORDER; // !!!@@@ A REVOIR !!!
+  Node* b = null;
+  Element* chgrp = null;
+  View* chboxview = null;
   
   // interdiction de tenir compte de l'orient dans les UElems
   // if (grp.boxCast()) vd.orient = curp.orient;
   
-  // les UElem sont normalement en UOrient::inherit    
+  // les Element sont normalement en UOrient::inherit    
   vd.orient = grp.isVertical() ? UOrient::VERTICAL : UOrient::HORIZONTAL;
 
   // if this group is not null (which generally is the case) the object
   // it contains are added to children for normal display
   // (can for instance be used for adding list-item markers, checkboxes...
   if (curp.local.content) {
-    UElem* content = curp.local.content;
+    Element* content = curp.local.content;
     curp.local.content = null;	// avoid infinite recursion
     doLayout2(vd, *content, curp, vl);    // pas de curp, meme vd
   }
 
-  for (UChildIter ch = mlist.begin(); ch != mlist.end(); mlist.next(ch))
+  for (ChildIter ch = mlist.begin(); ch != mlist.end(); mlist.next(ch))
     // NB: null cond means always
     if (!ch.getCond() || ch.getCond()->verifies(curp, grp)) {
 
@@ -295,17 +291,17 @@ void UView::doLayout2(UViewLayoutImpl& vd, UElem& grp, UUpdateContext& curp, UVi
       // UElems, UBoxes, UWins
 
       else if ((chgrp = b->toElem()) && chgrp->isShowable()) {
-        UBox* boxgrp = chgrp->toBox();
+        Box* boxgrp = chgrp->toBox();
         if (boxgrp) {  // QUE les Box
 
-          if ((chgrp->getDisplayType() == UElem::BLOCK   // UBox or UPluggin
+          if ((chgrp->getDisplayType() == Element::BLOCK   // Box or UPluggin
                && (chboxview = boxgrp->getViewInImpl(vd.view /*,&ch.child()*/)))
               ||
-              (mlist.in_softwin_list && chgrp->getDisplayType() == UElem::SOFTWIN
+              (mlist.in_softwin_list && chgrp->getDisplayType() == Element::SOFTWIN
                && (chboxview = boxgrp->getViewInImpl(vd.view /*,null*/)))
               ) {
             
-            //if (chboxview->hasVMode(UView::FORCE_POS)) {
+            //if (chboxview->hasVMode(View::FORCE_POS)) {
             if (chgrp->isFloating()) {
               vd.mustLayoutAgain |= chboxview->doLayout(curp, chvl);
               // floatings pas additionnes pour calcul taille parent, mais parent
@@ -329,18 +325,18 @@ void UView::doLayout2(UViewLayoutImpl& vd, UElem& grp, UUpdateContext& curp, UVi
           } // endif(isDef(Mode::BOX) ...)
         } // endif(boxCast)
         
-        else {  // just an UElem
-          UUpdateContext chcurp(curp, chgrp, vd.view, null);
+        else {  // just an Element
+          UpdateContext chcurp(curp, chgrp, vd.view, null);
           doLayout2(vd, *chgrp, chcurp, vl);   //own curp, same vd
         }
       }
     }
       
-    // la suite ne concerne pas les UElem
+    // la suite ne concerne pas les Element
     if (grp.toBox()) {
 
     // Border and Box size
-    UPaddingSpec padding(0, 0);
+    PaddingSpec padding(0, 0);
       
     if (curp.local.border) {
        curp.local.border->getSize(curp, padding);
@@ -349,10 +345,10 @@ void UView::doLayout2(UViewLayoutImpl& vd, UElem& grp, UUpdateContext& curp, UVi
         UViewBorderProp* vb = null;
         if (!vd.view->getProp(vb)) {
           vd.view->obtainProp(vb);
-          chgrp->initView(/*new UChild(chgrp),*/ vd.view);
+          chgrp->initView(/*new Child(chgrp),*/ vd.view);
         }
         
-        UUpdateContext chcurp(curp, chgrp, vd.view, null);
+        UpdateContext chcurp(curp, chgrp, vd.view, null);
         doLayout2(vd, *chgrp, chcurp, vl);   //own curp, same vd
         padding.add(*vb);
       }
@@ -365,12 +361,12 @@ void UView::doLayout2(UViewLayoutImpl& vd, UElem& grp, UUpdateContext& curp, UVi
 
 /* ==================================================== [Elc] ======= */
 
-void hintElemHoriz(UViewLayoutImpl& vd, const UUpdateContext& curp,
-                   const UViewLayout& chvl, UElem* chbox) {
+void hintElemHoriz(UViewLayoutImpl& vd, const UpdateContext& curp,
+                   const UViewLayout& chvl, Element* chbox) {
   if (chbox) {
     // number of horizontally flexible child objects
     // ATT: jamais flexible si CANT_RESIZE_WIDTH
-    if (curp.halign==UHalign::FLEX && chbox->isWidthResizable())
+    if (curp.halign==Halign::FLEX && chbox->isWidthResizable())
       vd.view->incrHFlexCount(); 
     // fait avant: vd.mustLayoutAgain |= chboxview->doLayout(curp, chvl);
   }
@@ -378,7 +374,7 @@ void hintElemHoriz(UViewLayoutImpl& vd, const UUpdateContext& curp,
   // add spacing if something before
   if (vd.visibleElemCount > 0) vd.chwidth += curp.hspacing;
 
-  // NB: only takes into account Ubox or Uelem (not UElem nor floating)
+  // NB: only takes into account Ubox or Uelem (not Element nor floating)
   vd.visibleElemCount++;
 
   // add element size
@@ -388,14 +384,13 @@ void hintElemHoriz(UViewLayoutImpl& vd, const UUpdateContext& curp,
   if (chvl.dim.height > vd.chheight) vd.chheight = chvl.dim.height;
 }
 
-/* ==================================================== ======== ======= */
 
-void hintElemVert(UViewLayoutImpl& vd, const UUpdateContext& curp,
-                  const UViewLayout& chvl, UElem* chbox) {
+void hintElemVert(UViewLayoutImpl& vd, const UpdateContext& curp,
+                  const UViewLayout& chvl, Element* chbox) {
   if (chbox) {
     // number of vertically flexible child objects
     // ATT: jamais flexible si CANT_RESIZE_HEIGHT
-    if (curp.valign==UValign::FLEX && chbox->isHeightResizable())
+    if (curp.valign==Valign::FLEX && chbox->isHeightResizable())
       vd.view->incrVFlexCount();
     // fait avant: vd.mustLayoutAgain |= chboxview->doLayout(curp, chvl);
   }
@@ -403,7 +398,7 @@ void hintElemVert(UViewLayoutImpl& vd, const UUpdateContext& curp,
   // add spacing if something before
   if (vd.visibleElemCount > 0) vd.chheight += curp.vspacing;
 
-  // NB: only takes into account Ubox or Uelem (not UElem nor floating)
+  // NB: only takes into account Ubox or Uelem (not Element nor floating)
   vd.visibleElemCount++;
 
   // add element size then take max
@@ -413,12 +408,11 @@ void hintElemVert(UViewLayoutImpl& vd, const UUpdateContext& curp,
   if (chvl.dim.width > vd.chwidth) vd.chwidth = chvl.dim.width;
 }
 
-/* ==================================================== ======== ======= */
 
-void hintElemViewport(UViewLayoutImpl& vd, const UUpdateContext& curp,
-                      const UViewLayout& chvl, UElem* chbox) {
+void hintElemViewport(UViewLayoutImpl& vd, const UpdateContext& curp,
+                      const UViewLayout& chvl, Element* chbox) {
   if (!chbox) {
-    UAppli::error("UView::doLayout","a UPane can only contain UBoxes in its central area");
+    Application::error("View::doLayout","a UPane can only contain UBoxes in its central area");
     return;
   }
 
@@ -428,30 +422,29 @@ void hintElemViewport(UViewLayoutImpl& vd, const UUpdateContext& curp,
   if (vd.chheight < chvl.dim.height) vd.chheight = chvl.dim.height;
 }
 
-/* ==================================================== ======== ======= */
 
-void hintElemBorder(UViewLayoutImpl& vd, const UUpdateContext& curp,
-                    const UViewLayout& chvl, UElem* chbox) {
+void hintElemBorder(UViewLayoutImpl& vd, const UpdateContext& curp,
+                    const UViewLayout& chvl, Element* chbox) {
   UViewBorderProp* vb = null;           
   if (!vd.view->getProp(vb)) {
-    UAppli::internalError("UView::doLayout","Invalid border");
+    Application::internalError("View::doLayout","Invalid border");
     return;
   }
-  UPaddingSpec& frame = *vb;
+  PaddingSpec& frame = *vb;
   
   // !!!!!!  A COMPLETER !!! prendre en compte les Units du padding !!!!!!!
 
   //NB: top et bottom s'adaptent a la zone centrale en largeur
   //ils ne controlent donc que la hauteur de leurs zones respectives
   switch (curp.valign) {
-  case UValign::TOP:
+  case Valign::TOP:
     if (chvl.dim.height > frame.top.val) frame.top.val = chvl.dim.height;
     break;
-  case UValign::BOTTOM:
+  case Valign::BOTTOM:
     if (chvl.dim.height > frame.bottom.val) frame.bottom.val = chvl.dim.height;
     break;
-  case UValign::CENTER:
-  case UValign::FLEX:
+  case Valign::CENTER:
+  case Valign::FLEX:
     if (chvl.dim.height > vd.chheight) vd.chheight = chvl.dim.height;
     break;
   }
@@ -459,14 +452,14 @@ void hintElemBorder(UViewLayoutImpl& vd, const UUpdateContext& curp,
   //NB: left et right s'adaptent a la zone centrale en hauteur
   //ils ne controlent donc que la largeur de leurs zones respectives
   switch (curp.halign) {
-  case UHalign::LEFT:
+  case Halign::LEFT:
     if (chvl.dim.width > frame.left.val) frame.left.val = chvl.dim.width;
     break;
-  case UHalign::RIGHT:
+  case Halign::RIGHT:
     if (chvl.dim.width > frame.right.val) frame.right.val = chvl.dim.width;
     break;
-  case UHalign::CENTER:
-  case UHalign::FLEX:
+  case Halign::CENTER:
+  case Halign::FLEX:
     if (chvl.dim.width > vd.chwidth) vd.chwidth = chvl.dim.width;
     break;
   }

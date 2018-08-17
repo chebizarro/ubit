@@ -1,23 +1,32 @@
-/************************************************************************
- *
- *  ufilebox.hpp: File Box Element
- *  Ubit GUI Toolkit - Version 6
+/*
+ *  filebox.h: File Box Element
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE :
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION;
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
 
 #ifndef _ufilebox_hpp_
 #define	_ufilebox_hpp_ 1
+
 #include <ubit/ubox.hpp>
 #include <ubit/uchoice.hpp>
+
 namespace ubit {
 
 /* File chooser.
@@ -26,14 +35,14 @@ namespace ubit {
 * <pre>
 *   class Demo {
 *   public:
-*     void openFile(UEvent& e) {...}   // the UEvent& parameter is optional
+*     void openFile(Event& e) {...}   // the Event& parameter is optional
 *     ...
 *   };
 *
 *   Demo* d = new Demo();
 *
 *   // NB: ufilebox(...) is a shortcut for *new UFilebox(...)
-*   UBox& fbox = ufilebox( utitle("Open File")
+*   Box& fbox = ufilebox( utitle("Open File")
 *                          + UOn::action / ucall(this, &Demo::openFile)
 *                         );
 *   UDialog& fdialog = udialog(fbox)
@@ -46,11 +55,11 @@ namespace ubit {
 *
 * @see: UCall for more info on callback methods/functions and their parameters
 */
-class UFilebox : public UBox {
+class UFilebox : public Box {
 public:
   UCLASS(UFilebox)
 
-  UFilebox(const UArgs& arglist = UArgs::none);
+  UFilebox(const Args& arglist = Args::none);
   /**< create a new file box (@see also shortcut ufilebox()).
     * The arglist is typically used to add a callback function.
     * see class UFilebox for an example.
@@ -60,27 +69,27 @@ public:
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  const UStr& getDir() const {return *fdir2;}
+  const String& getDir() const {return *fdir2;}
   ///< returns the directory of the file (without the file name).
 
-  const UStr& getName() const {return *fname;}
+  const String& getName() const {return *fname;}
   ///< returns the name of the file (without the directory).
 
-  const UStr& getPath() const {return *fpath;}
-  UStr& path() {return *fpath;}
+  const String& getPath() const {return *fpath;}
+  String& path() {return *fpath;}
   ///< returns the full pathname: getDir()/getName().
 
-  const UStr& getFilter() const {return *ffilter;}
+  const String& getFilter() const {return *ffilter;}
   ///< returns the extension filter.
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  virtual void setDir(const UStr&);
+  virtual void setDir(const String&);
   ///< note that setDir and setFilter reload the directory.
 
-  virtual void setName(const UStr&);
+  virtual void setName(const String&);
 
-  virtual void setFilter(const UStr&);
+  virtual void setFilter(const String&);
   ///< syntax: "C++ Files (*.cpp; *.hpp)" or "*.cc; *.hh" or "*.*" 
 
   virtual void showList(bool);
@@ -93,26 +102,26 @@ public:
   
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 protected:
-  UStr fspec;
-  uptr<UStr> fname, fdir2, ffilter, fpath;
+  String fspec;
+  uptr<String> fname, fdir2, ffilter, fpath;
   //UScrollpane* scrollpane;
-  UBox *mainbox;
-  UBox *show_list, *show_hidden_files;
+  Box *mainbox;
+  Box *show_list, *show_hidden_files;
   URadioSelect new_sel;
   bool autoclose;
   
   virtual void cancelBehavior(UInputEvent&);
   virtual void okBehavior(UInputEvent&);
-  virtual void selectBehavior(UEvent&, UStr* pathname);
-  virtual void setDirImpl(UStr*);
-  virtual void changeDirImpl(UStr*);
+  virtual void selectBehavior(Event&, String* pathname);
+  virtual void setDirImpl(String*);
+  virtual void changeDirImpl(String*);
   /* sets the directory in a relative way.
     * - goes to the parent directory if arg is ".."
     * - goes to subdirectory "xxx" if arg is "xxx"
     */
 };
 
-UFilebox& ufilebox(const UArgs& arglist = UArgs::none);
+UFilebox& ufilebox(const Args& arglist = Args::none);
 ///< shortcut that returns *new UFilebox().
 
 }

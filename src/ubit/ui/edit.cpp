@@ -1,18 +1,25 @@
-/************************************************************************
- *
- *  uedit.cpp: Text Edition Attribute
- *  Ubit GUI Toolkit - Version 6
+/*
+ *  edit.cpp: Text Edition Attribute
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE :
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION;
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
 
 #include <ubit/ubit_features.h>
 #include <ctype.h>
@@ -28,7 +35,7 @@
 #include <ubit/ucursor.hpp>
 #include <ubit/uscrollpane.hpp>
 #include <ubit/uscrollbar.hpp>
-#include <ubit/uselection.hpp>
+#include <ubit/Selection.hpp>
 #include <ubit/ukey.hpp>
 #include <ubit/uappli.hpp>
 using namespace std;
@@ -39,7 +46,7 @@ NAMESPACE_UBIT
 UEdit::UEdit() :
   calls(ucall(this, &UEdit::inputCB)),
   calls2(ucall(this, &UEdit::callbacks2)),
-  caret_color(UColor::red),
+  caret_color(Color::red),
   caret_str(null), caret_pos(0),
   is_editable(true), is_visible(true), repainted(false) {
 }
@@ -49,25 +56,23 @@ UEdit::~UEdit() {
   destructs();
 }
 
-/* ==================================================== ======== ======= */
 
 bool UEdit::isEditable() const {return is_editable;}
 bool UEdit::isCaretVisible() const {return is_visible;}
-UColor* UEdit::getCaretColor() const {return caret_color;}
+Color* UEdit::getCaretColor() const {return caret_color;}
 
 UEdit& UEdit::setEditable(bool b) {is_editable = b; return *this;}
 UEdit& UEdit::setCaretVisible(bool b)  {is_visible = b; return *this;}
-UEdit& UEdit::setCaretColor(UColor* c) {caret_color = c; return *this;}
+UEdit& UEdit::setCaretColor(Color* c) {caret_color = c; return *this;}
 
-/* ==================================================== ======== ======= */
 
-void UEdit::addingTo(UChild& selflink, UElem& parent) {
-  UAttr::addingTo(selflink, parent);
+void UEdit::addingTo(Child& selflink, Element& parent) {
+  Attribute::addingTo(selflink, parent);
   //if (getParentCount() > 1) {pourquoi pas ?
-  //  UAppli::warning("UEdit::addingTo","UEdit objects can not have several parents; last parent: ",parent->cname());
+  //  Application::warning("UEdit::addingTo","UEdit objects can not have several parents; last parent: ",parent->cname());
    //}
   if (parent.emodes.IS_TEXT_EDITABLE) {
-    const UStr* classname = &parent.getClassName();
+    const String* classname = &parent.getClassName();
     warning("UEdit::addingTo","This UEdit attribute has a parent (%s %p) that contains another UEdit attribute (an widget should not contain multiple UEdit objects", classname, &parent);
   }
 
@@ -84,10 +89,9 @@ void UEdit::addingTo(UChild& selflink, UElem& parent) {
   parent.addAttr(UOn::click / *calls2);
 }
 
-/* ==================================================== ======== ======= */
 //NB: removingFrom() requires a destructor to be defined
 //
-void UEdit::removingFrom(UChild& c, UElem& parent) {
+void UEdit::removingFrom(Child& c, Element& parent) {
   parent.emodes.IS_TEXT_EDITABLE = false;
   parent.emodes.IS_TEXT_SELECTABLE = false;
   //parent.emodes.CLOSE_MENU_MODE = 0;
@@ -99,18 +103,16 @@ void UEdit::removingFrom(UChild& c, UElem& parent) {
   parent.removeAttr(*calls);
   parent.removeAttr(UCursor::text);
   parent.removeAttr(*calls2);
-  UAttr::removingFrom(c, parent);
+  Attribute::removingFrom(c, parent);
 }
 
-/* ==================================================== ======== ======= */
 
-void UEdit::putProp(UUpdateContext* ctx, UElem& state) {
+void UEdit::putProp(UpdateContext* ctx, Element& state) {
   ctx->edit = this;
 }
 
-/* ==================================================== ======== ======= */
 // met a jour la string concernee laquelle mettra ainsi a jour ses parents
-//  => ceci permet de synchroniser l'affichage de la UStr dans tous les parents
+//  => ceci permet de synchroniser l'affichage de la String dans tous les parents
 // Remarque:
 // par contre les moveCaret sont locaux a chaque uedit (le caret peut avoir
 // une position differente dans chaque parent)
@@ -118,16 +120,16 @@ void UEdit::putProp(UUpdateContext* ctx, UElem& state) {
 void UEdit::update() {
   // NB: _parents.updateAutoParents() ne suffit pas car la string peut apparaitre
   // dans d'autres widgets, non editables
-  if (caret_str) caret_str->updateAutoParents(UUpdate::layoutAndPaint);
+  if (caret_str) caret_str->updateAutoParents(Update::layoutAndPaint);
 }
 
 /* ==================================================== [Elc:] ======= */
 /*
-static void scroll(UView* view, int dir) {
+static void scroll(View* view, int dir) {
   UScrollpane* spane = null;
   view = view->getParentView();
   while (view) {
-    UBox* par = view->getBox();
+    Box* par = view->getBox();
     if (par && (spane = dynamic_cast<UScrollpane*>(par)))
       break;
     view = view->getParentView();
@@ -137,7 +139,7 @@ static void scroll(UView* view, int dir) {
 }
 */
 /*
-static int trueLength(const UStr *s) {
+static int trueLength(const String *s) {
   cerr << s << endl;
   const char* c = s->c_str();
   if (!c) return 0;
@@ -150,18 +152,18 @@ static int trueLength(const UStr *s) {
 */
 
 long UEdit::getCaretPos() const {
-  UElem* par = getParent(0);
+  Element* par = getParent(0);
   return par ? getCaretPos(*par) : 0;
 }
 
-long UEdit::getCaretPos(UElem& par) const {
+long UEdit::getCaretPos(Element& par) const {
   //if (!par) return 0;
-  UStr* s = null;
+  String* s = null;
   long k = 0;
   bool found = false;
 
-  for (UChildIter i = par.cbegin(); i != par.cend(); ++i) {
-    if ((s = dynamic_cast<UStr*>(*i))) {
+  for (ChildIter i = par.cbegin(); i != par.cend(); ++i) {
+    if ((s = dynamic_cast<String*>(*i))) {
       if (s != caret_str) k += s->length(); //trueLength(s);
       else {k += caret_pos; found = true; break;}
     }
@@ -170,18 +172,18 @@ long UEdit::getCaretPos(UElem& par) const {
 }
 
 UEdit& UEdit::setCaretPos(long pos) {
-  UElem* par = getParent(0);
+  Element* par = getParent(0);
   return par ? setCaretPos(pos, *par) : *this;
 }
 
-UEdit& UEdit::setCaretPos(long pos, UElem& par) {
+UEdit& UEdit::setCaretPos(long pos, Element& par) {
   //if (!par) return *this;
-  UStr* s = null;
+  String* s = null;
   long k = 0, found_pos = 0;
-  UStr *found_s = null, *last_s = null;
+  String *found_s = null, *last_s = null;
 
-  for (UChildIter i = par.cbegin(); i != par.cend(); ++i) {
-    if ((s = dynamic_cast<UStr*>(*i))) {
+  for (ChildIter i = par.cbegin(); i != par.cend(); ++i) {
+    if ((s = dynamic_cast<String*>(*i))) {
       last_s = s;
       if (k + s->length() < pos) k += s->length();
       else {found_s = s; found_pos = pos -k; break;}
@@ -195,30 +197,29 @@ UEdit& UEdit::setCaretPos(long pos, UElem& par) {
 
 /* ==================================================== [Elc:] ======= */
 
-UStr* UEdit::getCaretStr(int& pos) const {
+String* UEdit::getCaretStr(int& pos) const {
   pos = caret_pos;
   return caret_str;
 }
 
-UStr* UEdit::getCaretStr() const {
+String* UEdit::getCaretStr() const {
   return caret_str;
 }
 
-UEdit& UEdit::setCaretStr(UStr* _str) {
+UEdit& UEdit::setCaretStr(String* _str) {
   setCaretStr(_str, 0, true, null);
   return *this;
 }
 
-UEdit& UEdit::setCaretStr(UStr* _str, int _pos) {
+UEdit& UEdit::setCaretStr(String* _str, int _pos) {
   setCaretStr(_str, _pos, true, null);
   return *this;
 }
 
-/* ==================================================== ======== ======= */
 // NB1: la Str peut etre partagee a la fois par des Box editables et non editables
 // NB2: strpos = pos in newstr / -1 means end of string
 
-void UEdit::setCaretStr(UStr* newstr, int newpos, bool _update, UView* view) {
+void UEdit::setCaretStr(String* newstr, int newpos, bool _update, View* view) {
   caret_str = newstr;
   if (!caret_str) caret_pos = 0;
   else {
@@ -238,24 +239,23 @@ void UEdit::setCaretStr(UStr* newstr, int newpos, bool _update, UView* view) {
   }
 
   if (_update && caret_str) {
-    if (caret_str) caret_str->updateAutoParents(UUpdate::paint);
+    if (caret_str) caret_str->updateAutoParents(Update::paint);
   }
 }
 
 
-/* ==================================================== ====== ======= */
 // devrait etre ailleurs car fct generique
 
 // il faut parcourir la liste depuis le debut car les listes sont 
 // simplement chainees, de plus 'from' et 'next' peuvent etre dans
-// des descendants de type UElem (mais PAS UBox ni UWin)
+// des descendants de type Element (mais PAS Box ni Window)
 
-static UStr* _getPreviousStr(UStr* from, UStr*& last_str, UElem& box) {
+static String* _getPreviousStr(String* from, String*& last_str, Element& box) {
   if (/*!box || */ !from) return null;
   
-  for (UChildIter ch = box.cbegin(); ch != box.cend(); ++ch) {
-    UStr* s = null;
-    UElem* grp = null;
+  for (ChildIter ch = box.cbegin(); ch != box.cend(); ++ch) {
+    String* s = null;
+    Element* grp = null;
     
     if ((grp = (*ch)->toElem()) && !grp->toBox()) {
       s = _getPreviousStr(from, last_str, *grp);
@@ -273,14 +273,13 @@ static UStr* _getPreviousStr(UStr* from, UStr*& last_str, UElem& box) {
   return null;
 }
 
-/* ==================================================== ======== ======= */
 
-static UStr* _getNextStr(UStr* from, bool& from_found, UElem& box) {
+static String* _getNextStr(String* from, bool& from_found, Element& box) {
   if (/*!box ||*/ !from) return null;
 
-  for (UChildIter ch = box.cbegin(); ch != box.cend(); ++ch) {
-    UStr* s = null;
-    UElem* grp = null;
+  for (ChildIter ch = box.cbegin(); ch != box.cend(); ++ch) {
+    String* s = null;
+    Element* grp = null;
  
     if ((grp = (*ch)->toElem()) && !grp->toBox()) {
       s = _getNextStr(from, from_found, *grp);
@@ -298,15 +297,14 @@ static UStr* _getNextStr(UStr* from, bool& from_found, UElem& box) {
   return null;
 }
 
-/* ==================================================== ======== ======= */
 
-UStr* UEdit::getPreviousStr(UStr* from, UElem& par) {
-  UStr* last_str = null;
+String* UEdit::getPreviousStr(String* from, Element& par) {
+  String* last_str = null;
   return _getPreviousStr(from, last_str, par);
 }
 
 
-UStr* UEdit::getNextStr(UStr* from, UElem& par) {
+String* UEdit::getNextStr(String* from, Element& par) {
   bool from_found = false;
   return _getNextStr(from, from_found, par);
 }
@@ -314,12 +312,12 @@ UStr* UEdit::getNextStr(UStr* from, UElem& par) {
 /* ==================================================== [Elc:] ======= */
 // devrait etre ailleurs car fct generique
 
-UStr* UEdit::getParagraphFirstStr(UStr* from, int& pos, UElem& par) {
+String* UEdit::getParagraphFirstStr(String* from, int& pos, Element& par) {
   if (/*!par ||*/ !from) return null;
   if (pos == -1) pos = from->length(); // caret on end-of-str
 
-  UStr* s = from;
-  UStr* slast = from;
+  String* s = from;
+  String* slast = from;
   bool first_str = true;
 
   while (true) {
@@ -348,7 +346,7 @@ UStr* UEdit::getParagraphFirstStr(UStr* from, int& pos, UElem& par) {
     }
 
     slast = s;
-    UStr* last_str = null;
+    String* last_str = null;
     s = _getPreviousStr(s, last_str, par);
     if (!s) {
       pos = 0;
@@ -358,14 +356,13 @@ UStr* UEdit::getParagraphFirstStr(UStr* from, int& pos, UElem& par) {
   }
 }
 
-/* ==================================================== ======== ======= */
 
-UStr* UEdit::getParagraphLastStr(UStr* from, int& pos, UElem& par) {
+String* UEdit::getParagraphLastStr(String* from, int& pos, Element& par) {
   if (/*!par ||*/ !from) return null;
   if (pos == -1) pos = from->length(); // caret on end-of-str
 
-  UStr* s = from;
-  UStr* slast = from;
+  String* s = from;
+  String* slast = from;
 
   while (true) {
     const char* ch = s->c_str();
@@ -387,7 +384,7 @@ UStr* UEdit::getParagraphLastStr(UStr* from, int& pos, UElem& par) {
 
 /* ==================================================== [Elc:] ======= */
 
-void UEdit::deletePreviousChar(UElem& par, UView* view) {
+void UEdit::deletePreviousChar(Element& par, View* view) {
   if (!caret_str) return;
   //if (!par) par = getParent(0);
   //if (!par) return;
@@ -401,7 +398,7 @@ void UEdit::deletePreviousChar(UElem& par, UView* view) {
   }
 }
 
-void UEdit::deleteChar(UElem& par, UView* view) {   // !! INCOMPLET !! ne passe pas a str suivante
+void UEdit::deleteChar(Element& par, View* view) {   // !! INCOMPLET !! ne passe pas a str suivante
   if (!caret_str) return;
   //if (!par) par = getParent(0);
   //if (!par) return;
@@ -413,9 +410,8 @@ void UEdit::deleteChar(UElem& par, UView* view) {   // !! INCOMPLET !! ne passe 
   }
 }
 
-/* ==================================================== ======== ======= */
 
-bool UEdit::previousChar(UElem& par, UView* view) {
+bool UEdit::previousChar(Element& par, View* view) {
   if (!caret_str) return false;
   //if (!par) par = getParent(0);
   //if (!par) return false;
@@ -432,7 +428,7 @@ bool UEdit::previousChar(UElem& par, UView* view) {
   }
   // move to previous str is possible (and skip \n if any)
   else {
-    UStr *s_prev = getPreviousStr(caret_str, par);
+    String *s_prev = getPreviousStr(caret_str, par);
     if (s_prev) {
       // move to last-1 char (and skip final \n)
       setCaretStr(s_prev, -2, true, view); // avant dernier char
@@ -444,9 +440,8 @@ bool UEdit::previousChar(UElem& par, UView* view) {
   return stat;
 }
 
-/* ==================================================== ======== ======= */
 
-bool UEdit::nextChar(UElem& par, UView* view) {
+bool UEdit::nextChar(Element& par, View* view) {
   if (!caret_str) return false;
   //if (!par) par = getParent(0);
   //if (!par) return false;
@@ -468,7 +463,7 @@ bool UEdit::nextChar(UElem& par, UView* view) {
        )
       ) {
     // move to next str is possible (and skip \n if any)
-    UStr* snext = getNextStr(caret_str, par);
+    String* snext = getNextStr(caret_str, par);
     
     if (snext) {
       if (newline)
@@ -479,7 +474,7 @@ bool UEdit::nextChar(UElem& par, UView* view) {
     }
     else if (fview) {
       // cas particulier d'un multi-line on est a la fin 
-      // de la derniere UStr : il faut pouvoir passer a la ligne
+      // de la derniere String : il faut pouvoir passer a la ligne
       // finale (bien qu'il n'ait rien sur cette line)
       //repainted = false;
       setCaretStr(caret_str, caret_pos+1, true, view);
@@ -497,7 +492,7 @@ bool UEdit::nextChar(UElem& par, UView* view) {
 
 /* ==================================================== [Elc:] ======= */
 
-void UEdit::previousLine(UElem& par, UView* view) {
+void UEdit::previousLine(Element& par, View* view) {
   UFlowView* fview = view->toFlowView();
   if (fview) {
     int cpos = getCaretPos(par);
@@ -513,7 +508,7 @@ void UEdit::previousLine(UElem& par, UView* view) {
   }
 }
 
-void UEdit::nextLine(UElem& par, UView* view) {
+void UEdit::nextLine(Element& par, View* view) {
   UFlowView* fview = view->toFlowView();
   if (fview) {
     int cpos = getCaretPos(par);
@@ -529,7 +524,7 @@ void UEdit::nextLine(UElem& par, UView* view) {
   }
 }
 
-void UEdit::beginningOfLine(UElem& par, UView* view) {
+void UEdit::beginningOfLine(Element& par, View* view) {
   UFlowView* fview = view->toFlowView();
   if (fview) {
     int pos1 = getCaretPos(par);
@@ -541,12 +536,12 @@ void UEdit::beginningOfLine(UElem& par, UView* view) {
   }
   else {
     int pos = caret_pos;
-    UStr* s = getParagraphFirstStr(caret_str, pos, par);
+    String* s = getParagraphFirstStr(caret_str, pos, par);
     if (s) setCaretStr(s, pos, true, view);
   }
 }
 
-void UEdit::endOfLine(UElem& par, UView* view) {
+void UEdit::endOfLine(Element& par, View* view) {
   UFlowView* fview = view->toFlowView();
   if (fview) {
     int pos1 = getCaretPos(par);
@@ -558,27 +553,27 @@ void UEdit::endOfLine(UElem& par, UView* view) {
   }
   else {
     int pos = caret_pos;
-    UStr* s = getParagraphLastStr(caret_str, pos, par);
+    String* s = getParagraphLastStr(caret_str, pos, par);
     if (s) setCaretStr(s, pos, true, view);
   }
 }
 
 /*
-void UEdit::beginningOfParagraph(UElem* par) {
+void UEdit::beginningOfParagraph(Element* par) {
   int pos = caret_pos;
-  UStr* s = getParagraphFirstStr(caret_str, pos, par);
+  String* s = getParagraphFirstStr(caret_str, pos, par);
   if (s) setCaretStr(s, pos, true, view);
 }
 
-void UEdit::endOfParagraph(UElem* par) {
+void UEdit::endOfParagraph(Element* par) {
   int pos = caret_pos;
-  UStr* s = getParagraphLastStr(caret_str, pos, par);
+  String* s = getParagraphLastStr(caret_str, pos, par);
   if (s) setCaretStr(s, pos, true, view);
 }
 */
 /* ==================================================== [Elc:] ======= */
 
-float UEdit::getXpos(UUpdateContext& ctx, const URect& r, int offset, int cellen) const {
+float UEdit::getXpos(UpdateContext& ctx, const Rectangle& r, int offset, int cellen) const {
   float xpos = r.x;
   if (!caret_str) return xpos;
 
@@ -594,11 +589,11 @@ float UEdit::getXpos(UUpdateContext& ctx, const URect& r, int offset, int cellen
   return xpos;
 }
 
-float UEdit::getXpos(UUpdateContext& ctx, const URect& r) const {
+float UEdit::getXpos(UpdateContext& ctx, const Rectangle& r) const {
   return getXpos(ctx, r, 0,  (caret_str ? caret_str->length() : 0));
 }
 
-void UEdit::paint(UGraph& g, UUpdateContext& ctx, const URect& r, int offset, int cellen) const {
+void UEdit::paint(Graph& g, UpdateContext& ctx, const Rectangle& r, int offset, int cellen) const {
   if (!is_visible) return;
   float xpos = getXpos(ctx, r, offset, cellen);  // ex int
 
@@ -611,16 +606,15 @@ void UEdit::paint(UGraph& g, UUpdateContext& ctx, const URect& r, int offset, in
   g.drawLine(xpos, r.y, xpos, y2);
   //g.drawLine(xpos+1, r.y, xpos+1, y2);
 
-  URect c;
+  Rectangle c;
   g.getHardwinClip(c);
   repainted = (r.y > c.y) && (y2 < c.y+c.height);
 }
 
-void UEdit::paint(UGraph& g, UUpdateContext& ctx, const URect& r) const {
+void UEdit::paint(Graph& g, UpdateContext& ctx, const Rectangle& r) const {
   paint(g, ctx, r, 0, (caret_str ? caret_str->length() : 0));
 }
 
-/* ==================================================== ======== ======= */
 // NB: press et non arm car arm provoque un reaffichage 
 //     (on reafficherait donc 2 fois)
 
@@ -633,19 +627,18 @@ void UEdit::inputCB(UInputEvent& e) {
     kpressed((UKeyEvent&)e);
 }
 
-/* ==================================================== ======== ======= */
 
 void UEdit::mpressed(UMouseEvent& e) {
   UDataContext dc;
-  UStr* s = null;
+  String* s = null;
   int btn = e.getButton();
 
-  if ((btn == UAppli::conf.mouse_select_button || btn == UAppli::conf.mouse_alt_button)
+  if ((btn == Application::conf.mouse_select_button || btn == Application::conf.mouse_alt_button)
       && (s = e.getStr(dc))) {
 
     setCaretStr(s, dc.strpos, true, e.getView()/*ex:false*/); // no hscroll
     
-    if (btn == UAppli::conf.mouse_alt_button) {
+    if (btn == Application::conf.mouse_alt_button) {
       // APRES setCaretPosition !
       if (caret_str && is_editable) {
         // ATTENTION: c'est lie a *chaque* disp et c'est ASYNCHRONE: le paste
@@ -657,26 +650,24 @@ void UEdit::mpressed(UMouseEvent& e) {
   }
 }
 
-/* ==================================================== ======== ======= */
 
 void UEdit::mreleased(UMouseEvent& e) {
   UDataContext dc;
-  UStr* newstr = null;
+  String* newstr = null;
   // mrelease1 necessaire pour que le Drag selection fonctionne
-  if (e.getButton() == UAppli::conf.mouse_select_button && (newstr = e.getStr(dc))) {
+  if (e.getButton() == Application::conf.mouse_select_button && (newstr = e.getStr(dc))) {
     setCaretStr(newstr, dc.strpos, true, e.getView() /*ex: false*/);  // no hscroll
   }
 }
 
-/* ==================================================== ======== ======= */
 
 void UEdit::callbacks2(UMouseEvent& e) {  // multiple clicks
   int btn = e.getButton();
 
-  if (btn == UAppli::conf.mouse_select_button) {
+  if (btn == Application::conf.mouse_select_button) {
     if (caret_str && e.getClickCount() == 2) {
-      UStr sel_txt;
-      USelection* sel = getSelection(e, sel_txt);
+      String sel_txt;
+      Selection* sel = getSelection(e, sel_txt);
       if (sel) {
         sel->start(e);
         sel->fromPos = 0;
@@ -687,20 +678,18 @@ void UEdit::callbacks2(UMouseEvent& e) {  // multiple clicks
   }
 }
 
-/* ==================================================== ======== ======= */
-/* ==================================================== ======== ======= */
 
-USelection* UEdit::getSelection(UInputEvent& e, UStr& sel_text) {
+Selection* UEdit::getSelection(UInputEvent& e, String& sel_text) {
   sel_text.clear();
-  UDisp* d = e.getDisp(); 
-  USelection* sel = d ? d->getChannelSelection(0) : null;  // on devrait tenir compte du flow !!!
+  Display* d = e.getDisp(); 
+  Selection* sel = d ? d->getChannelSelection(0) : null;  // on devrait tenir compte du flow !!!
   if (sel) sel->copyText(sel_text);
   return sel;
 }
 
-void UEdit::deleteSelection(USelection* sel, UStr& sel_text, UElem& container) {
+void UEdit::deleteSelection(Selection* sel, String& sel_text, Element& container) {
   int pos_in_s = 0;
-  UStr* s = getCaretStr(pos_in_s);
+  String* s = getCaretStr(pos_in_s);
   
   if (!sel || !sel->in_obj || sel->oldLink == sel->in_obj->cend()
       || s != *(sel->oldLink)) 
@@ -716,21 +705,21 @@ void UEdit::deleteSelection(USelection* sel, UStr& sel_text, UElem& container) {
 void UEdit::kpressed(UKeyEvent& e) {
   if (!caret_str) return;
 
-  // en fait ca retourne pas un UElem mais toujours le UBox qui le
+  // en fait ca retourne pas un Element mais toujours le Box qui le
   // contient. c'est une bonne chose car ca permet aux diverses fonctions
   // de descendre dans les UElems imbriques qunad il y en a et de traiter
-  // ainsi tous les descendants du UBox de la meme maniere qu'ils soient
+  // ainsi tous les descendants du Box de la meme maniere qu'ils soient
   // ou non inclus dans des UElems intermediaires
   if (!e.getSource()) return;
-  UElem& box = *e.getSource();
-  UView* view = e.getView();
+  Element& box = *e.getSource();
+  View* view = e.getView();
   
   long  keycode = e.getKeyCode();
   unsigned short keychar = e.getKeyChar();
   bool done  = false;  
 
-  UStr sel_txt;
-  USelection* sel = getSelection(e, sel_txt);
+  String sel_txt;
+  Selection* sel = getSelection(e, sel_txt);
 
   // si la selection n'est pas sur l'objet ou on interagit on l'efface
   if (sel && sel->getObj() != &box) sel->clear();

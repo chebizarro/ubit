@@ -1,22 +1,31 @@
-/************************************************************************
- *
- *  uon.hpp: Callback conditions
- *  Ubit GUI Toolkit - Version 6
+/*
+ *  on.h: Callback conditions
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE :
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION;
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
 
 #ifndef _uon_hpp_
 #define	_uon_hpp_ 1
+
 #include <ubit/ucond.hpp>
+
 namespace ubit {
   
   /** Callback conditions.
@@ -29,10 +38,10 @@ namespace ubit {
    *
    * Note that:
    * - UOn conditions MUST NOT be deleted (this is done automatically by the toolkit)
-   * - most UOn conditions only have an effect on widgets that derive from UBox 
-   *   (some on them only on UWin subclasses) as explained in their documentation
+   * - most UOn conditions only have an effect on widgets that derive from Box 
+   *   (some on them only on Window subclasses) as explained in their documentation
    */
-  class UOn : public UCond {
+  class UOn : public Condition {
   public:    
     static UOn
     idle,
@@ -45,7 +54,7 @@ namespace ubit {
      * the semantics of this "action" depends on the widget (e.g. a mouse click or
      * a SPACE key press for a button, an ENTER key press for a textfield).
      *
-     * Callback functions triggered by UOn::action can have an optional UEvent parameter.
+     * Callback functions triggered by UOn::action can have an optional Event parameter.
      * @see also: UOn::arm, UOn::mpress.
      */
     
@@ -58,25 +67,25 @@ namespace ubit {
      * This behavior is slightly different in lists and menus: an item is armed when
      * the mouse enters even if the initial mouse press was performed on another item.
      *
-     * Any widget deriving from UBox can be made "armable" by UElem::setArmable(). 
+     * Any widget deriving from Box can be made "armable" by Element::setArmable(). 
      * Most interactors (e.g. UButton, UCheckbox...) are armable by default.
      *
      * Callback functions triggered by UOn::arm and UOn::disarm can have an optional 
-     * UEvent parameter. @see also UOn::action, UOn::mpress.
+     * Event parameter. @see also UOn::action, UOn::mpress.
      */
     
     &select, &deselect,
     /**< detects that a widget was "selected" or "deselected".
      * Certain widgets, such as UCheckbox or UListbox items can be selected. Besides,   
-     * any widget deriving from UBox can be made "selectable" by UElem::setSelectable().
+     * any widget deriving from Box can be made "selectable" by Element::setSelectable().
      *
      * Callback functions triggered by UOn::select and UOn::deselect can have an optional
-     * UEvent parameter. @see also UOn::action.
+     * Event parameter. @see also UOn::action.
      */
     
     enter, leave,
     /**< detects that the mouse entered or left a widget.
-     * These conditions are applicable to any widget that derives from UBox.
+     * These conditions are applicable to any widget that derives from Box.
      *
      * Callback functions triggered by UOn::enter and UOn::leave can have an optional
      * UMouseEvent parameter.
@@ -84,7 +93,7 @@ namespace ubit {
     
     click, doubleClick,
     /**< detects that the mouse was clicked or double-clicked on a widget.
-     * These conditions are applicable to any widget that derives from UBox.
+     * These conditions are applicable to any widget that derives from Box.
      *
      * Callback functions triggered by UOn::click and UOn::doubleClick can have an
      * optional UMouseEvent parameter which has a getClickCount() method.
@@ -97,7 +106,7 @@ namespace ubit {
     
     mpress, mrelease, mdrag, mmove, 
     /**< detects that the mouse was pressed, released, dragged or moved.
-     * These conditions are applicable to any widget that derives from UBox.
+     * These conditions are applicable to any widget that derives from Box.
      *
      * Callback functions triggered by these conditions can have an optional UMouseEvent
      * parameter which have several useful methods such as getSource(), getX(), getY()
@@ -110,14 +119,14 @@ namespace ubit {
      *
      * Notes:
      * - press and release events are repeated if the widget is in auto repeat mode
-     *   see: UElem::setAutoRepeat()
+     *   see: Element::setAutoRepeat()
      * - event are produced in the following order (when applicable): 
      *   mpress / arm / action / click / disarm / mrelease.
      */
     
     wheel,
     /**< detects that the wheel was moved while the mouse was over a widget.
-     * This condition is applicable to any widget that derives from UBox. The widget
+     * This condition is applicable to any widget that derives from Box. The widget
      * that receive the wheel events is the one where the mouse is currenly located. 
      *
      * Callback functions triggered by UOn::wheel can have an optional UWheelEvent 
@@ -135,7 +144,7 @@ namespace ubit {
      * The box that gets these events is the one that has the input focus (which is
      * the box where the mouse is currenly located in the current version of the toolkit)
      * Note that mouse and key these conditions only apply to boxes (ie. objects 
-     * that derive from UBox)
+     * that derive from Box)
      * @see: UOn::ktype
      */
     
@@ -150,7 +159,7 @@ namespace ubit {
      * The box that gets these events is the one that has the input focus (which is
      * the box where the mouse is currenly located in the current version of the toolkit)
      * Note that mouse and key these conditions only apply to boxes (ie. objects 
-     * that derive from UBox)
+     * that derive from Box)
      * @see: UOn::kpress, UOn::krelease
      */
     
@@ -165,34 +174,34 @@ namespace ubit {
      */
     
     close,
-    ///< fires callbacks when a window (or a menu) is closed by the window manager (@see UWin::close()).
+    ///< fires callbacks when a window (or a menu) is closed by the window manager (@see Window::close()).
     
     paint, 
     /**< detect that a widget was repainted.
-     * This condition is applicable to any widget that derives from UBox.
+     * This condition is applicable to any widget that derives from Box.
      * 
      * Callback functions triggered by UOn::paint can have an optional UPaintEvent
      * parameter which have several useful methods such as getSource(), getView(),
      * getClip(), etc. @see UPaintEvent for details.
      *
-     * A UBox can have multiple views. Callback functions are then fired for each view
+     * A Box can have multiple views. Callback functions are then fired for each view
      * that has been repainted.   
      */
     
     resize, motion,
     /**< detect that a widget was resized or moved.
-     * These conditions are applicable to any widget that derives from UBox.
+     * These conditions are applicable to any widget that derives from Box.
      * 
-     * Callback functions triggered by these conditions can have an optional UEvent
+     * Callback functions triggered by these conditions can have an optional Event
      * parameter 
      *
-     * A UBox can have multiple views. Callback functions are then fired for each view
+     * A Box can have multiple views. Callback functions are then fired for each view
      * that has been resized or moved.
      */
     
     addChild, removeChild,
     /**< fire callbacks when a child is added to / removed from an object.
-     * objects must derive from UElem. Callbacks can have an optional UEvent parameter. 
+     * objects must derive from Element. Callbacks can have an optional Event parameter. 
      * Its getTarget() method returns the child that was added or removed
      * (beware: this child may have been destroyed in the latter case!)
      */
@@ -220,8 +229,8 @@ namespace ubit {
      *   (= when a item, that was previously unselected, becomes selected)
      *
      * Notes for UChoice, UListbox, UCombobox:
-     *  - UEvent::getTarget() returns the item that was selected (while
-     *    UEvent::getSource() returns the UChoice, UListbox... container)
+     *  - Event::getTarget() returns the item that was selected (while
+     *    Event::getSource() returns the UChoice, UListbox... container)
      *  - UOn::change is not triggered if the user selects an item that was
      *    already selected (in contrast with UOn::action which would be
      *    fired in this case)
@@ -230,19 +239,18 @@ namespace ubit {
     propChange, dataChange, strChange, //caretChange,
     /**< child change conditions.
      * these conditions detects when a child of a box is changed:
-     * - propChange detects if a UAttr child was changed
-     * - dataChange ... if a UData ..
-     * - strChange ... if a UStr ..
+     * - propChange detects if a Attribute child was changed
+     * - dataChange ... if a Data ..
+     * - strChange ... if a String ..
      * Note that UOn::change is triggered on the child before propChange,
      * dataChange or strChange are triggered on the parents.
-     * 'dataChange' then 'strChange' are triggered when UStr(ings) 
+     * 'dataChange' then 'strChange' are triggered when String(ings) 
      * are changed.
      */
     
     userEvent;
     ///< user event.
     
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     
     enum Callback {  /// callbacks this object is sensitive to
       DESTRUCT_CB      = 1<<12,
@@ -270,7 +278,6 @@ namespace ubit {
       /*| FILTER_EVENT_CB*/ | USER_EVENT_CB //!no comma after last item!
     };
     
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     // interaction state
     
     enum IState {
@@ -289,37 +296,36 @@ namespace ubit {
      * Notes:
      * - UOn instances MUST NOT be deleted (this is done automatically by the toolkit)
      * - in the current version of the toolkit, mouse and key conditions are ignored
-     *   by objects that do not derive from UBox
+     *   by objects that do not derive from Box
      */
     
     virtual int getID() const {return ID;}
     
     // see superclass for details.
-    virtual bool operator==(const UCond&) const;
-    virtual bool operator!=(const UCond&) const;
-    virtual const UCond* matches(const UCond&) const;
-    virtual bool verifies(const UUpdateContext&, const UElem&) const;
+    virtual bool operator==(const Condition&) const;
+    virtual bool operator!=(const Condition&) const;
+    virtual const Condition* matches(const Condition&) const;
+    virtual bool verifies(const UpdateContext&, const Element&) const;
     
     virtual UOn* toOn() {return this;}
     virtual const UOn* toOn() const {return this;}
     
   protected:
-    friend class UElem;
+    friend class Element;
     long callback_mask;
     int istate;
-    virtual void setParentModes(UElem& parent) const;
+    virtual void setParentModes(Element& parent) const;
   };
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   
   class UOn2 : public UOn {
   public:
-    typedef UElem& (UElem::*SetModeFunc)(bool);
+    typedef Element& (Element::*SetModeFunc)(bool);
     
     UOn2(int id, long callback_mask, int state, SetModeFunc);
     
   protected:
-    virtual void setParentModes(UElem& parent) const;
+    virtual void setParentModes(Element& parent) const;
     SetModeFunc set_mode_func;
   };
   

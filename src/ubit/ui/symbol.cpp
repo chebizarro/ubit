@@ -1,18 +1,25 @@
-/************************************************************************
- *
- *  usymbol.cpp : graphical symbols that can be embedded in elements
- *  Ubit GUI Toolkit - Version 6
+/*
+ *  symbol.cpp : graphical symbols that can be embedded in elements
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE :
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION;
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
 
 #include <iostream>
 #include <ubit/ubit_features.h>
@@ -42,14 +49,14 @@ USymbol USymbol::circle(S_CIRCLE, UCONST);
 
 /* ==================================================== [Elc] ======= */
 
-USymbol::USymbol(const USymbol &o) : UData() {
+USymbol::USymbol(const USymbol &o) : Data() {
   ix = o.ix;
   color = o.color;
   frontShadowColor = o.frontShadowColor;
   backShadowColor = o.backShadowColor;
 }
 
-USymbol::USymbol(int index, UConst m) : UData(m) {
+USymbol::USymbol(int index, UConst m) : Data(m) {
   ix = index;
   color = null;
   frontShadowColor = null;
@@ -65,20 +72,20 @@ void USymbol::set(const USymbol& o) {  // a completer!
 }
 
 void USymbol::update() {
-  _parents.updateAutoParents(UUpdate::LAYOUT_PAINT);
+  _parents.updateAutoParents(Update::LAYOUT_PAINT);
 }
 
-void USymbol::setColor(const UColor &c) {
+void USymbol::setColor(const Color &c) {
   color = &c;
 }
-void USymbol::setFrontShadowColor(const UColor &c) {
+void USymbol::setFrontShadowColor(const Color &c) {
   frontShadowColor = &c;
 }
-void USymbol::setBackShadowColor(const UColor &c) {
+void USymbol::setBackShadowColor(const Color &c) {
   backShadowColor = &c;
 }
 
-void USymbol::getSize(UUpdateContext& ctx, UDimension& dim) const {
+void USymbol::getSize(UpdateContext& ctx, Dimension& dim) const {
   // les tailles des symbols dependent de celles des fonts !
   // on enleve SM_GETSIZE pour eviter que ca aille du haut jusqu'en bas
   dim.height = UFontMetrics(ctx).getHeight() - SM_GETSIZE;
@@ -88,7 +95,7 @@ void USymbol::getSize(UUpdateContext& ctx, UDimension& dim) const {
   dim.width = dim.height; // format carre
 }
 
-void USymbol::paint(UGraph& g, UUpdateContext& ctx, const URect& r) const {
+void USymbol::paint(Graph& g, UpdateContext& ctx, const Rectangle& r) const {
   // xl, yl = length for obtaining the last point (= width-1, height-1)
   // dont't forget to remove the left and right margin (SM)
   float xl = r.width  - 2*SM - 1;
@@ -100,19 +107,19 @@ void USymbol::paint(UGraph& g, UUpdateContext& ctx, const URect& r) const {
   else 
     active = (ctx.obj->getInterState() == UOn::ARMED);
 
-  const UColor *back, *fore, *symcolor;
-  symcolor = color ? color : &UColor::darkgrey;
+  const Color *back, *fore, *symcolor;
+  symcolor = color ? color : &Color::darkgrey;
 
   if (active) {
-    fore = backShadowColor ? backShadowColor : &UColor::black;
-    back = frontShadowColor ? frontShadowColor : &UColor::white;
+    fore = backShadowColor ? backShadowColor : &Color::black;
+    back = frontShadowColor ? frontShadowColor : &Color::white;
   }
   else {
-    back = backShadowColor ? backShadowColor : &UColor::black;
-    fore = frontShadowColor ? frontShadowColor : &UColor::white;
+    back = backShadowColor ? backShadowColor : &Color::black;
+    fore = frontShadowColor ? frontShadowColor : &Color::white;
   }
 
-  vector<UPoint> p(3);
+  vector<Point> p(3);
 
   switch (ix) {
     /*
@@ -208,7 +215,7 @@ void USymbol::paint(UGraph& g, UUpdateContext& ctx, const URect& r) const {
     p[0].x = r.x+SM+xl/2,  p[0].y = r.y+SM;
     p[1].x = r.x+SM,       p[1].y = r.y+SM+yl/2;
     p[2].x = r.x+SM+xl/2,  p[2].y = r.y+yl;
-    p.push_back(UPoint(r.x+xl, r.y+SM+yl/2));  // 4 points
+    p.push_back(Point(r.x+xl, r.y+SM+yl/2));  // 4 points
 
     if (active) {
       g.setColor(*symcolor);

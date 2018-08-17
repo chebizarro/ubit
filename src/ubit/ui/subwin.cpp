@@ -1,18 +1,25 @@
-/************************************************************************
- *
- *  usubwin.cpp: window inside a window
- *  Ubit GUI Toolkit - Version 6
+/*
+ *  subwin.cpp: window inside a window
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE :
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION;
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
 
 #include <ubit/ubit_features.h>
 #include <iostream>
@@ -35,28 +42,28 @@ namespace ubit {
 
 
 UStyle* USubwin::createStyle() {
-  UStyle* s = UWin::createStyle();
+  UStyle* s = Window::createStyle();
   // necessaire, surtout pour UGlcanvas
-  s->setBgcolors(UColor::none);
+  s->setBgcolors(Color::none);
   return s;
 }
 
-USubwin::USubwin(UArgs a) : UWin(a) {
-  // Contrairement aux UWin, sont affichees par defaut et sont en mode BOX (= tiled)
+USubwin::USubwin(Args a) : Window(a) {
+  // Contrairement aux Window, sont affichees par defaut et sont en mode BOX (= tiled)
   emodes.IS_SHOWABLE = true;
   wmodes.IS_HARDWIN = true;
   //emodes.IS_SUBWIN = true; (remplacé par virtual method isSubWin())
 }
 
 // must be redefined to init parent view
-// void USubwin::initView(UChild *selflink, UView *parview) {
-  void USubwin::initView(UView* parview) {
-  UWin::initViewImpl(/*selflink,*/ parview, parview->getDisp());
+// void USubwin::initView(Child *selflink, View *parview) {
+  void USubwin::initView(View* parview) {
+  Window::initViewImpl(/*selflink,*/ parview, parview->getDisp());
   
-  // as the subwin is laid out as a normal UBox, it must have
+  // as the subwin is laid out as a normal Box, it must have
   // a parent view (in constrast with other Wins that do not have one)
   // (see getViewInside())
-  UView* winview = getWinView(parview->getDisp());
+  View* winview = getWinView(parview->getDisp());
   
   // le parent de la vue doit etre mis a jour (pour les softwins only)
   // MAIS PAS LE CHAMP win !!
@@ -66,7 +73,7 @@ USubwin::USubwin(UArgs a) : UWin(a) {
 
 bool USubwin::realize() {
   if (! wmodes.IS_HARDWIN) {
-    UAppli::error("USubwin::realize","can't be a SOFTWIN: can't realize object %p",this);
+    Application::error("USubwin::realize","can't be a SOFTWIN: can't realize object %p",this);
     return false;
   }
   
@@ -91,7 +98,7 @@ bool USubwin::realize() {
 }
 
 void USubwin::resizeImpl(UResizeEvent& e) {
-  UView* v = e.getView();
+  View* v = e.getView();
   UHardwinImpl* hw = hardImpl();
   if (hw) {
     // setSize first because pos depends on size for GLUT
@@ -101,11 +108,11 @@ void USubwin::resizeImpl(UResizeEvent& e) {
 }
   
 void USubwin::motionImpl(UViewEvent& e) {
-  UView* v = e.getView();
+  View* v = e.getView();
   UHardwinImpl* hw = hardImpl();
   if (hw) {
     hw->setPos(v->getHardwinPos());
-    //UPoint p = hw->getPos(p);
+    //Point p = hw->getPos(p);
     //cerr << "motionCB pos: " << v->getWinPos() << " p= " << p<<  endl; 
   }
 }

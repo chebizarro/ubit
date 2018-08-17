@@ -1,18 +1,26 @@
-/* ==================================================== ======== ======= *
- *
+/*
  *  ufontmetrics.hpp
- *  Ubit GUI Toolkit - Version 6
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE : 
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE 
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. 
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU 
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION; 
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
+
 
 #ifndef _ufontmetrics_hpp_
 #define	_ufontmetrics_hpp_ 1
@@ -22,25 +30,25 @@ class UFontMetrics {
 public:
   UFontMetrics();
 
-  UFontMetrics(const UFont&, UDisp*);
+  UFontMetrics(const UFont&, Display*);
 
-  UFontMetrics(const UFontDesc&, UDisp*);
+  UFontMetrics(const UFontDesc&, Display*);
   ///< Note: the UFontDesc argument must NOT be destroyed while this UFontMetrics is used.
 
-  UFontMetrics(UUpdateContext&);
+  UFontMetrics(UpdateContext&);
 
   ~UFontMetrics();
     
-  void set(const UFont&, UDisp* = null);
-  void set(const UFontDesc&, UDisp* = null);
+  void set(const UFont&, Display* = null);
+  void set(const UFontDesc&, Display* = null);
 
   float getAscent() const;  
   float getDescent() const;
   float getHeight() const;
 
   float getWidth(char) const;  
-  float getWidth(const UStr&) const;
-  float getWidth(const UStr&, int from_char, int len = -1) const;
+  float getWidth(const String&) const;
+  float getWidth(const String&, int from_char, int len = -1) const;
   float getWidth(const char* str, int str_len = -1) const;
 
   int getCharPos(const char* str, int str_len, float x) const;
@@ -49,7 +57,7 @@ public:
   float getXPos(const char* str, int str_len, int char_pos) const;
   ///< converts char pos to x pos.
   
-  bool getSubTextSize(const char* s, int s_len, UDimension&, float available_width, 
+  bool getSubTextSize(const char* s, int s_len, Dimension&, float available_width, 
                       int& s_sublen, int& change_line) const;
   /**< returns font metrics of a substring that verifies certain conditions.
     * Notes:
@@ -72,7 +80,7 @@ public:
     */
 
 protected:
-  UDisp* disp;
+  Display* disp;
   const UFontDesc* fd;
   bool own_fd;
 };

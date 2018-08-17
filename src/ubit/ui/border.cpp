@@ -1,6 +1,5 @@
-/************************************************************************
- *
- *  uborder.cpp: Border Attribute for UBox containers
+/*
+ *  border.cpp: Border Attribute for Box containers
  *  Ubit GUI Toolkit - Version 6.0
  *  (C) 2008 | Eric Lecolinet | ENST Paris | www.enst.fr/~elc/ubit
  *
@@ -31,47 +30,47 @@ using namespace std;
 namespace ubit {
 
 
-#define DARK  UColor::darkgrey
-#define LIGHT UColor::lightgrey
+#define DARK  Color::darkgrey
+#define LIGHT Color::lightgrey
 
-UBorder UBorder::none(NONE, UColor::inherit, UColor::inherit, 0, 0, UCONST);
-UBorder UBorder::empty(NONE, UColor::inherit, UColor::inherit, 1, 1, UCONST);
-UBorder UBorder::line(LINE, DARK, LIGHT, 1, 1, UCONST);
-UBorder UBorder::shadowOut(+SHADOW, DARK, LIGHT,1,1,UCONST);
-UBorder UBorder::shadowIn(-SHADOW, DARK, LIGHT, 1,1,UCONST);
-UBorder UBorder::etchedOut(+ETCHED, DARK, LIGHT, 2,2,UCONST);
-UBorder UBorder::etchedIn(-ETCHED, DARK, LIGHT, 2,2,UCONST);
+Border Border::none(NONE, Color::inherit, Color::inherit, 0, 0, UCONST);
+Border Border::empty(NONE, Color::inherit, Color::inherit, 1, 1, UCONST);
+Border Border::line(LINE, DARK, LIGHT, 1, 1, UCONST);
+Border Border::shadowOut(+SHADOW, DARK, LIGHT,1,1,UCONST);
+Border Border::shadowIn(-SHADOW, DARK, LIGHT, 1,1,UCONST);
+Border Border::etchedOut(+ETCHED, DARK, LIGHT, 2,2,UCONST);
+Border Border::etchedIn(-ETCHED, DARK, LIGHT, 2,2,UCONST);
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-UBorder::UBorder(int d) : padding(1,1) {
-  constructs(d, UColor::white, UColor::black);
+Border::Border(int d) : padding(1,1) {
+  constructs(d, Color::white, Color::black);
 }
 
-UBorder::UBorder(int d, const UColor& c, const UColor& bgc, float horiz, float vert) 
+Border::Border(int d, const Color& c, const Color& bgc, float horiz, float vert) 
 : padding(horiz,vert) {
   constructs(d, c, bgc);
 }
 
-UBorder::UBorder(int d, const UColor& c, const UColor& bgc, float horiz, float vert, UConst m)
-: UAttr(m), padding(horiz,vert) {
+Border::Border(int d, const Color& c, const Color& bgc, float horiz, float vert, UConst m)
+: Attribute(m), padding(horiz,vert) {
   constructs(d, c, bgc);
 }
 
-UBorder::UBorder(const UBorder& b) : padding(b.padding) {
+Border::Border(const Border& b) : padding(b.padding) {
   constructs(b.decoration, *b.pcolor, *b.pbgcolor);
 }
 
-UBorder::~UBorder() {}
+Border::~Border() {}
 
-void UBorder::constructs(int d, const UColor& c, const UColor& bgc) {
+void Border::constructs(int d, const Color& c, const Color& bgc) {
   decoration = d;
   is_overlaid = is_rounded = false;
   pcolor = c;
   pbgcolor = bgc;
 }
 
-UBorder& UBorder::operator=(const UBorder& b) {
+Border& Border::operator=(const Border& b) {
   if (checkConst()) return *this;
   // !! tester egalite !!
   constructs(b.decoration, *b.pcolor, *b.pbgcolor);
@@ -82,42 +81,42 @@ UBorder& UBorder::operator=(const UBorder& b) {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-URoundBorder::URoundBorder(int d) : UBorder(d), arc_w(5), arc_h(5) {
+URoundBorder::URoundBorder(int d) : Border(d), arc_w(5), arc_h(5) {
   is_rounded = true;
 }
 
-URoundBorder::URoundBorder(int d, const UColor& c, const UColor& bgc,
+URoundBorder::URoundBorder(int d, const Color& c, const Color& bgc,
              float w, float h, float aw, float ah)
-: UBorder(d, c, bgc, w, h), arc_w(aw), arc_h(ah) {
+: Border(d, c, bgc, w, h), arc_w(aw), arc_h(ah) {
   is_rounded = true;
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-class UBorderContent : public UElem {
+class UBorderContent : public Element {
 public:
   UCLASS(UBorderContent)
-  UBorderContent(const UArgs& a = UArgs::none) : UElem(a) {}
+  UBorderContent(const Args& a = Args::none) : Element(a) {}
   virtual int getDisplayType() const {return BORDER;}   // redefined
 };
 
 UCompositeBorder::UCompositeBorder() 
-: UBorder(+SHADOW, UColor::none, UColor::none, 1,1) {
+: Border(+SHADOW, Color::none, Color::none, 1,1) {
 }
 
-UCompositeBorder::UCompositeBorder(const UArgs& a) 
-: UBorder(+SHADOW, UColor::none, UColor::none, 1,1) {
+UCompositeBorder::UCompositeBorder(const Args& a) 
+: Border(+SHADOW, Color::none, Color::none, 1,1) {
   pchildren = new UBorderContent(a);
 }
 
 /*
-UCompositeBorder& UCompositeBorder::addChildren(const UArgs& a) {
+UCompositeBorder& UCompositeBorder::addChildren(const Args& a) {
   if (!pchildren) pchildren = new UBorderContent(a);
   else pchildren->add(a);
   return *this;
 }
 
-UCompositeBorder& UCompositeBorder::addChildren(bool superimposed, const UArgs& a) {
+UCompositeBorder& UCompositeBorder::addChildren(bool superimposed, const Args& a) {
   is_overlaid = superimposed;
   if (!pchildren) pchildren = new UBorderContent(a);
   else pchildren->add(a);
@@ -126,7 +125,7 @@ UCompositeBorder& UCompositeBorder::addChildren(bool superimposed, const UArgs& 
 */
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-UBorder& UBorder::setDecoration(int decor) {
+Border& Border::setDecoration(int decor) {
   if (checkConst()) return *this;
   decoration = decor;
   switch(decor) {
@@ -137,59 +136,59 @@ UBorder& UBorder::setDecoration(int decor) {
   return *this;
 }
 
-UBorder& UBorder::setColor(const UColor& c) {
+Border& Border::setColor(const Color& c) {
   if (checkConst() || pcolor==&c || *pcolor==c) return *this;
   pcolor = c;
   return *this;
 }
 
-UBorder& UBorder::setBgcolor(const UColor& c) {
+Border& Border::setBgcolor(const Color& c) {
   if (checkConst() || pbgcolor==&c || *pbgcolor==c) return *this;
   pbgcolor = c;
   return *this;
 }
 
 /*
- UBorder& UBorder::setThickness(float t) {
+ Border& Border::setThickness(float t) {
  thickness = t;
  return *this;
  }
  */
 
-UBorder& UBorder::setPadding(const UPaddingSpec& p) {
+Border& Border::setPadding(const PaddingSpec& p) {
   if (checkConst()) return *this;
   padding = p;
   return *this;
 }
 
-UBorder& UBorder::setOverlaid(bool state) {
+Border& Border::setOverlaid(bool state) {
   if (checkConst()) return *this;
   is_overlaid = state; 
   return *this;
 }
 
-void UBorder::update() {
-  updateAutoParents(UUpdate::LAYOUT_PAINT);
+void Border::update() {
+  updateAutoParents(Update::LAYOUT_PAINT);
 }
 
-void UBorder::putProp(UUpdateContext* props, UElem&) {
+void Border::putProp(UpdateContext* props, Element&) {
   // a defaut de mieux : ne pas ecraser une definition de border !!
   // s'il contient des elements (typiquement un scrollpane)
   if (!props->local.border || !props->local.border->getSubGroup())
     props->local.border = this;
 }
 
-void UCompositeBorder::putProp(UUpdateContext* props, UElem&) {
+void UCompositeBorder::putProp(UpdateContext* props, Element&) {
   props->local.border = this;  // ecrase si existe
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UBorder::getSize(const UUpdateContext&, UPaddingSpec& _m) const {
+void Border::getSize(const UpdateContext&, PaddingSpec& _m) const {
   _m = padding;
 }
 
-void UBorder::paint(UGraph& g, const UUpdateContext& parp, const URect& r) const {
+void Border::paint(Graph& g, const UpdateContext& parp, const Rectangle& r) const {
   // new: fait avant:
   // vd.margin = margin;
   // if (!vd.can_paint) return;   // si rien a peindre on s'arrete la
@@ -204,15 +203,15 @@ void UBorder::paint(UGraph& g, const UUpdateContext& parp, const URect& r) const
   else 
     is_active = (parp.obj->getInterState() == UOn::ARMED);
   
-  const UColor *_color;
-  if (pcolor->equals(UColor::inherit)) _color = parp.color;
+  const Color *_color;
+  if (pcolor->equals(Color::inherit)) _color = parp.color;
   else _color = pcolor;
   
-  const UColor *_bgcolor;
-  if (pbgcolor->equals(UColor::inherit)) _bgcolor = parp.bgcolor;
+  const Color *_bgcolor;
+  if (pbgcolor->equals(Color::inherit)) _bgcolor = parp.bgcolor;
   else _bgcolor = pbgcolor;
   
-  const UColor *bg = null, *fg = null;
+  const Color *bg = null, *fg = null;
   
   if (decoration > NONE) {  // OUT (normal case)
     if (is_active) {bg = _color; fg = _bgcolor;}
@@ -228,8 +227,8 @@ void UBorder::paint(UGraph& g, const UUpdateContext& parp, const URect& r) const
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UBorder::paintDecoration(UGraph& g, const URect& r, UElem& obj, 
-                              const UColor& fg, const UColor& bg) const {
+void Border::paintDecoration(Graph& g, const Rectangle& r, Element& obj, 
+                              const Color& fg, const Color& bg) const {
   float x1 = r.x;
   float y1 = r.y;
   float x2 = r.x + r.width - 1;
@@ -274,8 +273,8 @@ void UBorder::paintDecoration(UGraph& g, const URect& r, UElem& obj,
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void URoundBorder::paintDecoration(UGraph& g, const URect& r, UElem& obj, 
-                                   const UColor& fg, const UColor& bg) const {
+void URoundBorder::paintDecoration(Graph& g, const Rectangle& r, Element& obj, 
+                                   const Color& fg, const Color& bg) const {
   float x1 = r.x;
   float y1 = r.y;
   float x2 = r.x + r.width - 1;

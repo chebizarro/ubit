@@ -1,57 +1,66 @@
-/************************************************************************
- *
- *  uupdatecontext.hpp: [implementation] stack context
- *  Ubit GUI Toolkit - Version 6
+/*
+ *  updatecontext.h: [implementation] stack context
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE :
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION;
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
 
 #ifndef _uupdatecontext_hpp_
 #define	_uupdatecontext_hpp_ 1
+
 #include <ubit/udefs.hpp>
 #include <ubit/ustyle.hpp>
 #include <ubit/draw/ufontImpl.hpp>
 #include <ubit/uview.hpp>
 #include <vector>
+
 namespace ubit {
   
   // ====[internal implementation]=========================================
   // NOTE: this header is part of the Ubit intrinsics and subject to change
   
-  /* [impl] UUpdateContext = a subcontext (not the first layer of the context cstack)
+  /* [impl] UpdateContext = a subcontext (not the first layer of the context cstack)
    * and a base for UWinUpdateContext (the first layer of the cstack)
    */
-  class UUpdateContext {
+  class UpdateContext {
   public:  
-    UUpdateContext(const UUpdateContext& parent_ctx, UElem*, UView*, UViewUpdateImpl*);
+    UpdateContext(const UpdateContext& parent_ctx, Element*, View*, UViewUpdateImpl*);
     ///< creates a subcontext (not the first layer of the context stack)
     
-    UElem* getObj() {return obj;}
-    ///< returns the object (a UElem, a UElem or a UBox) that is related to this context.
+    Element* getObj() {return obj;}
+    ///< returns the object (a Element, a Element or a Box) that is related to this context.
     
-    UBox* getBoxParent() {return view->getBoxParent();}
+    Box* getBoxParent() {return view->getBoxParent();}
     /*< returns the direct or *indirect* box parent of getObj().
-     * 'boxes' are UBox objects or objects that derive from UBox.
+     * 'boxes' are Box objects or objects that derive from Box.
      */  
     
-    UView* getView() {return view;}
+    View* getView() {return view;}
     ///< returns the view related to this context.
     
-    UView* getWinView() {return view->getWinView();}
+    View* getWinView() {return view->getWinView();}
     ///< returns the window view that contains getView().
     
-    UDisp* getDisp() const {return view->getDisp();}  
+    Display* getDisp() const {return view->getDisp();}  
     // const necessaire pour certains appels
     
-    UGraph* getGraph() {return graph;}
+    Graph* getGraph() {return graph;}
 
     void rescale();
     ///< rescales the coordinates according to the current scale.
@@ -62,15 +71,14 @@ namespace ubit {
     const UPropdef* getPropdef(const UFlag&) const;
     const UPropdef* getPropdef(const UFlag*) const;
     
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #ifndef NO_DOC
     // cette implementation est dangereuse car dans certains cas win_ctx est undef
-    const UUpdateContext* parent_ctx;
+    const UpdateContext* parent_ctx;
     UWinUpdateContext* win_ctx;  // not const because of the flags vector
     unsigned short flag_count;   // number of valid flagdefs for this stack level
     
-    UElem* obj;
-    UView* view;
+    Element* obj;
+    View* view;
     UViewUpdateImpl* view_impl;
     const UStyle* obj_style;
     ULocalProps local;
@@ -81,38 +89,36 @@ namespace ubit {
     float xyscale;            // current scale
     float vspacing, hspacing;
     UEdit* edit;
-    const UColor *color, *bgcolor;
+    const Color *color, *bgcolor;
     const UCursor *cursor;
-    UGraph* graph;
+    Graph* graph;
 
   protected:
     friend class UViewFind;
-    UUpdateContext() {}  // pour UViewFind
-    UUpdateContext(UView* win_view); // for UWinUpdateContext
+    UpdateContext() {}  // pour UViewFind
+    UpdateContext(View* win_view); // for UWinUpdateContext
 #endif
   };
   
-  /* ==================================================== ======== ======= */
-  /* [impl] UWinUpdateContext = the first layer of the context cstack
+    /* [impl] UWinUpdateContext = the first layer of the context cstack
    */
-  class UWinUpdateContext : public UUpdateContext {
+  class UWinUpdateContext : public UpdateContext {
   public:
-    UWinUpdateContext(UView* winview, UGraph*);
+    UWinUpdateContext(View* winview, Graph*);
     /**< creates the first layer of the context stack
      * !Warning: 'win_view' must be a valid (NOT null) window view!
      */
         
   private:
-    friend class UUpdateContext;
+    friend class UpdateContext;
     std::vector<const UFlagdef*> flags;
   };
   
-  /* ==================================================== ======== ======= */
-  
+    
   // cette implementation est dangereuse car dans certains cas win_ctx est undef
-  //inline UView*  UUpdateContext::getWinView() {return win_ctx->view;}
-  //inline UDisp*  UUpdateContext::getDisp() const {return win_ctx->view->getDisp();}
-  //inline UGraph* UUpdateContext::getGraph() {return win_ctx->graph;}
+  //inline View*  UpdateContext::getWinView() {return win_ctx->view;}
+  //inline Display*  UpdateContext::getDisp() const {return win_ctx->view->getDisp();}
+  //inline Graph* UpdateContext::getGraph() {return win_ctx->graph;}
   
 }
 #endif

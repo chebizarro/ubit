@@ -1,18 +1,26 @@
-/************************************************************************
- *
- *  utimer.hpp
- *  Ubit GUI Toolkit - Version 6
+/*
+ *  timer.hpp
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE : 
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE 
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. 
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU 
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION; 
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
+
 
 #ifndef _utimer_hpp_
 #define	_utimer_hpp_ 1
@@ -22,6 +30,7 @@ extern "C" {
 }
 
 #include <ubit/uobject.hpp>
+
 namespace ubit {
   
   /** a UTimer object fires callbacks after a given delay. Callbacks can be
@@ -42,7 +51,7 @@ namespace ubit {
    * - by default these callbacks are fired until stop() is called. start() can 
    *   have an optional arg that specifies how many times they must be called.
    */
-  class UTimer : public UNode {
+  class UTimer : public Node {
   public:
     UCLASS(UTimer)
     
@@ -70,7 +79,7 @@ namespace ubit {
     virtual void onAction(UCall& callback);
     /**< adds a callback that is fired when the time is up.
      * 'callback' is a ucall<> expression (see UCall). It is destroyed when the timer
-     *  is destroyed except if it is referenced by a uptr<> or another node (see UNode).
+     *  is destroyed except if it is referenced by a uptr<> or another node (see Node).
      */  
     
     virtual void onTimeout(UCall& callback) {onAction(callback);}
@@ -88,7 +97,7 @@ namespace ubit {
     virtual void stop();
     /**< stops the timer.
      * the UTimer is destroyed if it was started in auto_delete mode (see start())
-     * and if it is not referenced elsewhere (see UNode).
+     * and if it is not referenced elsewhere (see Node).
      */
     
     unsigned long getDelay() const {return delay;}
@@ -105,7 +114,7 @@ namespace ubit {
     bool timerCB();
     
   private:
-    friend class UAppli;
+    friend class Application;
     friend class UAppliImpl;
     friend class UTimerImpl;
     bool auto_delete, is_running, is_looping;

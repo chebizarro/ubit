@@ -1,63 +1,71 @@
-/************************************************************************
- *
- *  udoc.hpp: Document Element
- *  Ubit GUI Toolkit - Version 6
+/*
+ *  doc.h: Document Element
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE :
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION;
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
 
 #ifndef _udoc_hpp_
 #define _udoc_hpp_ 1
+
 #include <list>
 #include <map>
 #include <ubit/udefs.hpp>
 #include <ubit/ustr.hpp>
 #include <ubit/uboxes.hpp>
+
 namespace ubit {
   
-  class UDocCreator;
-  class UDocAttachment;
+  class DocumentCreator;
+  class DocumentAttachment;
   
-  /** UDocAttachment List.
+  /** DocumentAttachment List.
    */
-  typedef std::list<UDocAttachment*> UDocAttachments;
+  typedef std::list<DocumentAttachment*> DocumentAttachments;
   
-  /* ==================================================== ====== ======= */
-  /** Document Factory: use this class to read documents.
-   * See class UDoc for info on "documents".
+    /** Document Factory: use this class to read documents.
+   * See class Document for info on "documents".
    */
-  class UDocFactory {
+  class DocumentFactory {
   public:
-    UDocFactory();
-    virtual ~UDocFactory();
+    DocumentFactory();
+    virtual ~DocumentFactory();
     
-    static UDocFactory& getDefaultFactory();
+    static DocumentFactory& getDefaultFactory();
     /**< returns the default factory for reading/creating documents.
      */
     
-    virtual UDoc* create(const UStr& name);
+    virtual Document* create(const String& name);
     /**< creates an empty document.
-     * creates an instance of the appropriate UDoc subclass depending
+     * creates an instance of the appropriate Document subclass depending
      * on 'name' suffix.
      */
     
-    virtual UDoc* load(const UStr& name, const UStr& buffer);
+    virtual Document* load(const String& name, const String& buffer);
     /**< loads a document from a buffer in memory.
-     * creates an instance of the appropriate UDoc subclass depending
+     * creates an instance of the appropriate Document subclass depending
      * on 'name' suffix.
      */
     
-    virtual UDoc* read(const UStr& filename);
+    virtual Document* read(const String& filename);
     /**< reads a document from a file.
-     * reads and creates an instance of the appropriate UDoc subclass
+     * reads and creates an instance of the appropriate Document subclass
      *  depending on 'filename' suffix.
      */
     
@@ -70,12 +78,12 @@ namespace ubit {
      */ 
     
     virtual void saveErrors(bool);
-    virtual UStr* getErrors() const; 
+    virtual String* getErrors() const; 
     /**< return last errors messages if saveErrors() was set to true.
      * errors are printed on stderr otherwise.
      */
     
-    virtual UDocCreator* getCreator(const UStr& type);
+    virtual DocumentCreator* getCreator(const String& type);
     /**< returns the creator for this type (if any, null otherwise).
      * by convention, the 'type' is the suffix of the file
      * (e.g. "html", "txt", "cpp" ...)
@@ -85,65 +93,62 @@ namespace ubit {
      * the actual creator and to change its options.
      */
     
-    virtual UDocCreator* getDefaultCreator();
+    virtual DocumentCreator* getDefaultCreator();
     ///< returns the default document creator.
     
-    virtual void addCreator(const UStr& type, UDocCreator&);
+    virtual void addCreator(const String& type, DocumentCreator&);
     ///< adds a document creator.
     
-    virtual void setDefaultCreator(UDocCreator&);
+    virtual void setDefaultCreator(DocumentCreator&);
     ///< changes the creator that is used when the document type is unknown.
     
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   protected:
     struct Comp {
-      bool operator()(const UStr* s1, const UStr* s2) const;
+      bool operator()(const String* s1, const String* s2) const;
     };
-    typedef std::map<const UStr*, UDocCreator*, Comp> Map;
+    typedef std::map<const String*, DocumentCreator*, Comp> Map;
     Map rmap;
-    UDocCreator* default_creator;
+    DocumentCreator* default_creator;
     int stat;
-    uptr<UStr> errors;
+    uptr<String> errors;
   };
   
 
-  /* ==================================================== ====== ======= */
-  /** Generic Document
+    /** Generic Document
    *
-   * a UDoc is just a tree (or acyclic graph) of various Ubit objects.
+   * a Document is just a tree (or acyclic graph) of various Ubit objects.
    * It can be modified in the same way as other Ubit instance trees.
    *
-   * UDoc can't be instantiated directly, only appropriate subclasses
-   * can be (such as UXmlDocument, etc.) 
+   * Document can't be instantiated directly, only appropriate subclasses
+   * can be (such as XmlDocument, etc.) 
    * 
-   * UDocFactory::read() reads a document file and creates an instance 
-   * of the appropriate UDoc subclass depending on the file suffix
+   * DocumentFactory::read() reads a document file and creates an instance 
+   * of the appropriate Document subclass depending on the file suffix
    */
-  class UDoc : public UBox {
+  class Document : public Box {
   public:
-    UCLASS(UDoc)
+    UCLASS(Document)
     
-    static UDocFactory& getDefaultFactory();
+    static DocumentFactory& getDefaultFactory();
     ///< returns the default factory (for reading/creating documents).
     
-    virtual ~UDoc();
+    virtual ~Document();
     
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     
     virtual bool isEditable() const;
     virtual void setEditable(bool state = true);
     
-    virtual const UStr& getPath() const {return *ppath;}
+    virtual const String& getPath() const {return *ppath;}
     ///< returns the pathname of the document.
     
-    virtual void setPath(const UStr& path);
-    virtual void makePath(UStr& fullpath, const UStr& url);
+    virtual void setPath(const String& path);
+    virtual void makePath(String& fullpath, const String& url);
     /**< creates a full pathname from an attachment or an URL.
      * returns true if the fullname is a local filename.
      * returns false otherwise (typically is the fullname starts with http:)
      */
     
-    virtual const UDocAttachments* getAttachments() const {return null;}
+    virtual const DocumentAttachments* getAttachments() const {return null;}
     ///< returns the objects (images, stylesheets, etc) that are attached to this document.
     
     virtual int loadAttachments(bool reload = false) {return 0;}
@@ -153,10 +158,10 @@ namespace ubit {
      * - returns: the number of attachments that are still unloaded
      */
     
-    virtual bool loadAttachment(UDocAttachment*, bool reload = false) {return false;}
+    virtual bool loadAttachment(DocumentAttachment*, bool reload = false) {return false;}
     ///< loads this attachment.
     
-    virtual void addLinkCallback(const UChild& cond_slash_callback);
+    virtual void addLinkCallback(const Child& cond_slash_callback);
     /**< adds a callback that observes events in the document's hyperlinks.
      * 'cond_slash_callback' is condition/callback expression such as: 
      * <pre>   UOn::action / ucall(obj, &Obj::foo)   // (obj type is Obj*)  
@@ -167,79 +172,74 @@ namespace ubit {
     
     // - - - Impl. - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     
-    virtual void linkEventCB(UInputEvent&, const UStr* path);
+    virtual void linkEventCB(UInputEvent&, const String* path);
     
   protected:
-    UDoc();
-    UDoc(const UStr& path);
-    ///< NB: the constr is protected: use read() or a subclass to create a UDoc.
+    Document();
+    Document(const String& path);
+    ///< NB: the constr is protected: use read() or a subclass to create a Document.
     
   private:
-    uptr<UStr> ppath;
-    uptr<UElem> call_list;
-    UDoc(const UDoc&);             // these operators are forbidden
-    UDoc& operator=(const UDoc&);
+    uptr<String> ppath;
+    uptr<Element> call_list;
+    Document(const Document&);             // these operators are forbidden
+    Document& operator=(const Document&);
   };
   
-  /* ==================================================== ======== ======= */
-  /** Document attachment (image, stylesheet, etc.)
+    /** Document attachment (image, stylesheet, etc.)
    */
-  class UDocAttachment {
+  class DocumentAttachment {
   public:
-    virtual ~UDocAttachment() {}
-    virtual const UStr& getUrl() const = 0;
-    virtual const UStr& getType() const = 0;
+    virtual ~DocumentAttachment() {}
+    virtual const String& getUrl() const = 0;
+    virtual const String& getType() const = 0;
     virtual bool isLoaded() const = 0;
-    virtual int  load(UDoc*) = 0;
+    virtual int  load(Document*) = 0;
   };
   
-  /* ==================================================== ======== ======= */
-  /** Document source (file, buffer, etc.).
+    /** Document source (file, buffer, etc.).
    */
-  struct UDocSource {
+  struct DocumentSource {
     enum From {PATHNAME, BUFFER, SCRATCH};
     
-    UDocSource(int from, const UStr* path, UStr* errors, const UStr* buffer = null);
+    DocumentSource(int from, const String* path, String* errors, const String* buffer = null);
     ///< note that path and errors are not duplicated.
   
     int from;
     int stat;
-    uptr<const UStr> path, fullpath;
-    const UStr* buffer;
-    UStr* errors;
+    uptr<const String> path, fullpath;
+    const String* buffer;
+    String* errors;
   };
   
   
-  /* ==================================================== ======== ======= */
-  /** Document creator interface (intended to be subclassed).
+    /** Document creator interface (intended to be subclassed).
    */
-  class UDocCreator {
+  class DocumentCreator {
   public:
-    virtual ~UDocCreator() {}
-    virtual UDoc* create(UDocSource&) = 0;
-    ///< create or load the document specified by the UDocSource.
+    virtual ~DocumentCreator() {}
+    virtual Document* create(DocumentSource&) = 0;
+    ///< create or load the document specified by the DocumentSource.
   };
   
   
-  /* ==================================================== ======== ======= */
-  /**< Base of flat documents that just contains flat text or an image
-   * see also: UXmlDocument for XML "hierarchical" documents.
+    /**< Base of flat documents that just contains flat text or an image
+   * see also: XmlDocument for XML "hierarchical" documents.
    */
-  class UFlatDoc : public UDoc {
+  class FlatDocument : public Document {
   public:
-    UFlatDoc(const UStr& _pathname);
+    FlatDocument(const String& _pathname);
     virtual bool isEditable() const;
     virtual void setEditable(bool state = true);
     uptr<class UEdit> edit;
   };
   
   
-  /* ==================================================== ======== ======= */
-  /**< Documents that needs a plugin to be displayed. 
+    /**< Documents that needs a plugin to be displayed. 
    */
-  class UPluginDoc : public UDoc {
+  class PluginDocument : public Document {
   public:
-    UPluginDoc(const UStr& _pathname);
+    PluginDocument(const String& _pathname);
     //virtual void setEditable(bool state = true) {}
   };
   

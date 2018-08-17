@@ -1,22 +1,31 @@
-/************************************************************************
- *
- *  uchoice.hpp: item chooser in a list
- *  Ubit GUI Toolkit - Version 6
+/*
+ *  choice.h: item chooser in a list
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE :
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION;
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
 
 #ifndef _uchoice_hpp_
 #define	_uchoice_hpp_ 1
+
 #include <ubit/uattr.hpp>
+
 namespace ubit {
   
   /** Makes the children of a widget (exclusively) selectable.
@@ -27,7 +36,7 @@ namespace ubit {
    * UListbox, UTreebox, UCombobox use an internal UChoice
    * @see also: URadioSelect.
    */
-  class UChoice : public UAttr {
+  class UChoice : public Attribute {
   public:
     UCLASS(UChoice)
     
@@ -39,13 +48,13 @@ namespace ubit {
     virtual void clearSelection();
     ///< deselects the selected object.
     
-    virtual UBox* getSelectedItem() const;
+    virtual Box* getSelectedItem() const;
     ///< returns the current selection; returns null if there is no selection.
     
-    virtual UBox* setSelectedItem(UBox&);
+    virtual Box* setSelectedItem(Box&);
     ///< selects and returns this item if it is in the list, returns null otherwise.
     
-    virtual UBox* setSelectedItem(UBox*);
+    virtual Box* setSelectedItem(Box*);
     ///< selects this item or clear the selection if this item is null.
 
     virtual int getSelectedIndex() const;
@@ -55,7 +64,7 @@ namespace ubit {
      * when counting indexes.
      */
     
-    virtual UBox* setSelectedIndex(int N);
+    virtual Box* setSelectedIndex(int N);
     /**< selects the Nth *selectable* object in the list.
      * the last selectable object is selected if N = -1. The selected object is
      * returned (if any, null is returned otherwise).
@@ -63,14 +72,14 @@ namespace ubit {
      * non-selectable objects, which are ignored when counting indexes.
      */
     
-    virtual UBox* getSelectableItem(int N) const;
+    virtual Box* getSelectableItem(int N) const;
     /**< returns the Nth *selectable* object.
      * the last selectable object is returned if N = -1.
      * NOTE: A list can contain non-selectable objects, which are ignored when
      * counting indexes. Use getChild() to have access to all objects.
      */
     
-    virtual UBox* getSelectableItem(const UStr& s, bool ignore_case = true) const;
+    virtual Box* getSelectableItem(const String& s, bool ignore_case = true) const;
     /**< returns the 1st *selectable* object which contains a string equal to 's'.
      * this function compares the content of the strings (not their addresses).
      * NOTE: A list can contain non-selectable objects, which are ignored by
@@ -78,13 +87,13 @@ namespace ubit {
      */
     
     struct IsSelectable {
-      virtual bool operator()(const UBox*) const;
+      virtual bool operator()(const Box*) const;
       virtual ~IsSelectable() {}
     };
     
     virtual void setSelectionRule(IsSelectable&);
     /**< define which objects can be selected in the list.
-     * by default, ARMable objects that derive from UBox can be selected, such as
+     * by default, ARMable objects that derive from Box can be selected, such as
      * UItem, UButton ... or any box that has been made armable by adding its 
      * setArmable() method.
      */
@@ -93,9 +102,9 @@ namespace ubit {
     
     // - - - impl - -  - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #ifndef NO_DOC
-    virtual void putProp(UUpdateContext*, UElem&);
-    virtual void addingTo(UChild&, UElem& parent);
-    virtual void removingFrom(UChild&, UElem& parent);
+    virtual void putProp(UpdateContext*, Element&);
+    virtual void addingTo(Child&, Element& parent);
+    virtual void removingFrom(Child&, Element& parent);
     // NB: removingFrom() requires a destructor to be defined
     
     /*
@@ -120,17 +129,17 @@ namespace ubit {
      */
   protected:
     uptr<UCall>  callbacks;
-    uptr<UBox>   container;
-    uptr<UElem> last_browsing_group;
-    uptr<UElem> sel_items;
+    uptr<Box>   container;
+    uptr<Element> last_browsing_group;
+    uptr<Element> sel_items;
     IsSelectable*is_selectable;
     //short sel_mode, sel_style;
     virtual void mouseCB(UInputEvent&);
     virtual void actionCB(UInputEvent*);
     virtual void changeCB(UInputEvent*);
     virtual void changed(bool update = true);
-    virtual UBox* setSelectedItemImpl(UBox* item, UInputEvent*);
-    virtual UBox* getSelectedItemImpl() const;
+    virtual Box* setSelectedItemImpl(Box* item, UInputEvent*);
+    virtual Box* getSelectedItemImpl() const;
 #endif
   };
   
@@ -150,14 +159,14 @@ namespace ubit {
    *  </pre>
    * @see also: UChoice.
    */
-  class URadioSelect : public UAttr {
+  class URadioSelect : public Attribute {
   public:
     UCLASS(URadioSelect)
     
     URadioSelect();
     ///< create a new URadioSelect object; @see also shortcut uradioselect().
     
-    URadioSelect(UInt& index);
+    URadioSelect(Int& index);
     ///< create a new URadioSelect object; @see also shortcut uradioselect().
     
     virtual ~URadioSelect();
@@ -169,18 +178,18 @@ namespace ubit {
     virtual void clearSelection();
     ///< deselects the selected object (if any).
     
-    virtual UElem* getSelectedItem() const;
+    virtual Element* getSelectedItem() const;
     ///< returns the selected object; returns null if there is no selected object.
     
-    virtual void setSelectedItem(UElem&);
+    virtual void setSelectedItem(Element&);
     ///< selects this object.
     
-    UInt& index() const {return *pindex;}
+    Int& index() const {return *pindex;}
     virtual int getSelectedIndex() const;
     ///< returns the index of the selected object; returns -1 if there is no selected object.
     
     virtual void setSelectedIndex(int n);
-    virtual void setSelectedIndex(const UInt& n);
+    virtual void setSelectedIndex(const Int& n);
     ///< selects the Nth  object; selects the last selectable object if n = -1.
     
     virtual void update();
@@ -188,7 +197,7 @@ namespace ubit {
     // - - impl  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #ifndef NO_DOC
     virtual void changed(bool update = true);
-    virtual void changed(UElem* target);
+    virtual void changed(Element* target);
     /**< called when the selection is changed.
      * This function:
      * - updates grahics (if arg is true)
@@ -196,18 +205,18 @@ namespace ubit {
      * - then fires parents' UOn::select callbacks
      */
     
-    virtual void putProp(UUpdateContext*, UElem&);
-    virtual void addingTo(UChild&, UElem& parent);
-    virtual void removingFrom(UChild&, UElem& parent);
+    virtual void putProp(UpdateContext*, Element&);
+    virtual void addingTo(Child&, Element& parent);
+    virtual void removingFrom(Child&, Element& parent);
     // NB: removingFrom() requires a destructor to be defined
     
   protected:
     bool can_unselect_mode;
-    uptr<UInt> pindex;
+    uptr<Int> pindex;
     uptr<UCall> pselect_callback;
     void itemChanged(UInputEvent&);
     void setIndexImpl();
-    void _selectItem(UElem*);
+    void _selectItem(Element*);
 #endif
   };
   

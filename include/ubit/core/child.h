@@ -1,5 +1,4 @@
-/* ***********************************************************************
- *
+/*
  *  uchild.hpp [internal implementation]
  *  Ubit GUI Toolkit - Version 6
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
@@ -20,91 +19,89 @@ namespace ubit {
 
 /** [impl] Internal implementation of a child node.
 */
-class UChild {
+class Child {
 public:
-  UChild(UNode& o) : obj(&o), parent(0), cond(0) {}
-  UChild(UNode* o) : obj(o),  parent(0), cond(0) {}
-  UChild(UNode* o, const UCond& c) : obj(o), parent(0), cond(&c) {}
-  UChild(const char* s);
+  Child(Node& o) : obj(&o), parent(0), cond(0) {}
+  Child(Node* o) : obj(o),  parent(0), cond(0) {}
+  Child(Node* o, const Condition& c) : obj(o), parent(0), cond(&c) {}
+  Child(const char* s);
 
-  UNode* operator*() {return obj;}  
-  const UNode* operator*() const {return obj;}  
+  Node* operator*() {return obj;}  
+  const Node* operator*() const {return obj;}  
   
-  UElem* getParent() {return parent;}
+  Element* getParent() {return parent;}
 
-  const UCond* getCond() const {return cond;}
-  void setCond(const UCond& c)  {cond = &c;}
-  void setCond(const UChild& c) {cond = c.cond;}
+  const Condition* getCond() const {return cond;}
+  void setCond(const Condition& c)  {cond = &c;}
+  void setCond(const Child& c) {cond = c.cond;}
   
  private:
-  friend class UParent;
-  friend class UNode;
-  friend class UElem;
-  UNode* obj;
-  UElem* parent;
-  const UCond* cond;
+  friend class Parent;
+  friend class Node;
+  friend class Element;
+  Node* obj;
+  Element* parent;
+  const Condition* cond;
 };
 
-/* ==================================================== ===== ======= */
 
 template <class _Iter>
-class _UChildIter : public _Iter {
+class _ChildIter : public _Iter {
 public:
-  //_UChildIter() : _Iter(null) {}       // !ATT: peut poser probleme si pas g++ !
-  _UChildIter() : _Iter() {}
-  _UChildIter(const _Iter& i) : _Iter(i) {}
-  _UChildIter(const _UChildIter& i) : _Iter(i) {}
+  //_ChildIter() : _Iter(null) {}       // !ATT: peut poser probleme si pas g++ !
+  _ChildIter() : _Iter() {}
+  _ChildIter(const _Iter& i) : _Iter(i) {}
+  _ChildIter(const _ChildIter& i) : _Iter(i) {}
   
-  UNode*  operator*()    {return static_cast<UNode*>(*_Iter::operator*());}
-  UChild& child()        {return _Iter::operator*();}
-  const UCond* getCond() {return _Iter::operator*().getCond();}
+  Node*  operator*()    {return static_cast<Node*>(*_Iter::operator*());}
+  Child& child()        {return _Iter::operator*();}
+  const Condition* getCond() {return _Iter::operator*().getCond();}
 };
 
 // ==================================================== [(c)Elc] ======= 
 
 /** forward iterator in a child or attribute list.
-* @see: UElem::cbegin(), UNode::abegin(), UChildren.
+* @see: Element::cbegin(), Node::abegin(), Children.
 */
-typedef _UChildIter<std::list<UChild>::iterator> UChildIter;
+typedef _ChildIter<std::list<Child>::iterator> ChildIter;
 
 /** reverse iterator in a child or attribute list.
-* @see: UElem::crbegin(), UChildren.
+* @see: Element::crbegin(), Children.
 */
-typedef _UChildIter<std::list<UChild>::reverse_iterator> UChildReverseIter;
+typedef _ChildIter<std::list<Child>::reverse_iterator> UChildReverseIter;
 
-/* ==================================================== ===== ======= */
 /** Child (or attribute) list.
- * @see: UChildIter, UElem::children(), UElem::attributes(), UAttr::attributes().
+ * @see: ChildIter, Element::children(), Element::attributes(), Attribute::attributes().
  */
-class UChildren : public std::list<UChild> {
+class Children : public std::list<Child> {
 public:
-  UChildIter at(int pos);
+  ChildIter at(int pos);
   ///< returns an iterator pointing to the object at this position; returns the last child if 'pos' = -1 and end() if 'pos' is out of bounds.
 
-  UChildIter find(const UNode& child);
+  ChildIter find(const Node& child);
   ///< returns an iterator pointing to 'child'; returns end() if 'child' does no belong to the child list.
   
-  UChildIter findStr(const UStr& value, bool ignore_case = true);
-  /**< searches a string (UStr) which is equal to 'value'; returns end() if there is no such child.
+  ChildIter findStr(const String& value, bool ignore_case = true);
+  /**< searches a string (String) which is equal to 'value'; returns end() if there is no such child.
     * this function compares the content of strings (not their addresses).
     */
   
-  UChildIter findBox(const UStr& value, bool ignore_case = true);
-  /**< searches a box (UBox or subclass) which contains a string which is equal to 'value'; returns end() if there is no such child.
+  ChildIter findBox(const String& value, bool ignore_case = true);
+  /**< searches a box (Box or subclass) which contains a string which is equal to 'value'; returns end() if there is no such child.
     * this function compares the content of strings (not their addresses).
     */
   
   /** returns an iterator to the first child that derives from this class.
     * "derives" means: this class or a direct or indirect subclass. Exemple:
     * <pre>
-    *    UColor* c = null;
-    *    UChildIter i = children.findClass(c);
+    *    Color* c = null;
+    *    ChildIter i = children.findClass(c);
     * </pre>
     */
   template <class CC>
-    UChildIter findClass(CC*& c) {
+    ChildIter findClass(CC*& c) {
       c = null;
-      for (UChildIter i = begin(); i != end(); ++i) {
+      for (ChildIter i = begin(); i != end(); ++i) {
         if (dynamic_cast<CC*>(*i)) {c = (CC*)*i; return i;}
       }
       return end();

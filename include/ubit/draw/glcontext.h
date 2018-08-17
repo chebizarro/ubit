@@ -1,25 +1,35 @@
-/* ***********************************************************************
- *
- *  UGlcontext.hpp: OpenGL rendering context
- *  Ubit GUI Toolkit - Version 6.0
- *  (C) 2008 Eric Lecolinet | ENST Paris | www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE : 
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE 
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. 
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU 
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION; 
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+/*
+ *  UGlcontext.h: OpenGL rendering context
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
+ *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
+
 
 #if UBIT_WITH_GL
 
 #ifndef _UGlcontext_hpp_
 #define	_UGlcontext_hpp_ 1
+
 #include <ubit/ugl.hpp>
 #include <ubit/urendercontext.hpp>
+
 namespace ubit {
 
 class UHardImaGL;
@@ -27,9 +37,9 @@ class UHardImaGL;
 class UGlcontext : public URenderContext {
 public:
 #if UBIT_WITH_GLUT
-  UGlcontext(UDisp*, class UHardwinGLUT*);
+  UGlcontext(Display*, class UHardwinGLUT*);
 #else
-  UGlcontext(UDisp*, UGlcontext* sharelists);
+  UGlcontext(Display*, UGlcontext* sharelists);
 #endif
   virtual ~UGlcontext();
   
@@ -40,25 +50,25 @@ public:
 
   virtual void setDest(UHardwinImpl* destination, double xoffset, double yoffset);
   virtual void setOffset(double x, double y);
-  virtual void setPaintMode(UGraph& g);
-  virtual void setXORMode(UGraph& g, const UColor& backcolor);
+  virtual void setPaintMode(Graph& g);
+  virtual void setXORMode(Graph& g, const Color& backcolor);
   virtual void set3Dmode(bool state);
   virtual void setClip(double x, double y, double width, double height);
   
-  virtual void setColor(UGraph& g, const UColor&);
-  virtual void setBackground(UGraph& g, const UColor&);
-  virtual void setFont(UGraph& g, const UFontDesc&);
-  virtual void setWidth(UGraph& g, double);
+  virtual void setColor(Graph& g, const Color&);
+  virtual void setBackground(Graph& g, const Color&);
+  virtual void setFont(Graph& g, const UFontDesc&);
+  virtual void setWidth(Graph& g, double);
 
   virtual void makeCurrent() const;
   virtual void swapBuffers();
   virtual void flush();
   
   virtual void drawArc(double x, double y, double w, double h, double start, double ext, bool filled) const;
-  virtual void drawIma(const UGraph&, const UIma&, double x, double y, double scale) const;
+  virtual void drawIma(const Graph&, const Image&, double x, double y, double scale) const;
   virtual void drawLine(double x1, double y1, double x2, double y2) const; 
   virtual void drawPolygon(const float* points, int card, int polytype) const;
-  virtual void drawPolygon(const std::vector<UPoint>& points, int polytype) const;
+  virtual void drawPolygon(const std::vector<Point>& points, int polytype) const;
   virtual void drawRect(double x, double y, double w, double h, bool filled) const;
   virtual void drawRoundRect(double x, double y, double w, double h, 
                              double arc_w, double arc_h, bool filled) const;
@@ -77,7 +87,7 @@ private:
 #elif UBIT_WITH_GLUT
   class UHardwinGLUT* hardwin;
 #endif
-  void drawTex(const UGraph&, const UHardImaGL*, double x, double y, double width, double height) const;
+  void drawTex(const Graph&, const UHardImaGL*, double x, double y, double width, double height) const;
 };
 
 }

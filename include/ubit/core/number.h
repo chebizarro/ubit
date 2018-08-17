@@ -1,40 +1,51 @@
-/************************************************************************
- *
- *  unumber.hpp
- *  Ubit GUI Toolkit - Version 6
+/*
+ *  number.hpp
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE : 
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE 
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. 
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU 
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION; 
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
+
 
 #ifndef _unumber_hpp_
 #define	_unumber_hpp_ 1
+
 #include <iostream>
-#include <ubit/unode.hpp>
+#include <ubit/core/node.h>
+
 namespace ubit {
  
-// !!! should not inherit from UNode
+// !!! should not inherit from Node
 
-/** Active Number base class.
-  */
-class UNumber: public UNode {
+/**
+ * Active Number base class.
+ */
+class Number: public Node {
 public:
-  //UCLASS("#number", UNumber, null)
-  UABSTRACT_CLASS(UNumber)
+  //UCLASS("#number", Number, null)
+  UABSTRACT_CLASS(Number)
     
   virtual int    intValue()    const = 0;
   virtual float  floatValue()  const = 0;
   virtual double doubleValue() const = 0;
-  virtual UStr   toString()    const = 0;
+  virtual String   toString()    const = 0;
 
-  virtual UNumber& onChange(UCall&);
+  virtual Number& onChange(UCall&);
   ///< adds callbacks that are activated when the objects' value changes.
 
   virtual void changed(bool = true);
@@ -42,280 +53,275 @@ public:
 };
   
   
-/* ==================================================== ===== ======= */
-/** Active Integer
-*/
-class UInt : public UNumber {
+/**
+ * Active Integer
+ */
+class Int : public Number {
 public:
-  UCLASS(UInt)
+  UCLASS(Int)
   
-  UInt(int v = 0) : value(v) {}
-  UInt(const UInt& v) : value(v.value) {}
-  UInt(const UStr&);
-  UInt(const std::string&);
+  Int(int v = 0) : value(v) {}
+  Int(const Int& v) : value(v.value) {}
+  Int(const String&);
+  Int(const std::string&);
 
   operator int() const {return value;}
-  ///< type conversion: converts UInt to int.
+  ///< type conversion: converts Int to int.
 
-  friend std::istream& operator>>(std::istream&, UInt&);
+  friend std::istream& operator>>(std::istream&, Int&);
   ///< prints value on output stream.
 
   int    intValue()    const {return value;}
   float  floatValue()  const {return float(value);}
   double doubleValue() const {return double(value);}
-  UStr   toString()    const;
+  String   toString()    const;
   //static int parseInt(String s);
   //static int parseInt(String s, int radix);
   
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  UInt& operator=(int v)          {return setImpl(v);}
-  UInt& operator=(const UInt& v)  {return setImpl(v.value);}
+  Int& operator=(int v)          {return setImpl(v);}
+  Int& operator=(const Int& v)  {return setImpl(v.value);}
 
-  UInt& operator=(const char* s)  {return setImpl(s);}
-  UInt& operator=(const UStr& s);
-  UInt& operator=(const std::string& s);
+  Int& operator=(const char* s)  {return setImpl(s);}
+  Int& operator=(const String& s);
+  Int& operator=(const std::string& s);
 
-  friend std::ostream& operator<<(std::ostream&, const UInt&);
+  friend std::ostream& operator<<(std::ostream&, const Int&);
   ///< reads value from input stream.
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   bool operator==(int v)         const {return value == v;}
   bool operator==(double v)      const {return value == v;}
-  bool operator==(const UInt& v) const {return value == v.value;}
+  bool operator==(const Int& v) const {return value == v.value;}
 
   bool operator!=(int v)         const {return value != v;}
   bool operator!=(double v)      const {return value != v;}
-  bool operator!=(const UInt& v) const {return value != v.value;}
+  bool operator!=(const Int& v) const {return value != v.value;}
 
   bool operator<(int v)          const {return value < v;}
   bool operator<(double v)       const {return value < v;}
-  bool operator<(const UInt& v)  const {return value < v.value;}
+  bool operator<(const Int& v)  const {return value < v.value;}
 
   bool operator<=(int v)         const {return value <= v;}
   bool operator<=(double v)      const {return value <= v;}
-  bool operator<=(const UInt& v) const {return value <= v.value;}
+  bool operator<=(const Int& v) const {return value <= v.value;}
 
   bool operator>(int v)          const {return value > v;}
   bool operator>(double v)       const {return value > v;}
-  bool operator>(const UInt& v)  const {return value > v.value;}
+  bool operator>(const Int& v)  const {return value > v.value;}
 
   bool operator>=(int v)         const {return value >= v;}
   bool operator>=(double v)      const {return value >= v;}
-  bool operator>=(const UInt& v) const {return value >= v.value;}
+  bool operator>=(const Int& v) const {return value >= v.value;}
   
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  UInt& operator++() {return setImpl(value+1);}
-  UInt  operator++(int);
-  UInt& operator--() {return setImpl(value-1);}
-  UInt  operator--(int);
+  Int& operator++() {return setImpl(value+1);}
+  Int  operator++(int);
+  Int& operator--() {return setImpl(value-1);}
+  Int  operator--(int);
 
-  UInt& operator+=(int v) {return setImpl(value+v);}
-  UInt& operator+=(const UInt& v) {return setImpl(value+v.value);}
-  UInt& operator-=(int v) {return setImpl(value-v);}
-  UInt& operator-=(const UInt& v) {return setImpl(value-v.value);}
-  UInt& operator*=(int v) {return setImpl(value*v);}
-  UInt& operator*=(const UInt& v) {return setImpl(value*v.value);}
-  UInt& operator/=(int v) {return setImpl(value/v);}
-  UInt& operator/=(const UInt& v) {return setImpl(value/v.value);}
+  Int& operator+=(int v) {return setImpl(value+v);}
+  Int& operator+=(const Int& v) {return setImpl(value+v.value);}
+  Int& operator-=(int v) {return setImpl(value-v);}
+  Int& operator-=(const Int& v) {return setImpl(value-v.value);}
+  Int& operator*=(int v) {return setImpl(value*v);}
+  Int& operator*=(const Int& v) {return setImpl(value*v.value);}
+  Int& operator/=(int v) {return setImpl(value/v);}
+  Int& operator/=(const Int& v) {return setImpl(value/v.value);}
   
-  // - - - Impl. - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  virtual UInt& setImpl(int, bool call_callbacks = true);
-  virtual UInt& setImpl(const char*, bool call_callbacks = true);
+  virtual Int& setImpl(int, bool call_callbacks = true);
+  virtual Int& setImpl(const char*, bool call_callbacks = true);
   ///< [impl] assignment.
   
 private:
-  friend class UFloat;
-  friend class UDouble;
+  friend class Float;
+  friend class Double;
   int value;
 };
 
   
-/* ==================================================== ===== ======= */
 /** Active Float.
 */
-class UFloat : public UNumber {
+class Float : public Number {
 public:
-  UCLASS(UFloat)
+  UCLASS(Float)
   
-  UFloat(float v = 0.0)     : value(v) {}
-  UFloat(const UFloat& v)   : value(v.value) {}
-  UFloat(const UInt& v) : value(v.value) {}
-  //UFloat(const char*);  ambigu
-  UFloat(const UStr&);
-  UFloat(const std::string&);
+  Float(float v = 0.0)     : value(v) {}
+  Float(const Float& v)   : value(v.value) {}
+  Float(const Int& v) : value(v.value) {}
+  //Float(const char*);  ambigu
+  Float(const String&);
+  Float(const std::string&);
 
   operator float() const {return value;}
-  ///< type conversion: converts UFloat to float.
+  ///< type conversion: converts Float to float.
 
-  friend std::ostream& operator<<(std::ostream&, const UFloat&);
+  friend std::ostream& operator<<(std::ostream&, const Float&);
   ///< prints value on output stream.
 
   int    intValue()    const {return int(value);}
   float  floatValue()  const {return value;}
   double doubleValue() const {return double(value);}
-  UStr   toString()    const;
+  String   toString()    const;
   
    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  UFloat& operator=(float v)           {return setImpl(v);}
-  UFloat& operator=(const UFloat& v)   {return setImpl(v.value);}
-  UFloat& operator=(const UInt& v) {return setImpl(v.value);}
-  UFloat& operator=(const char* s)     {return setImpl(s);}
-  UFloat& operator=(const UStr& s);
-  UFloat& operator=(const std::string& s);
+  Float& operator=(float v)           {return setImpl(v);}
+  Float& operator=(const Float& v)   {return setImpl(v.value);}
+  Float& operator=(const Int& v) {return setImpl(v.value);}
+  Float& operator=(const char* s)     {return setImpl(s);}
+  Float& operator=(const String& s);
+  Float& operator=(const std::string& s);
 
-  friend std::istream& operator>>(std::istream&, UFloat&);
+  friend std::istream& operator>>(std::istream&, Float&);
   ///< reads value from input stream.
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   bool operator==(float v)          const {return value == v;}
   bool operator==(double v)         const {return value == v;}
-  bool operator==(const UFloat& v)  const {return value == v.value;}
+  bool operator==(const Float& v)  const {return value == v.value;}
 
   bool operator!=(float v)          const {return value != v;}
   bool operator!=(double v)         const {return value != v;}
-  bool operator!=(const UFloat& v)  const {return value != v.value;}
+  bool operator!=(const Float& v)  const {return value != v.value;}
 
   bool operator<(float v)           const {return value < v;}
   bool operator<(double v)          const {return value < v;}
-  bool operator<(const UFloat& v)   const {return value < v.value;}
+  bool operator<(const Float& v)   const {return value < v.value;}
 
   bool operator<=(float v)          const {return value <= v;}
   bool operator<=(double v)         const {return value <= v;}
-  bool operator<=(const UFloat& v)  const {return value <= v.value;}
+  bool operator<=(const Float& v)  const {return value <= v.value;}
 
   bool operator>(float v)           const {return value > v;}
   bool operator>(double v)          const {return value > v;}
-  bool operator>(const UFloat& v)   const {return value > v.value;}
+  bool operator>(const Float& v)   const {return value > v.value;}
 
   bool operator>=(float v)          const {return value >= v;}
   bool operator>=(double v)         const {return value >= v;}
-  bool operator>=(const UFloat& v)  const {return value >= v.value;}
+  bool operator>=(const Float& v)  const {return value >= v.value;}
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  UFloat& operator++() {return setImpl(value+1);}
-  UFloat  operator++(int);
-  UFloat& operator--() {return setImpl(value-1);}
-  UFloat  operator--(int);
+  Float& operator++() {return setImpl(value+1);}
+  Float  operator++(int);
+  Float& operator--() {return setImpl(value-1);}
+  Float  operator--(int);
 
-  UFloat& operator+=(int v) {return setImpl(value+v);}
-  UFloat& operator+=(const UFloat& v) {return setImpl(value+v.value);}
-  UFloat& operator-=(int v) {return setImpl(value-v);}
-  UFloat& operator-=(const UFloat& v) {return setImpl(value-v.value);}
-  UFloat& operator*=(int v) {return setImpl(value*v);}
-  UFloat& operator*=(const UFloat& v) {return setImpl(value*v.value);}
-  UFloat& operator/=(int v) {return setImpl(value/v);}
-  UFloat& operator/=(const UFloat& v) {return setImpl(value/v.value);}
+  Float& operator+=(int v) {return setImpl(value+v);}
+  Float& operator+=(const Float& v) {return setImpl(value+v.value);}
+  Float& operator-=(int v) {return setImpl(value-v);}
+  Float& operator-=(const Float& v) {return setImpl(value-v.value);}
+  Float& operator*=(int v) {return setImpl(value*v);}
+  Float& operator*=(const Float& v) {return setImpl(value*v.value);}
+  Float& operator/=(int v) {return setImpl(value/v);}
+  Float& operator/=(const Float& v) {return setImpl(value/v.value);}
 
-  // - - - Impl. - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  virtual UFloat& setImpl(float, bool call_callbacks = true);
-  virtual UFloat& setImpl(const char*, bool call_callbacks = true);
+  virtual Float& setImpl(float, bool call_callbacks = true);
+  virtual Float& setImpl(const char*, bool call_callbacks = true);
   ///< [impl] assignment.
   
 private:
-  friend class UInt;
-  friend class UDouble;
+  friend class Int;
+  friend class Double;
   float value;
 };
 
   
-/* ==================================================== ===== ======= */
 /** Active Double.
 */
-class UDouble : public UNumber {
+class Double : public Number {
 public:
-  UCLASS(UDouble)
+  UCLASS(Double)
 
-  UDouble(double v = 0.0) : value(v) {}
-  UDouble(const UDouble& v) : value(v.value) {}
-  UDouble(const UFloat& v) : value(v.value) {}
-  UDouble(const UInt& v) : value(v.value) {}
-  UDouble(const UStr&);
-  UDouble(const std::string&);
+  Double(double v = 0.0) : value(v) {}
+  Double(const Double& v) : value(v.value) {}
+  Double(const Float& v) : value(v.value) {}
+  Double(const Int& v) : value(v.value) {}
+  Double(const String&);
+  Double(const std::string&);
 
   operator double() const {return value;}
-  ///< type conversion: converts UDouble to double.
+  ///< type conversion: converts Double to double.
 
-  friend std::ostream& operator<<(std::ostream&, const UDouble&);
+  friend std::ostream& operator<<(std::ostream&, const Double&);
   ///< prints value on output stream.
 
   int    intValue()    const {return int(value);}
   float  floatValue()  const {return float(value);}
   double doubleValue() const {return value;}
-  UStr   toString()    const;
+  String   toString()    const;
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  UDouble& operator=(double v)           {return setImpl(v);}
-  UDouble& operator=(const UDouble& v)   {return setImpl(v.value);}
-  UDouble& operator=(const UFloat& v)    {return setImpl(v.value);}
-  UDouble& operator=(const UInt& v)  {return setImpl(v.value);}
+  Double& operator=(double v)           {return setImpl(v);}
+  Double& operator=(const Double& v)   {return setImpl(v.value);}
+  Double& operator=(const Float& v)    {return setImpl(v.value);}
+  Double& operator=(const Int& v)  {return setImpl(v.value);}
 
-  UDouble& operator=(const char* s)      {return setImpl(s);}
-  UDouble& operator=(const UStr& s);
-  UDouble& operator=(const std::string& s);
+  Double& operator=(const char* s)      {return setImpl(s);}
+  Double& operator=(const String& s);
+  Double& operator=(const std::string& s);
 
-  friend std::istream& operator>>(std::istream&, UDouble&);
+  friend std::istream& operator>>(std::istream&, Double&);
   ///< reads value from input stream.
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   bool operator==(float v)          const {return value == v;}
   bool operator==(double v)         const {return value == v;}
-  bool operator==(const UDouble& v) const {return value == v.value;}
+  bool operator==(const Double& v) const {return value == v.value;}
 
   bool operator!=(float v)          const {return value != v;}
   bool operator!=(double v)         const {return value != v;}
-  bool operator!=(const UDouble& v) const {return value != v.value;}
+  bool operator!=(const Double& v) const {return value != v.value;}
 
   bool operator<(float v)           const {return value < v;}
   bool operator<(double v)          const {return value < v;}
-  bool operator<(const UDouble& v)  const {return value < v.value;}
+  bool operator<(const Double& v)  const {return value < v.value;}
 
   bool operator<=(float v)          const {return value <= v;}
   bool operator<=(double v)         const {return value <= v;}
-  bool operator<=(const UDouble& v) const {return value <= v.value;}
+  bool operator<=(const Double& v) const {return value <= v.value;}
 
   bool operator>(float v)           const {return value > v;}
   bool operator>(double v)          const {return value > v;}
-  bool operator>(const UDouble& v)  const {return value > v.value;}
+  bool operator>(const Double& v)  const {return value > v.value;}
 
   bool operator>=(float v)          const {return value >= v;}
   bool operator>=(double v)         const {return value >= v;}
-  bool operator>=(const UDouble& v) const {return value >= v.value;}
+  bool operator>=(const Double& v) const {return value >= v.value;}
   
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  UDouble& operator++() {return setImpl(value+1);}
-  UDouble  operator++(int);
-  UDouble& operator--() {return setImpl(value-1);}
-  UDouble  operator--(int);
+  Double& operator++() {return setImpl(value+1);}
+  Double  operator++(int);
+  Double& operator--() {return setImpl(value-1);}
+  Double  operator--(int);
 
-  UDouble& operator+=(int v) {return setImpl(value+v);}
-  UDouble& operator+=(const UDouble& v) {return setImpl(value+v.value);}
-  UDouble& operator-=(int v) {return setImpl(value-v);}
-  UDouble& operator-=(const UDouble& v) {return setImpl(value-v.value);}
-  UDouble& operator*=(int v) {return setImpl(value*v);}
-  UDouble& operator*=(const UDouble& v) {return setImpl(value*v.value);}
-  UDouble& operator/=(int v) {return setImpl(value/v);}
-  UDouble& operator/=(const UDouble& v) {return setImpl(value/v.value);}
+  Double& operator+=(int v) {return setImpl(value+v);}
+  Double& operator+=(const Double& v) {return setImpl(value+v.value);}
+  Double& operator-=(int v) {return setImpl(value-v);}
+  Double& operator-=(const Double& v) {return setImpl(value-v.value);}
+  Double& operator*=(int v) {return setImpl(value*v);}
+  Double& operator*=(const Double& v) {return setImpl(value*v.value);}
+  Double& operator/=(int v) {return setImpl(value/v);}
+  Double& operator/=(const Double& v) {return setImpl(value/v.value);}
 
-  // - - - Impl. - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  virtual UDouble& setImpl(double, bool call_callbacks = true);
-  virtual UDouble& setImpl(const char*, bool call_callbacks = true);
+  virtual Double& setImpl(double, bool call_callbacks = true);
+  virtual Double& setImpl(const char*, bool call_callbacks = true);
   ///< [impl] assignment.
 
 private:
-  friend class UInt;
-  friend class UFloat;
+  friend class Int;
+  friend class Float;
   double value;
 };
 

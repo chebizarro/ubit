@@ -1,70 +1,79 @@
-/************************************************************************
- *
- *  ustyle.hpp: Element and Box styles
- *  Ubit GUI Toolkit - Version 6
+/*
+ *  style.h: Element and Box styles
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE :
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION;
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
 
 #ifndef _ustyle_hpp_
 #define	_ustyle_hpp_ 1
+
 #include <ubit/udefs.hpp>
 #include <ubit/uborder.hpp>
 #include <ubit/ufont.hpp>
 #include <ubit/ugeom.hpp>
 #include <ubit/uon.hpp>
+
 namespace ubit {
   
   struct ULocalProps {
     ULocalProps();
     
-    USizeSpec size;                // object size
-    UPaddingSpec padding;          // space beween content and border (if any)
-    const UBorder* border;         // object border
-    const UBackground* background; // image or color background of the component
+    SizeSpec size;                // object size
+    PaddingSpec padding;          // space beween content and border (if any)
+    const Border* border;         // object border
+    const Background* background; // image or color background of the component
     float alpha;                   // for alpha blending
-    // const UShape* shape;        // shape of the component
+    // const Shape* shape;        // shape of the component
     // if this group is not null the objects it contains are added to children for 
     // display (e.g. for adding list-item or checkboxes markers)
-    UElem* content;    // NB: = null in most cases    
+    Element* content;    // NB: = null in most cases    
   };
   
   
   /** Compiled Object Style.
-   * specify the appearance of UElem/UBox/UWin objects and subclasses.
+   * specify the appearance of Element/Box/Window objects and subclasses.
    */
   class UStyle {
   public:
     UStyle();
     virtual ~UStyle();
-    virtual const UStyle& getStyle(UUpdateContext*) const {return *this;}
+    virtual const UStyle& getStyle(UpdateContext*) const {return *this;}
     
     void setAlpha(float a) {local.alpha = a;}
-    //void setBackground(const UBackground*);
-    void setBorder(const UBorder* b) {local.border = b;}
+    //void setBackground(const Background*);
+    void setBorder(const Border* b) {local.border = b;}
     void setCursor(const UCursor* c) {cursor = c;}
     void setFont(const UFont* f) {font = f;}
-    void setSize(ULength width, ULength height);
-    void setPadding(ULength horiz, ULength vert);
-    void setHorizPadding(ULength left, ULength right);
-    void setVertPadding(ULength top, ULength bottom);
+    void setSize(Length width, Length height);
+    void setPadding(Length horiz, Length vert);
+    void setHorizPadding(Length left, Length right);
+    void setVertPadding(Length top, Length bottom);
 
-    const UColor* getColor(const UElem&) const;
-    const UColor* getBgcolor(const UElem&) const;
-    void setColors(UColor& all_colors);
-    void setColors(UColor& unselected_colors, UColor& selected_colors);
-    void setBgcolors(UColor& all_colors);
-    void setBgcolors(UColor& unselected_colors, UColor& selected_colors);
-    void setColor(int action, UColor&);
-    void setBgcolor(int action, UColor&);
+    const Color* getColor(const Element&) const;
+    const Color* getBgcolor(const Element&) const;
+    void setColors(Color& all_colors);
+    void setColors(Color& unselected_colors, Color& selected_colors);
+    void setBgcolors(Color& all_colors);
+    void setBgcolors(Color& unselected_colors, Color& selected_colors);
+    void setColor(int action, Color&);
+    void setBgcolor(int action, Color&);
     
     // champs locaux a l'object, pas heritables
     ULocalProps local;
@@ -77,11 +86,11 @@ namespace ubit {
     //UEdit* edit;
     const UFont* font;
     const UCursor* cursor;
-    const UStr* textSeparator;  // text separator between children when printing
-    UColor* colors[2 * UOn::ACTION_COUNT];
-    UColor* bgcolors[2 * UOn::ACTION_COUNT];
-    //const UColor *color, *bgcolor;
-    //class UAttrList* attrs;
+    const String* textSeparator;  // text separator between children when printing
+    Color* colors[2 * UOn::ACTION_COUNT];
+    Color* bgcolors[2 * UOn::ACTION_COUNT];
+    //const Color *color, *bgcolor;
+    //class AttributeList* attrs;
   };
   
 }

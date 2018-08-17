@@ -1,47 +1,56 @@
-/************************************************************************
- *
- *  uscrollpane.hpp
- *  Ubit GUI Toolkit - Version 6
+/*
+ *  scrollpane.hpp
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE :
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION;
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
 
 #ifndef _uscrollpane_hpp_
 #define	_uscrollpane_hpp_ 1
+
 #include <ubit/uborder.hpp>
 #include <ubit/uview.hpp>
+
 namespace ubit {
   
   /** A box with (optionnal) scrollbars that manages a viewport.
    * There are two ways to use a scroll pane:
    *
    * - a) to scroll a viewport: in this case the scrollpane must have one
-   *   (and only one) child that derives from UBox 
+   *   (and only one) child that derives from Box 
    *
-   * - b) to superpose several layers: a scrollpane can have several UBox children,
+   * - b) to superpose several layers: a scrollpane can have several Box children,
    *   in which case they are superimposed (but not scrolled, except for the last one).
    *   Transparent boxes can be superimposed in this way (see UAlpha). UCardbox can
    *   also be used for this purpose.
    *
-   * Note: a scrollpane should only have children that derive from UBox, UAttr, UCall
-   * (it should not have UElem or UData/UStr children)
+   * Note: a scrollpane should only have children that derive from Box, Attribute, UCall
+   * (it should not have Element or Data/String children)
    */ 
-  class UScrollpane: public UBox {
+  class UScrollpane: public Box {
   public:
     UCLASS(UScrollpane)
 
-    UScrollpane(UArgs = UArgs::none);
+    UScrollpane(Args = Args::none);
     ///< create a scroll pane with 2 scrollbars; see also shortcut functions uscrollpane().
     
-    UScrollpane(int vert_scrollbar, int horiz_scrollbar, UArgs = UArgs::none);
+    UScrollpane(int vert_scrollbar, int horiz_scrollbar, Args = Args::none);
     /**< create a scroll pane with 0, 1 or 2 scrollbars; see also shortcut functions uscrollpane().
      * - the vertical scrollbar is created if 'vert_scrollbar' is true 
      * - the horizontal scrollbar is created if 'horiz_scrollbar' is true 
@@ -69,7 +78,7 @@ namespace ubit {
     virtual UScrollpane& setScroll(float xscroll, float yscroll);
     ///< changes the X and Y scroll values (float values in [0,100]).
 
-    virtual void makeVisible(UBox& child);
+    virtual void makeVisible(Box& child);
     /**< scrolls the pane to make this child visible.
      * 'child' must be a direct or indirect child of the scrollpane
      */
@@ -86,10 +95,10 @@ namespace ubit {
     UScrollbar* getVScrollbar() {return vscrollbar;}
     ///< returns the vertical scrollbar (if any; null otherwise)
     
-    UBox* getScrolledBox();
+    Box* getScrolledBox();
     ///< returns the box that is scrolled by this pane.
     
-    UView* getScrolledView(UView* pane_view);
+    View* getScrolledView(View* pane_view);
     /**< returns the appropriate view of the box that is scrolled by this pane.
      * A Pane can have multiple parents and thus, can appear several times
      * on the GUI. This functions makes return the corresponding view
@@ -104,7 +113,7 @@ namespace ubit {
     UScrollbar *hscrollbar, *vscrollbar;
     float xscroll, yscroll;
     
-    virtual void constructs(int vs_mode, int hs_mode, const UArgs&);
+    virtual void constructs(int vs_mode, int hs_mode, const Args&);
     virtual void unsetHScrollbar();
     virtual void unsetVScrollbar();
     virtual void resizeCB(UResizeEvent&);
@@ -112,26 +121,25 @@ namespace ubit {
 #endif
   };
   
-  inline UScrollpane& uscrollpane(const UArgs& args = UArgs::none) 
+  inline UScrollpane& uscrollpane(const Args& args = Args::none) 
   {return *new UScrollpane(args);}
   ///< shortcut function that returns *new UScrollpane(args).
   
-  inline UScrollpane& uscrollpane(int vscrollbar, int hscrollbar, const UArgs& args = UArgs::none)
+  inline UScrollpane& uscrollpane(int vscrollbar, int hscrollbar, const Args& args = Args::none)
   {return *new UScrollpane(vscrollbar, hscrollbar, args);}
   ///< shortcut function that returns *new UScrollpane(vert_scrollbar, horiz_scrollbar, args).
   
   
-  /* ==================================================== ======== ======= */
-  /** [Impl] UPane View.
+    /** [Impl] UPane View.
    */
-  class UPaneView: public UView {
+  class UPaneView: public View {
   public:
     static  UViewStyle style;  // renderer
     virtual UViewStyle* getViewStyle() {return &style;}
     
-    UPaneView(UBox*, UView* parview, UHardwinImpl*);
+    UPaneView(Box*, View* parview, UHardwinImpl*);
     virtual ~UPaneView() {}
-    static UView* createView(UBox*, UView* parview, UHardwinImpl*);
+    static View* createView(Box*, View* parview, UHardwinImpl*);
     
     virtual UPaneView* toPaneView() {return this;}
     
@@ -142,11 +150,11 @@ namespace ubit {
     virtual void setYScroll(float scr) {yscroll = scr;}
     ///< note that using these functions is not a good idea if this pane is already controlled by scrollbars.
     
-    void setPadding(const UPaddingSpec& p) {padding = p;} // for UView::initLayoutViewport
+    void setPadding(const PaddingSpec& p) {padding = p;} // for View::initLayoutViewport
     
 #ifndef NO_DOC
     friend class UScrollpane;
-    UPaddingSpec padding;
+    PaddingSpec padding;
     float xscroll, yscroll;
 #endif
   };

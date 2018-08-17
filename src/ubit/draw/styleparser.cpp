@@ -1,18 +1,25 @@
-/************************************************************************
- *
- *  ustyleparser.cpp
- *  Ubit GUI Toolkit - Version 6
+/*
+ *  styleparser.cpp
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE :
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION;
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
 
 #include <ubit/ubit_features.h>
 #include <iostream>
@@ -26,7 +33,7 @@ using namespace std;
 namespace ubit {
 
 
-void UStyleParser::skipSpaces() {                // skip comments
+void StyleParser::skipSpaces() {                // skip comments
   while (true) {
     const UChar* begin = p;
 
@@ -44,9 +51,8 @@ void UStyleParser::skipSpaces() {                // skip comments
   } 
 }
 
-/* ==================================================== ===== ======= */
 
-bool UStyleParser::readName(UStr& name) {
+bool StyleParser::readName(String& name) {
   if (!isalpha(*p) && *p!='_') return false; // 1st char must be in (alpha _ :)
   const UChar* begin = p;
   p++;
@@ -60,7 +66,7 @@ bool UStyleParser::readName(UStr& name) {
 }
 
 
-bool UStyleParser::readValue(UStr& value) {
+bool StyleParser::readValue(String& value) {
   if (iscntrl(*p)) return false;
   const UChar* begin = p;
 
@@ -78,10 +84,9 @@ bool UStyleParser::readValue(UStr& value) {
   return true;
 }
 
-/* ==================================================== ===== ======= */
 // starts on the 1st char of the name
 
-bool UStyleParser::readNameValuePair(UStr& name, UStr& value) {
+bool StyleParser::readNameValuePair(String& name, String& value) {
   const UChar* begin = p;
 
   if (!readName(name)) {
@@ -116,7 +121,7 @@ bool UStyleParser::readNameValuePair(UStr& name, UStr& value) {
 /* ==================================================== [Elc] ======= */
 // reads the properties of the style definition, ie. the {} part after the selector
 
-bool UStyleParser::readStyleProps(StyleMaker& xxx) {
+bool StyleParser::readStyleProps(StyleMaker& xxx) {
   const UChar* begin = p;
   if (*p == '{') p++;
 
@@ -133,7 +138,7 @@ bool UStyleParser::readStyleProps(StyleMaker& xxx) {
     }
 
     else if (isalpha(*p)) {
-      UStr name, value;
+      String name, value;
       if (readNameValuePair(name, value)) 
         xxx.addProp(name, value);
     }
@@ -147,7 +152,7 @@ bool UStyleParser::readStyleProps(StyleMaker& xxx) {
 
 /* ==================================================== [Elc] ======= */
 
-static void readBracketSelector(const char* n, UStr& aux) {
+static void readBracketSelector(const char* n, String& aux) {
   const char* pn = n;
   char* out = (char*)malloc(strlen(n));
   char* po = out;
@@ -167,16 +172,15 @@ static void readBracketSelector(const char* n, UStr& aux) {
   delete out;
 }
 
-/* ==================================================== ===== ======= */
 
-static bool readSingleSelector(UStr& name) {
+static bool readSingleSelector(String& name) {
   const char* n = name.c_str();
   if (!n) return false;
 
   // virer le wilcard puisqu'il est equivalent a rien
   if (*n == '*') {name.remove(0,1); n = name.c_str();}
     
-  UStr aux;
+  String aux;
   const char* pn = n;
   while (*pn) {
     if (*pn == '.') {
@@ -209,14 +213,13 @@ static bool readSingleSelector(UStr& name) {
   return true;
 }
 
-/* ==================================================== ===== ======= */
 // reads the selector(s) of the style definition.
 
-bool UStyleParser::readStyleSelectors(StyleMaker& xxx) {
+bool StyleParser::readStyleSelectors(StyleMaker& xxx) {
   const UChar* begin = p;
   bool multiple_sel = false;
 
-  UStr sel;
+  String sel;
 
   while (*p && *p != '{') {
     if (*p == '/' || *(p+1) == '*') {    // comment
@@ -254,7 +257,7 @@ bool UStyleParser::readStyleSelectors(StyleMaker& xxx) {
 /* ==================================================== [Elc] ======= */
 // reads one complete style definition (= the selector and the value part).
 
-bool UStyleParser::readStyleDef(StyleMaker& xxx) {
+bool StyleParser::readStyleDef(StyleMaker& xxx) {
   const UChar* begin = p;
 
   xxx.count = 0;
@@ -295,7 +298,7 @@ bool UStyleParser::readStyleDef(StyleMaker& xxx) {
 /* ==================================================== [Elc] ======= */
 // reads all style definitions included in the buffer.
 
-int UStyleParser::parseImpl(StyleMaker& xxx, const UStr& _buffer) {
+int StyleParser::parseImpl(StyleMaker& xxx, const String& _buffer) {
   p = text_buffer = _buffer.c_str();
   if (!p || !*p) {
     p = text_buffer = null;
@@ -319,36 +322,35 @@ int UStyleParser::parseImpl(StyleMaker& xxx, const UStr& _buffer) {
   return stat;
 }
 
-/* ==================================================== ===== ======= */
 
-UStyleParser::UStyleParser() :
+StyleParser::StyleParser() :
   permissive(true),
   stat(0),
   text_buffer(null),
   p(null),
-  perrhandler(UAppli::getErrorHandler()) {
+  perrhandler(Application::getErrorHandler()) {
 }
 
 // une fois pour toutes: 
 // les destr DOIVENT etre definis dans les .ccp qunad il y a des uptr<XXX> 
 // pour eviter d'etre oblige d'inclure la def de XXX dans le .hpp
 
-UStyleParser::~UStyleParser() {}
+StyleParser::~StyleParser() {}
 
 
-UStyleParser::StyleMaker::StyleMaker() {
+StyleParser::StyleMaker::StyleMaker() {
   // il faut TOUJOURS au moins un element sinon plantage !
-  selectors.push_back(new UStr());
+  selectors.push_back(new String());
 }
 
-UStyleParser::StyleMaker::~StyleMaker() {
+StyleParser::StyleMaker::~StyleMaker() {
   for (unsigned int k = 0; k < selectors.size(); k++)
     delete selectors[k];
 }
 
 /* ==================================================== [Elc] ======= */
 
-void UStyleParser::unexpected(const char* msg, const UChar* line) {
+void StyleParser::unexpected(const char* msg, const UChar* line) {
   if (!*p) {
     error("premature end of file ", "", msg, line);
   }
@@ -367,11 +369,11 @@ void UStyleParser::unexpected(const char* msg, const UChar* line) {
   }
 }
 
-void UStyleParser::error(const char* msg, const UChar* line) {
+void StyleParser::error(const char* msg, const UChar* line) {
   error(msg, "", 0, line);
 }
 
-void UStyleParser::error(const char* msg1, const UStr& name,
+void StyleParser::error(const char* msg1, const String& name,
                       const char* msg2, const UChar* line) {
   perrhandler->parserError(UError::CSS_ERROR, text_buffer, msg1, name, msg2, line);
 }

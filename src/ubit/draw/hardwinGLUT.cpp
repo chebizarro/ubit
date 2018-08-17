@@ -1,6 +1,5 @@
-/************************************************************************
- *
- *  uHardwinGLUT.cpp: GLUT Windows
+/*
+ *  HardwinGLUT.cpp: GLUT Windows
  *  Ubit GUI Toolkit - Version 6.0
  *  (C) 2008 | Eric Lecolinet | ENST Paris | www.enst.fr/~elc/ubit
  *
@@ -51,8 +50,8 @@ void UHardwinGLUT::swapBuffers() {
 */
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//NB: move fait par programme (PAS par l'utilisateur: cf UDisp::on_configure())
-void UHardwinGLUT::setPos(const UPoint& p) {
+//NB: move fait par programme (PAS par l'utilisateur: cf Display::on_configure())
+void UHardwinGLUT::setPos(const Point& p) {
   if (sys_win <= 0) return;
   
   int cur_win = glutGetWindow();
@@ -62,12 +61,12 @@ void UHardwinGLUT::setPos(const UPoint& p) {
 }
 
 
-UPoint UHardwinGLUT::getPos() const {
-  if (sys_win <= 0) return UPoint(0,0);
+Point UHardwinGLUT::getPos() const {
+  if (sys_win <= 0) return Point(0,0);
   
   int cur_win = glutGetWindow();
   if (cur_win != sys_win) glutSetWindow(sys_win);
-  UPoint pos;
+  Point pos;
   
   if (wintype != SUBWIN) {  // toplevel window
     pos.set(glutGet(GLUT_WINDOW_X), glutGet(GLUT_WINDOW_Y));
@@ -85,42 +84,42 @@ UPoint UHardwinGLUT::getPos() const {
 }
 
 
-UPoint UHardwinGLUT::getScreenPos() const {
-  if (sys_win <= 0) return UPoint(0,0);
+Point UHardwinGLUT::getScreenPos() const {
+  if (sys_win <= 0) return Point(0,0);
   
   int cur_win = glutGetWindow();
   if (cur_win != sys_win) glutSetWindow(sys_win);
   
-  UPoint pos(glutGet(GLUT_WINDOW_X), glutGet(GLUT_WINDOW_Y)); // OK with subwindows????%%%%
+  Point pos(glutGet(GLUT_WINDOW_X), glutGet(GLUT_WINDOW_Y)); // OK with subwindows????%%%%
   
   if (cur_win != sys_win) glutSetWindow(cur_win);
   return pos;
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-//NB: resize fait par programme (PAS par l'utilisateur: cf UDisp::on_configure())
+//NB: resize fait par programme (PAS par l'utilisateur: cf Display::on_configure())
 
-void UHardwinGLUT::setSize(const UDimension& size) {
+void UHardwinGLUT::setSize(const Dimension& size) {
   if (sys_win <= 0) return;
   
   int cur_win = glutGetWindow();
   if (cur_win != sys_win) glutSetWindow(sys_win);
 
   glutReshapeWindow(int(size.width), int(size.height));
-  //if (wintype != SUBWIN) UAppli::getDisp()->setGLViewportOrtho(size);  // fait dans UGraph
+  //if (wintype != SUBWIN) Application::getDisp()->setGLViewportOrtho(size);  // fait dans Graph
   
   if (cur_win != sys_win) glutSetWindow(cur_win);
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-UDimension UHardwinGLUT::getSize() const {
-  if (sys_win <= 0) return UDimension(0,0);
+Dimension UHardwinGLUT::getSize() const {
+  if (sys_win <= 0) return Dimension(0,0);
 
   int cur_win = glutGetWindow();
   if (cur_win != sys_win) glutSetWindow(sys_win);
   
-  UDimension dim(glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
+  Dimension dim(glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
   
   if (cur_win != sys_win) glutSetWindow(cur_win);
   return dim;
@@ -174,7 +173,7 @@ void UHardwinGLUT::setCursor(const UCursor* curs) {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UHardwinGLUT::setTitle(const UStr& s) {
+void UHardwinGLUT::setTitle(const String& s) {
   if (sys_win <= 0 || !s.c_str()) return;
   
   int cur_win = glutGetWindow();
@@ -185,7 +184,7 @@ void UHardwinGLUT::setTitle(const UStr& s) {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-UStr UHardwinGLUT::getTitle() const {
+String UHardwinGLUT::getTitle() const {
   if (sys_win <= 0) return "";
   
   //int cur_win = glutGetWindow();
@@ -198,7 +197,7 @@ UStr UHardwinGLUT::getTitle() const {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UHardwinGLUT::setIconTitle(const UStr& s) {
+void UHardwinGLUT::setIconTitle(const String& s) {
   if (sys_win <= 0 || !s.c_str()) return;
   
   int cur_win = glutGetWindow();
@@ -209,7 +208,7 @@ void UHardwinGLUT::setIconTitle(const UStr& s) {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-UStr UHardwinGLUT::getIconTitle() const {
+String UHardwinGLUT::getIconTitle() const {
   if (sys_win <= 0) return "";
   
   //int cur_win = glutGetWindow();
@@ -223,12 +222,12 @@ UStr UHardwinGLUT::getIconTitle() const {
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // no effect with GLUT
 
-void UHardwinGLUT::setClassProperty(const UStr& instance_name, const UStr& class_name) {
+void UHardwinGLUT::setClassProperty(const String& instance_name, const String& class_name) {
 }
 
 // ==================================================== [Ubit Toolkit] =========
 
-UHardwinGLUT::UHardwinGLUT(UDispGLUT* d, UWin* w)
+UHardwinGLUT::UHardwinGLUT(UDispGLUT* d, Window* w)
 : UHardwinImpl(d, w), sys_win(0) {
   glcontext = new UGlcontext(d, this);
 }
@@ -248,12 +247,12 @@ void UHardwinGLUT::realize(WinType wtype, float w, float h) {
   wintype = wtype;  // must be done first!
 
   if (wtype == PIXMAP) {  // first!
-    UAppli::error("UHardwinGLUT","type PIXMAP not implemented for GLUT");
+    Application::error("UHardwinGLUT","type PIXMAP not implemented for GLUT");
     return;
   }
   
   if (!isHardwin()) {
-    UAppli::error("UHardwinGLUT","wrong type for this function: %d", wtype);
+    Application::error("UHardwinGLUT","wrong type for this function: %d", wtype);
     return;
   }
   
@@ -266,7 +265,7 @@ void UHardwinGLUT::realize(WinType wtype, float w, float h) {
   else {       // !!! ATTENTION: il faut retrouver le bon parent!
     /*
     int parent_win = 0;
-    UView *win_v, *parent_v;
+    View *win_v, *parent_v;
     UHardwinGLUT* parent_hw;
     if ((win_v = win->getWinView(/disp/))
         && (parent_v = win_v->getParentView())
@@ -276,12 +275,12 @@ void UHardwinGLUT::realize(WinType wtype, float w, float h) {
     }
     */
     int parent_win = 0;
-    UElem* par = win->getParent(0);
-    UWin* parw = dynamic_cast<UWin*>(par);
+    Element* par = win->getParent(0);
+    Window* parw = dynamic_cast<Window*>(par);
     if (parw) parent_win = ((UHardwinGLUT*)parw->getHardwin())->sys_win;
     
     if (parent_win == 0) {
-      UAppli::error("UHardwinGLUT::realize","the parent of the USubwin is not realized, using the main frame as a parent");
+      Application::error("UHardwinGLUT::realize","the parent of the USubwin is not realized, using the main frame as a parent");
       parent_win = 1;
     }
 

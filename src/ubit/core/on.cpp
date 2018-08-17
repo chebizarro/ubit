@@ -1,6 +1,5 @@
-/************************************************************************
- *
- *  uon.cpp: UOn Callback Conditions
+/*
+ *  on.cpp: UOn Callback Conditions
  *  Ubit GUI Toolkit - Version 6.0
  *  (C) 2008 | Eric Lecolinet | ENST Paris | www.enst.fr/~elc/ubit
  *
@@ -21,7 +20,7 @@
 #include <ubit/uon.hpp>
 #include <ubit/uelem.hpp>
 #include <ubit/uupdatecontext.hpp>
-#include <ubit/uevent.hpp>
+#include <ubit/core/event.h>
 #include <ubit/ustr.hpp>
 using namespace std;
 #define NAMESPACE_UBIT namespace ubit {
@@ -47,9 +46,9 @@ UOn UOn::ktype(13,   UMode::KEY_CB);
 UOn UOn::idle(20,   UMode::MOUSE_CB, UMode::IDLE);  // il FAUT un callmask non nul
 
 UOn& UOn::arm =
-  *new UOn2(21, UMode::MOUSE_CB, UMode::ARMED, &UElem::setArmable);
+  *new UOn2(21, UMode::MOUSE_CB, UMode::ARMED, &Element::setArmable);
 UOn& UOn::disarm = 
-  *new UOn2(22, UMode::MOUSE_CB, UMode::ANY, &UElem::setArmable);
+  *new UOn2(22, UMode::MOUSE_CB, UMode::ANY, &Element::setArmable);
 
 // NB: action n'entraine pas necessairement CAN_ARM :
 // ce n'est vrai que si on n'est pas en CAN_EDIT_TEXT
@@ -61,9 +60,9 @@ UOn UOn::action(23,  UMode::MOUSE_CB, UMode::IDLE); // il FAUT un callmask non n
 */
 // ?? setArmableAndSelectable doit il exister et etre different de setSelectable ??
 UOn& UOn::select = 
-  *new UOn2(25, UMode::MOUSE_CB, UMode::ANY, &UElem::_setArmableAndSelectable); 
+  *new UOn2(25, UMode::MOUSE_CB, UMode::ANY, &Element::_setArmableAndSelectable); 
 UOn& UOn::deselect = 
-  *new UOn2(26, UMode::MOUSE_CB, UMode::ANY, &UElem::_setArmableAndSelectable); 
+  *new UOn2(26, UMode::MOUSE_CB, UMode::ANY, &Element::_setArmableAndSelectable); 
 
 UOn UOn::change(31,    UMode::CHANGE_CB);
 UOn UOn::propChange(32,UMode::CHILD_CHANGE_CB);
@@ -72,15 +71,15 @@ UOn UOn::strChange(34, UMode::CHILD_CHANGE_CB);
 //UOn UOn::caretChange(35, UMode::CHILD_CHANGE_CB);
 
 UOn& UOn::dragStart = 
-  *new UOn2(41, UMode::DND_CB, UMode::ANY, &UElem::setDraggable);
+  *new UOn2(41, UMode::DND_CB, UMode::ANY, &Element::setDraggable);
 UOn& UOn::dragDone = 
-  *new UOn2(42,  UMode::DND_CB, UMode::ANY, &UElem::setDraggable);
+  *new UOn2(42,  UMode::DND_CB, UMode::ANY, &Element::setDraggable);
 UOn& UOn::dropEnter = 
-  *new UOn2(43, UMode::DND_CB, UMode::ANY, &UElem::setDroppable);
+  *new UOn2(43, UMode::DND_CB, UMode::ANY, &Element::setDroppable);
 UOn& UOn::dropLeave = 
-  *new UOn2(44, UMode::DND_CB, UMode::ANY, &UElem::setDroppable);
+  *new UOn2(44, UMode::DND_CB, UMode::ANY, &Element::setDroppable);
 UOn& UOn::dropDone = 
-  *new UOn2(45,  UMode::DND_CB, UMode::ANY, &UElem::setDroppable);
+  *new UOn2(45,  UMode::DND_CB, UMode::ANY, &Element::setDroppable);
 
 //UOn UOn::message(47, UMode::MESSAGE_CB);
   
@@ -100,7 +99,6 @@ UOn UOn::sysWM(72, UMode::SYSWM_CB);
 //UOn UOn::filterEvent(80, UMode::FILTER_EVENT_CB);
 UOn UOn::userEvent(100,  UMode::USER_EVENT_CB);
 
-/* ==================================================== ===== ======= */
 /*
 UOn::UOn(short _id) 
   : ID(_id), callback_mask(UMode::USER_EVENT_CB), istate(UMode::ANY) {}
@@ -115,26 +113,25 @@ UOn::UOn(int _id, long _callback_mask, int _state)
 UOn2::UOn2(int _id, long _callback_mask, int _state, SetModeFunc f) 
   : UOn(_id, _callback_mask, _state), set_mode_func(f) {}
   
-/* ==================================================== ===== ======= */
 
-bool UOn::operator==(const UCond& c) const {
+bool UOn::operator==(const Condition& c) const {
   const UOn* on = c.toOn();
   return on ? (ID == on->ID) : false;
 }
 
-bool UOn::operator!=(const UCond& c) const  {
+bool UOn::operator!=(const Condition& c) const  {
   const UOn* on = c.toOn();
   return on ? (ID != on->ID) : false;
 }
 
-const UCond* UOn::matches(const UCond& c) const {
+const Condition* UOn::matches(const Condition& c) const {
   const UOn* on = c.toOn();
   if (on && ID == on->ID) return this;
   else return null;
 }
 
 // NB: programme' pour faire un OU entre modes et action
-bool UOn::verifies(const UUpdateContext&, const UElem& par) const {
+bool UOn::verifies(const UpdateContext&, const Element& par) const {
   if (*this == UOn::select) {
     return par.isSelected();
   }
@@ -147,7 +144,6 @@ bool UOn::verifies(const UUpdateContext&, const UElem& par) const {
   else return false;
 }
 
-/* ==================================================== ======== ======= */
 /* ATTENTION: PROBLEME
 * setModes() pose probleme avec select/unselect car ce n'est pas un mode
 * qu'il faut propager au parent mais juste un referent pour le UOn
@@ -155,14 +151,13 @@ bool UOn::verifies(const UUpdateContext&, const UElem& par) const {
 * en testant directement l'egalite des UOn dans fire() et match()
 */
 
-void UOn::setParentModes(UElem& parent) const {
+void UOn::setParentModes(Element& parent) const {
   parent.callback_mask |= this->callback_mask;
 }
 
-void UOn2::setParentModes(UElem& parent) const {
+void UOn2::setParentModes(Element& parent) const {
   UOn::setParentModes(parent);
   (parent.*set_mode_func)(true);
 }
 
-} /* ==================================================== [TheEnd] ======= */
-
+} 

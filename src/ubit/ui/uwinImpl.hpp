@@ -1,39 +1,46 @@
-/************************************************************************
- *
- *  uwinImpl.hpp: ubit windows implementation
- *  Ubit GUI Toolkit - Version 6
+/*
+ *  winImpl.h: ubit windows implementation
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE :
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION;
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
 
 #ifndef _uwinImpl_hpp_
 #define	_uwinImpl_hpp_ 1
+
 #include <ubit/uwin.hpp>
+
 namespace ubit {
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   /* [Impl] Window list.
    * Used for implementation purpose, UWinList elements are not counted has parents 
    * when auto deleting children. They are considered as genuine lists, not viewable
    * elements when displayingviews
    */
-  class UWinList : public UElem {
+  class UWinList : public Element {
   public:
     UCLASS(UWinList)
-    UWinList(const UArgs& a = UArgs::none) : UElem(a) {}
+    UWinList(const Args& a = Args::none) : Element(a) {}
     virtual int getDisplayType() const {return WINLIST;}   // redefined
   };
   
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   
   class UWinImpl {
   public:
@@ -54,29 +61,27 @@ namespace ubit {
     virtual ~UWinImpl() {};
   };
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   /* [Impl] Soft (= simulated) Window.
    * abstract class: @see UHardwinX11, UHardwinGLUT, etc.
    */
   class USoftwinImpl : public UWinImpl {
   public:
-    USoftwinImpl(UWin&);
+    USoftwinImpl(Window&);
     virtual ~USoftwinImpl();
     
     UPos& pos() {return *ppos;}
     
-    UView* getActualView(UView* winviews);
-    void setActualView(UView* winview);
+    View* getActualView(View* winviews);
+    void setActualView(View* winview);
     
-    void doUpdate(const UUpdate&, UWin*, UView* winview);
+    void doUpdate(const Update&, Window*, View* winview);
     
   private:
     uptr<UPos> ppos;
-    UView* actual_view;  
+    View* actual_view;  
   };
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   /* [Impl] Hard (= real) Window.
    * abstract class: @see UHardwinX11, UHardwinGLUT, etc.
@@ -85,8 +90,8 @@ namespace ubit {
   public:  
     virtual ~UHardwinImpl();
     
-    UDisp* getDisp() const {return disp;}
-    UWin*  getWin()  const {return win;}
+    Display* getDisp() const {return disp;}
+    Window*  getWin()  const {return win;}
     WinType getWinType() const {return WinType(wintype);}  
     UGlcontext* getGlcontext() const {return glcontext;}
     
@@ -102,46 +107,46 @@ namespace ubit {
     virtual void toBack() = 0;
     virtual void toFront() = 0;
     
-    virtual UPoint getScreenPos() const = 0;
+    virtual Point getScreenPos() const = 0;
     /**< returns window position relatively to the screen.
      * contrary to getPos(), this function returns the screen position for all windows
      * (even for subwindows embedded in another window)
      */
     
-    virtual UPoint getPos() const = 0;  
+    virtual Point getPos() const = 0;  
     /**< returns window position relatively to its parent window (or the screen).
      * the screen position is returned for first level windows (ie. windows that
      * are not subwindows embedded in another window)
      */
     
-    virtual void setPos(const UPoint&) = 0;
+    virtual void setPos(const Point&) = 0;
     /**< changes window position relatively to its parent window (or the screen).
      * changes position relatively to the screen for first level windows (ie. windows 
      * that are not subwindows embedded in another window)
      */
     
-    virtual UDimension getSize() const = 0;
+    virtual Dimension getSize() const = 0;
     ///< returns window size.
     
-    virtual void setSize(const UDimension&) = 0;
+    virtual void setSize(const Dimension&) = 0;
     ///< changes window size.
     
-    virtual UStr getTitle() const = 0;
+    virtual String getTitle() const = 0;
     ///< returns window title.
     
-    virtual void setTitle(const UStr&) = 0;
+    virtual void setTitle(const String&) = 0;
     ///< changes window title.
     
-    virtual UStr getIconTitle() const = 0;
+    virtual String getIconTitle() const = 0;
     ///< returns icon title.
     
-    virtual void setIconTitle(const UStr&) = 0;  
+    virtual void setIconTitle(const String&) = 0;  
     ///< changes icon title.
     
     virtual void setCursor(const UCursor*) = 0;
     ///< changes window cursor (can be null).
     
-    virtual void setClassProperty(const UStr& instance_name, const UStr& class_name) = 0;
+    virtual void setClassProperty(const String& instance_name, const String& class_name) = 0;
     ///< changes the WM_CLASS property when X11 is used.
     
   private:
@@ -149,35 +154,35 @@ namespace ubit {
     UHardwinImpl& operator=(const UHardwinImpl&);
     
   protected:
-    UHardwinImpl(UDisp*, UWin*);
+    UHardwinImpl(Display*, Window*);
     
     // - - - impl - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 #ifndef NO_DOC
   public:
-    UChildren* getSoftwinList();
+    Children* getSoftwinList();
     UWinList*  getSoftwins();
     UWinList*  obtainSoftwins();
-    void addSoftwin(UWin* softwin, UWin* hardwin, UDisp* disp, bool add_to_the_end);
+    void addSoftwin(Window* softwin, Window* hardwin, Display* disp, bool add_to_the_end);
     // add to the end add_to_the_end is true, to the beginning otherwise
-    void removeSoftwin(UWin* softwin);
+    void removeSoftwin(Window* softwin);
     
-    void doUpdate(const UUpdate&, UWin*, UView* winview);
-    void doUpdateImpl(const UUpdate&, UWin*, UView* winview, const UDimension* size);
+    void doUpdate(const Update&, Window*, View* winview);
+    void doUpdateImpl(const Update&, Window*, View* winview, const Dimension* size);
     
   protected:
-    friend class UDisp;
-    friend class UWin;
-    friend class UView;
-    friend class UGraph;
+    friend class Display;
+    friend class Window;
+    friend class View;
+    friend class Graph;
     friend class UPaintEvent;
     friend class UInputEvent;
     friend class UAppliImpl;
     friend class UGlcanvas;
     unsigned char wintype;       // one of UWinImpl::WinType
     unsigned char must_update;   // see UAppliImpl::processUpdateRequests
-    UDisp* disp;
-    UWin* win;
-    UChildren* softwin_list;
+    Display* disp;
+    Window* win;
+    Children* softwin_list;
     // glcanvas windows and GLUT window have their own UGlcontext
     UGlcontext* glcontext;
 #endif

@@ -1,22 +1,32 @@
-/************************************************************************
- *
- *  ukey.hpp : key symbols
- *  Ubit GUI Toolkit - Version 6
+/*
+ *  key.hpp : key symbols
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE : 
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE 
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. 
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU 
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION; 
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
+
 
 #ifndef _ukey_hpp_
 #define _ukey_hpp_ 1
+
 #include <ubit/udefs.hpp>
+
 namespace ubit {
   
   /** Modifier masks.
@@ -30,7 +40,7 @@ namespace ubit {
     LeftButton, RightButton, MidButton,
     ShiftDown, ControlDown, &MetaDown, &AltDown, AltGraphDown;
     
-    static void mapKeys(UDisp*);
+    static void mapKeys(Display*);
     ///< impl: init keys mapping.
   };
   
@@ -49,7 +59,7 @@ namespace ubit {
     F1, F2, F3, F4, F5, F6, F7, F8, F9, F10, F11, F12, F13, F14, F15, F16, F17, 
     F18, F19, F20, F21, F22, F23, F24;
     
-    static void mapKeys(UDisp*);
+    static void mapKeys(Display*);
     ///< impl: init keys mapping.
   };
   

@@ -1,32 +1,39 @@
-/************************************************************************
- *
- *  uconf.cpp : configuration of the UAppli
- *  Ubit GUI Toolkit - Version 6
+/*
+ *  conf.cpp : configuration of the Application
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE :
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION;
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
 
 #include <ubit/ubit_features.h>
 #include "ubit/config.h"	// LINUX
 #include <locale.h>
 #include <iostream>
 #include <ubit/udefs.hpp>
-#include <ubit/unode.hpp>
+#include <ubit/core/node.h>
 #include <ubit/uconf.hpp>
 #include <ubit/ucolor.hpp>
 #include <ubit/upix.hpp>
 #include <ubit/ustyleparser.hpp>
 #include <ubit/uappli.hpp>
-#include <ubit/core/uclassImpl.hpp>  // for UStyleSheet (bizarrement)
-#include <ubit/uevent.hpp>
+#include <ubit/core/uclassImpl.hpp>  // for StyleSheet (bizarrement)
+#include <ubit/core/event.h>
 #include <ubit/uima.hpp>
 #include <ubit/ubackground.hpp>
 using namespace std;
@@ -45,9 +52,8 @@ UFontFamily UFontFamily::sans_serif("sans_serif",UCONST);
 UFontFamily UFontFamily::serif("serif",UCONST);
 UFontFamily UFontFamily::monospace("monospace",UCONST);
   
-UConf UAppli::conf;   // configuration of the UAppli
+UConf Application::conf;   // configuration of the Application
 
-/* ==================================================== ===== ======= */
 
 UConf::~UConf() {
   // on detruit rien car il peut y avoir des pointeurs partages
@@ -93,7 +99,7 @@ mouse_select_button(UMouseEvent::LeftButton),
 mouse_menu_button(UMouseEvent::RightButton),
 mouse_alt_button(UMouseEvent::MidButton),
 locale(""),   // default="" : the locale is given by the environment (ex: "iso_8859_1")
-default_background(*new UBackground(UColor::lightgrey))
+default_background(*new Background(Color::lightgrey))
 {
   // - - - fonts - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   
@@ -176,10 +182,10 @@ default_background(*new UBackground(UColor::lightgrey))
    // - - - defaults - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   
   default_font = &UFont::sans_serif;     // CANT be null!
-  setDefaultBackground(UColor::lightgrey);     // UPix::velin, UColor::lightgrey
+  setDefaultBackground(Color::lightgrey);     // UPix::velin, Color::lightgrey
   unknow_image = &UPix::question;  
   selection_color  = null;               // none if pointer is null
-  selection_bgcolor= &UColor::lightblue; // idem
+  selection_bgcolor= &Color::lightblue; // idem
   selection_font = &UFont::fill;         // idem
   
   // - - - modes - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -208,20 +214,19 @@ default_background(*new UBackground(UColor::lightgrey))
   open_submenu_delay = 300;	  // millisec
  }
 
-/* ==================================================== ===== ======= */
 
-void UConf::setLocale(const UStr& s) {locale = s;}
+void UConf::setLocale(const String& s) {locale = s;}
 void UConf::setScale(float v) {scale = v;}
 void UConf::setVerbose(int v) {verbosity = v;}
   
-void UConf::setDefaultBackground(const UBackground& bg) {
+void UConf::setDefaultBackground(const Background& bg) {
   default_background = bg;
 }
 /*
-void UConf::setDefaultBackground(const UColor& c) {
+void UConf::setDefaultBackground(const Color& c) {
   default_background.setColor(c);
 }
-void UConf::setDefaultBackground(UIma& i) {
+void UConf::setDefaultBackground(Image& i) {
   default_background.setIma(i);
 }
  */
@@ -231,11 +236,11 @@ void UConf::setTransparentScrollbars(bool s) {transp_scrollbars = s;}
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 static void freezed_error(const char* fct) {
-  UAppli::error(fct,"this function must be called before the UAppli is created");
+  Application::error(fct,"this function must be called before the Application is created");
 }
 
 static void withoutgl_error(const char* fct, const char* ext = "") {
-  UAppli::error(fct,"this option is not available because the Ubit toolkit has not been compiled with OpenGL %s", ext);
+  Application::error(fct,"this option is not available because the Ubit toolkit has not been compiled with OpenGL %s", ext);
 }
 
 void UConf::useGL(bool state) {
@@ -287,40 +292,39 @@ void UConf::setBpp(int b) {
   else bpp = b;
 }
 
-/* ==================================================== ===== ======= */
 
-void UConf::parseOptions(int& argc, char** argv, UOption* options) {
-  UOption::parseOptions(argc, argv, options);
+void UConf::parseOptions(int& argc, char** argv, Option* options) {
+  Option::parseOptions(argc, argv, options);
 }
 
 void UConf::parseUbitOptions(int& argc, char** argv) {
   const char* conf_file = null;
   bool help = false, version = false, group = false, all_sync = false;
   
-  UOption ubit_opts[] = {
-  {"conf","",     UOption::Arg(conf_file)},
-  {"help","-",    UOption::Arg(help)},
-  {"ubit","",     UOption::Arg(help)},
-  {"vers","ion",  UOption::Arg(version)},
-  {"verb","ose",  UOption::Arg(verbosity)},
+  Option ubit_opts[] = {
+  {"conf","",     Option::Arg(conf_file)},
+  {"help","-",    Option::Arg(help)},
+  {"ubit","",     Option::Arg(help)},
+  {"vers","ion",  Option::Arg(version)},
+  {"verb","ose",  Option::Arg(verbosity)},
     
-  {"disp","lay",  UOption::Arg(display)},
-  {"gl","",       UOption::Arg(is_using_gl)},
-  {"free","type", UOption::Arg(is_using_freetype)},
-  {"sync","hronous",UOption::Arg(all_sync)},
-  {"xsync","",    UOption::Arg(xsync)},
-  {"usync","",    UOption::Arg(usync)},
+  {"disp","lay",  Option::Arg(display)},
+  {"gl","",       Option::Arg(is_using_gl)},
+  {"free","type", Option::Arg(is_using_freetype)},
+  {"sync","hronous",Option::Arg(all_sync)},
+  {"xsync","",    Option::Arg(xsync)},
+  {"usync","",    Option::Arg(usync)},
   
-  {"locale","",   UOption::Arg(locale)},
-  {"scale","",    UOption::Arg(scale)},
-  {"bpp","",      UOption::Arg(bpp)},
-  {"mgrab","",    UOption::Arg(menu_grab)},
-  {"dbf","",      UOption::Arg(soft_dbf)},
-  {"sfw","",      UOption::Arg(soft_wins)},
-  {"sfm","",      UOption::Arg(soft_menus)},
-  {"tsb","",      UOption::Arg(transp_scrollbars)},
-  {"telep","",    UOption::Arg(tele_pointers)},
-  {"group","ware",UOption::Arg(group)},
+  {"locale","",   Option::Arg(locale)},
+  {"scale","",    Option::Arg(scale)},
+  {"bpp","",      Option::Arg(bpp)},
+  {"mgrab","",    Option::Arg(menu_grab)},
+  {"dbf","",      Option::Arg(soft_dbf)},
+  {"sfw","",      Option::Arg(soft_wins)},
+  {"sfm","",      Option::Arg(soft_menus)},
+  {"tsb","",      Option::Arg(transp_scrollbars)},
+  {"telep","",    Option::Arg(tele_pointers)},
+  {"group","ware",Option::Arg(group)},
 
   {null, null, null}
   };
@@ -338,7 +342,7 @@ void UConf::parseUbitOptions(int& argc, char** argv) {
     soft_dbf = false;
   }
   else if (is_using_freetype) {   // without GL
-    //UAppli::warning("UConf", "FreeType option deactivated because it requires OpenGL");
+    //Application::warning("UConf", "FreeType option deactivated because it requires OpenGL");
     is_using_freetype = false;
   }
   
@@ -346,7 +350,7 @@ void UConf::parseUbitOptions(int& argc, char** argv) {
   
   if (version || verbosity != 0) {
     cerr
-    << "Ubit version: " << UAppli::getVersion() << endl
+    << "Ubit version: " << Application::getVersion() << endl
     << "(run the application with --help-ubit to display all options)" << endl
     << "Current configuration: " << endl
     << "- underlying windowing toolkit: " << windowing_toolkit << endl
@@ -358,7 +362,6 @@ void UConf::parseUbitOptions(int& argc, char** argv) {
   }
 }
 
-/* ==================================================== ===== ======= */
 
 void UConf::printHelp() {
   cout
@@ -382,31 +385,30 @@ void UConf::printHelp() {
   << endl << endl;
 }
 
-/* ==================================================== [(C)Elc] ======= */
 
-struct DefaultStyleMaker: public UStyleParser::StyleMaker {
-  UStyleSheet& smap;
-  UAttrList* props;
+struct DefaultStyleMaker: public StyleParser::StyleMaker {
+  StyleSheet& smap;
+  AttributeList* props;
   
-  DefaultStyleMaker(UStyleSheet& _smap) : smap(_smap), props(null) {}
+  DefaultStyleMaker(StyleSheet& _smap) : smap(_smap), props(null) {}
   virtual void begin() {props = null;}
   virtual void end(bool ok) {props = null;}
   
   virtual void create() {
     for (unsigned int k = 0; k < count; k++) {
       // att le selecteur peut etre vide!
-      const UClass* c = smap.obtainClass(*selectors[k]);
+      const Class* c = smap.obtainClass(*selectors[k]);
       if (k == 0) {
         props = c->getAttributes();      // props partagee !!!
-        if (!props) props = new UAttrList();
+        if (!props) props = new AttributeList();
       }
       c->setAttributes(props);
     }
   }
   
-  virtual void addProp(const UStr& name, const UStr& value) {
+  virtual void addProp(const String& name, const String& value) {
     if (!props)
-      UAppli::error("DefaultStyleMaker","this DefaultStyleMaker object (%p) has no prop list", this);
+      Application::error("DefaultStyleMaker","this DefaultStyleMaker object (%p) has no prop list", this);
     props->addAttr(name, value);
   }
 };
@@ -415,20 +417,19 @@ struct DefaultStyleMaker: public UStyleParser::StyleMaker {
 
 void UConf::readAttributes(const char* conf_file) {
   if (!conf_file || !*conf_file) return;
-  UStr buf;
+  String buf;
   if (buf.read(conf_file) <= 0) return;
   
-  DefaultStyleMaker dsm(UAppli::getStyleSheet());
-  UStyleParser parser;
+  DefaultStyleMaker dsm(Application::getStyleSheet());
+  StyleParser parser;
   parser.parseImpl(dsm, buf);
 }
 
-UAttrList* UConf::getAttributes(const char* category) {
-  const UClass* ec = UAppli::getStyleSheet().findClass(category);
+AttributeList* UConf::getAttributes(const char* category) {
+  const Class* ec = Application::getStyleSheet().findClass(category);
   if (ec) return ec->getAttributes() ; else return null;
 }
 
-/* ==================================================== [(C)Elc] ======= */
 
 static const char* testOption(const char* arg, const char* name,
                               const char* ending, const char*& stat) {
@@ -459,14 +460,13 @@ static void removeOption(int& card, char** tab, int k) {
   for (int j = k; j < card; j++) tab[j] = tab[j+1];
 }
 
-static UOption* matchOption(const char* arg, UOption* options, const char*& stat) {
-  for (UOption* p = options; p->begname != null; p++) {
+static Option* matchOption(const char* arg, Option* options, const char*& stat) {
+  for (Option* p = options; p->begname != null; p++) {
     if (testOption(arg, p->begname, p->endname, stat)) return p;
   }
   return null;  // not found
 }
 
-/* ==================================================== ===== ======= */
 
 class UOptionArg {
 public:
@@ -501,8 +501,8 @@ public:
 
 class UOptionStrArg : public UOptionArg {
 public:
-  UStr& val;
-  UOptionStrArg(UStr& _val) : val(_val) {}
+  String& val;
+  UOptionStrArg(String& _val) : val(_val) {}
   virtual int getArgCount() {return 1;}
   virtual void set(const char* _val) {val = _val;}
 };
@@ -523,35 +523,33 @@ public:
   virtual void set(const char* _val) {val = (_val ? UCstr::dup(_val) : null);}
 };
 
-/* ==================================================== ======== ======= */
 
-class UOptionArg* UOption::Arg(bool& _val) {
+class UOptionArg* Option::Arg(bool& _val) {
   return new UOptionBoolArg(_val);
 }
 
-class UOptionArg* UOption::Arg(int& _val) {
+class UOptionArg* Option::Arg(int& _val) {
   return new UOptionIntArg(_val);
 }
 
-class UOptionArg* UOption::Arg(float& _val) {
+class UOptionArg* Option::Arg(float& _val) {
   return new UOptionFloatArg(_val);
 }
 
-class UOptionArg* UOption::Arg(UStr& _val) {
+class UOptionArg* Option::Arg(String& _val) {
   return new UOptionStrArg(_val);
 }
 
-class UOptionArg* UOption::Arg(char*& _val) {
+class UOptionArg* Option::Arg(char*& _val) {
   return new UOptionC_StrArg(_val);
 }
 
-class UOptionArg* UOption::Arg(const char*& _val) {
+class UOptionArg* Option::Arg(const char*& _val) {
   return new UOptionCC_StrArg(_val);
 }
 
-/* ==================================================== ===== ======= */
  
-void UOption::parseOptions(int& argc, char** argv, UOption* options) {
+void Option::parseOptions(int& argc, char** argv, Option* options) {
   if (!options) return;
 
   int k = 1;
@@ -564,7 +562,7 @@ void UOption::parseOptions(int& argc, char** argv, UOption* options) {
     if (*p == '-') p++;                 // un - optionnel
     if (*p == 0) {k++; continue;}
     
-    UOption* opt = null;
+    Option* opt = null;
     
     if ((opt = matchOption(p, options, stat))) {
       removeOption(argc, argv, k);
@@ -596,5 +594,3 @@ void UOption::parseOptions(int& argc, char** argv, UOption* options) {
 
 
 }
-/* ==================================================== [TheEnd] ======= */
-/* ==================================================== [(c)Elc] ======= */

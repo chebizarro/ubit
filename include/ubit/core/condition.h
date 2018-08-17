@@ -1,65 +1,75 @@
-/************************************************************************
- *
- *  ucond.hpp: Base class for the attributes of the Scene Graph
- *  Ubit GUI Toolkit - Version 6
+/*
+ *  cond.h: Base class for the attributes of the Scene Graph
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE :
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION;
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
-#ifndef _ucond_hpp_
-#define	_ucond_hpp_ 1
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
+
+#ifndef UBIT_CORE_CONDITION_H_
+#define	UBIT_CORE_CONDITION_H_
+
 #include <ubit/udefs.hpp>
+
 namespace ubit {
   
-  /** Base class for Ubit conditions.
+  /**
+   * Base class for Ubit conditions.
+   * 
    * main subclasses: UOn, UFlag, UInscale.
    * Example:
    * <pre>
    *    ubutton("Click Me" + UOn::action / ucall(arg, myfunc))
    * </pre>
-   * !Warning: UCond (and derived) objects must not be deleted.
+   * !Warning: Condition (and derived) objects must not be deleted.
    */
-  class UCond {
+  class Condition {
   public:
-    virtual ~UCond() {}
+    virtual ~Condition() {}
     
-    virtual bool operator==(const UCond& c) const {return this == &c;}
-    virtual bool operator!=(const UCond& c) const {return this != &c;}
-    virtual const UCond* matches(const UCond& c) const {return this == &c ? this : 0;}
-    virtual bool verifies(const UUpdateContext&, const UElem&) const = 0;
+    virtual bool operator==(const Condition& c) const {return this == &c;}
+    virtual bool operator!=(const Condition& c) const {return this != &c;}
+    virtual const Condition* matches(const Condition& c) const {return this == &c ? this : 0;}
+    virtual bool verifies(const UpdateContext&, const Element&) const = 0;
     
     virtual UOn* toOn() {return null;}
     virtual const UOn* toOn() const {return null;}
     
-    // - - - impl - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    virtual void setParentModes(UElem& parent) const {};
+    virtual void setParentModes(Element& parent) const {};
   };
   
-  /* ==================================================== ===== ======= */
   // pose le pbm de la desctruction auto
   
-  class UMultiCond : public UCond {
+  class MultiCondition : public Condition {
   public:
-    UMultiCond& operator+=(const UCond& c) {return add(c);}
-    virtual UMultiCond& add(const UCond&);
-    virtual void remove(const UCond&);
+    MultiCondition& operator+=(const Condition& c) {return add(c);}
+    virtual MultiCondition& add(const Condition&);
+    virtual void remove(const Condition&);
     
-    virtual const UCond* matches(const UCond& c) const;
-    virtual bool verifies(const UUpdateContext&, const UElem&) const;
-    virtual void setParentModes(UElem& parent) const;
+    virtual const Condition* matches(const Condition& c) const;
+    virtual bool verifies(const UpdateContext&, const Element&) const;
+    virtual void setParentModes(Element& parent) const;
     
   private:
-    typedef std::list<const UCond*> CondList;
+    typedef std::list<const Condition*> CondList;
     CondList condlist;
   };
   
 }
-#endif
+#endif // UBIT_CORE_CONDITION_H_
 

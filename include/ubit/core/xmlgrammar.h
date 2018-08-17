@@ -1,78 +1,85 @@
-/* ==================================================== ======== ======= *
- *
+/*
  *  uxmlgrammar.hpp
- *  Ubit GUI Toolkit - Version 6
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE :
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION;
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
 
 #ifndef _uxmlgrammar_hpp_
 #define _uxmlgrammar_hpp_ 1
+
 #include <map>
 #include <vector>
 #include <ubit/udom.hpp>
+
 namespace ubit {
   
   
-  /** XML Grammar.
+  /**
+   * XML Grammar.
    */
-  class UXmlGrammar {
+  class XmlGrammar {
   public:
-    UXmlGrammar();
-    virtual ~UXmlGrammar();
+    XmlGrammar();
+    virtual ~XmlGrammar();
     
-    virtual void addAttrClass(const UClass&);
-    virtual void addElementClass(const UClass&);
-    virtual void addCharEntityRef(const UStr& entity_name, unsigned short entity_value);
+    virtual void addAttrClass(const Class&);
+    virtual void addElementClass(const Class&);
+    virtual void addCharEntityRef(const String& entity_name, unsigned short entity_value);
     
-    virtual const UClass* getAttrClass(const UStr& classname) const;
-    virtual const UClass* getElementClass(const UStr& classname) const;
-    virtual unsigned short getCharEntityRef(const UStr& entity_name) const;
+    virtual const Class* getAttrClass(const String& classname) const;
+    virtual const Class* getElementClass(const String& classname) const;
+    virtual unsigned short getCharEntityRef(const String& entity_name) const;
     
-    static UXmlGrammar& getSharedUndefGrammar();  ///< TO BE CHANGED !!!
-    static UClass* addUndefAttrClass(const UStr& classname); ///< TO BE CHANGED !!!
-    static UClass* addUndefElementClass(const UStr& classname); ///< TO BE CHANGED !!!
+    static XmlGrammar& getSharedUndefGrammar();  ///< TO BE CHANGED !!!
+    static Class* addUndefAttrClass(const String& classname); ///< TO BE CHANGED !!!
+    static Class* addUndefElementClass(const String& classname); ///< TO BE CHANGED !!!
     virtual void createDefaultCharEntityRefs(); ///< TO BE CHANGED !!!
     
   protected:
     struct Comp {
-      bool operator()(const UStr*a,const UStr*b) const {return a->compare(*b)<0;}
+      bool operator()(const String*a,const String*b) const {return a->compare(*b)<0;}
     };
-    typedef std::map<const UStr*, unsigned short, Comp> CharEntityRefMap;
+    typedef std::map<const String*, unsigned short, Comp> CharEntityRefMap;
     
     CharEntityRefMap char_entity_refs;
-    UElemClassMap element_classes;
-    UAttrClassMap attr_classes;
+    ElementClassMap element_classes;
+    AttributeClassMap attr_classes;
   };
   
-  /* ==================================================== ===== ======= */
   /** List of XML Grammars.
    */
-  class UXmlGrammars {
+  class XmlGrammars {
   public:  
-    void addGrammar(const UXmlGrammar&);
-    void addGrammars(const UXmlGrammars&);
+    void addGrammar(const XmlGrammar&);
+    void addGrammars(const XmlGrammars&);
     
-    const UClass* getAttrClass(const UStr& classname) const;
-    const UClass* getElementClass(const UStr& classname) const;
-    unsigned short getCharEntityRef(const UStr& entityname) const;
+    const Class* getAttrClass(const String& classname) const;
+    const Class* getElementClass(const String& classname) const;
+    unsigned short getCharEntityRef(const String& entityname) const;
     
   protected:
-    typedef std::vector<const UXmlGrammar*> GrammarList;
+    typedef std::vector<const XmlGrammar*> GrammarList;
     GrammarList glist;
   };
   
   
 }
 #endif
-/* ==================================================== [TheEnd] ======= */
-/* ==================================================== [(c)Elc] ======= */
 

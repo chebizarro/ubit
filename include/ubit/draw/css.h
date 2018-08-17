@@ -1,35 +1,44 @@
-/* ==================================================== ======== ======= *
- *
+/*
  *  ucss.hpp
- *  Ubit GUI Toolkit - Version 6
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE :
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION;
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
 
 #ifndef _ucss_hpp_
 #define _ucss_hpp_ 1
+
 #include <map>
 #include <ubit/udefs.hpp>
 #include <ubit/ustyle.hpp>
 #include <ubit/ustyleparser.hpp>
 #include <ubit/udom.hpp>
+
 namespace ubit {
   
   /** [impl] CSS parser for XML/HTML documents.
-   * this stylesheet parser is used implicitely when reading UXmlDocument objects.
+   * this stylesheet parser is used implicitely when reading XmlDocument objects.
    */
-  class UCssParser : public UStyleParser {
+  class UCssParser : public StyleParser {
   public:
-    int parse(const UStr& buffer, class UXmlDocument*);
-    int parseAttr(const UStr& buffer, class UXmlDocument*, UAttrList*);
+    int parse(const String& buffer, class XmlDocument*);
+    int parseAttr(const String& buffer, class XmlDocument*, AttributeList*);
   };
   
   
@@ -38,64 +47,62 @@ namespace ubit {
    */
   class UStyleProps {
   public:
-    typedef void (*AddPropFunc)(UXmlDocument*, UAttrList*, const UStr&);
+    typedef void (*AddPropFunc)(XmlDocument*, AttributeList*, const String&);
     ~UStyleProps();
     
-    AddPropFunc findAddPropFunc(const UStr& prop_name);
+    AddPropFunc findAddPropFunc(const String& prop_name);
     void defProp(const char* prop_name, AddPropFunc);
-    void defProp(const UStr& prop_name, AddPropFunc);
+    void defProp(const String& prop_name, AddPropFunc);
     
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     // useful fcts.
     
-    static bool parseUrl(const UStr&, UStr& url, UStr& remain);
+    static bool parseUrl(const String&, String& url, String& remain);
      
   private:
     struct Comp {
-      bool operator()(const UStr*s1, const UStr*s2) const {return s1->compare(*s2)<0;}
+      bool operator()(const String*s1, const String*s2) const {return s1->compare(*s2)<0;}
     };
-    typedef std::map<const UStr*, AddPropFunc, Comp> PropMap;
+    typedef std::map<const String*, AddPropFunc, Comp> PropMap;
     PropMap prop_map;
   };
   
-  /* ==================================================== ======== ======= */
-  /** [impl] precompiled CSS properties.
+    /** [impl] precompiled CSS properties.
    * to be completed...
    */
   class UCssProps : public UStyleProps {
   public:
     UCssProps();
     
-    static void create_font_family(UXmlDocument*, UAttrList*, const UStr& v);
-    static void create_font_size(UXmlDocument*, UAttrList*, const UStr& v);
-    static void create_font_weight(UXmlDocument*,UAttrList*, const UStr& v);
-    static void create_font_style(UXmlDocument*, UAttrList*, const UStr& v);
+    static void create_font_family(XmlDocument*, AttributeList*, const String& v);
+    static void create_font_size(XmlDocument*, AttributeList*, const String& v);
+    static void create_font_weight(XmlDocument*,AttributeList*, const String& v);
+    static void create_font_style(XmlDocument*, AttributeList*, const String& v);
     
-    static void create_color(UXmlDocument*, UAttrList*, const UStr& v);
-    static void create_background_color(UXmlDocument*, UAttrList*, const UStr& v);
-    static void create_background_image(UXmlDocument*, UAttrList*, const UStr& v);
-    static void create_background(UXmlDocument*, UAttrList*, const UStr& v);
+    static void create_color(XmlDocument*, AttributeList*, const String& v);
+    static void create_background_color(XmlDocument*, AttributeList*, const String& v);
+    static void create_background_image(XmlDocument*, AttributeList*, const String& v);
+    static void create_background(XmlDocument*, AttributeList*, const String& v);
     
-    static void create_width(UXmlDocument*, UAttrList*, const UStr& v);
-    static void create_height(UXmlDocument*, UAttrList*, const UStr& v);
-    static void create_text_align(UXmlDocument*, UAttrList*, const UStr& v);
-    static void create_vertical_align(UXmlDocument*, UAttrList*, const UStr& v);
+    static void create_width(XmlDocument*, AttributeList*, const String& v);
+    static void create_height(XmlDocument*, AttributeList*, const String& v);
+    static void create_text_align(XmlDocument*, AttributeList*, const String& v);
+    static void create_vertical_align(XmlDocument*, AttributeList*, const String& v);
     /*
-    static void create_margin_top(UXmlDocument*, UAttrList*, const UStr& v);
-    static void create_margin_bottom(UXmlDocument*, UAttrList*, const UStr& v);
-    static void create_margin_left(UXmlDocument*, UAttrList*, const UStr& v);
-    static void create_margin_right(UXmlDocument*, UAttrList*, const UStr& v);
+    static void create_margin_top(XmlDocument*, AttributeList*, const String& v);
+    static void create_margin_bottom(XmlDocument*, AttributeList*, const String& v);
+    static void create_margin_left(XmlDocument*, AttributeList*, const String& v);
+    static void create_margin_right(XmlDocument*, AttributeList*, const String& v);
     */
-    static void create_padding_top(UXmlDocument*, UAttrList*, const UStr& v);
-    static void create_padding_bottom(UXmlDocument*, UAttrList*, const UStr& v);
-    static void create_padding_left(UXmlDocument*, UAttrList*, const UStr& v);
-    static void create_padding_right(UXmlDocument*, UAttrList*, const UStr& v);
+    static void create_padding_top(XmlDocument*, AttributeList*, const String& v);
+    static void create_padding_bottom(XmlDocument*, AttributeList*, const String& v);
+    static void create_padding_left(XmlDocument*, AttributeList*, const String& v);
+    static void create_padding_right(XmlDocument*, AttributeList*, const String& v);
     
-    static void create_border(UXmlDocument*, UAttrList*, const UStr& v);
+    static void create_border(XmlDocument*, AttributeList*, const String& v);
   };
   
-  /* ==================================================== ======== ======= */
-  /** [impl] precompiled HTML Elements Styles.
+    /** [impl] precompiled HTML Elements Styles.
    * to be completed...
    */
   class UCssStyles {

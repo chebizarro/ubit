@@ -1,6 +1,5 @@
-/************************************************************************
- *
- *  ufontmetrics.cpp
+/*
+ *  fontmetrics.cpp
  *  Ubit GUI Toolkit - Version 6.0
  *  (C) 2008 | Eric Lecolinet | ENST Paris | www.enst.fr/~elc/ubit
  *
@@ -17,7 +16,7 @@
 #include <ubit/ubit_features.h>
 #include <iostream>
 #include <ctype.h>
-#include <ubit/unode.hpp>
+#include <ubit/core/node.h>
 #include <ubit/ufont.hpp>
 #include <ubit/ufontmetrics.hpp>
 #include <ubit/draw/ufontImpl.hpp>
@@ -27,32 +26,33 @@
 #include <ubit/uupdatecontext.hpp>
 #include <ubit/uappli.hpp>
 #include <ubit/uhardfont.hpp>
+
 namespace ubit {
 
 
 // !!!CAUTION: disp->getFont() uses the default GC if it actually creates a new Font
 // in OpenGL mode, the corresponding glcontext becomes the current context
 
-#define NULL_FONT_ERROR(msg) UAppli::error(msg,"can't retreive font")
+#define NULL_FONT_ERROR(msg) Application::error(msg,"can't retreive font")
 
 UFontMetrics::UFontMetrics() 
 : disp(null), fd(null), own_fd(false) {}
 
-UFontMetrics::UFontMetrics(const UFont& _f, UDisp* _d) {
+UFontMetrics::UFontMetrics(const UFont& _f, Display* _d) {
   set(_f, _d);
 }
 
-UFontMetrics::UFontMetrics(const UFontDesc& _fd, UDisp* _d) {
+UFontMetrics::UFontMetrics(const UFontDesc& _fd, Display* _d) {
   set(_fd, _d);
 }
 
-UFontMetrics::UFontMetrics(UUpdateContext& _ctx) : 
+UFontMetrics::UFontMetrics(UpdateContext& _ctx) : 
 disp(_ctx.getDisp()), 
 fd(&_ctx.fontdesc), 
 own_fd(false) {
   UHardFont* f = disp->getFont(fd);  // see note about getFont above
   if (!f) {
-    UAppli::error("UFontMetrics","can't retreive font");
+    Application::error("UFontMetrics","can't retreive font");
   }
 }
 
@@ -60,25 +60,23 @@ UFontMetrics::~UFontMetrics() {
   if (own_fd) delete &fd;
 }
 
-/* ==================================================== ===== ======= */
 
-void UFontMetrics::set(const UFont& _f, UDisp* _d) {
-  disp = (_d ? _d : UAppli::getDisp());
+void UFontMetrics::set(const UFont& _f, Display* _d) {
+  disp = (_d ? _d : Application::getDisp());
   fd = new UFontDesc(_f);
   own_fd = true;
   UHardFont* f = disp->getFont(fd);
-  if (!f) UAppli::error("UFontMetrics","can't retreive font");
+  if (!f) Application::error("UFontMetrics","can't retreive font");
 }
 
-void UFontMetrics::set(const UFontDesc& _fd, UDisp* _d) {
-  disp = (_d ? _d : UAppli::getDisp());
+void UFontMetrics::set(const UFontDesc& _fd, Display* _d) {
+  disp = (_d ? _d : Application::getDisp());
   fd = &_fd; 
   own_fd = false;
   UHardFont* f = disp->getFont(fd);
-  if (!f) UAppli::error("UFontMetrics","can't retreive font");
+  if (!f) Application::error("UFontMetrics","can't retreive font");
 }
 
-/* ==================================================== ===== ======= */
 
 float UFontMetrics::getWidth(char c) const {
   UHardFont* f = disp->getFont(fd);
@@ -92,15 +90,14 @@ float UFontMetrics::getWidth(const char* s, int len) const {
   return f->getWidth(s, len);
 }
 
-float UFontMetrics::getWidth(const UStr& s) const {
+float UFontMetrics::getWidth(const String& s) const {
   return getWidth(s.c_str(), -1);
 }
 
-float UFontMetrics::getWidth(const UStr& s, int pos, int len) const {
+float UFontMetrics::getWidth(const String& s, int pos, int len) const {
   return getWidth(s.c_str() + pos, len);
 }
 
-/* ==================================================== ===== ======= */
 
 float UFontMetrics::getAscent() const {
   UHardFont* f = disp->getFont(fd);
@@ -127,7 +124,7 @@ float UFontMetrics::getHeight() const {
  return getCharDefaultSize(fd, w, h);
  }
  
- bool UGraph::getCharDefaultSize(const UFontDesc& font, int& w, int& h) const {
+ bool Graph::getCharDefaultSize(const UFontDesc& font, int& w, int& h) const {
  if (!wg) return false;
  USysFont f = wg->disp->natdisp->getFont(font);
  if (!f) {
@@ -140,7 +137,6 @@ float UFontMetrics::getHeight() const {
  }
  */
 /* ==================================================== [Elc] ======= */
-/* ==================================================== ===== ======= */
 
 int UFontMetrics::getCharPos(const char* s, int len, float x) const {
   UHardFont* f = disp->getFont(fd);
@@ -181,10 +177,9 @@ float UFontMetrics::getXPos(const char *s, int len, int charpos) const {
   return xpos;
 }
 
-/* ==================================================== ======== ======= */
 
 bool UFontMetrics::
-getSubTextSize(const char* s, int len, UDimension& dim, float available_width,
+getSubTextSize(const char* s, int len, Dimension& dim, float available_width,
                int& s_sublen, int& change_line) const {
   dim.width = dim.height = 0;
   s_sublen = 0;
@@ -192,7 +187,7 @@ getSubTextSize(const char* s, int len, UDimension& dim, float available_width,
   
   UHardFont* f = disp->getFont(fd);
   if (!f) {
-    UAppli::error("UFontMetrics::getSubTextSize","can't retreive font");
+    Application::error("UFontMetrics::getSubTextSize","can't retreive font");
     return false;
   }
   
@@ -236,7 +231,6 @@ getSubTextSize(const char* s, int len, UDimension& dim, float available_width,
   return true;
 }
 
-/* ==================================================== ======== ======= */
 // utilise par drawString en mode OpenGL pour eviter de dessiner
 // ce qui sort de la zone de clipping
 
@@ -272,4 +266,3 @@ bool UFontMetrics::getClippedText(const UHardFont* f, float clip_x, float clip_w
 
 }
 /* ==================================================== [Elc] ======= */
-/* ==================================================== ===== ======= */

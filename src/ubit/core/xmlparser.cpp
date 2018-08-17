@@ -1,4 +1,4 @@
-/************************************************************************
+/*
 *
 *  uxmlparser.cpp
  *  Ubit GUI Toolkit - Version 6
@@ -30,9 +30,8 @@
 using namespace std;
 namespace ubit {
 
-/* ==================================================== ===== ======= */
 
-void UXmlParser::skipSpaces() {
+void XmlParser::skipSpaces() {
   while(*p && (*p==' ' || *p=='\n' || *p=='\r' || *p=='\t'))  p++;
 }
 
@@ -41,7 +40,7 @@ void UXmlParser::skipSpaces() {
 // starts on the 1st char of the name
 // ends on the first non (alpha || - || _) character
 
-bool UXmlParser::readName(UStr& name) {
+bool XmlParser::readName(String& name) {
   if (!isalpha(*p) && *p!='_' && *p!=':') return false; // 1st char must be in (alpha _ :)
   
   const UChar* begin = p;
@@ -55,11 +54,10 @@ bool UXmlParser::readName(UStr& name) {
   return true;
 }
 
-/* ==================================================== ===== ======= */
 // starts on starting " or '
 // ends on ending " or ' or the first control character
 
-bool UXmlParser::readQuotedValue(UStr& value, UChar quoting_char) {
+bool XmlParser::readQuotedValue(String& value, UChar quoting_char) {
   if (*p != quoting_char) return false;
   
   const UChar* begin = p;
@@ -73,7 +71,7 @@ bool UXmlParser::readQuotedValue(UStr& value, UChar quoting_char) {
   return true;
 }
 
-bool UXmlParser::readUnquotedValue(UStr& value) {
+bool XmlParser::readUnquotedValue(String& value) {
   if (iscntrl(*p)) return false; 
 
   const UChar* begin = p;
@@ -89,7 +87,7 @@ bool UXmlParser::readUnquotedValue(UStr& value) {
   // ======================================================== [Elc] ===========
 // starts on the 1st char of the name
 
-bool UXmlParser::readNameValuePair(UStr& name, UStr& value) {
+bool XmlParser::readNameValuePair(String& name, String& value) {
   const UChar* begin = p;
 
   if (!readName(name)) {
@@ -142,7 +140,7 @@ bool UXmlParser::readNameValuePair(UStr& name, UStr& value) {
 // starts on the 1st char of the name
 // ends on the >
 
-  UElem* UXmlParser::readElementStartTag(UStr& name, int& stat) {
+  Element* XmlParser::readElementStartTag(String& name, int& stat) {
   stat = false;
   const UChar* begin = p;
 
@@ -151,7 +149,7 @@ bool UXmlParser::readNameValuePair(UStr& name, UStr& value) {
     return null;
   }
 
-  UElem* e = doc->createElement(name);
+  Element* e = doc->createElement(name);
   if (!e) {
     error("unknown element", begin-1);
     return null;
@@ -162,7 +160,7 @@ bool UXmlParser::readNameValuePair(UStr& name, UStr& value) {
 
     if (*p == '>') {         // end of starting tag: <tag>
       if (permissive
-          && (e->getClass().getParseModes() & UClass::EMPTY_ELEMENT))
+          && (e->getClass().getParseModes() & Class::EMPTY_ELEMENT))
         stat = END_TAG_AND_ELEM;
       else
         stat = END_TAG;
@@ -176,7 +174,7 @@ bool UXmlParser::readNameValuePair(UStr& name, UStr& value) {
     }
 
     else if (isalpha(*p)) {
-      UStr name, value;
+      String name, value;
 
       if (!readNameValuePair(name, value)) {
         delete e;
@@ -184,7 +182,7 @@ bool UXmlParser::readNameValuePair(UStr& name, UStr& value) {
       }
       else {
         // may return null if attribute is unknown (if checked)
-        UAttr* attr = doc->createAttribute(name);
+        Attribute* attr = doc->createAttribute(name);
         if (attr) {
           attr->setValue(value);
           e->setAttr(*attr);
@@ -205,9 +203,9 @@ bool UXmlParser::readNameValuePair(UStr& name, UStr& value) {
 // starts on the 1st char of the name
 // ends on the >
 
-int UXmlParser::readElementEndTag(const UStr& elem_name) {
+int XmlParser::readElementEndTag(const String& elem_name) {
   const UChar* begin = p;
-  UStr ending_name;
+  String ending_name;
   
   if (!readName(ending_name)) {
     error("invalid element name in ending tag", begin-1);
@@ -235,7 +233,7 @@ int UXmlParser::readElementEndTag(const UStr& elem_name) {
 // starts on <
 // ends on the final >
 
-void UXmlParser::readElement(UElem* parent) {
+void XmlParser::readElement(Element* parent) {
   if (*p != '<') {
     error("element should start with a < sign", p);
     throw ParseError();
@@ -253,9 +251,9 @@ void UXmlParser::readElement(UElem* parent) {
     return;
   }
 
-  UStr name;
+  String name;
   int stat = false;
-  UElem* e = readElementStartTag(name, stat);
+  Element* e = readElementStartTag(name, stat);
 
   if (!e) throw ParseError();
   parent->add(e);
@@ -301,7 +299,7 @@ void UXmlParser::readElement(UElem* parent) {
 
   // ======================================================== [Elc] ===========
 
-static const char* findEndTag(const char* p, const UStr& end) {
+static const char* findEndTag(const char* p, const String& end) {
   const char c = end[0];
   int l = end.length();
   while(*p) {
@@ -315,15 +313,15 @@ static const char* findEndTag(const char* p, const UStr& end) {
 }
 
 // starts on text beginning, ends on following <
-void UXmlParser::readText(UElem* parent) {
+void XmlParser::readText(Element* parent) {
   const UChar* begin = p;
-  UStr text;
+  String text;
 
   // <script> and <style> tags: no parsing 'till the corresponding
   // </script> or </style> tag
 
-  if (parent->getClass().getParseModes() & UClass::DONT_PARSE_CONTENT) {
-    UStr endtag = "</"; 
+  if (parent->getClass().getParseModes() & Class::DONT_PARSE_CONTENT) {
+    String endtag = "</"; 
     //endtag &= parent->getNodeName() ? *parent->getNodeName() : "";
     endtag &= parent->getNodeName();
     endtag.lower();
@@ -347,7 +345,7 @@ void UXmlParser::readText(UElem* parent) {
   // enlever uniquement au rendu mais on triche en mode html
   // (sauf pour les <pre>)
   if (collapse_spaces 
-      && !(parent->getClass().getParseModes() & UClass::PRESERVE_SPACES)) {
+      && !(parent->getClass().getParseModes() & Class::PRESERVE_SPACES)) {
     collapse_spaces = true;
   }
   
@@ -403,9 +401,8 @@ void UXmlParser::readText(UElem* parent) {
   }
 }
   
-  /* ==================================================== ===== ======= */
   
-  UChar UXmlParser::readCharEntityReference() {
+  UChar XmlParser::readCharEntityReference() {
   if (*p != '&') {
     error("character entity reference should start with an &", p);
     throw ParseError();
@@ -437,12 +434,12 @@ void UXmlParser::readText(UElem* parent) {
   }
 
   if (p-begin-2 <= 0) return 0;
-  UStr code;
+  String code;
   code.append(begin+1, p-begin-2);
 
   if (code[0] == '#') {
     code.remove(0,1);
-    UInt val = code;
+    Int val = code;
     return val.intValue();
   }
   else {
@@ -457,11 +454,11 @@ void UXmlParser::readText(UElem* parent) {
 // starts on '?'
 // ends on '>'
 
-bool UXmlParser::readXMLDeclaration() {
+bool XmlParser::readXMLDeclaration() {
   const UChar* begin = p;
   p++;
 
-  UStr name;
+  String name;
   if (!readName(name)) {
     error("invalid XML Declaration", begin-1);
     throw ParseError();
@@ -486,7 +483,7 @@ bool UXmlParser::readXMLDeclaration() {
     }
 
     else if (isalpha(*p)) {
-      UStr name, value;
+      String name, value;
 
       if (!readNameValuePair(name, value)) {
         return false;
@@ -513,12 +510,11 @@ bool UXmlParser::readXMLDeclaration() {
   }
 }
 
-/* ==================================================== ======== ======= */
 // Processing instruction:  <?xxx ... ?>
 // starts on '?'
 // ends on '>'
 
-void UXmlParser::readXMLInstruction(UElem* parent) {
+void XmlParser::readXMLInstruction(Element* parent) {
   //if (*p != '?') {
   //  error("XML instruction should start with <?", p-1);
   //  throw ParseError();
@@ -527,7 +523,7 @@ void UXmlParser::readXMLInstruction(UElem* parent) {
   const UChar* begin = p;
   p++;
 
-  UStr name;
+  String name;
   if (!readName(name)) {
     error("invalid XML instruction", begin-1);
     throw ParseError();
@@ -559,7 +555,6 @@ void UXmlParser::readXMLInstruction(UElem* parent) {
   }
 }
   
-/* ==================================================== ======== ======= */
 // cases:
 //    <!-- comment -->
 //    <!DOCTYPE HTML>
@@ -570,7 +565,7 @@ void UXmlParser::readXMLInstruction(UElem* parent) {
 // starts on '?'
 // ends on '>'
 
-void UXmlParser::readSGMLData(UElem* parent) {
+void XmlParser::readSGMLData(Element* parent) {
   if (*p != '!') {
     error("SGML element should start with <!", p-1);
     throw ParseError();
@@ -588,14 +583,14 @@ void UXmlParser::readSGMLData(UElem* parent) {
       throw ParseError();
     }
 
-    UStr data;
+    String data;
     if (p < final) data.append(p, final-p);
     parent->add(doc->createComment(data));
     p = final+2;      // end of -->
   }
 
   else {
-    UStr name;
+    String name;
     
     if (!readName(name)) {
       error("invalid SGML element", begin-1);
@@ -610,7 +605,7 @@ void UXmlParser::readSGMLData(UElem* parent) {
 
     if (name.equals("CDATA",permissive)) {
       //cerr << "CDATA: not implemented" << endl;
-      UStr data;
+      String data;
       if (p < final) data.append(p, final-p);
       parent->add(doc->createCDATASection(data));
     }
@@ -633,16 +628,16 @@ void UXmlParser::readSGMLData(UElem* parent) {
 
 // ======================================================== [Elc] ===========
 
-void UXmlParser::error(const char* msg, const UChar* line) {
+void XmlParser::error(const char* msg, const UChar* line) {
   error(msg, "", 0, line);
 }
 
-void UXmlParser::error(const char* msg1, const UStr& name,
+void XmlParser::error(const char* msg1, const String& name,
                        const char* msg2, const UChar* line) {
   perrhandler->parserError(UError::XML_ERROR, text_buffer, msg1, name, msg2, line);
 }
 
-void UXmlParser::unexpected(const char* msg, const UChar* line) {
+void XmlParser::unexpected(const char* msg, const UChar* line) {
   if (!*p) {
     error("premature end of file ", "", msg, line);
   }
@@ -664,29 +659,28 @@ void UXmlParser::unexpected(const char* msg, const UChar* line) {
 /* ==================================================== [Elc] ======= */
  // NB: pour un "vrai" parsing XML il faut : permissive(false), 
 
-UXmlParser::UXmlParser() :
+XmlParser::XmlParser() :
 status(0),
 permissive(false),
 collapse_spaces(false),
 text_buffer(null),
 p(null),
 doc(null),
-parser_grammars(new UXmlGrammars()),
-perrhandler(UAppli::getErrorHandler()) {
+parser_grammars(new XmlGrammars()),
+perrhandler(Application::getErrorHandler()) {
 }
   
-UXmlParser::~UXmlParser() {
+XmlParser::~XmlParser() {
   delete parser_grammars;
 }
 
-void UXmlParser::addGrammar(const UXmlGrammar& g) {
+void XmlParser::addGrammar(const XmlGrammar& g) {
   parser_grammars->addGrammar(g);
 }
 
-/* ==================================================== ===== ======= */
 
-UXmlDocument* UXmlParser::read(const UStr& _pathname) {
-  UStr buf;
+XmlDocument* XmlParser::read(const String& _pathname) {
+  String buf;
   status = buf.read(_pathname);
 
   if (status <= 0) return null;
@@ -696,20 +690,19 @@ UXmlDocument* UXmlParser::read(const UStr& _pathname) {
   }
 }
 
-/* ==================================================== ===== ======= */
 
-UXmlDocument* UXmlParser::parse(const UStr& _name, const UStr& _buffer) {
+XmlDocument* XmlParser::parse(const String& _name, const String& _buffer) {
   status = 0;
   p = text_buffer = _buffer.c_str();
   if (!p || !*p) return null;
 
   status = 1;
-  doc = new UXmlDocument(_name);
+  doc = new XmlDocument(_name);
   if (parser_grammars) doc->grammars->addGrammars(*parser_grammars);
     
   // ATTENTION: ne doit pas etre cree avant un changement de Grammar !!
   // (sinon la classe sera indefinie)
-  UElem* root = doc->doc_elem;
+  Element* root = doc->doc_elem;
    
   try {
     // the XML declaration must start at line 1 column 1
@@ -789,10 +782,10 @@ UXmlDocument* UXmlParser::parse(const UStr& _name, const UStr& _buffer) {
  };
 
 class XmlNotation : public XmlNode {
-  virtual const UStr& getPublicId() const;
-  virtual const UStr& getSystemId() const;
-  virtual const UStr& getNodeName() const {return getName();}
-  virtual UStr       getNodeValue()      {return 0;}
+  virtual const String& getPublicId() const;
+  virtual const String& getSystemId() const;
+  virtual const String& getNodeName() const {return getName();}
+  virtual String       getNodeValue()      {return 0;}
   virtual unsigned short   getNodeType() const {return NOTATION_NODE;}
 };
 

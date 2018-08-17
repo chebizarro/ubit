@@ -1,6 +1,6 @@
-/************************************************************************
+/*
 *
-*  usource.hpp: file and socket data management
+*  usource.h: file and socket data management
  *  Ubit GUI Toolkit - Version 6
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
 *
@@ -16,7 +16,9 @@
 
 #ifndef _usource_hpp_
 #define	_usource_hpp_ 1
+
 #include <ubit/uobject.hpp>
+
 namespace ubit {
 
 /** a USource object fires callbacks when a file or a socket gets data.
@@ -30,9 +32,9 @@ namespace ubit {
 * - callbacks printArgs(x, y) and obj->doIt(val) are fired when 
 *   the source receives data
 *
-* See also: USocket (Ubit simple sockets).
+* See also: Socket (Ubit simple sockets).
 */
-class USource : public UNode {    // !!!@@@ devrait deriver de UObject !!!
+class USource : public Node {    // !!!@@@ devrait deriver de UObject !!!
 public:
   UCLASS(USource)
     
@@ -44,7 +46,7 @@ public:
   virtual void onAction(UCall& callback);
   /**< adds a callback that is fired when data is received.
    * the argument is a ucall<> expression (see UCall) that is destroyed when the
-   * USource is destroyed (except if "referenced elsewhere"; see UNode).
+   * USource is destroyed (except if "referenced elsewhere"; see Node).
    */
   
   virtual void onInput(UCall& callback) {onAction(callback);}

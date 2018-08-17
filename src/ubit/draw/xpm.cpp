@@ -1,5 +1,4 @@
-/* ==================================================== ======== ======= *
- *
+/*
  *  uupixmaps.cpp
  *  a wrapping for using some of the great FVWM pixmaps in the Ubit toolkit
  *
@@ -358,8 +357,7 @@ const char * UXpm::windows[] = {
 "   ..........   "
 };
 
-  /* ==================================================== ======== ======= */
-  
+    
   const char *upix_rball_xpm[] = {
     "10 10 4 1",
     "       c None s None",
@@ -395,8 +393,7 @@ const char * UXpm::windows[] = {
     ".............",
   "............."};
   
-  /* ==================================================== ======== ======= */
-  
+    
   const char *upix_cross_xpm[] = {
     " 16 16 23 1",
     ". c None s None",
@@ -439,8 +436,7 @@ const char * UXpm::windows[] = {
     "................",
   "................"};
   
-  /* ==================================================== ======== ======= */
-  
+    
   const char *upix_check_xpm[] = {
     " 16 16 32 1",
     ". c None s None",
@@ -1269,7 +1265,6 @@ const char *UXpm::bigQuestion[] = {
   "RRRRRRRRRRRRRRRRRRRRRRRR",
 };
 
-/* ==================================================== ======== ======= */
 /*
  const char* UXpm::left[] = {
  "17 17 5 1",
@@ -1376,7 +1371,6 @@ const char *UXpm::bigQuestion[] = {
  "EEEEEEEEEEEEEEEEE",
  };
  */
-/* ==================================================== ======== ======= */
 
 UPix UPix::bigFolder(UXpm::bigFolder,  UObject::UCONST);
 UPix UPix::bigDoc(UXpm::bigDoc,  UObject::UCONST);
