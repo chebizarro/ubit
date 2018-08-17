@@ -27,8 +27,8 @@
 #include <ubit/uappli.hpp>
 #include <ubit/core/uappliImpl.hpp>
 using namespace std;
-#define NAMESPACE_UBIT namespace ubit {
-NAMESPACE_UBIT
+namespace ubit {
+
 
 
 UNode::UNode() {}  // tout est fait dans UObject

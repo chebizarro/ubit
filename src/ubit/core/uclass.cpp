@@ -22,8 +22,8 @@
 #include <ubit/uappli.hpp>
 #include <ubit/core/uappliImpl.hpp>
 using namespace std;
-#define NAMESPACE_UBIT namespace ubit {
-NAMESPACE_UBIT
+namespace ubit {
+
 
 
 unsigned int UClass::count = 0;

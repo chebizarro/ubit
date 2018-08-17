@@ -1,6 +1,5 @@
 export BUILDTYPE ?= Debug
-#export WITH_CXX11ABI ?= $(shell scripts/check-cxx11abi.sh)
-export WITH_CXX11ABI = 0
+export WITH_CXX11ABI ?= $(shell scripts/check-cxx11abi.sh)
 
 ifeq ($(BUILDTYPE), Release)
 else ifeq ($(BUILDTYPE), RelWithDebInfo)
@@ -15,7 +14,7 @@ buildtype := $(shell echo "$(BUILDTYPE)" | tr "[A-Z]" "[a-z]")
 ifeq ($(shell uname -s), Darwin)
   HOST_PLATFORM = macos
   HOST_PLATFORM_VERSION = $(shell uname -m)
-  #export NINJA = platform/macos/ninja
+  export NINJA = ninja
   export JOBS ?= $(shell sysctl -n hw.ncpu)
 else ifeq ($(shell uname -s), Linux)
   HOST_PLATFORM = linux

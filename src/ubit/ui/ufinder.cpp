@@ -37,8 +37,8 @@
 #include <ubit/ufinder.hpp>
 #include <ubit/ui/ufinderImpl.hpp>
 using namespace std;
-#define NAMESPACE_UBIT namespace ubit {
-NAMESPACE_UBIT
+namespace ubit {
+
 
 
 static const char *doc_xpm[] = {       // moins large que UPix::doc

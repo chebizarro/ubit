@@ -38,8 +38,8 @@
 #include <ubit/utimer.hpp>
 #include <ubit/ugraph.hpp>
 using namespace std;
-#define NAMESPACE_UBIT namespace ubit {
-NAMESPACE_UBIT
+namespace ubit {
+
 
 //UConf UAppli::conf is in uconf.cpp to avoid init problems
 

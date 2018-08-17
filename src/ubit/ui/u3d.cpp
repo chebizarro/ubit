@@ -31,8 +31,8 @@
 #include <ubit/core/uappliImpl.hpp>
 #include <ubit/ugraph.hpp>
 using namespace std;
-#define NAMESPACE_UBIT namespace ubit {
-NAMESPACE_UBIT
+namespace ubit {
+
 
 static const float FOVY = 70.;
 static const float NEAR_PLANE = 1.;

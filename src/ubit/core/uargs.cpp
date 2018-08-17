@@ -22,8 +22,8 @@
 #include <ubit/ustr.hpp>
 #include <ubit/uappli.hpp>
 using namespace std;
-#define NAMESPACE_UBIT namespace ubit {
-NAMESPACE_UBIT
+namespace ubit {
+
 
 const UArgs UArgs::none;
 

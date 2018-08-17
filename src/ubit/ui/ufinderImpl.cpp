@@ -41,8 +41,8 @@
 #include <ubit/ui/ufinderImpl.hpp>
 #include <ubit/ucall.hpp>
 using namespace std;
-#define NAMESPACE_UBIT namespace ubit {
-NAMESPACE_UBIT
+namespace ubit {
+
  
 static void _openPMenuCB(UMouseEvent& e, UPopmenu* m) {
   if (e.getButton() == e.RightButton) m->open(e);

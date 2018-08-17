@@ -38,8 +38,8 @@
 #endif
 
 using namespace std;
-#define NAMESPACE_UBIT namespace ubit {
-NAMESPACE_UBIT
+namespace ubit {
+
 
 // ! checks that the current context is the default context of the display !
 #define MAKE_CURRENT if (disp->current_glcontext != this) makeCurrent()

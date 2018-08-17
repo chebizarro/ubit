@@ -23,8 +23,8 @@
 #include <ubit/uappli.hpp>
 #include <ubit/uflag.hpp>
 using namespace std;
-#define NAMESPACE_UBIT namespace ubit {
-NAMESPACE_UBIT
+namespace ubit {
+
 
 
 UUpdateContext::UUpdateContext(const UUpdateContext& parctx, 

@@ -29,8 +29,8 @@
 #include <ubit/uon.hpp>
 #include <ubit/uevent.hpp>
 using namespace std;
-#define NAMESPACE_UBIT namespace ubit {
-NAMESPACE_UBIT
+namespace ubit {
+
 
 
 UViewStyle::UViewStyle(UView*(*make_view)(UBox*, UView*, UHardwinImpl*), UConst c) 

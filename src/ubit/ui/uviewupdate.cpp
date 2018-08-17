@@ -30,8 +30,8 @@
 #include <ubit/uappli.hpp>
 #include <ubit/uborder.hpp>
 using namespace std;
-#define NAMESPACE_UBIT namespace ubit {
-NAMESPACE_UBIT
+namespace ubit {
+
 
 // ==================================================== [Ubit Toolkit] =========
 

@@ -33,8 +33,8 @@
 #include <ubit/uglcanvas.hpp>
 #include <ubit/udispX11.hpp>
 using namespace std;
-#define NAMESPACE_UBIT namespace ubit {
-NAMESPACE_UBIT
+namespace ubit {
+
 
 
 UGlcanvas::UGlcanvas(UArgs a) :

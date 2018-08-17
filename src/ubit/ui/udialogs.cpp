@@ -26,8 +26,8 @@
 #include <ubit/upix.hpp>
 #include <ubit/ucolor.hpp>
 using namespace std;
-#define NAMESPACE_UBIT namespace ubit {
-NAMESPACE_UBIT
+namespace ubit {
+
 
 
 UStyle* UFrame::createStyle() {

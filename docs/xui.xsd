@@ -1,0 +1,1064 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    The Purnama Project XUI (XML-based User Interface) is an XML namespace
+    that describes user interfaces and that is used by libraries (the XUI
+    library thus far) to parse these files and create GUIs on various platforms.
+
+    Copyright (c) 2003 Arron Ferguson
+
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 2.1 of the License, or (at your option) any later version.
+
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with this library; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+    For more information, please contact Arron Ferguson at:
+    e-mail: arron_ferguson@bcit.ca
+    snail-mail: 480-555 Seymour Street, Vancouver, B.C., V6B 3H6
+    Web: http://xml.bcit.ca/PurnamaProject/
+
+
+    Namespace = http://xml.bcit.ca/PurnamaProject/2003/xui
+
+    Revision: 0.5.0
+    Date: 3/30/2003 10:47:01 PM
+  -->
+<xs:schema elementFormDefault="qualified"
+           targetNamespace="http://xml.bcit.ca/PurnamaProject/2003/xui"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:xui="http://xml.bcit.ca/PurnamaProject/2003/xui">
+
+
+
+  <!--
+      The root element of all XUIs. The XUI root element allows for up to 255 Windows.
+      This root element is the application context. It allows for as many windows that
+      are required (up to 255 windows) for each application.
+    -->
+  <xs:element name="XUI">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="128" ref="xui:Window"/>
+        <xs:element minOccurs="0" maxOccurs="1" ref="xui:Resource"/>
+      </xs:sequence>
+      <xs:attribute name="id" type="xs:anyURI" use="required"/>
+    </xs:complexType>
+  </xs:element>
+
+
+
+  <!--
+      The resource that contains code. This is not the actual resource but rather
+      a link to it based on the URI.
+    -->
+  <xs:element name="Resource">
+    <xs:complexType>
+      <xs:sequence>
+      </xs:sequence>
+      <xs:attribute name="uri" type="xs:anyURI" use="required"/>
+      <xs:attribute name="class" type="xs:token" use="required"/>
+      <xs:attribute name="type" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="java"/>
+            <xs:enumeration value="c.sharp"/>
+            <xs:enumeration value="windows2k.xp.me"/>
+            <xs:enumeration value="solaris8"/>
+            <xs:enumeration value="linux.elf"/>
+            <xs:enumeration value="mac.x"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+
+
+
+<!-- ################################################################
+     #####                  TOP LEVEL CONTAINERS                #####
+     ################################################################
+  -->
+
+
+
+  <!--
+      Window allows for intermediate containers and top-level containers
+      to be placed directly in them.
+    -->
+  <xs:element name="Window">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="xui:GridLayout"/>
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+          <xs:element ref="xui:BasicDialog"/>
+          <xs:element ref="xui:OpenFileDialog"/>
+          <xs:element ref="xui:SaveFileDialog"/>
+          <xs:element ref="xui:CustomDialog"/>
+          <xs:element ref="xui:Panel"/>
+          <xs:element ref="xui:SplitPanel"/>
+          <xs:element ref="xui:TabbedPanel"/>
+        </xs:choice>
+        <xs:element minOccurs="0" maxOccurs="1" ref="xui:MenuBar"/>
+      </xs:sequence>
+      <xs:attribute name="id" type="xs:ID" use="required"/>
+      <xs:attribute name="x" type="xs:short" use="required"/>
+      <xs:attribute name="y" type="xs:short" use="required"/>
+      <xs:attribute name="width" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="height" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="name" type="xs:string" use="required"/>
+      <xs:attribute name="visible" type="xs:boolean" use="required"/>
+    </xs:complexType>
+  </xs:element>
+
+
+
+  <!--
+      A very basic dialog within a windowing system. It contains:
+      - a message
+      - an Image
+      - a title
+      - a button (with the predefined text of "ok")
+      It references its parent and has the ability to be modal. A basic dialog can be one of the
+      following types:
+      - question (showing a question Image - value 0)
+      - information (showing an information Image - value 1)
+      - warning (showing a warning Image - value 2)
+      - error (showing an error Image - value 3)
+    -->
+  <xs:element name="BasicDialog">
+    <xs:complexType>
+      <xs:sequence>
+      </xs:sequence>
+      <xs:attribute name="message" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:minLength value="0"/>
+            <xs:maxLength value="128"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="idref" type="xs:IDREF" use="optional"/>
+      <xs:attribute name="name" type="xs:string" use="required"/>
+      <xs:attribute name="id" type="xs:ID" use="required"/>
+      <xs:attribute name="type" type="xs:byte" use="required"/>
+      <xs:attribute name="x" type="xs:short" use="required"/>
+      <xs:attribute name="y" type="xs:short" use="required"/>
+      <xs:attribute name="width" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="height" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="visible" type="xs:boolean" use="required"/>
+    </xs:complexType>
+  </xs:element>
+
+
+
+  <!--
+      A custom dialog box is one that can be custom built just like a window. It comes
+      with the added feature of being able to be modal.
+    -->
+  <xs:element name="CustomDialog">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="xui:GridLayout"/>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="xui:Panel"/>
+      </xs:sequence>
+      <xs:attribute name="modal" type="xs:boolean" use="required"/>
+      <xs:attribute name="idref" type="xs:IDREF" use="optional"/>
+      <xs:attribute name="name" type="xs:string" use="required"/>
+      <xs:attribute name="id" type="xs:ID" use="required"/>
+      <xs:attribute name="x" type="xs:short" use="required"/>
+      <xs:attribute name="y" type="xs:short" use="required"/>
+      <xs:attribute name="width" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="height" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="visible" type="xs:boolean" use="required"/>
+    </xs:complexType>
+  </xs:element>
+
+
+
+  <!--
+       The filter file extension. Accepts letters a - z or A - Z or 0 - 9
+       allowing for a filter name to be between 1 and 4 characters long.
+    -->
+  <xs:simpleType name="Filter">
+    <xs:restriction base="xs:token">
+      <xs:pattern value="[a-z, A-Z, 0-9]{1,4}"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+
+
+  <!--
+      A file dialog that allows the user to open a file for application
+      manipulation. File filters are allowed to be stored.
+    -->
+  <xs:element name="OpenFileDialog">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="Filter" type="xui:Filter"/>
+      </xs:sequence>
+      <xs:attribute name="idref" type="xs:IDREF" use="optional"/>
+      <xs:attribute name="id" type="xs:ID" use="required"/>
+      <xs:attribute name="x" type="xs:short" use="required"/>
+      <xs:attribute name="y" type="xs:short" use="required"/>
+      <xs:attribute name="width" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="height" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="visible" type="xs:boolean" use="required"/>
+    </xs:complexType>
+  </xs:element>
+
+
+
+  <!--
+      A file dialog that allows the user to save application-based data to
+      a file. File filters are allowed to be stored.
+    -->
+  <xs:element name="SaveFileDialog">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="Filter" type="xui:Filter"/>
+      </xs:sequence>
+      <xs:attribute name="idref" type="xs:IDREF" use="optional"/>
+      <xs:attribute name="id" type="xs:ID" use="required"/>
+      <xs:attribute name="x" type="xs:short" use="required"/>
+      <xs:attribute name="y" type="xs:short" use="required"/>
+      <xs:attribute name="width" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="height" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="visible" type="xs:boolean" use="required"/>
+    </xs:complexType>
+  </xs:element>
+
+
+
+ <!-- ################################################################
+      #####                  MENU COMPONENTS                     #####
+      ################################################################
+  -->
+
+
+
+  <!--
+      The Menubar for holding menus.
+    -->
+  <xs:element name="MenuBar">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="xui:Menu"/>
+      </xs:sequence>
+      <xs:attribute name="id" type="xs:ID" use="required"/>
+      <xs:attribute name="idref" type="xs:IDREF" use="optional"/>
+    </xs:complexType>
+  </xs:element>
+
+
+
+  <!--
+      Menu. A Menu holds Menu items.
+    -->
+  <xs:element name="Menu">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+          <xs:element minOccurs="0" maxOccurs="255" ref="xui:MenuItem"/>
+          <xs:element minOccurs="0" maxOccurs="255" ref="xui:Menu"/>
+        </xs:choice>
+      </xs:sequence>
+      <xs:attribute name="enabled" type="xs:boolean" use="required"/>
+      <xs:attribute name="id" type="xs:ID" use="required"/>
+      <xs:attribute name="idref" type="xs:IDREF" use="optional"/>
+      <xs:attribute name="isPopupMenu" type="xs:boolean" use="required"/>
+      <xs:attribute name="isSubMenu" type="xs:boolean" use="required"/>
+      <xs:attribute name="label" type="xs:token" use="required"/>
+    </xs:complexType>
+  </xs:element>
+
+
+
+  <!--
+      MenuItem. Can contain a Menu. This is however not apparent in the element type below.
+      Rather, this is done by a Menu referencing the MenuItem in it's idref attribute.
+    -->
+  <xs:element name="MenuItem">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="1" ref="xui:Image"/>
+        <xs:element minOccurs="0" maxOccurs="1" ref="xui:Shortcut"/>
+      </xs:sequence>
+      <xs:attribute name="checked" type="xs:boolean" use="required"/>
+      <xs:attribute name="enabled" type="xs:boolean" use="required"/>
+      <xs:attribute name="id" type="xs:ID" use="required"/>
+      <xs:attribute name="idref" type="xs:IDREF" use="optional"/>
+      <xs:attribute name="label" type="xs:token" use="required"/>
+    </xs:complexType>
+  </xs:element>
+
+
+
+  <!-- A menu or menu item shortcut. The use of quick keys to control menu options.
+    -->
+  <xs:element name="Shortcut">
+    <xs:complexType>
+      <xs:attribute name="keyCode" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="0"/>
+            <xs:enumeration value="O"/>
+            <xs:enumeration value="1"/>
+            <xs:enumeration value="2"/>
+            <xs:enumeration value="3"/>
+            <xs:enumeration value="4"/>
+            <xs:enumeration value="5"/>
+            <xs:enumeration value="6"/>
+            <xs:enumeration value="7"/>
+            <xs:enumeration value="8"/>
+            <xs:enumeration value="9"/>
+            <xs:enumeration value="A"/>
+            <xs:enumeration value="ADD"/>
+            <xs:enumeration value="ALT"/>
+            <xs:enumeration value="AMPERSAND"/>
+            <xs:enumeration value="B"/>
+            <xs:enumeration value="BACK_SLASH"/>
+            <xs:enumeration value="BACK_SPACE"/>
+            <xs:enumeration value="BRACE_LEFT"/>
+            <xs:enumeration value="BRACE_RIGHT"/>
+            <xs:enumeration value="C"/>
+            <xs:enumeration value="CAPS_LOCK"/>
+            <xs:enumeration value="CLEAR"/>
+            <xs:enumeration value="CLOSE_BRACKET"/>
+            <xs:enumeration value="COMMA"/>
+            <xs:enumeration value="CONTROL"/>
+            <xs:enumeration value="D"/>
+            <xs:enumeration value="DELETE"/>
+            <xs:enumeration value="DIVIDE"/>
+            <xs:enumeration value="DOLLAR"/>
+            <xs:enumeration value="DOWN"/>
+            <xs:enumeration value="E"/>
+            <xs:enumeration value="END"/>
+            <xs:enumeration value="ENTER"/>
+            <xs:enumeration value="EQUALS"/>
+            <xs:enumeration value="ESCAPE"/>
+            <xs:enumeration value="EXCLAMATION_MARK"/>
+            <xs:enumeration value="F"/>
+            <xs:enumeration value="F1"/>
+            <xs:enumeration value="F10"/>
+            <xs:enumeration value="F11"/>
+            <xs:enumeration value="F12"/>
+            <xs:enumeration value="F2"/>
+            <xs:enumeration value="F3"/>
+            <xs:enumeration value="F4"/>
+            <xs:enumeration value="F5"/>
+            <xs:enumeration value="F6"/>
+            <xs:enumeration value="F7"/>
+            <xs:enumeration value="F8"/>
+            <xs:enumeration value="F9"/>
+            <xs:enumeration value="G"/>
+            <xs:enumeration value="GREATER"/>
+            <xs:enumeration value="H"/>
+            <xs:enumeration value="HOME"/>
+            <xs:enumeration value="I"/>
+            <xs:enumeration value="INSERT"/>
+            <xs:enumeration value="J"/>
+            <xs:enumeration value="K"/>
+            <xs:enumeration value="L"/>
+            <xs:enumeration value="LEFT"/>
+            <xs:enumeration value="LESS"/>
+            <xs:enumeration value="M"/>
+            <xs:enumeration value="MINUS"/>
+            <xs:enumeration value="MULTIPLY"/>
+            <xs:enumeration value="N"/>
+            <xs:enumeration value="NUM_LOCK"/>
+            <xs:enumeration value="NUMBER_SIGN"/>
+            <xs:enumeration value="NUMPAD0"/>
+            <xs:enumeration value="NUMPAD1"/>
+            <xs:enumeration value="NUMPAD2"/>
+            <xs:enumeration value="NUMPAD3"/>
+            <xs:enumeration value="NUMPAD4"/>
+            <xs:enumeration value="NUMPAD5"/>
+            <xs:enumeration value="NUMPAD6"/>
+            <xs:enumeration value="NUMPAD7"/>
+            <xs:enumeration value="NUMPAD8"/>
+            <xs:enumeration value="NUMPAD9"/>
+            <xs:enumeration value="OPEN_BRACKET"/>
+            <xs:enumeration value="P"/>
+            <xs:enumeration value="PAGE_DOWN"/>
+            <xs:enumeration value="PAGE_UP"/>
+            <xs:enumeration value="PAUSE"/>
+            <xs:enumeration value="PERIOD"/>
+            <xs:enumeration value="PLUS"/>
+            <xs:enumeration value="PRINTSCREEN"/>
+            <xs:enumeration value="Q"/>
+            <xs:enumeration value="QUOTE"/>
+            <xs:enumeration value="QUOTEDBL"/>
+            <xs:enumeration value="R"/>
+            <xs:enumeration value="RIGHT"/>
+            <xs:enumeration value="S"/>
+            <xs:enumeration value="SCROLL_LOCK"/>
+            <xs:enumeration value="SEMICOLON"/>
+            <xs:enumeration value="SHIFT"/>
+            <xs:enumeration value="SLASH"/>
+            <xs:enumeration value="SPACE"/>
+            <xs:enumeration value="SUBTRACT"/>
+            <xs:enumeration value="T"/>
+            <xs:enumeration value="TAB"/>
+            <xs:enumeration value="U"/>
+            <xs:enumeration value="UNDEFINED"/>
+            <xs:enumeration value="UNDERSCORE"/>
+            <xs:enumeration value="UP"/>
+            <xs:enumeration value="V"/>
+            <xs:enumeration value="W"/>
+            <xs:enumeration value="X"/>
+            <xs:enumeration value="Y"/>
+            <xs:enumeration value="Z"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="keyModifier1" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="CTRL"/>
+            <xs:enumeration value="ALT"/>
+            <xs:enumeration value="SHIFT"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="keyModifier2" use="optional">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="CTRL"/>
+            <xs:enumeration value="ALT"/>
+            <xs:enumeration value="SHIFT"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+
+
+
+  <!--
+      The grid that allows for components to be distributed over any high level container
+      such as:
+      - a Window
+      - a BasicPanel
+      - a ScrollPanel
+      Components that are placed inside of these containers may span more than one row
+      or column. Note that the content model is empty. To quote the W3C ...
+      "To define a type whose content is empty, we essentially define a type that
+      allows only elements in its content, but we do not actually declare any elements 
+      and so the type's content model is empty."
+    -->
+  <xs:element name="GridLayout">
+    <xs:complexType>
+      <xs:attribute name="width" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="height" type="xs:unsignedShort" use="required"/>
+    </xs:complexType>
+  </xs:element>
+
+
+
+<!-- ################################################################
+     #####                 ATOMIC COMPONENTS                    #####
+     ################################################################
+
+
+
+  -->
+  <!--
+      An image. The image types supported are handled and covered in the XUI API Specification.
+    -->
+  <xs:element name="Image">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="ImageData" type="xs:base64Binary"/>
+      </xs:sequence>
+      <xs:attribute name="width" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="height" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="x" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="y" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="id" type="xs:ID" use="required"/>
+      <xs:attribute name="type" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:minLength value="2"/>
+            <xs:maxLength value="8"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="name" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:minLength value="1"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+
+
+
+  <!-- Label allows for a single line of non-editable text to be displayed.
+    -->
+  <xs:element name="Label">
+    <xs:complexType>
+      <xs:sequence/>
+      <xs:attribute name="height" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="text" type="xs:string" use="required"/>
+      <xs:attribute name="width" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="x" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="y" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="id" type="xs:ID" use="required"/>
+      <xs:attribute name="justified" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="left"/>
+            <xs:enumeration value="center"/>
+            <xs:enumeration value="right"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+
+
+
+  <!-- Radio is a component that can belong to a RadioGroup but doesn't have to.
+       There are allowed up to 3 Images:
+       - pressed Image
+       - rolled over Image
+       - default Image
+    -->
+  <xs:element name="RadioButton">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="3" minOccurs="0" ref="xui:Image"/>
+      </xs:sequence>
+      <xs:attribute name="label" type="xs:string" use="required"/>
+      <xs:attribute name="x" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="y" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="width" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="height" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="enabled" type="xs:boolean" use="required"/>
+      <xs:attribute name="selected" type="xs:boolean" use="required"/>
+      <xs:attribute name="id" type="xs:ID" use="required"/>
+      <xs:attribute name="orientation" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="horizontal"/>
+            <xs:enumeration value="vertical"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+
+
+
+  <!-- CheckBox can be selected or deselected. There are allowed up to 3 Images:
+       - pressed Image
+       - rolled over Image
+       - default Image
+    -->
+  <xs:element name="CheckBox">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="3" minOccurs="0" ref="xui:Image"/>
+      </xs:sequence>
+      <xs:attribute name="label" type="xs:string" use="required"/>
+      <xs:attribute name="x" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="y" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="width" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="height" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="selected" type="xs:boolean" use="required"/>
+      <xs:attribute name="enabled" type="xs:boolean" use="required"/>
+      <xs:attribute name="id" type="xs:ID" use="required"/>
+      <xs:attribute name="orientation" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="horizontal"/>
+            <xs:enumeration value="vertical"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+
+
+
+  <!-- Button is a standard button. There are allowed up to 3 Images:
+       - default Image
+       - rolled over Image
+       - pressed Image
+    -->
+  <xs:element name="Button">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="3" minOccurs="0" ref="xui:Image"/>
+      </xs:sequence>
+      <xs:attribute name="label" type="xs:string" use="required"/>
+      <xs:attribute name="x" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="y" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="width" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="height" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="enabled" type="xs:boolean" use="required"/>
+      <xs:attribute name="id" type="xs:ID" use="required"/>
+      <xs:attribute name="orientation" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="horizontal"/>
+            <xs:enumeration value="vertical"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+
+
+
+  <!-- TextField is a single line text entry component.
+    -->
+  <xs:element name="TextField">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Text" type="xs:string"/>
+      </xs:sequence>
+      <xs:attribute name="x" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="y" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="width" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="height" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="enabled" type="xs:boolean" use="required"/>
+      <xs:attribute name="id" type="xs:ID" use="required"/>
+    </xs:complexType>
+  </xs:element>
+
+
+
+  <!-- TextArea is a multi-line text entry component.
+    -->
+  <xs:element name="TextArea">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Text" type="xs:string"/>
+      </xs:sequence>
+      <xs:attribute name="x" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="y" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="width" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="height" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="enabled" type="xs:boolean" use="required"/>
+      <xs:attribute name="id" type="xs:ID" use="required"/>
+      <xs:attribute name="scrolling" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="horizontal"/>
+            <xs:enumeration value="vertical"/>
+            <xs:enumeration value="both"/>
+            <xs:enumeration value="none"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+
+
+
+  <!-- PasswordField is a single line text entry component. It contains a label as well.
+    -->
+  <xs:element name="PasswordField">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Text" type="xs:string"/>
+      </xs:sequence>
+      <xs:attribute name="x" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="y" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="width" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="height" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="enabled" type="xs:boolean" use="required"/>
+      <xs:attribute name="id" type="xs:ID" use="required"/>
+    </xs:complexType>
+  </xs:element>
+
+
+
+  <!-- List allows for multiple items to be added to it.
+    -->
+  <xs:element name="List">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="256" minOccurs="0" name="ListItem" type="xs:token"/>
+      </xs:sequence>
+      <xs:attribute name="x" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="y" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="width" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="height" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="enabled" type="xs:boolean" use="required"/>
+      <xs:attribute name="itemSelected" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="id" type="xs:ID" use="required"/>
+      <xs:attribute name="scrolling" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="horizontal"/>
+            <xs:enumeration value="vertical"/>
+            <xs:enumeration value="both"/>
+            <xs:enumeration value="none"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+
+
+
+  <!-- Like a List, a ComboBox allows for multiple items to be added to it. Unlike a list
+       however, a ComboBox takes up a single row and only appears to show other items in it
+       once the user has clicked on it.
+    -->
+  <xs:element name="ComboBox">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="256" minOccurs="0" name="ComboItem" type="xs:token"/>
+      </xs:sequence>
+      <xs:attribute name="x" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="y" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="width" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="height" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="enabled" type="xs:boolean" use="required"/>
+      <xs:attribute name="isEditable" type="xs:boolean" use="required"/>
+      <xs:attribute name="itemSelected" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="id" type="xs:ID" use="required"/>
+    </xs:complexType>
+  </xs:element>
+
+
+
+  <!-- SliderBar is a bar that contains a value and allows the slider cursor to be positioned
+     somewhere on the SliderBar.
+    -->
+  <xs:element name="SliderBar">
+    <xs:complexType>
+      <xs:sequence>
+      </xs:sequence>
+      <xs:attribute name="x" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="y" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="width" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="height" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="enabled" type="xs:boolean" use="required"/>
+      <xs:attribute name="cursorPosition" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:unsignedShort">
+            <xs:minInclusive value="0"/>
+            <xs:maxInclusive value="100"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="visualMeasureIncrement" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:unsignedShort">
+            <xs:minInclusive value="0"/>
+            <xs:maxInclusive value="100"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="id" type="xs:ID" use="required"/>
+      <xs:attribute name="maxValue" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:unsignedShort">
+            <xs:minInclusive value="0"/>
+            <xs:maxInclusive value="100"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="orientation" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="horizontal"/>
+            <xs:enumeration value="vertical"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+
+
+
+  <!-- ProgressBar shows the progress of a certain function taking place.
+    -->
+  <xs:element name="ProgressBar">
+    <xs:complexType>
+      <xs:sequence>
+      </xs:sequence>
+      <xs:attribute name="x" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="y" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="width" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="height" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="statusValue" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:unsignedShort">
+            <xs:minInclusive value="0"/>
+            <xs:maxInclusive value="100"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="id" type="xs:ID" use="required"/>
+      <xs:attribute name="label" type="xs:token" use="required"/>
+    </xs:complexType>
+  </xs:element>
+
+
+
+  <!-- Table is a set of rows and columns whereby each intersection is a cell.
+    -->
+  <xs:element name="Table">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="1" minOccurs="1" ref="xui:ColumnHeader"/>
+        <xs:element maxOccurs="1" minOccurs="1" ref="xui:RowHeader"/>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="xui:Row"/>
+      </xs:sequence>
+      <xs:attribute name="x" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="y" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="width" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="height" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="isEditable" type="xs:boolean" use="required"/>
+      <xs:attribute name="id" type="xs:ID" use="required"/>
+    </xs:complexType>
+  </xs:element>
+
+
+
+  <!-- Headers belong to Tables. Each cell in the header has a textual label.
+    -->
+  <xs:element name="ColumnHeader">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="xui:Cell"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+
+
+  <!-- Headers belong to Tables. Each cell in the header has a textual label.
+    -->
+  <xs:element name="RowHeader">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="xui:Cell"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+
+
+  <!-- Row elements contain cells.
+    -->
+  <xs:element name="Row">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="xui:Cell"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+
+
+  <!-- Row elements contain cells.
+    -->
+  <xs:element name="Cell">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute name="justified" use="required">
+            <xs:simpleType>
+              <xs:restriction base="xs:token">
+                <xs:enumeration value="left"/>
+                <xs:enumeration value="center"/>
+                <xs:enumeration value="right"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+
+
+
+  <!-- A Tree has a TreeData element.
+    -->
+  <xs:element name="Tree">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="1" minOccurs="1" ref="xui:TreeNode"/>
+      </xs:sequence>
+      <xs:attribute name="x" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="y" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="width" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="height" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="id" type="xs:ID" use="required"/>
+    </xs:complexType>
+  </xs:element>
+
+
+
+  <!-- TreeNode element.
+    -->
+  <xs:element name="TreeNode">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="xui:TreeNode"/>
+      </xs:sequence>
+      <xs:attribute name="text" type="xs:string" use="required"/>
+      <xs:attribute name="id" type="xs:ID" use="required"/>
+      <xs:attribute name="idref" type="xs:IDREF" use="optional"/>
+    </xs:complexType>
+  </xs:element>
+
+
+
+<!-- ################################################################
+     #####                  COMPOSITE COMPONENTS                #####
+     ################################################################
+
+
+
+  -->
+  <!-- Calendar has a back button and a forward button for cycling through the months
+     of the year. Shows the current date.
+  -->
+  <xs:element name="Calendar">
+    <xs:complexType>
+      <xs:sequence/>
+      <xs:attribute name="x" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="y" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="width" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="height" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="id" type="xs:ID" use="required"/>
+    </xs:complexType>
+  </xs:element>
+
+
+
+  <!-- HyperTextPane allows hypertext to be inserted into it. For now a HypertextPane
+       can be an HTML pane. A panel handling hypertext will be responsible for 
+       handling its own connections and logic for reading content from a host.
+    -->
+  <xs:element name="HypertextPane">
+    <xs:complexType>
+      <xs:sequence>
+      </xs:sequence>
+      <xs:attribute name="x" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="y" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="width" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="height" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="id" type="xs:ID" use="required"/>
+      <xs:attribute name="uri" type="xs:anyURI" use="required"/>
+    </xs:complexType>
+  </xs:element>
+
+
+
+<!-- ################################################################
+     #####           INTERMEDIATE      CONTAINERS               #####
+     ################################################################
+  -->
+
+
+
+  <!-- A basic panel allows for other components to be added to it within a layout.
+    -->
+  <xs:element name="Panel">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="1" minOccurs="1" ref="xui:GridLayout"/>
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+          <xs:element minOccurs="0" maxOccurs="unbounded" ref="xui:Button"/>
+          <xs:element minOccurs="0" maxOccurs="unbounded" ref="xui:Calendar"/>
+          <xs:element minOccurs="0" maxOccurs="unbounded" ref="xui:CheckBox"/>
+          <xs:element minOccurs="0" maxOccurs="unbounded" ref="xui:ComboBox"/>
+          <xs:element minOccurs="0" maxOccurs="unbounded" ref="xui:HypertextPane"/>
+          <xs:element minOccurs="0" maxOccurs="unbounded" ref="xui:Image"/>
+          <xs:element minOccurs="0" maxOccurs="unbounded" ref="xui:Label"/>
+          <xs:element minOccurs="0" maxOccurs="unbounded" ref="xui:List"/>
+          <xs:element minOccurs="0" maxOccurs="unbounded" ref="xui:PasswordField"/>
+          <xs:element minOccurs="0" maxOccurs="unbounded" ref="xui:ProgressBar"/>
+          <xs:element minOccurs="0" maxOccurs="unbounded" ref="xui:RadioButton"/>
+          <xs:element minOccurs="0" maxOccurs="unbounded" ref="xui:SliderBar"/>
+          <xs:element minOccurs="0" maxOccurs="unbounded" ref="xui:Table"/>
+          <xs:element minOccurs="0" maxOccurs="unbounded" ref="xui:TextArea"/>
+          <xs:element minOccurs="0" maxOccurs="unbounded" ref="xui:TextField"/>
+          <xs:element minOccurs="0" maxOccurs="unbounded" ref="xui:Tree"/>
+        </xs:choice>
+      </xs:sequence>
+      <xs:attribute name="x" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="y" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="width" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="height" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="name" type="xs:string" use="required"/>
+      <xs:attribute name="id" type="xs:ID" use="required"/>
+      <xs:attribute name="idref" type="xs:IDREF" use="optional"/>
+    </xs:complexType>
+  </xs:element>
+
+
+
+  <!-- SplitPanel contains to panels that are resizable. Can contain basic panels
+       or scroll panels.
+    -->
+  <xs:element name="SplitPanel">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="2" ref="xui:Panel"/>
+      </xs:sequence>
+      <xs:attribute name="x" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="y" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="width" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="height" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="id" type="xs:ID" use="required"/>
+      <xs:attribute name="idref" type="xs:IDREF" use="optional"/>
+      <xs:attribute name="leftTopPercentage" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:unsignedShort">
+            <xs:minExclusive value="0"/>
+            <xs:maxExclusive value="100"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="orientation" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="horizontal"/>
+            <xs:enumeration value="vertical"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+
+
+
+  <!-- TabbedPanel contains at least two tabs which contain either a Panel or
+       a ScrollPanel.
+    -->
+  <xs:element name="TabbedPanel">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="255">
+        <xs:element ref="xui:Panel"/>
+      </xs:choice>
+      <xs:attribute name="x" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="y" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="width" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="height" type="xs:unsignedShort" use="required"/>
+      <xs:attribute name="id" type="xs:ID" use="required"/>
+      <xs:attribute name="idref" type="xs:IDREF" use="optional"/>
+    </xs:complexType>
+  </xs:element>
+
+
+</xs:schema>

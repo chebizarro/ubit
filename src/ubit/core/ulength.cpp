@@ -22,8 +22,8 @@
 #include <ubit/uappli.hpp>
 #include <ubit/draw/ufontImpl.hpp>
 using namespace std;
-#define NAMESPACE_UBIT namespace ubit {
-NAMESPACE_UBIT
+namespace ubit {
+
 
 const UUnit 
 UPX(UUnit::PX),

@@ -25,8 +25,8 @@
 #include <ubit/uhtml.hpp>
 #include <ubit/ucss.hpp>   // pour UCssAttachment
 using namespace std;
-#define NAMESPACE_UBIT namespace ubit {
-NAMESPACE_UBIT
+namespace ubit {
+
 
 const UStr& UComment::getNodeName() const 
 {static UStr nn("#comment"); return nn;}

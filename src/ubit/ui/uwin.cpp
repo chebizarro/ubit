@@ -29,8 +29,8 @@
 #include <ubit/ucolor.hpp>
 #include <ubit/ucall.hpp>
 using namespace std;
-#define NAMESPACE_UBIT namespace ubit {
-NAMESPACE_UBIT
+namespace ubit {
+
 
 static const char* Unrealized_Window = 
   "UWin object %p is not realized; check if this window has a valid parent";
