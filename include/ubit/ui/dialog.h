@@ -14,8 +14,8 @@
  * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
  * ***********************************************************************/
 
-#ifndef UBIT_UDIALOGS_HPP_
-#define	UBIT_UDIALOGS_HPP_
+#ifndef UBIT_UI_DIALOG_H_
+#define	UBIT_UI_DIALOG_H_
 #include <ubit/uwin.hpp>
 namespace ubit {
 
@@ -164,4 +164,4 @@ namespace ubit {
   };
   
 }
-#endif // UBIT_UDIALOGS_HPP_
+#endif // UBIT_UI_DIALOG_H_

@@ -1,87 +1,96 @@
-/************************************************************************
- *
- *  ubackground.hpp: Widget background and transparency.
- *  Ubit GUI Toolkit - Version 6
+/*
+ *  background.h: Widget background and transparency.
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE :
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION;
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
 
-#ifndef ubackground_hpp
-#define	ubackground_hpp 1
-#include <ubit/uattr.hpp>
+#ifndef UBIT_UI_BACKGROUND_H_
+#define	UBIT_UI_BACKGROUND_H_
+
+#include <ubit/core/attribute.h>
+
 namespace ubit {
   
-
-  /** Widget background.
-   * This attributes controls the background of widgets (objects deriving from UBox).
+  /**
+   * Widget background.
+   * 
+   * This attributes controls the background of widgets (objects deriving from Box).
    * If not added to the widget's attribute list, the default background specified
-   * in the widget's UStyle is used. This default background if transparent for most
+   * in the widget's ubit::Style is used. This default background if transparent for most
    * widgets, so that the background of the first non transparent parent widget
    * will appear.
    */
-  class UBackground : public UAttr {
+  class Background : public Attribute {
   public:
-    UCLASS(UBackground)
     
-    static UBackground none, inherit,
+    static Background none, inherit,
     metal, velin, white, black, grey, lightgrey, darkgrey, navy, lightblue, blue, 
     red, green, yellow, orange, wheat, teal;
     ///< predefined background constants.
     
-    ~UBackground();
+    ~Background();
     
-    UBackground();
+    Background();
     ///< creates an empty background attribute.
     
-    UBackground(const UBackground&);
+    Background(const Background&);
     ///< creates a background from another one.
     
-    UBackground(const UColor&);
+    Background(const UColor&);
     ///< creates a background prop with a solid color (the UColor argument is copied).
     
-    UBackground(UIma&);  
+    Background(UIma&);  
     ///< creates a background prop with an image (the UIma argument is copied).
     
-    UBackground& operator=(const UBackground&);
+    Background& operator=(const Background&);
     ///< copies a background attribute from another one.
 
-    bool operator==(const UBackground&);
+    bool operator==(const Background&);
     ///< compares two background attributes.
 
-    virtual UBackground& setColor(const UColor& color);
+    virtual Background& setColor(const UColor& color);
     /**< changes the background color.
      * the UColor argument is copied internally so that this background will remain
      * valid if this argument is destroyed.
      */
     
-    virtual UBackground& setRgba(const URgba&);
+    virtual Background& setRgba(const URgba&);
     ///< changes the background color.
      
-    virtual UBackground& setRbgaF(float r, float g, float b, float a = 1.);
+    virtual Background& setRbgaF(float r, float g, float b, float a = 1.);
     ///< changes the background color, arguments are floats in range [0,1].
     
-    virtual UBackground& setRbgaI(unsigned int r, unsigned int g, unsigned int b,
+    virtual Background& setRbgaI(unsigned int r, unsigned int g, unsigned int b,
                                       unsigned int a = 255);
     ///< changes the background color, arguments are integers in range [0,255].
 
-    virtual UBackground& setNamedColor(const UStr& color_name, float a = 1.);
+    virtual Background& setNamedColor(const UStr& color_name, float a = 1.);
     ///< changes the background color, arguments are a color name and an alpha value in range [0,1].
     
-    virtual UBackground& setIma(UIma& image, bool tiling = true);
+    virtual Background& setIma(UIma& image, bool tiling = true);
     /**< changes the background image (WARNING: see details).
      * WARNING: the UIma argument is NOT copied internally: this background will
      * NOT be valid if this argument is destroyed.
      */
     
-    UBackground& setTiling(bool);
+    Background& setTiling(bool);
     ///< sets tiling on or off.
     
     const UColor* getColor() const;
@@ -98,8 +107,8 @@ namespace ubit {
         
     // - impl. - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #ifndef NO_DOC
-    UBackground(UColor&, UConst);
-    UBackground(UIma&, UConst);
+    Background(UColor&, UConst);
+    Background(UIma&, UConst);
   protected:
     uptr<UColor> pcolor;
     uptr<UIma> pima;
@@ -108,27 +117,27 @@ namespace ubit {
 #endif
   };
   
-  inline UBackground& ubackground() {return *new UBackground();}
-  ///< shortcut for *new UBackground().
+  inline Background& ubackground() {return *new Background();}
+  ///< shortcut for *new Background().
   
-  inline UBackground& ubackground(const UColor& col) {return *new UBackground(col);}
-  ///< shortcut for *new UBackground(col).
+  inline Background& ubackground(const UColor& col) {return *new Background(col);}
+  ///< shortcut for *new Background(col).
 
-  inline UBackground& ubackground(UIma& ima) {return *new UBackground(ima);}
-  ///< shortcut for *new UBackground(ima).
+  inline Background& ubackground(UIma& ima) {return *new Background(ima);}
+  ///< shortcut for *new Background(ima).
 
   // ==================================================== Ubit Toolkit =========
   /** Widget transparency.
    * value must be in range [0.0, 1.0]. A value of 1. makes the widget opaque,
    * a value of 0. makes it fully transparent
    */
-  class UAlpha : public UAttr {
+  class UAlpha : public Attribute {
   public:
     UCLASS(UAlpha)
     
     UAlpha(float = 1.0);
     /**< creates an alpha blending property; see also shortcut function ualpha().
-     * specifies if the widget (UBox and subclass) that contains this prop
+     * specifies if the widget (ubit:Box and subclass) that contains this prop
      * is opaque (value = 1.0), fully stransparent (value = 0.0)
      * or translucent (value in range ]0.0, 1.0[)
      */

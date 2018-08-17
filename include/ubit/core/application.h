@@ -38,9 +38,9 @@ namespace ubit {
   typedef std::vector<EventFlow*> FlowList;
   
   
-  /** Display lists (@see UDisp and Application)
+  /** Display lists (@see Display and Application)
    */
-  typedef std::vector<UDisp*> DisplayList;
+  typedef std::vector<Display*> DisplayList;
   
       
   /**
@@ -69,7 +69,7 @@ namespace ubit {
    * in ubit/ums). Finally, Event flows can be uniquely identified in callback 
    * functions through the getFlow() method of their UEvent& argument.
    *
-   * Classes UTimer and USource make it possible to fire callback functions after
+   * Classes Timer and USource make it possible to fire callback functions after
    * a given timeout or when the application receives data on a file source
    * (such as a socket). Application::onTimeout() and Application::postpone() provide a 
    * simplified API for using timers. postpone() is used to fire CPU intensive 
@@ -83,10 +83,10 @@ namespace ubit {
    * Application::getMessagePort().
    *
    * NOTE on colors: Ubit applications may not work properly on (obsolete) X11 
-   * displays that do not support True Colors. See UDisp::setTrueColors() 
-   * and UDisp::setPseudoColors() for details.
+   * displays that do not support True Colors. See Display::setTrueColors() 
+   * and Display::setPseudoColors() for details.
    * 
-   * See also the UDisp class for inherited methods.
+   * See also the Display class for inherited methods.
    */
   class Application {
   public:
@@ -122,7 +122,7 @@ namespace ubit {
      * the first line prints out the help message. The second line specifies
      * a rendering scale and a X server display name.
      *
-     * See also: Application::openDisp() and the man of classes Application and UDisp.
+     * See also: Application::openDisp() and the man of classes Application and Display.
      */
     
     virtual ~Application();
@@ -162,7 +162,7 @@ namespace ubit {
      *   "Main Frame" of the application. It will be returned by Application::getMainFrame()
      *
      * - windows are initially hidden, their show() method must be called to make 
-     *   them visible. If a window has not been added to a display by UDisp::add(), 
+     *   them visible. If a window has not been added to a display by Display::add(), 
      *   it is implicitely added to the the Application when its show() method is called.
      * 
      * - the size of windows is computed when their show() method is called for the
@@ -285,7 +285,7 @@ namespace ubit {
      *   until the completion of the application if ntimes is -1.
      * - 'callback' is a ucall<> expression (see UCall). It is destroyed after
      *    completion, except if referenced by a unique_ptr<> or another node (see UNode).
-     * See also: postpone() and class UTimer.
+     * See also: postpone() and class Timer.
      */
     
     static void postpone(UCall& callback);
@@ -295,19 +295,19 @@ namespace ubit {
      * - to request the execution of callbacks in the main thread from another thread
      * 'callback' is a ucall<> expression (see UCall). It is destroyed after
      *  completion, except if referenced by a unique_ptr<> or another node (see UNode).
-     * See also: onTimeout() and UTimer.
+     * See also: onTimeout() and Timer.
      */
     
     
     // - - - Displays and Event Flows  - - - - - - - - - - - - - - - - - - - - -
     
-    static UDisp* getDisp();
+    static Display* getDisp();
     ///< returns the default display of the appplication.
     
-    static UDisp* getDisp(int ID);
+    static Display* getDisp(int ID);
     /**< returns the display with this ID.
      * Ubit applications can open windows on multiple displays when X11 is used.
-     * this function returns the UDisp that has this ID, and numm otherwise.
+     * this function returns the Display that has this ID, and numm otherwise.
      * The ID of the default display is 0.
      * @see Application::openDisp().
      */
@@ -315,10 +315,10 @@ namespace ubit {
     static const DisplayList& getDispList();
     //< returns the list of Displays that are connected with this Application.
     
-    static UDisp* openDisp(const String& display_name);
+    static Display* openDisp(const String& display_name);
     /**< opens a connection on another X display.
      * returns null if the connection failed. Otherwise, windows (UFrame,
-     * UDialog...) can be added to the returned UDisp by using its add()
+     * UDialog...) can be added to the returned Display by using its add()
      * method. 
      * - 'display' is the name of the X Window server. It follows the syntax:
      *    hostname[:display_no[:screen_no]] such as in: hendrix.tsne.fr:0.0
@@ -327,7 +327,7 @@ namespace ubit {
      *   these displays.
      */
     
-    static void closeDisp(UDisp*);
+    static void closeDisp(Display*);
     ///< closes a connection with another X display.  
     
     static EventFlow* getFlow(int ID = 0);
@@ -337,7 +337,7 @@ namespace ubit {
      *
      * Each event flow has a unique ID. 0 is the ID of the native event flow on 
      * the main display (ie. the display where the Application was launched).
-     * @see also: UDisp::getDispFlow()
+     * @see also: Display::getDispFlow()
      */
     
     static const FlowList& getFlowList();
@@ -357,14 +357,14 @@ namespace ubit {
     static void onMessage(const String& port_name, UCall& callback);
     /**< adds a callback that is fired when data is received on this port.
      * Ubit messages makes it simple to exchange data between applications.
-     * See class UMessagePort.
+     * See class MessagePort.
      */
     
-    static UMessagePort& getMessagePort(const String& name);
-    ///< Ubit Messages: @see onMessage() and class UMessagePort.
+    static MessagePort& getMessagePort(const String& name);
+    ///< Ubit Messages: @see onMessage() and class MessagePort.
     
-    static UMessagePort* findMessagePort(const String& name);
-    ///< Ubit Messages: @see onMessage() and class UMessagePort.
+    static MessagePort* findMessagePort(const String& name);
+    ///< Ubit Messages: @see onMessage() and class MessagePort.
     
     static UMessagePortMap* getMessagePortMap();
     ///< [impl] Ubit Messages.
@@ -403,7 +403,7 @@ namespace ubit {
     
     static void internalError(const char* fun, const char* format, ...);
 
-    static void deleteNotify(UDisp*);
+    static void deleteNotify(Display*);
     ///< [impl] notifies that a display is being destroyed.
     
     static void deleteNotify(UElem*);
@@ -418,9 +418,7 @@ namespace ubit {
   /** Error management.
    */
   class ErrorHandler : public Object {
-  public:
-    UCLASSDEF("ErrorHandler", ErrorHandler, null)
-    
+  public:    
     ErrorHandler(const String& label, std::ostream* out_stream = &std::cerr);
     /**< creates a new error handler.
      * - 'label' identifies the handler (it is the name of the application for the
