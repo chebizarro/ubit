@@ -35,7 +35,7 @@ MetaClass(): Class(NAME) {} \
 virtual bool isInstance(UObject& obj) const {return dynamic_cast<C*>(&obj);} \
 virtual bool isInstance(UObject* obj) const {return dynamic_cast<C*>(obj);} \
 virtual C* newInstance() const {return CREATOR;} \
-virtual UStyle* newStyle() const {return C::createStyle();} \
+virtual Style* newStyle() const {return C::createStyle();} \
 }; \
 static  const Class& Class() {static MetaClass& c = *new MetaClass; return c;} \
 virtual const Class& getClass() const {return Class();}
@@ -122,13 +122,13 @@ virtual const Class& getClass() const {return Class();}
      * redefines this method.
      */
     
-    virtual UStyle* newStyle() const {return null;}
+    virtual Style* newStyle() const {return null;}
     /**< creates a new instance of the style of this class (if applicable).
      * Ubit classes that derive from Element should have an associated Class that
      * redefines this method.
      */
         
-    UStyle* obtainStyle() const {return style ? style : (style = newStyle());}
+    Style* obtainStyle() const {return style ? style : (style = newStyle());}
     /**< returns the style prototype that is associated to this class.
      * Ubit classes that derive from Element can have a style prototype.
      * This function calls newStyle() the 1st type it is called to create the
@@ -151,7 +151,7 @@ virtual const Class& getClass() const {return Class();}
     static unsigned int count;
     unsigned int no;
     String* name;
-    mutable UStyle* style;
+    mutable Style* style;
     mutable AttributeList* attributes;
     
     Class(const Class&);   // assignment is forbidden.

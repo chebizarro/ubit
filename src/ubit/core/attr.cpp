@@ -28,7 +28,7 @@
 #include <ubit/uwin.hpp>
 #include <ubit/uon.hpp>
 #include <ubit/ucall.hpp>
-#include <ubit/uupdatecontext.hpp>
+#include <ubit/ui/updatecontext.h>
 #include <ubit/uappli.hpp>
 using namespace std;
 #define NAMESPACE_UBIT namespace ubit {

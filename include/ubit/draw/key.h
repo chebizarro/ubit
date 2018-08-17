@@ -30,8 +30,8 @@
 namespace ubit {
   
   /** Modifier masks.
-   * modifier masks are returned by UInputEvent::getModifiers(), UMouseEvent::getButton(),
-   * UMouseEvent::getButtons().
+   * modifier masks are returned by InputEvent::getModifiers(), MouseEvent::getButton(),
+   * MouseEvent::getButtons().
    * @see also class Key for key codes.
    */
   class Modifier {

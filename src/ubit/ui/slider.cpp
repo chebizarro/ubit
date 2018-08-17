@@ -19,7 +19,7 @@
 #include <ubit/uscrollbar.hpp>
 #include <ubit/ustyle.hpp>
 #include <ubit/uupdate.hpp>
-#include <ubit/uupdatecontext.hpp>
+#include <ubit/ui/updatecontext.h>
 #include <ubit/upix.hpp>
 #include <ubit/uon.hpp>
 #include <ubit/ucall.hpp>
@@ -34,14 +34,14 @@ class USliderRail : public Box {
 public:
   UCLASS(USliderRail)  
   USliderRail(const Args& a = Args::none) : Box(a) {}
-  static UStyle* createStyle();
+  static Style* createStyle();
 };
   
 class USliderKnob : public Box {
 public:
   UCLASS(USliderKnob)  
   USliderKnob(const Args& a = Args::none) : Box(a) {}
-  static UStyle* createStyle();
+  static Style* createStyle();
 };
 
 
@@ -52,7 +52,7 @@ USliderStyle::USliderStyle() {
   vstyle.local.size.height = 150|UPX;
   vstyle.hspacing = 0;
   vstyle.vspacing = 0;
-  vstyle.orient = UOrient::VERTICAL;
+  vstyle.orient = Orientation::VERTICAL;
   vstyle.halign = Halign::CENTER;
   vstyle.valign = Valign::FLEX;
   //vstyle.local.padding.left = 1; //sinon impression rail decentre
@@ -62,13 +62,13 @@ USliderStyle::USliderStyle() {
   local.size.height = 16|UPX;
   hspacing = 0;
   vspacing = 0;
-  orient = UOrient::HORIZONTAL;
+  orient = Orientation::HORIZONTAL;
   halign = Halign::FLEX;
   valign = Valign::CENTER;
   //local.padding.top = 1;
 }
 
-const UStyle& USliderStyle::getStyle(UpdateContext* ctx) const {
+const Style& USliderStyle::getStyle(UpdateContext* ctx) const {
   //att: par defaut, si pas de ctx, renvoyer HORIZ
   if (ctx && ctx->obj && ctx->obj->isVertical()) return vstyle; 
   else return *this;
@@ -82,7 +82,7 @@ USlider& uslider(Float& v, const Args& a) {return *new USlider(v, a);}
 USlider& uhslider(const Args& a) {return *new USlider(a);}
 
 USlider& uvslider(const Args& a) {
-  return *new USlider(UOrient::vertical + a);
+  return *new USlider(Orientation::vertical + a);
 }
 
 USlider::USlider(const Args& a) : Box(a), pvalue(*new Float) {
@@ -131,7 +131,7 @@ Box* USlider::createKnob() {return new USliderKnob();}
 Box* USlider::createRail() {return new USliderRail();}
 
 
-void USlider::gotoPosCB(UMouseEvent& e) {
+void USlider::gotoPosCB(MouseEvent& e) {
   View* v = e.getView();
   if (!v) return;
 
@@ -167,10 +167,10 @@ void USlider::changeCB(Event& notused) {  //UNodeEvent
 }
 
 
-struct USliderRailStyle : public UStyle {
-  UStyle vstyle;
+struct USliderRailStyle : public Style {
+  Style vstyle;
   USliderRailStyle();
-  virtual const UStyle& getStyle(UpdateContext* ctx) const {
+  virtual const Style& getStyle(UpdateContext* ctx) const {
     //att: par defaut, si pas de ctx, renvoyer HORIZ
     if (ctx && ctx->parent_ctx && ctx->parent_ctx->obj
         && ctx->parent_ctx->obj->isVertical())
@@ -180,26 +180,26 @@ struct USliderRailStyle : public UStyle {
 };
 
 USliderRailStyle::USliderRailStyle() {
-  vstyle.orient = UOrient::INHERIT;
+  vstyle.orient = Orientation::INHERIT;
   //vstyle.local.size.setWidth(5);
   vstyle.local.size.width = 5|UPX;
   vstyle.local.border = &Border::shadowIn;
   
-  orient = UOrient::INHERIT;
+  orient = Orientation::INHERIT;
   //local.size.setHeight(5);
   local.size.height = 5|UPX;
   local.border = &Border::shadowIn;
 }
 
-UStyle* USliderRail::createStyle() {
+Style* USliderRail::createStyle() {
   return new USliderRailStyle;
 }
 
 
-struct USliderKnobStyle : public UStyle {
-  UStyle vstyle;
+struct USliderKnobStyle : public Style {
+  Style vstyle;
   USliderKnobStyle();
-  virtual const UStyle& getStyle(UpdateContext* ctx) const {
+  virtual const Style& getStyle(UpdateContext* ctx) const {
   //att: par defaut, si pas de ctx, renvoyer vertical
     if (ctx && ctx->parent_ctx && ctx->parent_ctx->obj
         && ctx->parent_ctx->obj->isVertical())
@@ -209,14 +209,14 @@ struct USliderKnobStyle : public UStyle {
 };
 
 USliderKnobStyle::USliderKnobStyle() {
-  orient = UOrient::INHERIT;
+  orient = Orientation::INHERIT;
   halign = Halign::LEFT;
   valign = Valign::TOP;
   hspacing = 0;
   vspacing = 0;
   local.content = new Element(UPix::hslider);
 
-  vstyle.orient = UOrient::INHERIT;
+  vstyle.orient = Orientation::INHERIT;
   vstyle.halign = Halign::LEFT;
   vstyle.valign = Valign::TOP;
   vstyle.hspacing = 0;
@@ -224,7 +224,7 @@ USliderKnobStyle::USliderKnobStyle() {
   vstyle.local.content = new Element(UPix::vslider);
 }
 
-UStyle* USliderKnob::createStyle() {
+Style* USliderKnob::createStyle() {
   return new USliderKnobStyle();
 }
 
@@ -241,12 +241,12 @@ UStyle* USliderKnob::createStyle() {
 class URangeSlider: public USlider {
 public:
   URangeSlider(const Args& = Args::none);
-  URangeSlider(const UOrient&, const Args& = Args::none);
+  URangeSlider(const Orientation&, const Args& = Args::none);
   URangeSlider(Float& value1, Float& value2, 
-               const UOrient&, const Args& = Args::none);
+               const Orientation&, const Args& = Args::none);
   /**< constructors.
-    * - default orientation is UOrient::Vertical
-  * - 'orient' can be UOrient::horizontal or UOrient::vertical.
+    * - default orientation is Orientation::Vertical
+  * - 'orient' can be Orientation::horizontal or Orientation::vertical.
     */
   
   Float& value2() {return *pvalue2;}
@@ -262,7 +262,7 @@ public:
   // implementation
   
   virtual Class* getClass() const;
-  static UStyle* createStyle();
+  static Style* createStyle();
   
   virtual Box* createSlider(bool vertical);
   virtual Box* createSlider2(bool vertical);

@@ -35,7 +35,7 @@ namespace ubit {
    * is verified. Works in conbination with UFlagdef.
    * Example:
    * <pre>
-   * const UFlag showStores, showMuseums;
+   * const Flag showStores, showMuseums;
    * 
    *   Box& stores = ...;  // whatever
    *   Box& museums = ...; // whatever
@@ -48,77 +48,75 @@ namespace ubit {
    *   Box& scene_with_museums = ubox( uflagdef(showMuseums) + scene);
    * </pre>
    *
-   * !Warning: UFlag objects must not be deleted!
+   * !Warning: Flag objects must not be deleted!
    * See also: UFlagdef, UPropdef.
    */
-  class UFlag : public Condition {
+  class Flag : public Condition {
   public:
-    static const UFlag none;
+    static const Flag none;
     
-    UFlag() {}
+    Flag() {}
     virtual bool verifies(const UpdateContext&, const Element&) const;
   };
   
 
-  // ==================================================== Ubit Toolkit =========
-  /** [impl] negation of a UFlag condition.
+  /** [impl] negation of a Flag condition.
    * see also: Condition& operator!(const Condition&)
    */
-  class UNotFlag : public Condition {
+  class NotFlag : public Condition {
   public:
-    const UFlag& cond;
-    UNotFlag(const UFlag& c) : cond(c) {}
+    const Flag& cond;
+    NotFlag(const Flag& c) : cond(c) {}
     virtual bool verifies(const UpdateContext&, const Element&) const;
   };
   
-  /** negation of a UFlag condition.
+  /** negation of a Flag condition.
    */
-  inline UNotFlag& operator!(const UFlag& c) {return *new UNotFlag(c);}
+  inline NotFlag& operator!(const Flag& c) {return *new NotFlag(c);}
   
   
-  // ==================================================== Ubit Toolkit =========
   /* [impl] Defines a flag that is inherited in the scene graph.
-   *  See: UFlag.
+   *  See: Flag.
    */
   class UFlagdef : public Attribute {
   public:
     UCLASS(UFlagdef)
     
     UFlagdef();
-    UFlagdef(const UFlag&);
-    ///< create a new flagdef (see UFlag.).
+    UFlagdef(const Flag&);
+    ///< create a new flagdef (see Flag.).
     
-    UFlagdef& operator=(const UFlag& f) {return set(f);} 
-    virtual UFlagdef& set(const UFlag&);
+    UFlagdef& operator=(const Flag& f) {return set(f);} 
+    virtual UFlagdef& set(const Flag&);
     virtual UFlagdef& clear();
     
-    const UFlag* getFlag() const {return flag;}
+    const Flag* getFlag() const {return flag;}
     
     virtual void update();
     virtual void putProp(UpdateContext*, Element&);
     
   protected:
-    const UFlag* flag;
+    const Flag* flag;
   };
   
   inline UFlagdef& uflagdef() {return *new UFlagdef();}
-  inline UFlagdef& uflagdef(const UFlag& f) {return *new UFlagdef(f);}
+  inline UFlagdef& uflagdef(const Flag& f) {return *new UFlagdef(f);}
   
   
-  // ==================================================== Ubit Toolkit =========
-  /* [impl] Defines a property that is inherited in the scene graph.
+  /*
+   * [impl] Defines a property that is inherited in the scene graph.
    * use UAttrval to retreive the property in a (direct or indirect) child.
    */
   class UPropdef : public UFlagdef {
   public:
     UCLASS(UPropdef)
     UPropdef();
-    UPropdef(const UFlag&);
-    UPropdef(const UFlag&, Attribute&);
+    UPropdef(const Flag&);
+    UPropdef(const Flag&, Attribute&);
     
-    virtual UPropdef& set(const UFlag&);
+    virtual UPropdef& set(const Flag&);
     virtual UPropdef& set(Attribute&);
-    virtual UPropdef& set(const UFlag&, Attribute&);
+    virtual UPropdef& set(const Flag&, Attribute&);
     virtual UPropdef& clear();
     
     Attribute* getProp() const {return prop;}
@@ -128,22 +126,23 @@ namespace ubit {
     uptr<Attribute> prop;
   };
   
-  /* [impl] gets the value of an inherited property.
+  /*
+   * [impl] gets the value of an inherited property.
    * use UPropdef to define a property in a (direct or indirect) parent.
    */
   class UPropval : public Attribute {
   public:
     UCLASS(UPropval)
     UPropval();
-    UPropval(const UFlag&);
+    UPropval(const Flag&);
     
-    const UFlag* getFlag() const {return flag;}
+    const Flag* getFlag() const {return flag;}
     
     virtual void update();
     virtual void putProp(UpdateContext*, Element&);
     
   private:
-    const UFlag* flag;
+    const Flag* flag;
   };
   
 }

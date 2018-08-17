@@ -170,7 +170,7 @@ Box* Node::getParent(const View* _view) const {
   return null;
 }
 
-Box* Node::getParent(const UInputEvent& e) const {
+Box* Node::getParent(const InputEvent& e) const {
   return getParent(e.getView());
 }
 
@@ -186,7 +186,7 @@ View* Node::getParentView(const View* _view) const {
   return null;
 }
 
-View* Node::getParentView(const UInputEvent& e) const {
+View* Node::getParentView(const InputEvent& e) const {
   return getParentView(e.getView());
 }
 

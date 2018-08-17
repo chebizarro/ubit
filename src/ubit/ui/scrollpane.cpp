@@ -29,10 +29,10 @@ using namespace std;
 NAMESPACE_UBIT
 
 
-UStyle* UScrollpane::createStyle() {
-  UStyle& s = *new UStyle();
+Style* Scrollpane::createStyle() {
+  Style& s = *new Style();
   s.viewStyle = &UPaneView::style;
-  s.orient = UOrient::HORIZONTAL;
+  s.orient = Orientation::HORIZONTAL;
   s.halign = Halign::FLEX;
   s.valign = Valign::FLEX;
   s.hspacing = 1;
@@ -44,26 +44,26 @@ UStyle* UScrollpane::createStyle() {
 }
 
 
-UScrollpane::~UScrollpane() {
+Scrollpane::~Scrollpane() {
   //!!Att: scrollbar pas forcement enfnats du Pane !
   // (seront automatiquement detruit via le DAG inutile de s'en charger ici)
   if (vscrollbar) vscrollbar->setPane(null); vscrollbar = null;
   if (hscrollbar) hscrollbar->setPane(null); hscrollbar = null;
 }
 
-UScrollpane::UScrollpane(Args a) : 
+Scrollpane::Scrollpane(Args a) : 
 Box(a), hscrollbar(null), vscrollbar(null) {
-  addAttr(UOn::resize / ucall(this, &UScrollpane::resizeCB));
+  addAttr(UOn::resize / ucall(this, &Scrollpane::resizeCB));
   constructs(true, true, a);
 }
 
-UScrollpane::UScrollpane(int vs_mode, int hs_mode, Args a) :
+Scrollpane::Scrollpane(int vs_mode, int hs_mode, Args a) :
 Box(a), hscrollbar(null), vscrollbar(null) {
-  addAttr(UOn::resize / ucall(this, &UScrollpane::resizeCB));
+  addAttr(UOn::resize / ucall(this, &Scrollpane::resizeCB));
   constructs(vs_mode, hs_mode, a);
 }
 
-void UScrollpane::constructs(int vs_mode, int hs_mode, const Args&) {
+void Scrollpane::constructs(int vs_mode, int hs_mode, const Args&) {
   Args ba;
 
   if (vs_mode) {
@@ -85,26 +85,26 @@ void UScrollpane::constructs(int vs_mode, int hs_mode, const Args&) {
   if (Application::conf.transp_scrollbars) border->setOverlaid(true);
   
   // the mouse wheel scrolls the pane
-  observeChildrenEvents(UOn::wheel / ucall(this, &UScrollpane::wheelCB));
+  observeChildrenEvents(UOn::wheel / ucall(this, &Scrollpane::wheelCB));
 }
 
 
-void UScrollpane::setTracking(bool state) {
+void Scrollpane::setTracking(bool state) {
   if (hscrollbar) hscrollbar->setTracking(state);
   if (vscrollbar) vscrollbar->setTracking(state);
 }
 
-UScrollpane& UScrollpane::showHScrollbar(bool state) {
+Scrollpane& Scrollpane::showHScrollbar(bool state) {
   if (hscrollbar) hscrollbar->show(state);
   return *this;
 }
 
-UScrollpane& UScrollpane::showVScrollbar(bool state) {
+Scrollpane& Scrollpane::showVScrollbar(bool state) {
   if (vscrollbar) vscrollbar->show(state);
   return *this;
 }
   
-UScrollpane& UScrollpane::showHScrollButtons(bool state) {
+Scrollpane& Scrollpane::showHScrollButtons(bool state) {
   UScrollbar* sb = hscrollbar;
   if (sb) {
     if (sb->getLessButton()) sb->getLessButton()->show(state);
@@ -113,7 +113,7 @@ UScrollpane& UScrollpane::showHScrollButtons(bool state) {
   return *this;
 }
 
-UScrollpane& UScrollpane::showVScrollButtons(bool state) {
+Scrollpane& Scrollpane::showVScrollButtons(bool state) {
   UScrollbar* sb = vscrollbar;
   if (sb) {
     if (sb->getLessButton()) sb->getLessButton()->show(state);
@@ -122,15 +122,15 @@ UScrollpane& UScrollpane::showVScrollButtons(bool state) {
   return *this;
 }
 
-void UScrollpane::unsetHScrollbar() {
+void Scrollpane::unsetHScrollbar() {
   hscrollbar = null;
 }
 
-void UScrollpane::unsetVScrollbar() {
+void Scrollpane::unsetVScrollbar() {
   vscrollbar = null;
 }
 
-Box* UScrollpane::getScrolledBox() {
+Box* Scrollpane::getScrolledBox() {
   for (ChildIter c = cbegin(); c != cend(); ++c) {
     Box* box = (*c)->toBox();
     if (box) return box;
@@ -138,12 +138,12 @@ Box* UScrollpane::getScrolledBox() {
   return null;    // not found
 }
 
-View *UScrollpane::getScrolledView(View* pane_view) {
+View *Scrollpane::getScrolledView(View* pane_view) {
   Box* child = getScrolledBox();
   return (child ? child->getViewInImpl(pane_view /*,null*/) : null);
 }
 
-void UScrollpane::wheelCB(UWheelEvent& e) {
+void Scrollpane::wheelCB(UWheelEvent& e) {
   if (vscrollbar) {
     if (e.getWheelDelta() > 0) vscrollbar->pressScrollButton(e,-1);
     else if (e.getWheelDelta() < 0) vscrollbar->pressScrollButton(e,+1);
@@ -181,7 +181,7 @@ void UPane::setVScrollbar(UScrollbar *sc, bool add_to_pane) {
 }
 */
 
-void UScrollpane::makeVisible(Box& child) {
+void Scrollpane::makeVisible(Box& child) {
   bool move_x = false, move_y = false;
   
   for (View* v = child.getView(0); v != null; v = v->getNext()) {
@@ -219,7 +219,7 @@ void UScrollpane::makeVisible(Box& child) {
 /* ==================================================== [Elc] ======= */
 // synchronizes the scrollbars (att aux loops!)
 
-UScrollpane& UScrollpane::setScroll(float _xscroll, float _yscroll) {
+Scrollpane& Scrollpane::setScroll(float _xscroll, float _yscroll) {
   // NO_DELAY necessaire pour update immediat par appel de setScroll()
   //update(Update::LAYOUT | Update::NO_DELAY);
   doUpdate(Update::LAYOUT);
@@ -227,7 +227,7 @@ UScrollpane& UScrollpane::setScroll(float _xscroll, float _yscroll) {
   return *this;
 }
 
-void UScrollpane::setScrollImpl(float _xscroll, float _yscroll) {
+void Scrollpane::setScrollImpl(float _xscroll, float _yscroll) {
   if (_xscroll < 0) _xscroll = 0; else if (_xscroll > 100) _xscroll = 100;
   if (_yscroll < 0) _yscroll = 0; else if (_yscroll > 100) _yscroll = 100;
   //cerr << _xscroll <<" " << xscroll  <<" " <<_yscroll  <<" " << yscroll<<endl;
@@ -298,7 +298,7 @@ void UScrollpane::setScrollImpl(float _xscroll, float _yscroll) {
 }
 
 
-void UScrollpane::resizeCB(UResizeEvent& e) {
+void Scrollpane::resizeCB(UResizeEvent& e) {
   UPaneView *pane_view  = dynamic_cast<UPaneView*>(e.getView());
 
     // !!! A COMPLETER !!! prendre en compte les Units 

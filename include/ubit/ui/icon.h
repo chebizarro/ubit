@@ -27,17 +27,17 @@
 
 namespace ubit {
   
-  /** UIcon (for UIconbox)
+  /** Icon (for IconBox)
    */
-  class UIcon : public UItem {
+  class Icon : public Item {
   public:
-    UCLASS(UIcon)
+    UCLASS(Icon)
     
-    UIcon(const String& name = "", Args content = Args::none);
+    Icon(const String& name = "", Args content = Args::none);
     ///< creates a new icon.
             
-    virtual ~UIcon();
-    static UStyle* createStyle();
+    virtual ~Icon();
+    static Style* createStyle();
 
     virtual int loadImage(const String& image_path);
     ///< load and shows the icon image, returns file loading status.
@@ -56,52 +56,52 @@ namespace ubit {
 
     /** Icon box
    */
-  class UIconbox : public UDocbox {
+  class IconBox : public UDocbox {
   public:
-    UCLASS(UIconbox)
+    UCLASS(IconBox)
     
-    UIconbox(Args = Args::none);
-    virtual ~UIconbox();
-    static UStyle* createStyle();
+    IconBox(Args = Args::none);
+    virtual ~IconBox();
+    static Style* createStyle();
 
     virtual int readDir(const String& pathname, bool remote_dir = false);
     
     // inherited:
     // virtual Box& titlebar() {return *ptitle_bar;}
     // virtual Box& content()  {return *pcontent;}
-    // virtual UScrollpane& scrollpane()  {return *pspane;}
-    // virtual UScale& scale()  {return *pscale;}
+    // virtual Scrollpane& scrollpane()  {return *pspane;}
+    // virtual Scale& scale()  {return *pscale;}
     
     virtual String& pathname()  {return *ppathname;}
     virtual String& title()     {return *ptitle;}
-    virtual Listbox& icons() {return *picons;}
-    virtual UChoice& choice();
-    virtual const UChoice& choice() const;
+    virtual ListBox& icons() {return *picons;}
+    virtual Choice& choice();
+    virtual const Choice& choice() const;
     
-    virtual void addIcon(class UIcon&);
-    virtual void removeIcon(class UIcon&, bool auto_delete=true);
+    virtual void addIcon(class Icon&);
+    virtual void removeIcon(class Icon&, bool auto_delete=true);
     virtual void removeAllIcons(bool auto_delete = true);
     
-    virtual class UIcon* getSelectedIcon();
-    virtual class UIcon* getPreviousIcon();
-    virtual class UIcon* getNextIcon();
-    virtual class UIcon* getIcon(int) const;
+    virtual class Icon* getSelectedIcon();
+    virtual class Icon* getPreviousIcon();
+    virtual class Icon* getNextIcon();
+    virtual class Icon* getIcon(int) const;
     
-    virtual void selectIcon(UIcon&);
+    virtual void selectIcon(Icon&);
     virtual void selectIcon(const String& name);
     virtual void selectPreviousIcon();
     virtual void selectNextIcon();
     
     // - - - impl.  - - - - - - - - - - - - - - - - - - - - - - - - - -
   protected:
-    friend class UFinder;
+    friend class Finder;
     uptr<String> ppathname, ptitle;
-    uptr<Listbox> picons;
-    uptr<UHspacing> icon_hspacing;
-    uptr<UVspacing> icon_vspacing;
+    uptr<ListBox> picons;
+    uptr<HSpacing> icon_hspacing;
+    uptr<VSpacing> icon_vspacing;
     unsigned long filetime;
     bool show_parent_dir;
-    virtual void okBehavior(UInputEvent&); 
+    virtual void okBehavior(InputEvent&); 
   };
   
 }

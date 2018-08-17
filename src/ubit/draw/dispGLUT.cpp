@@ -31,18 +31,18 @@ using namespace std;
 #define NAMESPACE_UBIT namespace ubit {
 NAMESPACE_UBIT
 
-UCursor UCursor::pointer(GLUT_CURSOR_LEFT_ARROW, UCONST);
-UCursor UCursor::crosshair(GLUT_CURSOR_CROSSHAIR, UCONST);
-UCursor UCursor::text(GLUT_CURSOR_TEXT, UCONST);
-UCursor UCursor::hand(GLUT_CURSOR_INFO, UCONST);
-UCursor UCursor::pencil(GLUT_CURSOR_SPRAY, UCONST);  // ???GLUT_CURSOR_LEFT_ARROW
-UCursor UCursor::wait(GLUT_CURSOR_WAIT, UCONST);
-UCursor UCursor::question(GLUT_CURSOR_HELP, UCONST);
-UCursor UCursor::hresize(GLUT_CURSOR_LEFT_RIGHT, UCONST);
-UCursor UCursor::vresize(GLUT_CURSOR_UP_DOWN, UCONST);
-UCursor UCursor::move(GLUT_CURSOR_INFO, UCONST);  // same sa hand
-UCursor UCursor::dnd(GLUT_CURSOR_CYCLE, UCONST);  // ???
-//UCursor UCursor::plus(GDK_PLUS, UCONST);
+Cursor Cursor::pointer(GLUT_CURSOR_LEFT_ARROW, UCONST);
+Cursor Cursor::crosshair(GLUT_CURSOR_CROSSHAIR, UCONST);
+Cursor Cursor::text(GLUT_CURSOR_TEXT, UCONST);
+Cursor Cursor::hand(GLUT_CURSOR_INFO, UCONST);
+Cursor Cursor::pencil(GLUT_CURSOR_SPRAY, UCONST);  // ???GLUT_CURSOR_LEFT_ARROW
+Cursor Cursor::wait(GLUT_CURSOR_WAIT, UCONST);
+Cursor Cursor::question(GLUT_CURSOR_HELP, UCONST);
+Cursor Cursor::hresize(GLUT_CURSOR_LEFT_RIGHT, UCONST);
+Cursor Cursor::vresize(GLUT_CURSOR_UP_DOWN, UCONST);
+Cursor Cursor::move(GLUT_CURSOR_INFO, UCONST);  // same sa hand
+Cursor Cursor::dnd(GLUT_CURSOR_CYCLE, UCONST);  // ???
+//Cursor Cursor::plus(GDK_PLUS, UCONST);
   
 // ==================================================== [Ubit Toolkit] =========
 
@@ -131,7 +131,7 @@ int UDispGLUT::getPointerState() const {
   return 0;
 }
 
-bool UDispGLUT::grabPointer(const UCursor* c) {
+bool UDispGLUT::grabPointer(const Cursor* c) {
   //Application::error("Display::grabPointer","Not available with GLUT");
   return false;
 }
@@ -141,7 +141,7 @@ void UDispGLUT::ungrabPointer() {
 }
 
 bool UDispGLUT::pickWindow(int& x_in_win, int& y_in_win, UHardwinImpl* window,
-                           UCursor* cursor, UCall* callback) {
+                           Cursor* cursor, UCall* callback) {
   Application::error("Display::pickWindow","This function is not available when using GLUT");
   return false;
 }
@@ -226,19 +226,19 @@ namespace glut {
       switch (btn) {
         case GLUT_LEFT_BUTTON: 
           //19jan08: the pressed button must be included!
-          _mouse_state |= UMouseEvent::LeftButton;
+          _mouse_state |= MouseEvent::LeftButton;
           _state = _mouse_state | glutGetModifiers();
-          f->mousePress(winview, time, _state, win_pos, scr_pos, UMouseEvent::LeftButton);
+          f->mousePress(winview, time, _state, win_pos, scr_pos, MouseEvent::LeftButton);
           break;
         case GLUT_MIDDLE_BUTTON:
-          _mouse_state |= UMouseEvent::MidButton;
+          _mouse_state |= MouseEvent::MidButton;
           _state = _mouse_state | glutGetModifiers();
-          f->mousePress(winview, time, _state, win_pos, scr_pos, UMouseEvent::MidButton);
+          f->mousePress(winview, time, _state, win_pos, scr_pos, MouseEvent::MidButton);
           break;
         case GLUT_RIGHT_BUTTON: 
-          _mouse_state |= UMouseEvent::RightButton;
+          _mouse_state |= MouseEvent::RightButton;
           _state = _mouse_state | glutGetModifiers();
-          f->mousePress(winview, time, _state, win_pos, scr_pos, UMouseEvent::RightButton);
+          f->mousePress(winview, time, _state, win_pos, scr_pos, MouseEvent::RightButton);
           break;
         default:
           Application::warning("glutMousePress", "unknown mouse button %d", btn);
@@ -249,19 +249,19 @@ namespace glut {
       switch (btn) {
         case GLUT_LEFT_BUTTON: 
           //19jan08: the pressed button must be excluded!
-          _mouse_state &= ~UMouseEvent::LeftButton;
+          _mouse_state &= ~MouseEvent::LeftButton;
           _state = _mouse_state | glutGetModifiers();
-          f->mouseRelease(winview, time, _state, win_pos, scr_pos, UMouseEvent::LeftButton);
+          f->mouseRelease(winview, time, _state, win_pos, scr_pos, MouseEvent::LeftButton);
           break;
         case GLUT_MIDDLE_BUTTON:
-          _mouse_state &= ~UMouseEvent::MidButton;
+          _mouse_state &= ~MouseEvent::MidButton;
           _state = _mouse_state | glutGetModifiers();
-          f->mouseRelease(winview, time, _state, win_pos, scr_pos, UMouseEvent::MidButton);
+          f->mouseRelease(winview, time, _state, win_pos, scr_pos, MouseEvent::MidButton);
           break;
         case GLUT_RIGHT_BUTTON: 
-          _mouse_state &= ~UMouseEvent::RightButton;
+          _mouse_state &= ~MouseEvent::RightButton;
           _state = _mouse_state | glutGetModifiers();
-          f->mouseRelease(winview, time, _state, win_pos, scr_pos, UMouseEvent::RightButton);
+          f->mouseRelease(winview, time, _state, win_pos, scr_pos, MouseEvent::RightButton);
           break;
         default:
           Application::warning("glutMouseRelease", "unknown mouse button %d", btn);

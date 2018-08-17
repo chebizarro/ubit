@@ -161,7 +161,7 @@ void UHardwinGLUT::toBack() {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UHardwinGLUT::setCursor(const UCursor* curs) {
+void UHardwinGLUT::setCursor(const Cursor* curs) {
   if (sys_win <= 0) return;
   
   int cur_win = glutGetWindow();

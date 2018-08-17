@@ -49,9 +49,9 @@ public:
 
 protected:
   void setObj(Element* obj);
-  void start(UMouseEvent&);
-  void extend(UMouseEvent&);
-  bool complete(UMouseEvent&);
+  void start(MouseEvent&);
+  void extend(MouseEvent&);
+  bool complete(MouseEvent&);
   void keyPress(UKeyEvent&);
   bool beingSelected() {return being_selected;}
   void perform(String* copy, bool del);

@@ -36,7 +36,7 @@ namespace ubit {
    *  Geometry: the width of a UFlowbox object does do not change when its content
    *  is modified. This behavior differs from those of most other boxes.
    *  It is generally well suited for displaying/editing text (UTexfield and 
-   *  UTextarea enforce this behavior)
+   *  TextArea enforce this behavior)
    *
    *  Implementation note: a UFlowbox is an Box with UFlowview renderer.
    */
@@ -49,7 +49,7 @@ namespace ubit {
      * a flowbox displays strings and other objects as a continous 2D flow
      */
     
-    static UStyle* createStyle();
+    static Style* createStyle();
   };
   
   inline UFlowbox& uflowbox(Args args = Args::none) {return *new UFlowbox(args);}
@@ -72,7 +72,7 @@ namespace ubit {
     UBar(Args args = Args::none): Box(args) {}
     ///< creates a new horizontal bar; @see also shortcut: ubar().
     
-    static UStyle* createStyle();
+    static Style* createStyle();
   };
   
   inline UBar& ubar(Args args = Args::none) {return *new UBar(args);}
@@ -95,7 +95,7 @@ namespace ubit {
     UStatusbar(Args args = Args::none): Box(args) {}
     ///< create a new status bar; @see also shortcut: ustatusbar().
     
-    static UStyle* createStyle();
+    static Style* createStyle();
   };
   
   inline UStatusbar& ustatusbar(Args args = Args::none) {return *new UStatusbar(args);}
@@ -114,7 +114,7 @@ namespace ubit {
     
     virtual ~UCardbox();
     
-    static  UStyle* createStyle();
+    static  Style* createStyle();
     
     virtual UCardbox& addCard(Box& card);
     /**< adds a superimposed card (without a tab).
@@ -145,15 +145,15 @@ namespace ubit {
     virtual void setSelectedIndex(int index);
     ///< selects the card at this index (the last card if n = -1).
     
-    UChoice& choice();
-    ///< returns the UChoice object that controls the selection of cards and tabs.
+    Choice& choice();
+    ///< returns the Choice object that controls the selection of cards and tabs.
     
-    Listbox& tablist() {return *ptabs;}
+    ListBox& tablist() {return *ptabs;}
     ///< returns the tab list.
     
 #ifndef NO_DOC
   protected:
-    uptr<Listbox> ptabs;
+    uptr<ListBox> ptabs;
     virtual void setSelectedImpl();
 #endif
   };
@@ -176,9 +176,9 @@ namespace ubit {
     virtual ~UDocbox();
     
     virtual Box& titlebar()           {return *ptitlebar;}
-    virtual UScrollpane& scrollpane()  {return *pspane;}
+    virtual Scrollpane& scrollpane()  {return *pspane;}
     virtual Box& content()            {return *pcontent;}
-    virtual UScale& scale()            {return *pscale;}
+    virtual Scale& scale()            {return *pscale;}
     virtual void iconify(bool);
     virtual bool isIconified() const;
     virtual void zoom(float value = 1.);
@@ -189,8 +189,8 @@ namespace ubit {
 #ifndef NO_DOC
   protected:
     uptr<Box> ptitlebar, pcontent;
-    uptr<UScrollpane> pspane;
-    uptr<UScale> pscale;
+    uptr<Scrollpane> pspane;
+    uptr<Scale> pscale;
     float zoom_quantum;
 #endif
   };
@@ -199,13 +199,13 @@ namespace ubit {
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   /** Alertbox gadget
    */
-  class UAlertbox : public Box {
+  class AlertBox : public Box {
   public:
-    UCLASS(UAlertbox)
+    UCLASS(AlertBox)
 
-    UAlertbox(Args args = Args::none);
+    AlertBox(Args args = Args::none);
     
-    static UStyle* createStyle();
+    static Style* createStyle();
     
     // NB: show doit etre redefini, sinon show("abcd") est pris comme show(bool)
     // a cause des conversions implicites (stupides) du C++

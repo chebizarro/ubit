@@ -64,7 +64,7 @@ namespace ubit {
    *    // d->colorCB(&color) will be called when the color is changed
    *    color.onChange(ucall(d, &color, &Demo::colorCB));
    * 
-   *    Box& btn = ubutton("Click Me");    // shorcut for: *new UButton(...)
+   *    Box& btn = ubutton("Click Me");    // shorcut for: *new Button(...)
    *
    *    btn.addAttr(color);                 // adds color to the attribute list
    *

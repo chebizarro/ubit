@@ -173,8 +173,8 @@ StyleSheet& Application::getStyleSheet() {
   return impl.stylesheet;
 }
 
-const UStyle& Application::getDefaultStyle() {
-  static UStyle* default_style = new UStyle();
+const Style& Application::getDefaultStyle() {
+  static Style* default_style = new Style();
   return *default_style;
 }
 
@@ -541,7 +541,7 @@ Selection* Application::getSelection(int _id) {
 
 //==============================================================================
 
-UMenu* Application::getOpenedMenu() {
+Menu* Application::getOpenedMenu() {
   EventFlow* fl = impl.disp->obtainChannelFlow(0);  // DEFAULT IFLOW : A REVOIR
   return fl ? fl->menu_man.getDeepestMenu() : null; 
 }

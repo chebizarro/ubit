@@ -1,5 +1,5 @@
 /*
- *  finder.cpp: UFinder element
+ *  finder.cpp: Finder element
  *  Ubit GUI Toolkit - Version 8
  *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
@@ -71,10 +71,10 @@ static const char *doc_xpm[] = {       // moins large que UPix::doc
   "  oooooooooo ",
   "             "
 };
-UPix& UFinder::doc_pix = *new UPix(doc_xpm, UObject::UCONST);
+UPix& Finder::doc_pix = *new UPix(doc_xpm, UObject::UCONST);
 
 
-UFinder::Options::Options() :
+Finder::Options::Options() :
   clone_frame_size(600,450),
   default_background(Color::white),
   default_color(Color::black),
@@ -85,43 +85,43 @@ UFinder::Options::Options() :
 
 /* ==================================================== (c)[Elc] ======= */
 
-void UFinder::setTracking(bool state) {
+void Finder::setTracking(bool state) {
   setTracking(state, state);
 }
 
-void UFinder::setTracking(bool doc_track, bool icon_track) {
+void Finder::setTracking(bool doc_track, bool icon_track) {
   is_tracking = icon_track;
   pdocbox->scrollpane().setTracking(doc_track);
   if (piconbox) piconbox->scrollpane().setTracking(icon_track);
 }
 
-//void UFinder::showDocGlass(bool state) {docglass->show(state);}
+//void Finder::showDocGlass(bool state) {docglass->show(state);}
 
-void UFinder::showAlert(const String& msg) {alertbox->showMsg(msg);}
+void Finder::showAlert(const String& msg) {alertbox->showMsg(msg);}
 
-void UFinder::hideAlert() {alertbox->show(false);}
+void Finder::hideAlert() {alertbox->show(false);}
 
-void UFinder::setListener(UFinderListener* ll) {
+void Finder::setListener(FinderListener* ll) {
   listener = ll;
 }
 
-UFinderListener* UFinder::getListener() {
+FinderListener* Finder::getListener() {
   return listener;
 }
 
 /* ==================================================== (c)[Elc] ======= */
 
-UFinder::~UFinder() {
+Finder::~Finder() {
 delete local_ums;
 }
 
-UFinder::UFinder(const String& _pathname) :
+Finder::Finder(const String& _pathname) :
 mode(NoMode),
 is_tracking(false), 
 open_in_fullwin(false),
 //iconbox_panel(new UVbox()),
-listener(new UFinderListener()),
-alertbox(new UAlertbox()),
+listener(new FinderListener()),
+alertbox(new AlertBox()),
 ctlmenu(&createContextMenu()),
 local_ums(null),
 remote_ums(null),
@@ -134,14 +134,14 @@ last_preview_request(null),
 last_preview(null),
 preview_timer(new Timer(false)) 
 {
-  preview_timer->onAction(ucall(this, &UFinder::showIconPreviews));
-  Application::onMessage("next",    ucall(this, &UFinder::nextEntry));
-  Application::onMessage("previous",ucall(this, &UFinder::previousEntry));
-  Application::onMessage("parent",  ucall(this, &UFinder::openParent));
-  Application::onMessage("file",    ucall(this, &UFinder::openMsg));
-  Application::onMessage("open",    ucall(this, &UFinder::openMsg));
-  Application::onMessage("clone",   ucall(this, &UFinder::createCloneRequest));
-  //Application::onMessage("put",     ucall(this, &UFinder::sendFileMessage)); 
+  preview_timer->onAction(ucall(this, &Finder::showIconPreviews));
+  Application::onMessage("next",    ucall(this, &Finder::nextEntry));
+  Application::onMessage("previous",ucall(this, &Finder::previousEntry));
+  Application::onMessage("parent",  ucall(this, &Finder::openParent));
+  Application::onMessage("file",    ucall(this, &Finder::openMsg));
+  Application::onMessage("open",    ucall(this, &Finder::openMsg));
+  Application::onMessage("clone",   ucall(this, &Finder::createCloneRequest));
+  //Application::onMessage("put",     ucall(this, &Finder::sendFileMessage)); 
   /*
   docglass->addAttr(Background::none);
   docglass->addAttr(upos(0,0));
@@ -155,7 +155,7 @@ preview_timer(new Timer(false))
   alertbox->show(false);
 
   ask_dialog_msg = new String(); 
-  ask_dialog = new UDialog
+  ask_dialog = new Dialog
   (uhcenter() + uvflex()
    + upadding(15,20) + uvspacing(20)
    + Font::bold + Font::large
@@ -180,19 +180,19 @@ preview_timer(new Timer(false))
   toolbar.addAttr(Background::metal + Font::xx_large + Font::bold);
   toolbar
   .add(*optbox_btn
-       + ubutton(uhcenter() + UPix::bigUp + ucall(this, &UFinder::openParent))
-       + ubutton(uhcenter() + UPix::bigLeft + ucall(this, &UFinder::previousEntry))
-       + ubutton(UPix::bigRight + ucall(this, &UFinder::nextEntry))
+       + ubutton(uhcenter() + UPix::bigUp + ucall(this, &Finder::openParent))
+       + ubutton(uhcenter() + UPix::bigLeft + ucall(this, &Finder::previousEntry))
+       + ubutton(UPix::bigRight + ucall(this, &Finder::nextEntry))
        + " " 
-       + ubutton(Font::bold + "  Z  " + ucall(this, &UFinder::zoomIn))
-       + ubutton(Font::bold + "  z  " + ucall(this, &UFinder::zoomOut))
-       + ubutton(Font::bold + "  =  " + ucall(this, 1.0f, &UFinder::zoom))
+       + ubutton(Font::bold + "  Z  " + ucall(this, &Finder::zoomIn))
+       + ubutton(Font::bold + "  z  " + ucall(this, &Finder::zoomOut))
+       + ubutton(Font::bold + "  =  " + ucall(this, 1.0f, &Finder::zoom))
        );
   
-  mainbox.addAttr(UOrient::vertical + uvflex() + uvflex());
+  mainbox.addAttr(Orientation::vertical + uvflex() + uvflex());
   
   addAttr(Background::white); 
-  add(UOrient::vertical 
+  add(Orientation::vertical 
       + utop() + toolbar
       + uvflex()
       + uhbox(uvflex() + uleft() + optbox + uhflex() + mainbox)
@@ -212,22 +212,22 @@ preview_timer(new Timer(false))
 }
 
 
-void UFinder::showSideBar(bool state) {
+void Finder::showSideBar(bool state) {
   optbox_btn->setSelected(state);
 }
 
-void UFinder::initOptbox() {
+void Finder::initOptbox() {
   optbox_btn = 
   ubutton(USymbol::square 
           + UOn::select   / ushow(optbox, true)
           + UOn::deselect / ushow(optbox, false)
           );
-  optbox.addAttr(UOrient::vertical + Background::velin
+  optbox.addAttr(Orientation::vertical + Background::velin
                  + usize(120,UAUTO) + upadding(6,9).setRight(2) + utop());
 
   // - - - HISTORY - - - -
   
-  folderlist.addAttr(UOrient::vertical + utop() + uchoice());
+  folderlist.addAttr(Orientation::vertical + utop() + uchoice());
   Box& folders = uscrollpane(true, false, folderlist);
   folders.addAttr(usize(UAUTO,100) + upadding().setLeft(15)); 
   folders.show(false);
@@ -245,18 +245,18 @@ void UFinder::initOptbox() {
   // - - - HOSTS - - - -
  
   String* host_str = new String;
-  UMenu& new_host_menu = 
-  umenu(UOrient::horizontal
+  Menu& new_host_menu = 
+  umenu(Orientation::horizontal
         + "Host Name: "
         + utextfield(usize(150) + host_str
-                     + ucall(this, (const String*)host_str, &UFinder::addHostCB)
+                     + ucall(this, (const String*)host_str, &Finder::addHostCB)
                      + ucall(0, &Element::closeWin))
         + ubutton(" Add "
-                  + ucall(this, (const String*)host_str, &UFinder::addHostCB)
+                  + ucall(this, (const String*)host_str, &Finder::addHostCB)
                   + ucall(0, &Element::closeWin))
         );
   
-  hostlist.addAttr(UOrient::vertical + utop());
+  hostlist.addAttr(Orientation::vertical + utop());
   hostlist.add(uitem(Font::italic + " Add Host" + new_host_menu));
 
   Box& hosts = uscrollpane(true, false, hostlist);
@@ -283,38 +283,38 @@ void UFinder::initOptbox() {
 
 /* ==================================================== [Elc] ======= */
 
-UDocbox* UFinder::getCurrentBox() {
+UDocbox* Finder::getCurrentBox() {
   if (mode == DirMode) return getIconbox();
   else if (mode == DocMode) return getDocbox();
   else return null;
 };
 
-void UFinder::zoom(float z) {
+void Finder::zoom(float z) {
   if (getCurrentBox()) getCurrentBox()->zoom(z);
 }
 
-void UFinder::zoomIn() {
+void Finder::zoomIn() {
   if (getCurrentBox()) getCurrentBox()->zoomIn();
 }
 
-void UFinder::zoomOut() {
+void Finder::zoomOut() {
   if (getCurrentBox()) getCurrentBox()->zoomOut();
 }
 
-void UFinder::setZoomQuantum(float z) {
+void Finder::setZoomQuantum(float z) {
   if (getCurrentBox()) getCurrentBox()->setZoomQuantum(z);
 }
 
-void UFinder::showSelectedIcon() {
-  UIconbox* ibox = getIconbox();
+void Finder::showSelectedIcon() {
+  IconBox* ibox = getIconbox();
   if (ibox) {
-    UIcon* icon = ibox->getSelectedIcon();
+    Icon* icon = ibox->getSelectedIcon();
     if (icon) ibox->scrollpane().makeVisible(*icon);
   }
 }
 
-void UFinder::showDocBox() {
-  UIconbox* ibox = getIconbox();
+void Finder::showDocBox() {
+  IconBox* ibox = getIconbox();
   if (ibox) {
     ibox->title() = ibox->pathname().basename();
     filelist.add(*ibox);
@@ -325,9 +325,9 @@ void UFinder::showDocBox() {
 }
 
 
-void UFinder::showDirBox() {
+void Finder::showDirBox() {
   filelist.removeAll();
-  UIconbox* ibox = getIconbox();
+  IconBox* ibox = getIconbox();
   if (ibox) ibox->title() = ibox->pathname();
   filelist.show(false);
   filelist_btn->show(false);
@@ -335,7 +335,7 @@ void UFinder::showDirBox() {
 
 /* ==================================================== [Elc] ======= */
 
-void UFinder::open(const String& path) {
+void Finder::open(const String& path) {
   if (path.empty()) return;
 
   int path_type = UFileInfo::parsePrefix(path);
@@ -347,7 +347,7 @@ void UFinder::open(const String& path) {
 }
 
 
-void UFinder::openImpl(const String& path_name, int path_mode, int path_type) {
+void Finder::openImpl(const String& path_name, int path_mode, int path_type) {
   if (path_name.empty()) return;
   String path = path_name;
 
@@ -385,7 +385,7 @@ void UFinder::openImpl(const String& path_name, int path_mode, int path_type) {
 
 /* ==================================================== [Elc] ======= */
 
-void UFinder::openParent() {
+void Finder::openParent() {
   String name;
   if (piconbox) name = piconbox->pathname();
   else name = ".";
@@ -402,12 +402,12 @@ void UFinder::openParent() {
   }
 }
 
-void UFinder::openFBox(UFilebox& openbox) {
+void Finder::openFBox(FileChooser& openbox) {
   String path = openbox.getPath();
   open(path);
 }
 
-void UFinder::openMsg(MessageEvent& e) {
+void Finder::openMsg(MessageEvent& e) {
   const String* file = e.getMessage();
   if (!file || file->empty()) openEntry();
   else {
@@ -421,7 +421,7 @@ void UFinder::openMsg(MessageEvent& e) {
 /* ==================================================== (c)[Elc] ======= */
 namespace impl {
 
-  struct CMenu : public UCtlmenu {
+  struct CMenu : public ControlMenu {
     Element * mopener;
     CMenu() {}
   };
@@ -429,18 +429,18 @@ namespace impl {
 
   struct ZoomAction : public UCall {
     CMenu& cmenu;
-    UFinder& browser;
+    Finder& browser;
     double base;
     int incr, last_incr;
-    uptr<UScale> scale;
+    uptr<Scale> scale;
     
     static const int QUANTUM;
     static const float ZOOM_QUANTUM;
     
-    ZoomAction(CMenu& _c, UFinder& _b) :  cmenu(_c), browser(_b) {}
+    ZoomAction(CMenu& _c, Finder& _b) :  cmenu(_c), browser(_b) {}
     
     virtual void operator()(Event& event) {
-      UMouseEvent& e = (UMouseEvent&)event;
+      MouseEvent& e = (MouseEvent&)event;
       
       if (e.isFirstDrag()) {
         Element* source = cmenu.mopener;
@@ -480,25 +480,25 @@ namespace impl {
   const float ZoomAction::ZOOM_QUANTUM = 1.10;
   
     
-  struct ScrollAction : public UScrollAction {
+  struct ScrollAction : public ScrollAction {
     CMenu& cmenu;
-    UFinder& f;
+    Finder& f;
     
-    ScrollAction(CMenu& _c, UFinder& _f, float _gain = 0.3)
-      : UScrollAction(_gain), cmenu(_c), f(_f) {}
+    ScrollAction(CMenu& _c, Finder& _f, float _gain = 0.3)
+      : ScrollAction(_gain), cmenu(_c), f(_f) {}
     
-    virtual void mdrag(UMouseEvent& e, UCtlmenu&) {
+    virtual void mdrag(MouseEvent& e, ControlMenu&) {
       if (e.isFirstDrag()) {
         Element* source = cmenu.mopener;
         if (source == f.getIconbox()) setPane(f.getIconbox()->scrollpane());
         else if (source == f.getDocbox()) setPane(f.getDocbox()->scrollpane());
       }
-      UScrollAction::mdrag(e, cmenu);
+      ScrollAction::mdrag(e, cmenu);
     }  
   };
   
 
-  void mpressCB(UMouseEvent& e, CMenu* m) {
+  void mpressCB(MouseEvent& e, CMenu* m) {
     // open menu if RightButton ou CTRL-LeftButton
     if (e.getButton() == e.RightButton
         || (e.getButton() == e.LeftButton && e.isControlDown())) {
@@ -512,13 +512,13 @@ namespace impl {
 }  // endof nested namespace
 
   
-void UFinder::openContextMenuIn(Box& box) {  
+void Finder::openContextMenuIn(Box& box) {  
   // mpressCB() opens menu if RightButton or CTRL-LeftButton and propagates events
   // to children otherwise
   box.catchEvents(UOn::mpress / ucall((impl::CMenu*)ctlmenu(), impl::mpressCB));
 }
 
-UCtlmenu& UFinder::createContextMenu() {
+ControlMenu& Finder::createContextMenu() {
   impl::CMenu* cmenu = new impl::CMenu();
   
   impl::ZoomAction* za = new impl::ZoomAction(*cmenu, *this);

@@ -330,7 +330,7 @@ namespace ubit {
     friend class UViewLayoutImpl;
     friend class UViewUpdateImpl;
     friend class UAppliImpl;
-    friend class UInputEvent;
+    friend class InputEvent;
     friend class EventFlow;
     friend class 3DCanvasView;
     View(const View&);

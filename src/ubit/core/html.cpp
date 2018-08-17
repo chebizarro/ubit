@@ -51,7 +51,7 @@ Subclass() : Class(CLASSNAME) {} \
 virtual int getParseModes() const {return MODES;} \
 virtual bool isInstance(UObject& obj) const {return dynamic_cast<CLASS*>(&obj);} \
 virtual CLASS* newInstance() const {return NEWCLASS;} \
-virtual UStyle* newStyle() const {return NEWSTYLE;} \
+virtual Style* newStyle() const {return NEWSTYLE;} \
 };\
 static  const Class& Class() {static Subclass& c = *new Subclass; return c;} \
 virtual const Class& getClass() const {return Class();}
@@ -118,10 +118,10 @@ virtual void initNode(Document*); \
 ELEMENT_INIT_CLASS(img, Box, Class::EMPTY_ELEMENT)
 ELEMENT_INIT_CLASS(br, Element, Class::EMPTY_ELEMENT)
 
-struct UHtml_a : public ULinkbutton {
+struct UHtml_a : public LinkButton {
   UBIT_CLASS_DEF("a", UHtml_a, new UHtml_a, UCssStyles::create_a_style(), 0) 
   virtual void initNode(Document*);
-  //virtual const String* getHRef() const; ihnerited from ULinkbutton.
+  //virtual const String* getHRef() const; ihnerited from LinkButton.
 };
     
 /* ==================================================== [Elc] ======= */

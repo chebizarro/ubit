@@ -26,7 +26,7 @@
 #include <ubit/udefs.hpp>
 #include <ubit/uon.hpp>
 #include <ubit/ufile.hpp>
-#include <ubit/uupdatecontext.hpp>
+#include <ubit/ui/updatecontext.h>
 #include <ubit/ugraph.hpp>
 #include <ubit/ufontmetrics.hpp>
 #include <ubit/uview.hpp>

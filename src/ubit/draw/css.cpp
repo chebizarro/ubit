@@ -24,7 +24,7 @@
 #include <iostream>
 #include <ubit/ubit_features.h>
 #include <ubit/ubit.hpp>
-#include <ubit/uupdatecontext.hpp>
+#include <ubit/ui/updatecontext.h>
 #include <ubit/ucss.hpp>
 #include <ubit/udom.hpp>
 using namespace std;
@@ -402,43 +402,43 @@ remplacent cellspacing et cellpadding
 */
 
 
-UStyle* UCssStyles::create_body_style() {
-  //UStyle* style = UVbox::createStyle();
-  UStyle* style = Box::createStyle();
+Style* UCssStyles::create_body_style() {
+  //Style* style = UVbox::createStyle();
+  Style* style = Box::createStyle();
   style->setVertPadding(8,8);
   Font* f = new Font(); f->setPointSize(12); style->setFont(f);
   return style;
 }
 
-UStyle* UCssStyles::create_div_style() {
-  UStyle* style = UFlowbox::createStyle();
+Style* UCssStyles::create_div_style() {
+  Style* style = UFlowbox::createStyle();
   style->local.padding.set(6,1);
   return style;
 }
 
-UStyle* UCssStyles::create_p_style() {
-  UStyle* style = UFlowbox::createStyle();
+Style* UCssStyles::create_p_style() {
+  Style* style = UFlowbox::createStyle();
   style->local.padding.set(6,1);
   return style;
 }
 
 
-UStyle* UCssStyles::create_ul_style() {
-  UStyle* style = UFlowbox::createStyle();
+Style* UCssStyles::create_ul_style() {
+  Style* style = UFlowbox::createStyle();
   style->setHorizPadding(30, 0);
   style->setVertPadding(1, 0);
   return style;
 }
 
-UStyle* UCssStyles::create_ol_style() {
-  UStyle* style = UFlowbox::createStyle();
+Style* UCssStyles::create_ol_style() {
+  Style* style = UFlowbox::createStyle();
   style->setHorizPadding(30, 1);
   style->setVertPadding(1, 0);
   return style;
 }
 
-UStyle* UCssStyles::create_li_style() {
-  UStyle* style = UFlowbox::createStyle();
+Style* UCssStyles::create_li_style() {
+  Style* style = UFlowbox::createStyle();
   style->local.padding.set(1, 1);
   //style->local.content = new Element(UPix::rball);
   style->local.content = new Element(" - ");
@@ -446,22 +446,22 @@ UStyle* UCssStyles::create_li_style() {
 }
 
 
-UStyle* UCssStyles::create_pre_style() {
-  UStyle* style = UFlowbox::createStyle();
+Style* UCssStyles::create_pre_style() {
+  Style* style = UFlowbox::createStyle();
   style->setHorizPadding(80,0);
   style->setVertPadding(5,5);
   style->setFont(&Font::monospace);
   return style;
 }
 
-UStyle* UCssStyles::create_blockquote_style() {
-  UStyle* style = UFlowbox::createStyle();
+Style* UCssStyles::create_blockquote_style() {
+  Style* style = UFlowbox::createStyle();
   style->local.padding.set(20, 8);
   return style;
 }
 
-UStyle* UCssStyles::create_center_style() {
-  UStyle* style = UFlowbox::createStyle();
+Style* UCssStyles::create_center_style() {
+  Style* style = UFlowbox::createStyle();
   style->local.padding.set(1, 1);
   style->halign = Valign::CENTER;
   return style;
@@ -469,124 +469,124 @@ UStyle* UCssStyles::create_center_style() {
 
 /* ==================================================== [Elc] ======= */
 
-UStyle* UCssStyles::create_h1_style() {
-  UStyle* style = UFlowbox::createStyle();
+Style* UCssStyles::create_h1_style() {
+  Style* style = UFlowbox::createStyle();
   style->setVertPadding(14,14);
   Font* f = new Font(Font::bold); f->setPointSize(32); style->setFont(f);
   return style;
 }
 
-UStyle* UCssStyles::create_h2_style() {
-  UStyle* style = UFlowbox::createStyle();
+Style* UCssStyles::create_h2_style() {
+  Style* style = UFlowbox::createStyle();
   style->setVertPadding(12,12);
   Font* f = new Font(Font::bold); f->setPointSize(18); style->setFont(f);
   return style;
 }
 
-UStyle* UCssStyles::create_h3_style() {
-  UStyle* style = UFlowbox::createStyle();
+Style* UCssStyles::create_h3_style() {
+  Style* style = UFlowbox::createStyle();
   style->setVertPadding(10,10);
   Font* f = new Font(Font::bold); f->setPointSize(14); style->setFont(f);
   return style;
 }
 
-UStyle* UCssStyles::create_h4_style() {
-  UStyle* style = UFlowbox::createStyle();
+Style* UCssStyles::create_h4_style() {
+  Style* style = UFlowbox::createStyle();
   style->setVertPadding(8,8);
   Font* f = new Font(Font::bold); f->setPointSize(12); style->setFont(f);
   return style;
 }
 
-UStyle* UCssStyles::create_h5_style() {
-  UStyle* style = UFlowbox::createStyle();
+Style* UCssStyles::create_h5_style() {
+  Style* style = UFlowbox::createStyle();
   style->setVertPadding(7,7);
   Font* f = new Font(Font::bold); f->setPointSize(10); style->setFont(f);
   return style;
 }
 
-UStyle* UCssStyles::create_h6_style() {
-  UStyle* style = UFlowbox::createStyle();
+Style* UCssStyles::create_h6_style() {
+  Style* style = UFlowbox::createStyle();
   style->setVertPadding(6,6);
   Font* f = new Font(Font::bold); f->setPointSize(8); style->setFont(f);
   return style;
 }
 
 
-UStyle* UCssStyles::create_table_style() {
-  UStyle* style = UTable::createStyle();
+Style* UCssStyles::create_table_style() {
+  Style* style = UTable::createStyle();
   style->valign = Valign::BOTTOM;
   style->halign = Halign::LEFT;
   return style;
 }
 
-UStyle* UCssStyles::create_tr_style() {
-  UStyle* style = UTrow::createStyle();
+Style* UCssStyles::create_tr_style() {
+  Style* style = UTrow::createStyle();
   style->hspacing = 0;
   style->valign = Valign::BOTTOM;
   style->halign = Halign::LEFT;
   return style;
 }
 
-UStyle* UCssStyles::create_td_style() {
-  UStyle* style = UTcell::createStyle();
+Style* UCssStyles::create_td_style() {
+  Style* style = UTcell::createStyle();
   style->valign = Valign::BOTTOM;
   style->halign = Halign::LEFT;
   return style;
 }
 
-UStyle* UCssStyles::create_th_style() {
-  UStyle* style = UTcell::createStyle();
+Style* UCssStyles::create_th_style() {
+  Style* style = UTcell::createStyle();
   return style;
 }
 
 
-UStyle* UCssStyles::create_span_style() {
-  UStyle* style = Element::createStyle();
+Style* UCssStyles::create_span_style() {
+  Style* style = Element::createStyle();
   return style;
 }
 
-UStyle* UCssStyles::create_b_style() {
-  UStyle* style = Element::createStyle();
+Style* UCssStyles::create_b_style() {
+  Style* style = Element::createStyle();
   style->setFont(&Font::bold);
   return style;
 }
 
-UStyle* UCssStyles::create_i_style() {
-  UStyle* style = Element::createStyle();
+Style* UCssStyles::create_i_style() {
+  Style* style = Element::createStyle();
   style->setFont(&Font::italic);
   return style;
 }
 
-UStyle* UCssStyles::create_em_style() {
-  UStyle* style = Element::createStyle();
+Style* UCssStyles::create_em_style() {
+  Style* style = Element::createStyle();
   //style->font = &Font::fill;
   style->setColors(Color::orange, Color::white);
   return style;
 }
 
-UStyle* UCssStyles::create_u_style() {
-  UStyle* style = Element::createStyle();
+Style* UCssStyles::create_u_style() {
+  Style* style = Element::createStyle();
   style->setFont(&Font::underline);
   return style;
 }
 
-UStyle* UCssStyles::create_font_style() {
-  UStyle* style = Element::createStyle();
+Style* UCssStyles::create_font_style() {
+  Style* style = Element::createStyle();
   return style;
 }
 
-UStyle* UCssStyles::create_img_style() {
-  UStyle* style = Box::createStyle();
+Style* UCssStyles::create_img_style() {
+  Style* style = Box::createStyle();
   return style;
 }
 
-UStyle* UCssStyles::create_br_style() {
-  UStyle* style = Element::createStyle();
+Style* UCssStyles::create_br_style() {
+  Style* style = Element::createStyle();
   return style;
 }
 
-UStyle* UCssStyles::create_a_style() {                  // A REVOIR  !!!@@@@
-  UStyle* href_style = ULinkbutton::createStyle();
+Style* UCssStyles::create_a_style() {                  // A REVOIR  !!!@@@@
+  Style* href_style = LinkButton::createStyle();
   href_style->setBgcolors(Color::none);
   return href_style;
 }

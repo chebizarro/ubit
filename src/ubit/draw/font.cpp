@@ -17,7 +17,7 @@
 #include <iostream>
 #include <ubit/ucall.hpp>
 #include <ubit/uupdate.hpp>
-#include <ubit/uupdatecontext.hpp>
+#include <ubit/ui/updatecontext.h>
 #include <ubit/ufont.hpp>
 #include <ubit/draw/ufontImpl.hpp>
 #include <ubit/uappli.hpp>

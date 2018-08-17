@@ -36,13 +36,13 @@ namespace ubit {
    * A UArg object may either hold a single object pointer or reference, or a list 
    * of object pointers or references separated by + operators, example:
    * <pre>
-   *   class UButton : public Box {
-   *     UButton(Args arglist);
+   *   class Button : public Box {
+   *     Button(Args arglist);
    *     ....
    *   };
    *
    *   void foo() {
-   *     UButton* b = new UButton(UPix::disquette + "Save" + ucall(obj, saveFunc));
+   *     Button* b = new Button(UPix::disquette + "Save" + ucall(obj, saveFunc));
    *     ...
    *   }
    * </pre>

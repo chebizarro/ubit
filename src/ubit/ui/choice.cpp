@@ -36,12 +36,12 @@ using namespace std;
 #define NAMESPACE_UBIT namespace ubit {
 NAMESPACE_UBIT
   
-static UChoice::IsSelectable is_selectable_by_default;
-bool UChoice::IsSelectable::operator()(const Box* box) const {return box->isArmable();}
-void UChoice::setSelectionRule(IsSelectable& v) {is_selectable = &v;}
+static Choice::IsSelectable is_selectable_by_default;
+bool Choice::IsSelectable::operator()(const Box* box) const {return box->isArmable();}
+void Choice::setSelectionRule(IsSelectable& v) {is_selectable = &v;}
 
-UChoice::UChoice() :
-  callbacks(ucall(this, &UChoice::mouseCB)),
+Choice::Choice() :
+  callbacks(ucall(this, &Choice::mouseCB)),
   container(null),
   last_browsing_group(null),
   sel_items(new Element()),
@@ -52,16 +52,16 @@ UChoice::UChoice() :
   //sel_style(SELECT_ON_ARM|SELECT_ON_DRAG) 
 {}
 
-UChoice::~UChoice() {
+Choice::~Choice() {
   destructs();
 }
 
-void UChoice::addingTo(Child& c, Element& parent) {
+void Choice::addingTo(Child& c, Element& parent) {
   Attribute::addingTo(c, parent);
   
   container = parent.toBox();
   if (!container) {
-    Application::warning("UChoice::addingTo","parent of this UChoice (%p) should be a Box", this);
+    Application::warning("Choice::addingTo","parent of this Choice (%p) should be a Box", this);
     return;
   }
   // the parent can select its ARMable children
@@ -76,7 +76,7 @@ void UChoice::addingTo(Child& c, Element& parent) {
 }
 
 //NB: removingFrom() requires a destructor to be defined
-void UChoice::removingFrom(Child& c, Element& parent) {
+void Choice::removingFrom(Child& c, Element& parent) {
   if (container) {
     // bug si plusieurs
     container->setBrowsable(false);
@@ -87,14 +87,14 @@ void UChoice::removingFrom(Child& c, Element& parent) {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UChoice::update() {
+void Choice::update() {
   //if (container) container->update(Update::paint, now);
 }
 
-void UChoice::putProp(UpdateContext*, Element&) {
+void Choice::putProp(UpdateContext*, Element&) {
 }
 
-Box* UChoice::setSelectedItem(Box* obj) {
+Box* Choice::setSelectedItem(Box* obj) {
   if (obj) return setSelectedItem(*obj);
   else {
     clearSelection();
@@ -102,7 +102,7 @@ Box* UChoice::setSelectedItem(Box* obj) {
   }
 }
 
-void UChoice::mouseCB(UInputEvent& e) {
+void Choice::mouseCB(InputEvent& e) {
   const Condition& cond = e.getCond();
 
   // *** browsing 
@@ -160,14 +160,14 @@ void UChoice::mouseCB(UInputEvent& e) {
 // dans un Element de telle sorte qu'il n'y ait pas de probleme si elle
 // elle est detruite par ailleurs (elle sera auto enlevee du Element)
 
-Box* UChoice::getSelectedItemImpl() const {
+Box* Choice::getSelectedItemImpl() const {
   Node* b = null;
   if (sel_items->cbegin() != sel_items->cend()) b = *sel_items->cbegin();
   return b ? b->toBox() : null;
 }
 
 // NB: item can be null
-Box* UChoice::setSelectedItemImpl(Box* item, UInputEvent* source_event) {
+Box* Choice::setSelectedItemImpl(Box* item, InputEvent* source_event) {
   if (!container) return null;
   Box* selected_item = getSelectedItemImpl();
   
@@ -201,20 +201,20 @@ Box* UChoice::setSelectedItemImpl(Box* item, UInputEvent* source_event) {
 }
 
 
-Box* UChoice::setSelectedItem(Box& item) {
+Box* Choice::setSelectedItem(Box& item) {
   return setSelectedItemImpl(&item, null);
 }
 
-Box* UChoice::setSelectedIndex(int index) {
+Box* Choice::setSelectedIndex(int index) {
   return setSelectedItemImpl(getSelectableItem(index), null);
 }
 
-void UChoice::clearSelection() {
+void Choice::clearSelection() {
   setSelectedItemImpl(null, null);
 }
 
 
-Box* UChoice::getSelectedItem() const {
+Box* Choice::getSelectedItem() const {
   if (!container) return null;
 
   // att si detruit: verifier que selected_item est toujours dans la hierarchie
@@ -224,7 +224,7 @@ Box* UChoice::getSelectedItem() const {
   else return null;
 }
 
-int UChoice::getSelectedIndex() const {
+int Choice::getSelectedIndex() const {
   Box* selected_item = getSelectedItemImpl();
   if (!container || !selected_item) return -1;
   int count = 0;
@@ -239,13 +239,13 @@ int UChoice::getSelectedIndex() const {
   return -1; // not found
 }
 
-//int UChoice::getSelectedIndex(Int& index) const {
+//int Choice::getSelectedIndex(Int& index) const {
 //  index = getSelectedIndex();
 //  return index.intValue();
 //}
 
 
-Box* UChoice::getSelectableItem(int index) const {
+Box* Choice::getSelectableItem(int index) const {
   if (!container) return null;
   int count = 0;
   for (ChildIter i = container->cbegin(); i != container->cend(); ++i) {
@@ -259,18 +259,18 @@ Box* UChoice::getSelectableItem(int index) const {
   return null;
 }
 
-Box* UChoice::getSelectableItem(const String& s, bool ignore_case) const {
+Box* Choice::getSelectableItem(const String& s, bool ignore_case) const {
   ChildIter i = container->children().findBox(s, ignore_case);
   return (i == container->cend()) ? null : dynamic_cast<Box*>(*i);
 }
 
 /* ==================================================== [Elc:] ======= */
 
-void UChoice::changed(bool update_now) {
+void Choice::changed(bool update_now) {
   changeCB(null);
 }
 
-void UChoice::changeCB(UInputEvent* source_event) {
+void Choice::changeCB(InputEvent* source_event) {
   //EventFlow* flow = source_event ? source_event->getFlow() : null;
   //View* hardwv = source_event ? source_event->getWinView() : null;
   // manque la bonne view et les coords
@@ -290,7 +290,7 @@ void UChoice::changeCB(UInputEvent* source_event) {
 // a la difference de UOn::change, UOn::action est appele chaque fois
 // que l'on clique un item, meme s'il etait deja selectionne
 
-void UChoice::actionCB(UInputEvent* source_event) {
+void Choice::actionCB(InputEvent* source_event) {
   //EventFlow* flow = source_event ? source_event->getFlow() : null;
   //View* hardwv = source_event ? source_event->getWinView() : null;
   Box* selected_item = getSelectedItemImpl();
@@ -383,7 +383,7 @@ void URadioSelect::changed(Element* target) {
 }
 
 
-void URadioSelect::itemChanged(UInputEvent& e) {
+void URadioSelect::itemChanged(InputEvent& e) {
   Element* new_item = e.getSource();
   if (!new_item) return;
 

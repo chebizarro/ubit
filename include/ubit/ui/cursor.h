@@ -32,39 +32,39 @@ namespace ubit {
   
   /** Mouse cursor property.
    * this property specifies the shape of the cursor in a Box. It is inherited
-   * by children, except if they have their own UCursor, or if their UStyle
-   * specifies another UCursor.
-   * As other Attribute(s), a UCursor instance must be added as an attribute 
+   * by children, except if they have their own Cursor, or if their Style
+   * specifies another Cursor.
+   * As other Attribute(s), a Cursor instance must be added as an attribute 
    * (or as a child) of the Box. @see: Attribute.
    */
-  class UCursor : public Attribute {
+  class Cursor : public Attribute {
   public:
-    UCLASS(UCursor)
+    UCLASS(Cursor)
     
-    static UCursor none, pointer, crosshair, text, hand, pencil, wait, question, 
+    static Cursor none, pointer, crosshair, text, hand, pencil, wait, question, 
     hresize, vresize, move, dnd;
     ///< predefined cursors.
     
-    UCursor(const UCursor& = UCursor::none);
-    ///< creates a new Cursor from a UCursor (or a default UCursor).
+    Cursor(const Cursor& = Cursor::none);
+    ///< creates a new Cursor from a Cursor (or a default Cursor).
     
-    UCursor(int cursor_type);
+    Cursor(int cursor_type);
     ///< creates a new Cursor from a cursor_type (impl dependent).
     
-    UCursor(int cursor_type, UConst);
+    Cursor(int cursor_type, UConst);
     ///< creates a new CONSTANT Cursor from a cursor_type (impl dependent).
     
-    virtual ~UCursor();
+    virtual ~Cursor();
     
-    UCursor& operator=(const UCursor& c) {return set(c);}
-    ///< copies another UCursor.
+    Cursor& operator=(const Cursor& c) {return set(c);}
+    ///< copies another Cursor.
     
-    virtual UCursor& set(const UCursor&);
-    ///< copies another UCursor.
+    virtual Cursor& set(const Cursor&);
+    ///< copies another Cursor.
     
-    bool operator==(const UCursor& c) const {return equals(c);}
-    bool operator!=(const UCursor& c) const {return !equals(c);}
-    virtual bool equals(const UCursor&) const;
+    bool operator==(const Cursor& c) const {return equals(c);}
+    bool operator!=(const Cursor& c) const {return !equals(c);}
+    virtual bool equals(const Cursor&) const;
     
     int getCursorType() const {return cursor_type;}
     

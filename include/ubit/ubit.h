@@ -37,7 +37,7 @@
 #include <ubit/uattr.hpp>
 #include <ubit/uboxgeom.hpp>
 #include <ubit/uborder.hpp>
-#include <ubit/ubackground.hpp>
+#include <ubit/ui/background.h>
 #include <ubit/ucolor.hpp>
 #include <ubit/ucursor.hpp>
 #include <ubit/uedit.hpp>
@@ -81,7 +81,7 @@
 #include <ubit/uview.hpp>
 #include <ubit/ufontmetrics.hpp>
 #include <ubit/uupdate.hpp>
-#include <ubit/uupdatecontext.hpp>
+#include <ubit/ui/updatecontext.h>
 #include <ubit/ugraph.hpp>
 #include <ubit/uconf.hpp>
 #include <ubit/ustyle.hpp>

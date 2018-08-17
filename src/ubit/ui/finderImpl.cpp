@@ -43,12 +43,12 @@ using namespace std;
 namespace ubit {
 
  
-static void _openPMenuCB(UMouseEvent& e, UPopmenu* m) {
+static void _openPMenuCB(MouseEvent& e, PopupMenu* m) {
   if (e.getButton() == e.RightButton) m->open(e);
 }
   
 
-UFinderDir::UFinderDir(UFinder* fd, const String& _fpath, int _path_type) {
+UFinderDir::UFinderDir(Finder* fd, const String& _fpath, int _path_type) {
   fpath = _fpath;
   fname = _fpath.basename();
   // CP du /  : basename est null mais il faut mettre qq chose
@@ -61,12 +61,12 @@ UFinderDir::UFinderDir(UFinder* fd, const String& _fpath, int _path_type) {
     (ualpha(0.5) + Background::black
      + Color::white + Font::bold + Border::none
      + ubutton("     ReOpen " + Color::yellow + fpath // read again if already opened
-               + ucall(fd, this, &UFinder::openDir))
+               + ucall(fd, this, &Finder::openDir))
      + ubutton("     Close Folder"
-               + ucall(fd, this, true, &UFinder::removeIconbox))
+               + ucall(fd, this, true, &Finder::removeIconbox))
      //+ uhsepar()
      //+ ubutton(UPix::cross + " Remove Folder" 
-     //      + ucall(fd, this, &UFinder::removeFromHistory)) // plante
+     //      + ucall(fd, this, &Finder::removeFromHistory)) // plante
      );
   popmenu.setSoftwin(true);
 
@@ -74,10 +74,10 @@ UFinderDir::UFinderDir(UFinder* fd, const String& _fpath, int _path_type) {
       fname
       + popmenu  
       // do not read again if already opened
-      + UOn::action / ucall(fd, this, &UFinder::openDir)
+      + UOn::action / ucall(fd, this, &Finder::openDir)
       // show info in the status bar
-      + UOn::enter  / ucall(fd, this, &UFinder::showDirInfo)
-      + UOn::leave  / ucall(fd, (UFinderDir*)0, &UFinder::showDirInfo)
+      + UOn::enter  / ucall(fd, this, &Finder::showDirInfo)
+      + UOn::leave  / ucall(fd, (UFinderDir*)0, &Finder::showDirInfo)
       );
   
   // right mouse button opens the menu
@@ -88,11 +88,11 @@ UFinderDir::~UFinderDir() {}
 
 const String& UFinderDir::getDir() const {return fpath;}
 
-class UIconbox* UFinderDir::getIconbox() const {return iconbox;}
+class IconBox* UFinderDir::getIconbox() const {return iconbox;}
 
 void UFinderDir::setDir(const String& _fpath) {fpath = _fpath;}
 
-void UFinderDir::setIconbox(class UIconbox* _ibox) {
+void UFinderDir::setIconbox(class IconBox* _ibox) {
   if (iconbox != _ibox) {
     emph(false);
     iconbox = _ibox;
@@ -107,7 +107,7 @@ void UFinderDir::emph(bool state) {
 /* ==================================================== [Elc] ======= */
 // HISTORY
 
-UFinderDir* UFinder::findDir(const String& name) {
+UFinderDir* Finder::findDir(const String& name) {
   UFinderDir* found = null;
 
   for (ChildIter c = folderlist.cbegin(); c != folderlist.cend(); c++) {
@@ -118,7 +118,7 @@ UFinderDir* UFinder::findDir(const String& name) {
   return found;
 }
 
-void UFinder::removeIconbox(UFinderDir* de, bool upd) {
+void Finder::removeIconbox(UFinderDir* de, bool upd) {
   if (!de) return;
   if (de->iconbox) {
     if (de->iconbox == piconbox) piconbox = null;
@@ -130,7 +130,7 @@ void UFinder::removeIconbox(UFinderDir* de, bool upd) {
   }
 }
 
-void UFinder::addToHistory(UFinderDir* de) {
+void Finder::addToHistory(UFinderDir* de) {
   if (de) {          // if not already in list
     folderlist.remove(*de);
     folderlist.add(*de, folderlist.cbegin());
@@ -138,23 +138,23 @@ void UFinder::addToHistory(UFinderDir* de) {
   last_direntry = de;
 }
 
-void UFinder::removeFromHistory(UFinderDir* de) {
+void Finder::removeFromHistory(UFinderDir* de) {
   if (last_direntry == de) last_direntry = null;
   removeIconbox(de, true);
   if (de) folderlist.remove(*de);
 }
 
-void UFinder::showDirInfo(UFinderDir* de) {
+void Finder::showDirInfo(UFinderDir* de) {
   //....
 }
 
-//void UFinder::iconifyIconbox(UFinderDir* de) {
+//void Finder::iconifyIconbox(UFinderDir* de) {
 //  if (de->iconbox) de->iconbox->iconify(!de->iconbox->isIconified());
 //}
 
 /* ==================================================== [Elc] ======= */
 
-void UFinder::showFile(const String& pathname, Document* doc) {
+void Finder::showFile(const String& pathname, Document* doc) {
   pdocbox->scrollpane().setScroll(0,0);
   if (listener) listener->docShown(pathname, doc);
 
@@ -173,7 +173,7 @@ void UFinder::showFile(const String& pathname, Document* doc) {
   //Application::setTitle(Application::getName() & " - " & pathname.basename());
 }
 
-void UFinder::showDir(const String& pathname) {
+void Finder::showDir(const String& pathname) {
   if (listener) listener->dirShown(pathname);
   
   if (mode != DirMode) {
@@ -189,12 +189,12 @@ void UFinder::showDir(const String& pathname) {
 
 // =============================================================================
   
-void UFinder::linkActionCB(UInputEvent& e, Document* doc) {
-  ULinkbutton * link = null;
+void Finder::linkActionCB(InputEvent& e, Document* doc) {
+  LinkButton * link = null;
   String url;
   
   if (!doc || !e.getSource() 
-      || !(link = dynamic_cast<ULinkbutton*>(e.getSource()))
+      || !(link = dynamic_cast<LinkButton*>(e.getSource()))
       //|| !(url = link->getHRef()) || url->empty()
       || (url = link->getHRef()).empty()
       )
@@ -211,7 +211,7 @@ void UFinder::linkActionCB(UInputEvent& e, Document* doc) {
 
 // =============================================================================
 
-int UFinder::openFile(const String& pathname, int path_type) {
+int Finder::openFile(const String& pathname, int path_type) {
   hideAlert();
   if (listener) listener->fileRequest(pathname);
 
@@ -222,7 +222,7 @@ int UFinder::openFile(const String& pathname, int path_type) {
     if (listener) listener->docLoaded(pathname, doc);
     if (pdocument) pdocbox->content().remove(*pdocument, false);
     
-    doc->addLinkCallback(UOn::action / ucall(this, doc, &UFinder::linkActionCB));
+    doc->addLinkCallback(UOn::action / ucall(this, doc, &Finder::linkActionCB));
     pdocument = doc;
     pdocbox->content().add(*pdocument, pdocbox->content().cbegin());
 
@@ -235,7 +235,7 @@ int UFinder::openFile(const String& pathname, int path_type) {
 
 /* ==================================================== [Elc] ======= */
 
-int UFinder::openDir(const String& pathname, int path_type) {
+int Finder::openDir(const String& pathname, int path_type) {
   int stat = false;
   String fpath = pathname;
   UFileDir::expandDirPath(fpath);  // pour transformer . en sa valeur
@@ -258,7 +258,7 @@ int UFinder::openDir(const String& pathname, int path_type) {
 }
 
 
-int UFinder::openDir(UFinderDir* de) {
+int Finder::openDir(UFinderDir* de) {
   if (!de) return false;
   int stat = false;
   // conserver scale et disp_mode courants
@@ -303,7 +303,7 @@ int UFinder::openDir(UFinderDir* de) {
   if (listener) listener->dirLoaded(de->fpath);
 
   {      // create a new iconbox in the navigator
-    UIconbox* iconbox = new UIconbox();
+    IconBox* iconbox = new IconBox();
     de->iconbox = iconbox;
     openContextMenuIn(*iconbox);
     if (is_tracking) iconbox->scrollpane().setTracking(true);
@@ -312,11 +312,11 @@ int UFinder::openDir(UFinderDir* de) {
   }
   
   de->iconbox->add
-    (UOn::change / ucall(this, de->iconbox(), &UFinder::iconSelectCB)
-     + UOn::action / ucall(this, de->iconbox(), &UFinder::iconActionCB)
+    (UOn::change / ucall(this, de->iconbox(), &Finder::iconSelectCB)
+     + UOn::action / ucall(this, de->iconbox(), &Finder::iconActionCB)
      // called when the iconbox is closed (the user clicked the "x" btn)
      // this will delete the iconbox
-     + UOn::close / ucall(this, de, true, &UFinder::removeIconbox)
+     + UOn::close / ucall(this, de, true, &Finder::removeIconbox)
      );
   
   stat = de->iconbox->readDir(de->fpath, de->path_type);
@@ -348,15 +348,15 @@ int UFinder::openDir(UFinderDir* de) {
 
 /* ==================================================== [Elc] ======= */
 
-UIcon* UFinder::getSelectedIcon() {
+Icon* Finder::getSelectedIcon() {
   return piconbox ? piconbox->getSelectedIcon() : null;
 }
 
-void UFinder::previousEntry() {
+void Finder::previousEntry() {
   if (!piconbox) return;
 
-  UIcon* current_icon = piconbox->getSelectedIcon();
-  UIcon* prev_icon = piconbox->getPreviousIcon();
+  Icon* current_icon = piconbox->getSelectedIcon();
+  Icon* prev_icon = piconbox->getPreviousIcon();
 
   if (mode == DocMode) {             // sauter les dirs
     //while (prev_icon && prev_icon->getMode().isDir()) {
@@ -364,7 +364,7 @@ void UFinder::previousEntry() {
       // ATT: ce code est FAUX: getPreviousIcon(0 renvoie toujours le meme!
       // ca marche uniquement parce que tous les dirs sont regroupes
       // en DEBUT de liste !
-      UIcon* prev_icon2 = piconbox->getPreviousIcon();
+      Icon* prev_icon2 = piconbox->getPreviousIcon();
       if (prev_icon == prev_icon2) {
         prev_icon = current_icon;         // cas que des dirs
         break;
@@ -382,15 +382,15 @@ void UFinder::previousEntry() {
   }
 }
 
-void UFinder::nextEntry() {
+void Finder::nextEntry() {
   if (!piconbox) return;
 
-  UIcon* current_icon = piconbox->getSelectedIcon();
-  UIcon* next_icon = piconbox->getNextIcon();
+  Icon* current_icon = piconbox->getSelectedIcon();
+  Icon* next_icon = piconbox->getNextIcon();
 
   if (mode == DocMode) {
     while (next_icon && next_icon->isDir()) {
-      UIcon* next_icon2 = piconbox->getNextIcon();
+      Icon* next_icon2 = piconbox->getNextIcon();
       if (next_icon == next_icon2) {
         next_icon = current_icon;         // cas que des dirs
         break;
@@ -408,7 +408,7 @@ void UFinder::nextEntry() {
   }
 }
 
-void UFinder::openEntry() {
+void Finder::openEntry() {
   if (!getSelectedIcon()) return;
 
   //if (open_in_fullwin) showFullWin();  // et si pas un dir
@@ -428,7 +428,7 @@ void UFinder::openEntry() {
 /* ==================================================== [Elc] ======= */
 // Callbacks
 
-void UFinder::iconActionCB(UIconbox* ibox) {
+void Finder::iconActionCB(IconBox* ibox) {
   if (piconbox && piconbox != ibox) {
     piconbox->selectIcon(null);
     // must be reloaded
@@ -438,7 +438,7 @@ void UFinder::iconActionCB(UIconbox* ibox) {
 }
 
 
-void UFinder::iconSelectCB(UIconbox* ibox) {
+void Finder::iconSelectCB(IconBox* ibox) {
   if (piconbox && piconbox != ibox) {
     piconbox->selectIcon(null);
     // must be reloaded
@@ -451,20 +451,20 @@ void UFinder::iconSelectCB(UIconbox* ibox) {
 }
 
 
-void UFinder::showPreviewRequest(UIcon* icon) {
+void Finder::showPreviewRequest(Icon* icon) {
   if (!icon) return;
   
   // afficher preview sauf si deja selectionne 
   if (icon != last_preview_request) {
     last_preview_request = icon;
     Timer* t = new Timer(10, 1, true);  // true => auto_delete
-    t->onAction(ucall(this, icon, &UFinder::showPreview));
+    t->onAction(ucall(this, icon, &Finder::showPreview));
     t->start();
   }
 }
 
 
-void UFinder::showPreview(UIcon* icon) {
+void Finder::showPreview(Icon* icon) {
   if (!icon) return; 
   if (icon != last_preview) {
     last_preview = icon;
@@ -474,14 +474,14 @@ void UFinder::showPreview(UIcon* icon) {
 }
 
 
-void UFinder::showIconPreviews() {
+void Finder::showIconPreviews() {
   if (previews_current == previews_end) {
     preview_timer->stop();
     return;
   }
 
   while (previews_current != previews_end) {
-    UIcon* icon = dynamic_cast<UIcon*>(*previews_current);
+    Icon* icon = dynamic_cast<Icon*>(*previews_current);
     previews_current++;
     if (icon) {
       String pathname = piconbox->pathname() & "/" & icon->getName();
@@ -502,7 +502,7 @@ extern "C" {
 
 #ifndef NO_REMOTE_DOC
 
-UFinderCom::UFinderCom(UFinder* _fd, const String& _path, int _type)
+UFinderCom::UFinderCom(Finder* _fd, const String& _path, int _type)
 : fd(_fd), path(_path), type(_type), mode(0), stat(0) {
   pthread_create(&thread_id, NULL, (START_ROUTINE)loadDoc, this);
 }
@@ -637,7 +637,7 @@ void UFinderCom::showDoc() {
 /* ==================================================== [Elc] ======= */
 
 void UFinderHost::putFile() {
-  UIcon* icon = fd.getSelectedIcon();
+  Icon* icon = fd.getSelectedIcon();
   if (!icon) {
     fd.showAlert("PutFile: no file selected (select an icon!)");
     return;
@@ -646,7 +646,7 @@ void UFinderHost::putFile() {
 }
 
 void UFinderHost::putFileImpl() {
-  UIcon* icon = fd.getSelectedIcon();
+  Icon* icon = fd.getSelectedIcon();
   if (!icon) {
     fd.showAlert("PutFile: no file selected (select an icon!)"); // !!!ET SIL A CHANGE?
     return;
@@ -715,17 +715,17 @@ ERROR:
 /* ==================================================== (c)[Elc] ======= */
 // HOSTS
 
-bool UFinder::isBrowsing() const {
+bool Finder::isBrowsing() const {
   return (local_ums && local_ums->isConnected());
 }
 
-bool UFinder::browseHosts() {
+bool Finder::browseHosts() {
   if (local_ums) delete local_ums;
   local_ums = new MessageService("localhost");
-  return local_ums->browseUMServers(ucall(this, &UFinder::browseCB));
+  return local_ums->browseUMServers(ucall(this, &Finder::browseCB));
 }
 
-void UFinder::browseCB(MessageEvent& e) {
+void Finder::browseCB(MessageEvent& e) {
   MessageService::BrowseReply r(e);
   if (r.serviceName.empty()) return;
  
@@ -746,33 +746,33 @@ void UFinder::browseCB(MessageEvent& e) {
     addHost(r.serviceName);
 }
 
-UFinderHost* UFinder::addHost(const String& hostname) {
+UFinderHost* Finder::addHost(const String& hostname) {
   UFinderHost* host = new UFinderHost(this, hostname);
   hostlist.add(host);
   return host;
 }
 
-UFinderHost* UFinder::addHostCB(const String* hostname) {
+UFinderHost* Finder::addHostCB(const String* hostname) {
   if (!hostname || hostname->empty()) return null;
   else return addHost(*hostname);
 }
 
-void UFinder::removeHost(UFinderHost* host) {
+void Finder::removeHost(UFinderHost* host) {
   if (host) hostlist.remove(*host);
 }
 
-void UFinder::addHosts(const vector<String*>& hostnames) {
+void Finder::addHosts(const vector<String*>& hostnames) {
   for (unsigned int k = 0; k < hostnames.size(); k++) 
     if (hostnames[k]) addHost(*hostnames[k]);
 }
-void UFinder::addHosts(char const* hostnames[]) {
+void Finder::addHosts(char const* hostnames[]) {
   for (unsigned int k = 0; hostnames[k] != null; k++)
     if (hostnames[k]) addHost(hostnames[k]);
 }
 
 /* ==================================================== (c)[Elc] ======= */
 
-UFinderHost::UFinderHost(class UFinder* _fd, const String& _hostname)
+UFinderHost::UFinderHost(class Finder* _fd, const String& _hostname)
 : fd(*_fd), hostname(_hostname), clone_win(null) //, remote_ums(null) 
 {
   clone_btn = 
@@ -798,11 +798,11 @@ UFinderHost::UFinderHost(class UFinder* _fd, const String& _hostname)
   if (hostname == "localhost")
     ;//box.add(ulinkbutton("Calibrate" + ucall(this, &UFinderHost::calibrate)));
   else {
-    put_btn = new ULinkbutton("-- Put"+ ucall(this, &UFinderHost::putFile));
+    put_btn = new LinkButton("-- Put"+ ucall(this, &UFinderHost::putFile));
     funcbox.add(*put_btn /* + get_btn */);  // to be completed...
   }
   
-  UItem& name_box = uitem
+  Item& name_box = uitem
     (Color::black + UOn::select / Font::bold
      + UOn::select / Background::none
      + UOn::select / UPix::minus
@@ -879,7 +879,7 @@ void UFinderHost::removeXhost() {
 }
 
 
-void UFinder::createClone(const String& hostname) {
+void Finder::createClone(const String& hostname) {
   UFinderHost* host = addHost(hostname);
   host->createClone();
 }
@@ -915,7 +915,7 @@ void UFinderHost::deleteClone() {
 }
 
 
-void UFinder::createCloneRequest(MessageEvent& e) {
+void Finder::createCloneRequest(MessageEvent& e) {
   const String* hostname = e.getMessage();
   if (!hostname || hostname->empty()) return;
 
@@ -927,7 +927,7 @@ void UFinder::createCloneRequest(MessageEvent& e) {
   }
 }
 
-UFrame* UFinder::createCloneFrame(const String& title) {
+UFrame* Finder::createCloneFrame(const String& title) {
   return &uframe(opts.clone_frame_size + this).setTitle(title);
 }
 

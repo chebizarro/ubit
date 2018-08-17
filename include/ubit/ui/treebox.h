@@ -24,7 +24,7 @@ namespace ubit {
 /** Tree widget.
   * @see also: Treenode.
 */
-class Treebox : public Listbox {
+class Treebox : public ListBox {
 public:
   UCLASS(Treebox)
   

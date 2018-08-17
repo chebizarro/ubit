@@ -30,7 +30,7 @@
 namespace ubit {
 
 /* File chooser.
-* A UFilebox can be included into a UDialog or a UMenu as follows:
+* A FileChooser can be included into a Dialog or a Menu as follows:
 * examples:
 * <pre>
 *   class Demo {
@@ -41,13 +41,13 @@ namespace ubit {
 *
 *   Demo* d = new Demo();
 *
-*   // NB: ufilebox(...) is a shortcut for *new UFilebox(...)
+*   // NB: ufilebox(...) is a shortcut for *new FileChooser(...)
 *   Box& fbox = ufilebox( utitle("Open File")
 *                          + UOn::action / ucall(this, &Demo::openFile)
 *                         );
-*   UDialog& fdialog = udialog(fbox)
+*   Dialog& fdialog = udialog(fbox)
 *   // and/or:
-*   UMenu& fmenu = umenu(fbox)
+*   Menu& fmenu = umenu(fbox)
 * </pre>
 *
 * this->openFile() is called when a file is double clicked or when
@@ -55,17 +55,17 @@ namespace ubit {
 *
 * @see: UCall for more info on callback methods/functions and their parameters
 */
-class UFilebox : public Box {
+class FileChooser : public Box {
 public:
-  UCLASS(UFilebox)
+  UCLASS(FileChooser)
 
-  UFilebox(const Args& arglist = Args::none);
+  FileChooser(const Args& arglist = Args::none);
   /**< create a new file box (@see also shortcut ufilebox()).
     * The arglist is typically used to add a callback function.
-    * see class UFilebox for an example.
+    * see class FileChooser for an example.
     */
     
-  virtual ~UFilebox();
+  virtual ~FileChooser();
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -104,14 +104,14 @@ public:
 protected:
   String fspec;
   uptr<String> fname, fdir2, ffilter, fpath;
-  //UScrollpane* scrollpane;
+  //Scrollpane* scrollpane;
   Box *mainbox;
   Box *show_list, *show_hidden_files;
   URadioSelect new_sel;
   bool autoclose;
   
-  virtual void cancelBehavior(UInputEvent&);
-  virtual void okBehavior(UInputEvent&);
+  virtual void cancelBehavior(InputEvent&);
+  virtual void okBehavior(InputEvent&);
   virtual void selectBehavior(Event&, String* pathname);
   virtual void setDirImpl(String*);
   virtual void changeDirImpl(String*);
@@ -121,8 +121,8 @@ protected:
     */
 };
 
-UFilebox& ufilebox(const Args& arglist = Args::none);
-///< shortcut that returns *new UFilebox().
+FileChooser& ufilebox(const Args& arglist = Args::none);
+///< shortcut that returns *new FileChooser().
 
 }
 #endif

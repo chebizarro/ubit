@@ -71,7 +71,7 @@ namespace ubit {
       virtual UDefaultInlineElement* newInstance() const {
         return new UDefaultInlineElement(*this);
       }
-      virtual UStyle* newStyle() const {return UDefaultInlineElement::createStyle();}
+      virtual Style* newStyle() const {return UDefaultInlineElement::createStyle();}
     };
     
     UDefaultInlineElement(const UDefaultInlineElement::MetaClass& c) : cid(c) {}  
@@ -98,7 +98,7 @@ namespace ubit {
       virtual UDefaultBlockElement* newInstance() const {
         return new UDefaultBlockElement(*this);
       }
-      virtual UStyle* newStyle() const {return UDefaultBlockElement::createStyle();}
+      virtual Style* newStyle() const {return UDefaultBlockElement::createStyle();}
     };
     
     UDefaultBlockElement(const UDefaultBlockElement::MetaClass& c) : cid(c) {}  

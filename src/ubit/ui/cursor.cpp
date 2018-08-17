@@ -28,26 +28,26 @@
 #include <ubit/ucolor.hpp>
 #include <ubit/uview.hpp>
 #include <ubit/core/event.h>
-#include <ubit/uupdatecontext.hpp>
+#include <ubit/ui/updatecontext.h>
 #include <ubit/ucursor.hpp>
 #include <ubit/uappli.hpp>
 
 namespace ubit {
 
-UCursor UCursor::none(-1, UCONST);
+Cursor Cursor::none(-1, UCONST);
   
   /* les autres definis dans udispX11.cpp :
-  *     UCursor UCursor::pointer(XC_left_ptr, UCONST);
-  *     UCursor UCursor::crosshair(XC_tcross, UCONST);
+  *     Cursor Cursor::pointer(XC_left_ptr, UCONST);
+  *     Cursor Cursor::crosshair(XC_tcross, UCONST);
   * ...etc...
   */
   
 
-UCursor::UCursor(const UCursor& c) : cursor_type(c.cursor_type) {}
-UCursor::UCursor(int ctype) : cursor_type(ctype) {}
-UCursor::UCursor(int ctype, UConst m): Attribute(m), cursor_type(ctype) {}
+Cursor::Cursor(const Cursor& c) : cursor_type(c.cursor_type) {}
+Cursor::Cursor(int ctype) : cursor_type(ctype) {}
+Cursor::Cursor(int ctype, UConst m): Attribute(m), cursor_type(ctype) {}
 
-UCursor& UCursor::set(const UCursor& c) {
+Cursor& Cursor::set(const Cursor& c) {
   if (checkConst()) return *this;
   if (cursor_type == c.cursor_type) return *this;
   cursor_type = c.cursor_type;
@@ -55,30 +55,30 @@ UCursor& UCursor::set(const UCursor& c) {
   return *this;
 }
 
-bool UCursor::equals(const UCursor &c) const {
+bool Cursor::equals(const Cursor &c) const {
   return (cursor_type == c.cursor_type);
 }
 
 
-void UCursor::addingTo(Child& c, Element& parent) {
+void Cursor::addingTo(Child& c, Element& parent) {
   Attribute::addingTo(c, parent);
   //if (parent->isDef(0, UMode::HAS_CURSOR)) 
-  //  Application::warning("UCursor::addingTo","multiple UCursor bricks in object:", parent->cname());
+  //  Application::warning("Cursor::addingTo","multiple Cursor bricks in object:", parent->cname());
   // rendre parent sensitif aux events ad hoc
   parent.emodes.HAS_CURSOR = true;
 }
 
-void UCursor::removingFrom(Child& c, Element& parent) {
+void Cursor::removingFrom(Child& c, Element& parent) {
   // tant pis s'il y a plusieurs Cursors: de tt facon c'est une erreur
   parent.emodes.HAS_CURSOR = false;
   Attribute::removingFrom(c, parent);
 }
 
-void UCursor::putProp(UpdateContext* ctx, Element&) {
+void Cursor::putProp(UpdateContext* ctx, Element&) {
   ctx->cursor = this;
 }
 
-UCursor::~UCursor() {
+Cursor::~Cursor() {
   if (Application::isExiting()) return;
   for (int k = 0; k < (int)cimpl.size(); ++k) {
     Display* d = Application::getDisp(k);
@@ -87,7 +87,7 @@ UCursor::~UCursor() {
   destructs();
 }
 
-UCursorImpl* UCursor::getCursorImpl(Display* d) const {
+UCursorImpl* Cursor::getCursorImpl(Display* d) const {
   int id = d->getID();
   if (id < (int)cimpl.size() && cimpl[id] != null) return cimpl[id];
   else {

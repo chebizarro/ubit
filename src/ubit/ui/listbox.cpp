@@ -21,61 +21,61 @@ using namespace std;
 NAMESPACE_UBIT
 
 
-URadiobox::URadiobox(const Args& a) 
-: pchoice(new UChoice()) {
+RadioBox::RadioBox(const Args& a) 
+: pchoice(new Choice()) {
   addAttr(*pchoice);
   add(a);
 }
 
-Box* URadiobox::getSelectedItem() const {
+Box* RadioBox::getSelectedItem() const {
   return choice().getSelectedItem();
 }
 
-int URadiobox::getSelectedIndex() const {
+int RadioBox::getSelectedIndex() const {
   return choice().getSelectedIndex();
 }
 
-URadiobox& URadiobox::setSelectedItem(Box& i) {
+RadioBox& RadioBox::setSelectedItem(Box& i) {
   choice().setSelectedItem(i);  // c'est title qui est selected !
   return *this;
 }
 
-URadiobox& URadiobox::setSelectedItem(Box* i) {
+RadioBox& RadioBox::setSelectedItem(Box* i) {
   choice().setSelectedItem(i);  // c'est title qui est selected !
   return *this;
 }
 
-URadiobox& URadiobox::setSelectedIndex(int i) {
+RadioBox& RadioBox::setSelectedIndex(int i) {
   choice().setSelectedIndex(i);
   return *this;
 }
 
-Listbox& Listbox::setSelectedItem(Box& i) {
+ListBox& ListBox::setSelectedItem(Box& i) {
   choice().setSelectedItem(i);  // c'est title qui est selected !
   return *this;
 }
 
-Listbox& Listbox::setSelectedIndex(int i) {
+ListBox& ListBox::setSelectedIndex(int i) {
   choice().setSelectedIndex(i);
   return *this;
 }
 
 
-struct UListStyle : public UStyle {
-  UStyle transp_style;
+struct UListStyle : public Style {
+  Style transp_style;
   UListStyle();
   
-  virtual const UStyle& getStyle(UpdateContext* ctx) const {
-    Listbox* l = null; 
+  virtual const Style& getStyle(UpdateContext* ctx) const {
+    ListBox* l = null; 
     if (ctx && ctx->obj 
-        && (l = dynamic_cast<Listbox*>(ctx->obj)) && l->isTransparent())
+        && (l = dynamic_cast<ListBox*>(ctx->obj)) && l->isTransparent())
       return transp_style; 
     else return *this;
   }
 };
 
 UListStyle::UListStyle() {
-  transp_style.orient = UOrient::VERTICAL;
+  transp_style.orient = Orientation::VERTICAL;
   transp_style.halign = Halign::FLEX;
   transp_style.valign = Valign::TOP;
   transp_style.hspacing = 1;
@@ -84,7 +84,7 @@ UListStyle::UListStyle() {
   setColors(Color::inherit, Color::white);
   setColor(UOn::DISABLED, Color::disabled);
   setBgcolors(Color::white, Color::black);
-  orient = UOrient::VERTICAL;
+  orient = Orientation::VERTICAL;
   halign = Halign::FLEX;
   valign = Valign::TOP;
   hspacing = 1;
@@ -95,37 +95,37 @@ UListStyle::UListStyle() {
 }
 
 
-UStyle* Listbox::createStyle() {
+Style* ListBox::createStyle() {
   return new UListStyle;
 }
 
-Listbox::Listbox(const Args& a) : transp_style(false) {
+ListBox::ListBox(const Args& a) : transp_style(false) {
   add(a);
 }
 
-Listbox& Listbox::addItem(const String& s) {
+ListBox& ListBox::addItem(const String& s) {
   add(uitem(ustr(s)));
   return *this;
 }
 
-Listbox& Listbox::addItem(String& s, bool dup) {
+ListBox& ListBox::addItem(String& s, bool dup) {
   if (dup) add(uitem(ustr(s))); else add(uitem(s));
   return *this;
 }
 
-Listbox& Listbox::addItems(const char* tab[]) {
+ListBox& ListBox::addItems(const char* tab[]) {
   for (unsigned int k = 0; tab[k] != null ; k++)
     addItem(tab[k]);
   return *this;
 }
 
-Listbox& Listbox::addItems(const std::vector<String*>& tab, bool dup) {
+ListBox& ListBox::addItems(const std::vector<String*>& tab, bool dup) {
   for (unsigned int k = 0; k < tab.size(); k++)
     if (tab[k]) addItem(*tab[k], dup);
   return *this;
 }
 
-Listbox& Listbox::addItems(const String& item_list, const String& sep) { 
+ListBox& ListBox::addItems(const String& item_list, const String& sep) { 
   vector<String*> tab;
   unsigned int count = item_list.tokenize(tab, sep);
   for (unsigned int k = 0; k < count; k++)
@@ -133,13 +133,13 @@ Listbox& Listbox::addItems(const String& item_list, const String& sep) {
   return *this;
 }
 
-Listbox& Listbox::addItems(const Args& prefix, const char* tab[]) {
+ListBox& ListBox::addItems(const Args& prefix, const char* tab[]) {
   for (unsigned int k = 0; tab[k] != null ; k++)
     add(uitem(prefix + ustr(tab[k])));
   return *this;
 }
 
-Listbox& Listbox::addItems(const Args& prefix,
+ListBox& ListBox::addItems(const Args& prefix,
                              const std::vector<String*>& tab, bool dup) {
   for (unsigned int k = 0; k < tab.size(); k++)
     if (tab[k]) {
@@ -149,7 +149,7 @@ Listbox& Listbox::addItems(const Args& prefix,
   return *this;
 }
 
-Listbox& Listbox::addItems(const Args& prefix, const String& item_list, 
+ListBox& ListBox::addItems(const Args& prefix, const String& item_list, 
                              const String& sep) { 
   vector<String*> tab;
   unsigned int count = item_list. tokenize(tab, sep);
@@ -159,28 +159,28 @@ Listbox& Listbox::addItems(const Args& prefix, const String& item_list,
 }
 
 
-static void adjustSize(UMenu* m, int i) {
+static void adjustSize(Menu* m, int i) {
   // inutile (et dengereux) si l'appli est terminee)
   if (Application::isExiting()) return;
   m->update(Update::ADJUST_WIN_SIZE);
 }
 
-UCombobox::UCombobox() :
-UTextfield(), plist(null), text_only(false) {
+ComboBox::ComboBox() :
+TextField(), plist(null), text_only(false) {
   constructs(Args::none);
 }
 
-UCombobox::UCombobox(Listbox& l, const Args& a) :
-UTextfield(a), plist(l), text_only(false) {
+ComboBox::ComboBox(ListBox& l, const Args& a) :
+TextField(a), plist(l), text_only(false) {
   constructs(a);
 }
 
-void UCombobox::constructs(const Args& _a) {
+void ComboBox::constructs(const Args& _a) {
   pmenu = upopmenu(*plist);
   
   setAttr(*new UCompositeBorder
           (Valign::flex + Halign::right
-           + uitem(USymbol::down + UOn::action /ucall(this, &UCombobox::openMenuCB))
+           + uitem(USymbol::down + UOn::action /ucall(this, &ComboBox::openMenuCB))
            + *pmenu
            ));
   addAttr(uvcenter());
@@ -188,8 +188,8 @@ void UCombobox::constructs(const Args& _a) {
   add(*pentry);
   
   plist->addAttr(Border::none);   // virer le border: horrible dans un menu
-  plist->addAttr(UOn::action / ucall(this, &UCombobox::actionCB));
-  plist->addAttr(UOn::change / ucall(this, &UCombobox::changedCB));
+  plist->addAttr(UOn::action / ucall(this, &ComboBox::actionCB));
+  plist->addAttr(UOn::change / ucall(this, &ComboBox::changedCB));
   plist->addAttr(UOn::addChild / ucall(pmenu(), 1, adjustSize));
   plist->addAttr(UOn::removeChild / ucall(pmenu(), -1, adjustSize));
   
@@ -197,13 +197,13 @@ void UCombobox::constructs(const Args& _a) {
   plist->choice().setSelectedIndex(0); 
 }
 
-UStyle* UCombobox::createStyle() {
-  return UTextfield::createStyle();
+Style* ComboBox::createStyle() {
+  return TextField::createStyle();
 }
 
 
-void UCombobox::actionCB(Event& e) {  //UElemEvent
-  //cerr << "UCombobox::actionCB"<< typeid(e).name()  << endl;
+void ComboBox::actionCB(Event& e) {  //UElemEvent
+  //cerr << "ComboBox::actionCB"<< typeid(e).name()  << endl;
   //EventFlow* flow = source_event.getFlow();
   // View* hardwv = ce n'est pas la meme!
   syncText();
@@ -215,8 +215,8 @@ void UCombobox::actionCB(Event& e) {  //UElemEvent
 }
 
 
-void UCombobox::changedCB(Event& e) {  //UElemEvent
-  //cerr << "UCombobox::changedCB" << typeid(e).name() <<endl;
+void ComboBox::changedCB(Event& e) {  //UElemEvent
+  //cerr << "ComboBox::changedCB" << typeid(e).name() <<endl;
   //EventFlow* flow = source_event.getFlow();
   //Event e2(UOn::change, null, flow);
   //e2.setSource(this);
@@ -226,7 +226,7 @@ void UCombobox::changedCB(Event& e) {  //UElemEvent
 }
 
 
-void UCombobox::syncText() {
+void ComboBox::syncText() {
   bool auto_up = pentry->isAutoUpdate();
   pentry->setAutoUpdate(false);
   
@@ -254,8 +254,8 @@ void UCombobox::syncText() {
 }
 
 
-void UCombobox::openMenuCB(UInputEvent& e) {
-  //cerr << "UCombobox::openMenuCB" << typeid(e).name() << endl;
+void ComboBox::openMenuCB(InputEvent& e) {
+  //cerr << "ComboBox::openMenuCB" << typeid(e).name() << endl;
   View* combo_view = e.getView() ? e.getView()->getParentView() : null;
   if (combo_view) {
     pmenu->setPos(*combo_view, Point(0, combo_view->getHeight()));
@@ -264,10 +264,10 @@ void UCombobox::openMenuCB(UInputEvent& e) {
 }
 
 
-UChoice& UCombobox::choice() {return plist->choice();}
-//const UChoice& UCombobox::choice() const {return plist->choice();}
+Choice& ComboBox::choice() {return plist->choice();}
+//const Choice& ComboBox::choice() const {return plist->choice();}
 
-UCombobox& UCombobox::setTextMode(bool st) {
+ComboBox& ComboBox::setTextMode(bool st) {
   text_only = st;
   syncText();
   return *this;

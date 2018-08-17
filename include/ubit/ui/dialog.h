@@ -36,22 +36,22 @@ namespace ubit {
    *
    * @see class Window for inherited methods and other important remarks.
    */
-  class UDialog : public Window {
+  class Dialog : public Window {
   public:
-    UCLASS(UDialog)
+    UCLASS(Dialog)
     
-    UDialog(Args nodelist = Args::none);
+    Dialog(Args nodelist = Args::none);
     ///< creates a new Dialog Window; @see also shortcut function udialog().
         
-    virtual ~UDialog() {destructs();}
+    virtual ~Dialog() {destructs();}
     
-    virtual UDialog& setTitle(const String& title) {Window::setTitle(title); return *this;}
+    virtual Dialog& setTitle(const String& title) {Window::setTitle(title); return *this;}
     ///< changes the title of the dialog box.
 
     virtual void show(bool state, Display*); // redefined
     ///< shows/hides the dialog box on this display; @see: show(bool state);
     
-    virtual void show(bool state = true) {UDialog::show(state, null);} // redefined
+    virtual void show(bool state = true) {Dialog::show(state, null);} // redefined
     /**< shows/hides this dialog box.
      * dialogs are not shown by default; show() must be called to make them visible.
      * Besides, their size do not change after the first call to show(), except if
@@ -97,7 +97,7 @@ namespace ubit {
      *   (see Args) that must not be destroyed (they won't appear otherwise)
      */
     
-    static UStyle* createStyle();  // redefined
+    static Style* createStyle();  // redefined
     virtual bool realize(); // redefined
 
 #ifndef NO_DOC
@@ -109,13 +109,13 @@ namespace ubit {
 #endif
   };
   
-  inline UDialog& udialog(Args arglist = Args::none) {return *new UDialog(arglist);}
-  ///< shortcut function that returns *new UDialog(args).
+  inline Dialog& udialog(Args arglist = Args::none) {return *new Dialog(arglist);}
+  ///< shortcut function that returns *new Dialog(args).
   
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   /** UFrame: toplevel and main window.
    * The main window of the application should usually be a UFrame. This window, 
-   * called the "Main Frame", has a special role for dialog boxes (@see UDialog)
+   * called the "Main Frame", has a special role for dialog boxes (@see Dialog)
    *
    * In contrast with Dialogs, Frames can be iconified separately. Most applications
    * have only 1 frame (the "Main Frame"). However, applications that require several 
@@ -124,7 +124,7 @@ namespace ubit {
    *
    * @see class Window for inherited methods and other important remarks.
    */
-  class UFrame : public UDialog {
+  class UFrame : public Dialog {
     friend class Application;
   public: 
     UCLASS(UFrame)
@@ -141,7 +141,7 @@ namespace ubit {
     virtual void show(bool state, Display*);  // redefined
     virtual void show(bool state = true) {UFrame::show(state, null);}  // redefined
 
-    static UStyle* createStyle();  // redefined
+    static Style* createStyle();  // redefined
     virtual bool realize();  // redefined
   };
   
@@ -151,9 +151,9 @@ namespace ubit {
   
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   /** Predefined dialog box with optional content, icon and buttons area.
-   * @see UDialog.
+   * @see Dialog.
    */
-  class UOptionDialog : public UDialog {
+  class UOptionDialog : public Dialog {
   public:
     UCLASS(UOptionDialog)
 

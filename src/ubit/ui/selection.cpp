@@ -278,7 +278,7 @@ void Selection::perform(String* copy, bool del) {
 
 /* ==================================================== [Elc] ======= */
 
-void Selection::start(UMouseEvent& e) {
+void Selection::start(MouseEvent& e) {
   if (e.getSource() && e.getButton() == Application::conf.getMouseSelectButton()) {
     
     // effacer selection courante (ce qui necessite ancien obj)
@@ -300,7 +300,7 @@ void Selection::start(UMouseEvent& e) {
 }
 
 
-void Selection::extend(UMouseEvent& e) {
+void Selection::extend(MouseEvent& e) {
   if (!in_obj || e.getSource() != in_obj) return;
   // si on a localise une string, changer la selection (sinon on ne fait rien
   // pour ne pas abimer inutilement la selection precedente)
@@ -309,7 +309,7 @@ void Selection::extend(UMouseEvent& e) {
 }
 
 
-bool Selection::complete(UMouseEvent& e) {
+bool Selection::complete(MouseEvent& e) {
   being_selected = false;   // on n'est plus en train de selectionner le texte
 
   return (in_obj && fromLink != in_obj->cend() && toLink != in_obj->cend()

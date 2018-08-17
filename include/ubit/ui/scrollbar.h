@@ -36,7 +36,7 @@ namespace ubit {
    *
    * Geometry:
    *  - horizontal orientation by default 
-   *  - addAttr(UOrient::vertical) makes the scrollbar vertical
+   *  - addAttr(Orientation::vertical) makes the scrollbar vertical
    *  - shortcut functions uhscrollbar() and uvscrollbar() specify the orientation
    *
    * Callbacks
@@ -50,7 +50,7 @@ namespace ubit {
 
     UScrollbar(const Args& = Args::none);
     /**< creates a new scrollbar (@see also shortcut uscrollbar()).
-     * Default orientation is vertical. new UScrollbar(UOrient::horizontal) creates
+     * Default orientation is vertical. new UScrollbar(Orientation::horizontal) creates
      * a horizontal slider. The scrollbar value is in the range [0., 100.]
      */
     
@@ -58,13 +58,13 @@ namespace ubit {
     /**< creates a new scrollbar with a model value.
      * the scrollbar is synchronized with this value. Several widgets 
      * (eg.scrollbar) that share the same value are synchronized.
-     * Default orientation is vertical. new USlider(value, UOrient::horizontal) 
+     * Default orientation is vertical. new USlider(value, Orientation::horizontal) 
      * creates a horizontal scrollbar. The value is in the range [0., 100.]
      */
     
     virtual ~UScrollbar();
         
-    static UStyle* createStyle();
+    static Style* createStyle();
 
     virtual float getValue() const;
     ///< returns the current value (a float between 0 and 100).
@@ -113,21 +113,21 @@ namespace ubit {
      * can be redefined by subclasses to use other widgets
      */
     
-    virtual void setPane(UScrollpane*);
-    UScrollpane* getPane() {return ppane;}
+    virtual void setPane(Scrollpane*);
+    Scrollpane* getPane() {return ppane;}
     ///< [impl] attaches the scrollbar to a scrollpane.
     
     virtual void setValueImpl(float percent, bool update_pane);
     ///< [impl] does not update the associated pane.
     
-    virtual void pressScrollButton(UMouseEvent&, int dir);
+    virtual void pressScrollButton(MouseEvent&, int dir);
     ///< [impl].
     
   private:
     friend class UScrollbarView;
-    friend class UScrollpane;
+    friend class Scrollpane;
     uptr<Float> pvalue;	        // scrollbar value (percentage)
-    uptr<UScrollpane> ppane;	    // the pane controlled by this scrollbar
+    uptr<Scrollpane> ppane;	    // the pane controlled by this scrollbar
     uptr<Box> pless_btn, pmore_btn, pknob, prail;
     uptr<UPos> pknob_pos;		      // current position of the knob
     float unit_increment, block_increment;
@@ -138,13 +138,13 @@ namespace ubit {
     void constructs();
     //nb: inutile que contructs soit virtuel car appele par constructeur!
     
-    virtual void pressKnob(UMouseEvent&);
-    virtual void releaseKnob(UMouseEvent&);
-    virtual void dragKnob(UMouseEvent&);
-    virtual void pressRail(UMouseEvent&);
-    virtual void releaseRail(UMouseEvent&);
-    virtual float getPercent(UMouseEvent&, View* knob_view, View* rail_view, float delta_mouse);
-    virtual float getIncrementPercent(UMouseEvent&, float increment);
+    virtual void pressKnob(MouseEvent&);
+    virtual void releaseKnob(MouseEvent&);
+    virtual void dragKnob(MouseEvent&);
+    virtual void pressRail(MouseEvent&);
+    virtual void releaseRail(MouseEvent&);
+    virtual float getPercent(MouseEvent&, View* knob_view, View* rail_view, float delta_mouse);
+    virtual float getIncrementPercent(MouseEvent&, float increment);
   };
   
   inline UScrollbar& uscrollbar(const Args& args = Args::none) {return *new UScrollbar(args);}

@@ -24,32 +24,32 @@ using namespace std;
 NAMESPACE_UBIT
 
 
-UStyle* UIconbox::createStyle() {
-  //UStyle* style = UVbox::createStyle();
-  UStyle* style = Box::createStyle();
+Style* IconBox::createStyle() {
+  //Style* style = UVbox::createStyle();
+  Style* style = Box::createStyle();
   return style;
 }
 
-UIconbox::UIconbox(Args args) : UDocbox(), show_parent_dir(true) {
+IconBox::IconBox(Args args) : UDocbox(), show_parent_dir(true) {
   filetime = 0;
-  icon_hspacing = new UHspacing(5);
-  icon_vspacing = new UVspacing(5);
+  icon_hspacing = new HSpacing(5);
+  icon_vspacing = new VSpacing(5);
   ppathname = new String;
   ptitle = new String;
   titlebar().addAttr(upadding(3,2) + uhspacing(3) + Font::italic);
   titlebar().add(*ptitle);
 
 /* beaucoup trop long ! bloque l'interaction              A REVOIR!!!
-  UButton& alt_btn = uflatbutton(" # ");
+  Button& alt_btn = uflatbutton(" # ");
   alt_btn.addAttr(Font::small);
-  alt_btn.addAttr(UOn::select / ucall(this,true, &UIconbox::showSmallIcons));
-  alt_btn.addAttr(UOn::deselect / ucall(this,false, &UIconbox::showSmallIcons));
+  alt_btn.addAttr(UOn::select / ucall(this,true, &IconBox::showSmallIcons));
+  alt_btn.addAttr(UOn::deselect / ucall(this,false, &IconBox::showSmallIcons));
   //titlebar().insert(0, alt_btn);
   titlebar().add(alt_btn, titlebar().cbegin());
  */
   
-  picons = new Listbox;
-  // NB: icons ne doit contenir que des UIcon sinon getIcon ne marchera pas
+  picons = new ListBox;
+  // NB: icons ne doit contenir que des Icon sinon getIcon ne marchera pas
   picons->addAttr(FlowView::style + upadding(0,0) 
                   + *icon_hspacing + *icon_vspacing + Font::small);                     
                      //+ show_dirs + show_docs + show_icon_names + show_icon_contents);
@@ -57,42 +57,42 @@ UIconbox::UIconbox(Args args) : UDocbox(), show_parent_dir(true) {
   content().add(*picons);
 }
 
-UIconbox::~UIconbox() {}
+IconBox::~IconBox() {}
 
-UChoice& UIconbox::choice() {return picons->choice();}
-const UChoice& UIconbox::choice() const {return picons->choice();}
+Choice& IconBox::choice() {return picons->choice();}
+const Choice& IconBox::choice() const {return picons->choice();}
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UIconbox::addIcon(UIcon& icon) {
+void IconBox::addIcon(Icon& icon) {
   picons->add(icon);
 }
 
-void UIconbox::removeIcon(UIcon& icon, bool auto_delete) {
+void IconBox::removeIcon(Icon& icon, bool auto_delete) {
   picons->remove(icon, auto_delete);
 }
 
-void UIconbox::removeAllIcons(bool auto_delete) {
+void IconBox::removeAllIcons(bool auto_delete) {
   picons->removeAll(auto_delete);
 }
 
-void UIconbox::okBehavior(UInputEvent& _e) {  // A REVOIR
+void IconBox::okBehavior(InputEvent& _e) {  // A REVOIR
   Event e2(UOn::action, this, _e.getSource());  //UElemEvent
   fire(e2);
 }
 
-UIcon* UIconbox::getSelectedIcon() {
+Icon* IconBox::getSelectedIcon() {
   Element* i = choice().getSelectedItem();
-  return i ? dynamic_cast<UIcon*>(i) : null;
+  return i ? dynamic_cast<Icon*>(i) : null;
 }
 
-void UIconbox::selectIcon(UIcon& i) {
+void IconBox::selectIcon(Icon& i) {
   choice().setSelectedItem(i);
 }
 
-void UIconbox::selectIcon(const String& name) {
+void IconBox::selectIcon(const String& name) {
   for (ChildIter i = picons->cbegin(); i != picons->cend(); ++i) {
-    UIcon* icon = dynamic_cast<UIcon*>(*i);
+    Icon* icon = dynamic_cast<Icon*>(*i);
     if (icon && icon->getName() == name) {
       choice().setSelectedItem(*icon);
       return;
@@ -100,38 +100,38 @@ void UIconbox::selectIcon(const String& name) {
   }
 }
 
-void UIconbox::selectPreviousIcon() {
-  UItem* item = getPreviousIcon();
+void IconBox::selectPreviousIcon() {
+  Item* item = getPreviousIcon();
   if (item) choice().setSelectedItem(*item);
 }
 
-void UIconbox::selectNextIcon() {
-  UItem* item = getNextIcon();
+void IconBox::selectNextIcon() {
+  Item* item = getNextIcon();
   if (item) choice().setSelectedItem(*item);
 }
 
-UIcon* UIconbox::getPreviousIcon() {
+Icon* IconBox::getPreviousIcon() {
   int index = choice().getSelectedIndex();
   if (index > 0) return getIcon(index-1);
   else return null;
 }
 
-UIcon* UIconbox::getNextIcon() {
+Icon* IconBox::getNextIcon() {
   int index = choice().getSelectedIndex();
-  UIcon* item = getIcon(index+1);
+  Icon* item = getIcon(index+1);
   // si pas de suivant prendre le dernier
   if (!item) item = getIcon(-1);
   return item;
 }
 
-UIcon* UIconbox::getIcon(int index) const {
+Icon* IconBox::getIcon(int index) const {
   Box* item = choice().getSelectableItem(index);
-  return item ? dynamic_cast<UIcon*>(item) : null;
+  return item ? dynamic_cast<Icon*>(item) : null;
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-int UIconbox::readDir(const String& _pathname, bool remote_dir) {
+int IconBox::readDir(const String& _pathname, bool remote_dir) {
   String prefix, filter;
   bool want_dotfiles = false;
   pathname() = _pathname;
@@ -145,9 +145,9 @@ int UIconbox::readDir(const String& _pathname, bool remote_dir) {
   picons->setAutoUpdate(false);
 
   if (show_parent_dir) {
-    UIcon& icon = *new UIcon("..", UPix::bigUp);
+    Icon& icon = *new Icon("..", UPix::bigUp);
     icon.setDir(true);
-    icon.addAttr(usize(75,75) + ucall(this, &UIconbox::okBehavior));
+    icon.addAttr(usize(75,75) + ucall(this, &IconBox::okBehavior));
     picons->add(icon);
   }
   
@@ -156,9 +156,9 @@ int UIconbox::readDir(const String& _pathname, bool remote_dir) {
   for (UFileInfos::const_iterator pe = entries.begin(); pe != entries.end(); ++pe) {
     const UFileInfo& e = *(*pe);
 
-    UIcon& icon = *new UIcon(*e.getFileName(), e.getIconImage());
+    Icon& icon = *new Icon(*e.getFileName(), e.getIconImage());
     if (e.isDir()) icon.setDir(true);
-    icon.addAttr(usize(75,75) + ucall(this, &UIconbox::okBehavior));
+    icon.addAttr(usize(75,75) + ucall(this, &IconBox::okBehavior));
     picons->add(icon);
   }
 
@@ -169,13 +169,13 @@ int UIconbox::readDir(const String& _pathname, bool remote_dir) {
 
 static const int CONTENT_WIDTH = 55, CONTENT_HEIGHT = 55;
 
-UStyle* UIcon::createStyle() {
-  return UItem::createStyle();
+Style* Icon::createStyle() {
+  return Item::createStyle();
 }
   
-UIcon::~UIcon() {}
+Icon::~Icon() {}
 
-UIcon::UIcon(const String& name, Args content) {
+Icon::Icon(const String& name, Args content) {
   is_dir = false;  
   pname = new String(name);
 
@@ -189,7 +189,7 @@ UIcon::UIcon(const String& name, Args content) {
   ima_box->addAttr(uhcenter()+uvcenter());
   ima_box->ignoreEvents();
   
-  addAttr(UOrient::vertical + uvspacing(2) + upadding(5, 5));
+  addAttr(Orientation::vertical + uvspacing(2) + upadding(5, 5));
   add(uhflex() 
       + uvflex() + *ima_box
       + ubottom() + *text_box
@@ -198,7 +198,7 @@ UIcon::UIcon(const String& name, Args content) {
 }
 
 /*
-void UIcon::set(const String& _name, Data&  _content) {
+void Icon::set(const String& _name, Data&  _content) {
   *pname = _name;
   //ima_box->setAutoUpdate(false);
   ima_box->removeAll();
@@ -209,7 +209,7 @@ void UIcon::set(const String& _name, Data&  _content) {
 }
 */
 
-int UIcon::loadImage(const String& ima_path) { 
+int Icon::loadImage(const String& ima_path) { 
   String fext = ima_path.suffix();
   int stat = false;
   

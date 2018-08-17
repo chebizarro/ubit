@@ -40,7 +40,7 @@ namespace ubit {
     UTable(Args a = Args::none): Box(a) {}
     ///< creates a new table widget (@see also shortcut utable()).
     
-    static UStyle* createStyle();
+    static Style* createStyle();
   };
   
   inline UTable& utable(Args a = Args::none) {return *new UTable(a);}
@@ -59,7 +59,7 @@ namespace ubit {
     UTrow(Args a = Args::none): Element(a) {}
     ///< creates a new table row (@see also shortcut utrow()).
     
-    static UStyle* createStyle();
+    static Style* createStyle();
   };
   
   inline UTrow& utrow(Args a = Args::none) {return *new UTrow(a);}
@@ -84,7 +84,7 @@ namespace ubit {
     UTcell(short colspan, short rowspan, Args a = Args::none);
     ///< creates a new table cell (@see also shortcut utcell()).
     
-    static UStyle* createStyle();
+    static Style* createStyle();
     
     void  setColspan(short);
     void  setRowspan(short);

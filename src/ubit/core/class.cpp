@@ -57,7 +57,7 @@ template <class CC>
 struct USubclass : public Class {
   USubclass(const char* name): Class(name) {}
   virtual bool isInstance(UObject& obj) const {return dynamic_cast<CC*>(&obj);}
-  virtual UStyle* newStyle() const {return CC::createStyle();}
+  virtual Style* newStyle() const {return CC::createStyle();}
 };
 
 template <class CC>

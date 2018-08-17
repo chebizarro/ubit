@@ -143,7 +143,7 @@ namespace ubit {
     virtual void setIconTitle(const String&) = 0;  
     ///< changes icon title.
     
-    virtual void setCursor(const UCursor*) = 0;
+    virtual void setCursor(const Cursor*) = 0;
     ///< changes window cursor (can be null).
     
     virtual void setClassProperty(const String& instance_name, const String& class_name) = 0;
@@ -175,9 +175,9 @@ namespace ubit {
     friend class View;
     friend class Graph;
     friend class PaintEvent;
-    friend class UInputEvent;
+    friend class InputEvent;
     friend class UAppliImpl;
-    friend class UGlcanvas;
+    friend class GLCanvas;
     unsigned char wintype;       // one of UWinImpl::WinType
     unsigned char must_update;   // see UAppliImpl::processUpdateRequests
     Display* disp;

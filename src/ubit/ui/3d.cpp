@@ -22,7 +22,7 @@
 #include <ubit/ugl.hpp>
 #include <ubit/core/event.h>
 #include <ubit/uupdate.hpp>
-#include <ubit/uupdatecontext.hpp>
+#include <ubit/ui/updatecontext.h>
 #include <ubit/ui/uviewImpl.hpp>
 #include <ubit/u3d.hpp>
 #include <ubit/u3dicon.hpp>
@@ -111,11 +111,11 @@ protected:
   UCall* callbacks;
   Point prev;
 
-  virtual void mouseCB(UMouseEvent&);
-  virtual void pressCB(UMouseEvent&);
-  virtual void releaseCB(UMouseEvent&);
-  virtual void dragCB(UMouseEvent&);
-  virtual void doubleClickCB(UMouseEvent&);
+  virtual void mouseCB(MouseEvent&);
+  virtual void pressCB(MouseEvent&);
+  virtual void releaseCB(MouseEvent&);
+  virtual void dragCB(MouseEvent&);
+  virtual void doubleClickCB(MouseEvent&);
 };
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -141,21 +141,21 @@ void U3DposHandle::removingFrom(Child& c, Element& parent) {
   Attribute::removingFrom(c, parent);
 }
 
-void U3DposHandle::mouseCB(UMouseEvent& e) {
+void U3DposHandle::mouseCB(MouseEvent& e) {
   if (e.getCond() == UOn::mdrag) dragCB(e);
   else if (e.getCond() == UOn::mpress) pressCB(e);
   else if (e.getCond() == UOn::mrelease) releaseCB(e);
   else if (e.getCond() == UOn::doubleClick) doubleClickCB(e);
 }
 
-void U3DposHandle::pressCB(UMouseEvent& e) {
+void U3DposHandle::pressCB(MouseEvent& e) {
   prev.x = e.getScreenPos().x;
   prev.y = e.getScreenPos().y;
 }
 
-void U3DposHandle::releaseCB(UMouseEvent& e) {}
+void U3DposHandle::releaseCB(MouseEvent& e) {}
 
-void U3DposHandle::dragCB(UMouseEvent& e) {
+void U3DposHandle::dragCB(MouseEvent& e) {
   Point screen_pos = e.getScreenPos();
   float dx = screen_pos.x - prev.x;
   float dy = -screen_pos.y + prev.y;   // !!!
@@ -180,7 +180,7 @@ void U3DposHandle::dragCB(UMouseEvent& e) {
   }
 }
 
-void U3DposHandle::doubleClickCB(UMouseEvent&) {
+void U3DposHandle::doubleClickCB(MouseEvent&) {
   cerr << "U3DposHandle::doubleClickCB " << endl;
   switch (transform) {
     case XYPOS:
@@ -203,7 +203,7 @@ void U3DposHandle::doubleClickCB(UMouseEvent&) {
 
 // =============================================================================
 
-UStyle* U3Dbox::createStyle() {
+Style* U3Dbox::createStyle() {
   return Box::createStyle();
 }
 
@@ -229,9 +229,9 @@ U3Dbox& U3Dbox::rotate(float dxrot, float dyrot, float dzrot) {
 
 // =============================================================================
   
-UStyle* U3Dwin::createStyle() {
-  UStyle* style = Box::createStyle();
-  style->orient = UOrient::VERTICAL;
+Style* U3Dwin::createStyle() {
+  Style* style = Box::createStyle();
+  style->orient = Orientation::VERTICAL;
   style->local.border = &Border::etchedOut;
   return style;
 }
@@ -269,8 +269,8 @@ Box& U3Dwin::createTitleBar(const String& title) {
 
 // =============================================================================
 
-UStyle* U3Dcanvas::createStyle() {
-  UStyle* style = Box::createStyle();
+Style* U3Dcanvas::createStyle() {
+  Style* style = Box::createStyle();
   style->viewStyle = &3DCanvasView::style;
   style->halign = Halign::LEFT;
   style->valign = Valign::TOP;

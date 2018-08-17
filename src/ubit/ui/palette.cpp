@@ -26,7 +26,7 @@
 #include <ubit/uborder.hpp>
 #include <ubit/usymbol.hpp>
 #include <ubit/ustyle.hpp>
-#include <ubit/ubackground.hpp>
+#include <ubit/ui/background.h>
 using namespace std;
 #define NAMESPACE_UBIT namespace ubit {
 NAMESPACE_UBIT
@@ -36,7 +36,7 @@ ppos(new UPos),
 ppos_ctrl((new UPosControl)->setModel(ppos)),
 psize(new USize),
 psize_ctrl((new USizeControl)->setModel(psize)),
-pcontent_scale(new UScale),
+pcontent_scale(new Scale),
 pcontent(new Box(a)),
 ptitle(new Element),
 pcontrols(new Element),
@@ -61,14 +61,14 @@ presize_btn(new Box)
   
   //pcontrols->add(Font::small + ubutton("x"));
   
-  ptitle_bar->addAttr(UOrient::horizontal + *ppos_ctrl);
+  ptitle_bar->addAttr(Orientation::horizontal + *ppos_ctrl);
   ptitle_bar->add(uleft() + *ptitle 
                   + uhflex() + ulabel().ignoreEvents() 
                   + uright() + *pcontrols);
   
-  pcontent->addAttr(UOrient::vertical+ *pcontent_scale);
+  pcontent->addAttr(Orientation::vertical+ *pcontent_scale);
 
-  addAttr(UOrient::vertical + *ppos + *psize);
+  addAttr(Orientation::vertical + *ppos + *psize);
   add(utop() + *ptitle_bar 
       + uvflex() + *pcontent 
       + *presize_btn);
@@ -76,18 +76,18 @@ presize_btn(new Box)
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-UStyle* UPalette::createStyle() {
-  UStyle* s = Box::createStyle();
+Style* UPalette::createStyle() {
+  Style* s = Box::createStyle();
   static Border* b = new URoundBorder(Border::LINE,Color::navy,Color::white,2,2,15,15);
   s->local.border = b;
   return s;
 }
 
 /*
-void UPalette::minmaxCB(UMouseEvent&) {
+void UPalette::minmaxCB(MouseEvent&) {
   pcontent->show(! pcontent->isShown());
 }
-void UPalette::resizeCB(UMouseEvent&) {
+void UPalette::resizeCB(MouseEvent&) {
   pcontent->show(! pcontent->isShown());
 }
 */

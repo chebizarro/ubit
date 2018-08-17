@@ -22,7 +22,7 @@
 #include <ubit/uview.hpp>
 #include <ubit/ui/uviewImpl.hpp>
 #include <ubit/uupdate.hpp>
-#include <ubit/uupdatecontext.hpp>
+#include <ubit/ui/updatecontext.h>
 #include <ubit/ubox.hpp>
 #include <ubit/uwin.hpp>
 #include <ubit/uon.hpp>

@@ -31,9 +31,9 @@ namespace ubit {
   
   /** Font of a Element or Box container.
    * this property specifies the font in a Element or a Box. It is inherited
-   * by children, except if they have their own Font, or if their UStyle
+   * by children, except if they have their own Font, or if their Style
    * specifies another font.
-   * As other Attribute(s), a UScale instance must be added to the attribute list
+   * As other Attribute(s), a Scale instance must be added to the attribute list
    * or child list of the container: @see: Attribute.
    */
   class Font : public Attribute {

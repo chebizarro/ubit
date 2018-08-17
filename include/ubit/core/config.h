@@ -190,7 +190,7 @@ public:
   ///< delay (in ms) before a UTip is opened.
 
   unsigned long open_submenu_delay; 
-  ///< delay (in ms) before a cascaded UMenu is opened.
+  ///< delay (in ms) before a cascaded Menu is opened.
 
   // - - - option parsing  - - - - - - - - - - - - - - - - - - - - - - - - - - -
   
@@ -247,8 +247,8 @@ private:
   friend class Font;
   friend class FontDescription;
   friend class UHardFont;
-  friend class UFilebox;
-  friend class UGlcanvas;
+  friend class FileChooser;
+  friend class GLCanvas;
   friend class U3Dcanvas;
   virtual void parseUbitOptions(int& argc, char** argv);
   

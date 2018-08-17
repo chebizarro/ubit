@@ -172,7 +172,7 @@ namespace ubit {
     
     // - - - Impl. - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     
-    virtual void linkEventCB(UInputEvent&, const String* path);
+    virtual void linkEventCB(InputEvent&, const String* path);
     
   protected:
     Document();

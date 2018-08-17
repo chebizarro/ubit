@@ -32,12 +32,12 @@ namespace ubit {
    * This class should not be used in most applications. It creates a non-toplevel 
    * system window (typically a X11 "child window") that is embbeded into another window.
    * It can be useful in some specific cases (for instance for drawing GL graphics:
-   * see UGlcanvas) but should be avoided in the general case because it breaks
+   * see GLCanvas) but should be avoided in the general case because it breaks
    * certain graphical properties of the toolkit, such as the possibility to have
    * transparent windows and menus (they must then be created as "hard windows",
    * see Window, otherwise they won't appear if they are on top of a Subwindow)
    *
-   * @see also subclass: UGlcanvas.
+   * @see also subclass: GLCanvas.
    */
   class USubwin : public Window {
   public:
@@ -47,7 +47,7 @@ namespace ubit {
     
     virtual bool isSubWin() const {return true;}
     
-    static UStyle* createStyle(); // redefined
+    static Style* createStyle(); // redefined
     virtual int getDisplayType() const {return BLOCK;} // redefined
     
     // - impl - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -61,7 +61,7 @@ namespace ubit {
     virtual void motionImpl(UViewEvent&);
     
     virtual void resizeImpl(UResizeEvent&);
-    // redefined by UGlcanvas.
+    // redefined by GLCanvas.
   };
   
 }

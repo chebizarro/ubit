@@ -16,7 +16,7 @@
 #include <ubit/ubit_features.h>
 #include <iostream>
 #include <ubit/ucond.hpp>
-#include <ubit/uupdatecontext.hpp>
+#include <ubit/ui/updatecontext.h>
 #include <ubit/ubox.hpp>
 #include <ubit/uboxgeom.hpp>
 #include <ubit/uview.hpp>
@@ -237,7 +237,7 @@ void View::doLayout2(UViewLayoutImpl& vd, Element& grp, UpdateContext& curp, UVi
   if (curp.xyscale != 1.) curp.rescale();
   scale = curp.xyscale;
   
-  bool is_pane  = dynamic_cast<UScrollpane*>(&grp);  // !!!@@@ A REVOIR !!!
+  bool is_pane  = dynamic_cast<Scrollpane*>(&grp);  // !!!@@@ A REVOIR !!!
   bool is_border = grp.getDisplayType() == Element::BORDER; // !!!@@@ A REVOIR !!!
   Node* b = null;
   Element* chgrp = null;
@@ -246,8 +246,8 @@ void View::doLayout2(UViewLayoutImpl& vd, Element& grp, UpdateContext& curp, UVi
   // interdiction de tenir compte de l'orient dans les UElems
   // if (grp.boxCast()) vd.orient = curp.orient;
   
-  // les Element sont normalement en UOrient::inherit    
-  vd.orient = grp.isVertical() ? UOrient::VERTICAL : UOrient::HORIZONTAL;
+  // les Element sont normalement en Orientation::inherit    
+  vd.orient = grp.isVertical() ? Orientation::VERTICAL : Orientation::HORIZONTAL;
 
   // if this group is not null (which generally is the case) the object
   // it contains are added to children for normal display
@@ -281,9 +281,9 @@ void View::doLayout2(UViewLayoutImpl& vd, Element& grp, UpdateContext& curp, UVi
           hintElemBorder(vd, curp, chvl, null);
         else if (is_pane) 
           hintElemViewport(vd, curp, chvl, null);
-        else if (vd.orient == UOrient::VERTICAL)
+        else if (vd.orient == Orientation::VERTICAL)
           hintElemVert(vd, curp, chvl, null);
-        else if (vd.orient == UOrient::HORIZONTAL)
+        else if (vd.orient == Orientation::HORIZONTAL)
           hintElemHoriz(vd, curp, chvl, null);
       }
 
@@ -316,7 +316,7 @@ void View::doLayout2(UViewLayoutImpl& vd, Element& grp, UpdateContext& curp, UVi
                 hintElemBorder(vd, curp, chvl, chgrp);
               else if (is_pane)
                 hintElemViewport(vd, curp, chvl, chgrp);
-              else if (vd.orient == UOrient::VERTICAL)
+              else if (vd.orient == Orientation::VERTICAL)
                 hintElemVert(vd, curp, chvl, chgrp);
               else
                 hintElemHoriz(vd, curp, chvl, chgrp);

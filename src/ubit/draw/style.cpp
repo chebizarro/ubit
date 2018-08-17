@@ -48,14 +48,14 @@ alpha(1.0),
 content(null) {
 }
 
-UStyle::UStyle() {
+Style::Style() {
   viewStyle = &View::style;
   textSeparator = null;    // text separator between two children when printing
-  orient = UOrient::INHERIT;
+  orient = Orientation::INHERIT;
   halign = Halign::LEFT;
   valign = Valign::TOP;
-  hspacing = UHspacing::INHERIT;
-  vspacing = UVspacing::INHERIT;
+  hspacing = HSpacing::INHERIT;
+  vspacing = VSpacing::INHERIT;
   font = null;
   cursor = null;
   //edit = null;
@@ -68,7 +68,7 @@ UStyle::UStyle() {
   setBgcolor(UOn::DROP_ENTERED, Color::grey);
 }
 
-UStyle::~UStyle() {
+Style::~Style() {
   //on ne peut pas detruire colors & bgcolors car partagees
   //delete colors;
   //delete bgcolors;
@@ -76,60 +76,60 @@ UStyle::~UStyle() {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UStyle::setSize(Length w, Length h) {
+void Style::setSize(Length w, Length h) {
   if (w != UIGNORE) local.size.width = w;
   if (h != UIGNORE) local.size.height = h;
 }
 
-void UStyle::setPadding(Length horiz, Length vert) {
+void Style::setPadding(Length horiz, Length vert) {
   if (horiz != UIGNORE) local.padding.left = local.padding.right = horiz;
   if (vert != UIGNORE) local.padding.top = local.padding.bottom = vert;
 }
 
-void UStyle::setHorizPadding(Length left, Length right) {
+void Style::setHorizPadding(Length left, Length right) {
   if (left != UIGNORE) local.padding.left = left;
   if (right != UIGNORE) local.padding.right = right;
 }
 
-void UStyle::setVertPadding(Length top, Length bottom) {
+void Style::setVertPadding(Length top, Length bottom) {
   if (top != UIGNORE) local.padding.top = top;
   if (bottom != UIGNORE) local.padding.bottom = bottom;
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-const Color* UStyle::getColor(const Element& e) const {
+const Color* Style::getColor(const Element& e) const {
   return colors[e.isSelected() * UOn::ACTION_COUNT + (int)e.getInterState()];
 }
 
-const Color* UStyle::getBgcolor(const Element& e) const {
+const Color* Style::getBgcolor(const Element& e) const {
   return bgcolors[e.isSelected()*UOn::ACTION_COUNT + (int)e.getInterState()];
 }
 
-void UStyle::setColors(Color& c) {setColors(c, c);}
+void Style::setColors(Color& c) {setColors(c, c);}
 
-void UStyle::setColors(Color& c_unselect, Color& c_select) {
+void Style::setColors(Color& c_unselect, Color& c_select) {
   for (int k = 0; k < UOn::ACTION_COUNT; ++k) {
     colors[k] = &c_unselect;
     colors[UOn::ACTION_COUNT + k] = &c_select;
   }
 }
 
-void UStyle::setBgcolors(Color& c) {setBgcolors(c, c);}
+void Style::setBgcolors(Color& c) {setBgcolors(c, c);}
 
-void UStyle::setBgcolors(Color& c_unselect, Color& c_select) {
+void Style::setBgcolors(Color& c_unselect, Color& c_select) {
   for (int k = 0; k < UOn::ACTION_COUNT; ++k) {
     bgcolors[k] = &c_unselect;
     bgcolors[UOn::ACTION_COUNT + k] = &c_select;
   }
 }
 
-void UStyle::setColor(int action, Color& c) {
+void Style::setColor(int action, Color& c) {
   colors[action] = &c;
   colors[UOn::ACTION_COUNT + action] = &c;
 }
 
-void UStyle::setBgcolor(int action, Color& c) {
+void Style::setBgcolor(int action, Color& c) {
   bgcolors[action] = &c;
   bgcolors[UOn::ACTION_COUNT + action] = &c;
 }

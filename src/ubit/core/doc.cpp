@@ -77,7 +77,7 @@ void Document::addLinkCallback(const Child& cond_slash_callback) {
   call_list->add(cond_slash_callback);
 }
 
-void Document::linkEventCB(UInputEvent& e, const String* path) {
+void Document::linkEventCB(InputEvent& e, const String* path) {
   if (call_list) {
     //const UOn* on = dynamic_cast<const UOn*>(&e.getCond());  // ???
     //if (on) {
@@ -189,10 +189,10 @@ public:
   UPluginDocCreator(const String& doctype, const String& command);
 
   virtual Document* create(DocumentSource&);
-  virtual void exec(UInputEvent&, Document*);
-  virtual void open(UInputEvent&, Document*);
-  virtual void openWith(UInputEvent&, Document*);
-  virtual void openAsText(UInputEvent&, Document*);
+  virtual void exec(InputEvent&, Document*);
+  virtual void open(InputEvent&, Document*);
+  virtual void openWith(InputEvent&, Document*);
+  virtual void openAsText(InputEvent&, Document*);
 protected:
   String doctype, command, alt_command, status;
 };
@@ -248,7 +248,7 @@ Document* UPluginDocCreator::create(DocumentSource& so) {
 }
 
 
-void UPluginDocCreator::open(UInputEvent& e, Document* doc) {
+void UPluginDocCreator::open(InputEvent& e, Document* doc) {
   status = "";
   if (command.empty()) return;
   if (e.getDisp() != Application::getDisp()) {
@@ -266,7 +266,7 @@ void UPluginDocCreator::open(UInputEvent& e, Document* doc) {
 }
 
 
-void UPluginDocCreator::openWith(UInputEvent& e, Document* doc) {
+void UPluginDocCreator::openWith(InputEvent& e, Document* doc) {
   status = "";
   if (alt_command.empty()) return;
   if (e.getDisp() != Application::getDisp()) {
@@ -279,7 +279,7 @@ void UPluginDocCreator::openWith(UInputEvent& e, Document* doc) {
 }
 
 
-void UPluginDocCreator::exec(UInputEvent& e, Document* doc) {
+void UPluginDocCreator::exec(InputEvent& e, Document* doc) {
   status = "";
   if (e.getDisp() != Application::getDisp()) {
     status = "Operation not allowed on clones";
@@ -297,7 +297,7 @@ void UPluginDocCreator::exec(UInputEvent& e, Document* doc) {
 }
 
 
-void UPluginDocCreator::openAsText(UInputEvent& e, Document* doc) {
+void UPluginDocCreator::openAsText(InputEvent& e, Document* doc) {
   status = "";
   doc->removeAll();
 

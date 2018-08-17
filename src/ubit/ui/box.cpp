@@ -25,7 +25,7 @@
 #include <iostream>
 #include <ubit/uon.hpp>
 #include <ubit/uboxgeom.hpp>
-#include <ubit/uupdatecontext.hpp>
+#include <ubit/ui/updatecontext.h>
 #include <ubit/ui/uviewImpl.hpp>
 #include <ubit/ustyle.hpp>
 #include <ubit/core/uappliImpl.hpp>
@@ -36,14 +36,14 @@ namespace ubit {
 Box& uvbox(Args args) {
   //return *new UVbox(args);
   Box* box = new Box(args);
-  box->setAttr(UOrient::vertical);
+  box->setAttr(Orientation::vertical);
   return *box;
 }
 
 Box& uhbox(Args args) {
   //return *new UHbox(args);
   Box* box = new Box(args);
-  box->setAttr(UOrient::horizontal);
+  box->setAttr(Orientation::horizontal);
   return *box;
 }
 
@@ -54,10 +54,10 @@ Box::Box(Args a) : views(null) {
   add(a);
 }
 
-UStyle* Box::createStyle() {
-  UStyle* style = new UStyle();
+Style* Box::createStyle() {
+  Style* style = new Style();
   style->textSeparator = new String(" ");
-  style->orient = UOrient::INHERIT;
+  style->orient = Orientation::INHERIT;
   // abndonne: marche pas: a la fois hflex et vflex
   style->halign = Halign::FLEX;
   style->valign = Valign::FLEX;
@@ -166,7 +166,7 @@ View* Box::getView(int pos) const {
   }
 }
 
-View* Box::getView(const UInputEvent& e) const {
+View* Box::getView(const InputEvent& e) const {
   View* eview = e.getView();
   if (!eview) return null;
   
@@ -175,7 +175,7 @@ View* Box::getView(const UInputEvent& e) const {
   View* found_view = getViewContaining(*eview);
   if (found_view) return found_view;
 
-  UMouseEvent* me = ((UInputEvent&)e).toMouseEvent();
+  MouseEvent* me = ((InputEvent&)e).toMouseEvent();
   View* winview = e.getWinView();
   if (!me || !winview) return null;
     
@@ -297,7 +297,7 @@ void Box::initView(View* parview) {
   if (render)
     view = (render->createView)(this, parview, parview->getHardwin());
   else {
-    error("Box::initView","the UStyle of this object could not be retreived");
+    error("Box::initView","the Style of this object could not be retreived");
     view = new View(this, parview, parview->getHardwin());
   }
   

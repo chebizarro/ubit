@@ -16,9 +16,9 @@
 #include <ubit/ubit_features.h>
 #include <iostream>
 #include <ubit/uon.hpp>
-#include <ubit/uupdatecontext.hpp>
+#include <ubit/ui/updatecontext.h>
 #include <ubit/uboxgeom.hpp>
-#include <ubit/ubackground.hpp>
+#include <ubit/ui/background.h>
 #include <ubit/uedit.hpp>
 #include <ubit/uima.hpp>
 #include <ubit/ugraph.hpp>
@@ -491,7 +491,7 @@ void View::doUpdate2(UViewUpdateImpl& vd, Element& grp, UpdateContext& ctx,
     }
     
     // orientation should not be taken into account in UElems
-    vd.orient = grp.isVertical() ? UOrient::VERTICAL : UOrient::HORIZONTAL;
+    vd.orient = grp.isVertical() ? Orientation::VERTICAL : Orientation::HORIZONTAL;
 
     vd.updateBackground(*g, ctx, r, clip);
 
@@ -520,7 +520,7 @@ void View::doUpdate2(UViewUpdateImpl& vd, Element& grp, UpdateContext& ctx,
 
     if (is_pane) 
       initLayoutViewport(vd, ctx, r);
-    else if (vd.orient == UOrient::HORIZONTAL) 
+    else if (vd.orient == Orientation::HORIZONTAL) 
       initLayoutH(vd, ctx, r);
     else 
       initLayoutV(vd, ctx, r);
@@ -561,7 +561,7 @@ void View::doUpdate2(UViewUpdateImpl& vd, Element& grp, UpdateContext& ctx,
           layoutBorder(vd, ctx, ch, dim, null);
         else if (is_pane)
           layoutViewport(vd, ctx, ch, dim, null);
-        else if (vd.orient == UOrient::HORIZONTAL) 
+        else if (vd.orient == Orientation::HORIZONTAL) 
           layoutH(vd, ctx, ch, dim, null, null);
         else 
           layoutV(vd, ctx, ch, dim, null, null);
@@ -570,11 +570,11 @@ void View::doUpdate2(UViewUpdateImpl& vd, Element& grp, UpdateContext& ctx,
           
           //NB: ITEM_OPS => vd.can_paint == false mais pas l'inverse !
           if (vd.can_paint) {
-            if ((vd.orient == UOrient::HORIZONTAL
+            if ((vd.orient == Orientation::HORIZONTAL
                  && vd.chr.x + vd.chr.width > vd.chclip.x
                  && vd.chr.x < vd.chclip.x + vd.chclip.width)
                 ||
-                (vd.orient == UOrient::VERTICAL
+                (vd.orient == Orientation::VERTICAL
                  && vd.chr.y + vd.chr.height > vd.chclip.y
                  && vd.chr.y < vd.chclip.y + vd.chclip.height)
                 ) {
@@ -622,7 +622,7 @@ void View::doUpdate2(UViewUpdateImpl& vd, Element& grp, UpdateContext& ctx,
             // y avoir des Element emboites suivis d'autres dataents
             
             if (vup.mode == UViewUpdate::FIND_DATA_POS) {
-              if (vd.orient == UOrient::HORIZONTAL) {
+              if (vd.orient == Orientation::HORIZONTAL) {
                 if (vd.view->findDataH(ctx, ch, mlist.end(), vd.chr, vup))
 				  ;
                 // goto END; FAUX: car on saute l'increment qui
@@ -642,7 +642,7 @@ void View::doUpdate2(UViewUpdateImpl& vd, Element& grp, UpdateContext& ctx,
           // increment 
           if (is_border) nextBorder(vd, ctx);
           else if (is_pane) nextViewport(vd, ctx);
-          else if (vd.orient == UOrient::HORIZONTAL) nextH(vd, ctx);
+          else if (vd.orient == Orientation::HORIZONTAL) nextH(vd, ctx);
           else nextV(vd, ctx);
             
        	} // endif (vd.chr.width > 0 && vd.chr.height > 0)	 
@@ -725,7 +725,7 @@ void View::doUpdate2(UViewUpdateImpl& vd, Element& grp, UpdateContext& ctx,
             layoutBorder(vd, ctx, ch, dim, chview);
           else if (is_pane)
             layoutViewport(vd, ctx, ch, dim, chview);
-          else if (vd.orient == UOrient::HORIZONTAL)
+          else if (vd.orient == Orientation::HORIZONTAL)
             layoutH(vd, ctx, ch, dim, chgrp, chview);
           else 
             layoutV(vd, ctx, ch, dim, chgrp, chview);
@@ -736,7 +736,7 @@ void View::doUpdate2(UViewUpdateImpl& vd, Element& grp, UpdateContext& ctx,
               nextBorder(vd, ctx);
             else if (is_pane) 
               nextViewport(vd, ctx);
-            else if (vd.orient == UOrient::HORIZONTAL) 
+            else if (vd.orient == Orientation::HORIZONTAL) 
               nextH(vd, ctx);
             else 
               nextV(vd, ctx);
@@ -981,9 +981,9 @@ void View::layoutViewport(UViewUpdateImpl& vd, const UpdateContext& ctx,
     Application::internalError("View::doUpdate","null UPaneView"); //fatal
     return;
   }
-  UScrollpane* pane = null;
+  Scrollpane* pane = null;
   UCardbox* card = null;
-  if (!(pane = dynamic_cast<UScrollpane*>(ctx.obj))
+  if (!(pane = dynamic_cast<Scrollpane*>(ctx.obj))
       && !(card =  dynamic_cast<UCardbox*>(ctx.obj))) {
     Application::internalError("View::doUpdate","null UPane"); //fatal
     return;

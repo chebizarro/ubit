@@ -29,7 +29,7 @@
 #include <cstdio>   // sscanf()
 #include <ubit/ucall.hpp>
 #include <ubit/uupdate.hpp>
-#include <ubit/uupdatecontext.hpp>
+#include <ubit/ui/updatecontext.h>
 #include <ubit/ustr.hpp>
 #include <ubit/ubox.hpp>
 #include <ubit/ucolor.hpp>

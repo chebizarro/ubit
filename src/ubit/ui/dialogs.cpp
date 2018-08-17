@@ -37,11 +37,11 @@ namespace ubit {
 
 
 
-UStyle* UFrame::createStyle() {
+Style* UFrame::createStyle() {
   return Window::createStyle();
 }
 
-UFrame::UFrame(Args a) : UDialog(a) {
+UFrame::UFrame(Args a) : Dialog(a) {
   wmodes.IS_HARDWIN = true;   // a frame is always a HARDWIN!
   wmodes.IS_FRAME  = true;
   wmodes.IS_DIALOG = false;
@@ -64,37 +64,37 @@ bool UFrame::realize() {
 
 // ------------------------------------------------------------ [ELC] ----------
 
-UStyle* UDialog::createStyle() {
-  UStyle* s = Window::createStyle();
+Style* Dialog::createStyle() {
+  Style* s = Window::createStyle();
   static Border* b = new URoundBorder(Border::LINE,Color::black,Color::white,2,2,15,15);
   s->setBorder(b);
   s->setPadding(4, 6);
   return s;
 }
 
-UDialog::UDialog(Args a) : Window(a), open_call(null) {
+Dialog::Dialog(Args a) : Window(a), open_call(null) {
   wmodes.IS_DIALOG = true;
 }
 
-bool UDialog::realize() {
+bool Dialog::realize() {
   if (wmodes.IS_HARDWIN) return realizeHardwin(UWinImpl::DIALOG);
   else {
-    error("UDialog::realize","can't realize UDialog object %p",this);
+    error("Dialog::realize","can't realize Dialog object %p",this);
     return false;
   }
 }
 
-void UDialog::addingTo(Child& c, Element& parent) {
+void Dialog::addingTo(Child& c, Element& parent) {
   Window::addingTo(c, parent);
-  // ajouter handler pour ouvrir auto le Dialog si le parent est un UButton
+  // ajouter handler pour ouvrir auto le Dialog si le parent est un Button
   if (wmodes.IS_AUTO_OPENED && parent.isArmable()) {
-    if (!open_call) open_call = &ucall(this, true, &UDialog::show);
+    if (!open_call) open_call = &ucall(this, true, &Dialog::show);
     parent.addAttr(*open_call);
   }
 }
 
 //NB: removingFrom() requires a destructor to be defined
-void UDialog::removingFrom(Child& c, Element& parent) {
+void Dialog::removingFrom(Child& c, Element& parent) {
   if (wmodes.IS_AUTO_OPENED && parent.isArmable()) {
     // don't delete the ucall as it is shared
     if (open_call) {
@@ -107,7 +107,7 @@ void UDialog::removingFrom(Child& c, Element& parent) {
   Window::removingFrom(c, parent);
 }
 
-void UDialog::show(bool state, Display* disp) {
+void Dialog::show(bool state, Display* disp) {
   if (isShown(disp) == state) return;
   View* v = getView(0);
   bool already_shown = (v && v->hasVMode(View::INITIALIZED));
@@ -203,7 +203,7 @@ UOptionDialog& UOptionDialog::setButtons(Args buttons) {
   else {
     pbuttons->add(buttons);
     for (ChildIter i = pbuttons->cbegin(); i != pbuttons->cend(); i++) {
-      UButton* b = dynamic_cast<UButton*>(*i);
+      Button* b = dynamic_cast<Button*>(*i);
       if (b) b->addAttr(ucloseWin());
     }
   }
@@ -219,9 +219,9 @@ UOptionDialog& UOptionDialog::setButtons(Args buttons) {
  PLAIN_MESSAGE
  */
 
-UOptionDialog* UDialog::messdialog = null;
+UOptionDialog* Dialog::messdialog = null;
 
-void UDialog::showMessageDialog(const String& title, Args message_nodes, Args icon) {
+void Dialog::showMessageDialog(const String& title, Args message_nodes, Args icon) {
   if (!messdialog) messdialog = new UOptionDialog();
   messdialog->setMessage(message_nodes);
   messdialog->setIcon(icon);
@@ -229,37 +229,37 @@ void UDialog::showMessageDialog(const String& title, Args message_nodes, Args ic
   messdialog->setTitle(title);
 }
 
-void UDialog::showMessageDialog(const String& title, const String& msg_string, Args icon) {
+void Dialog::showMessageDialog(const String& title, const String& msg_string, Args icon) {
   showMessageDialog(title, Args(ustr(msg_string)), icon);
 }
 
-void UDialog::showAlertDialog(Args message_nodes) {
+void Dialog::showAlertDialog(Args message_nodes) {
   showMessageDialog("Alert", 
                     Font::large + upadding(5,5) + message_nodes, 
                     uscale(1.5) + UPix::ray);      // !!! CHOIX ICON !!!!
 }
 
-void UDialog::showAlertDialog(const String& message_string) {
+void Dialog::showAlertDialog(const String& message_string) {
   showAlertDialog(Args(ustr(message_string)));
 }
 
-void UDialog::showErrorDialog(Args message_nodes) {
+void Dialog::showErrorDialog(Args message_nodes) {
   showMessageDialog("Error", 
                     Font::large + upadding(5,10) + message_nodes, 
                     uscale(1.5) + UPix::ray);      // !!! CHOIX ICON !!!!
 }
 
-void UDialog::showErrorDialog(const String& message_string) {
+void Dialog::showErrorDialog(const String& message_string) {
   showErrorDialog(Args(ustr(message_string)));
 }
 
-void UDialog::showWarningDialog(Args message_nodes) {
+void Dialog::showWarningDialog(Args message_nodes) {
   showMessageDialog("Warning", 
                     Font::large + upadding(5,10) + message_nodes, 
                     uscale(1.5) + UPix::ray);      // !!! CHOIX ICON !!!!
 }
 
-void UDialog::showWarningDialog(const String& message_string) {
+void Dialog::showWarningDialog(const String& message_string) {
   showWarningDialog(Args(ustr(message_string)));
 }
 

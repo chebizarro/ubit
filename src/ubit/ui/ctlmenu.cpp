@@ -34,8 +34,8 @@ using namespace std;
 NAMESPACE_UBIT
   
 
-UStyle* UCtlmenu::createStyle() {
-  UStyle* style = UMenu::createStyle();
+Style* ControlMenu::createStyle() {
+  Style* style = Menu::createStyle();
   style->local.alpha = 0.;
   style->local.border = null;
   style->local.padding.set(1, 1);
@@ -44,20 +44,20 @@ UStyle* UCtlmenu::createStyle() {
   return style;
 }
 
-UCtlmenu::UCtlmenu() {
+ControlMenu::ControlMenu() {
   spring_mode = false;
   ctlmenu_mode = true;
 }
 
 // ==================================================== [Ubit Toolkit] =========
 
-void UCtlAction::operator()(Event& e) {
+void ControlAction::operator()(Event& e) {
   // NB: getSource() renvoie le menu
-  UCtlmenu* m = dynamic_cast<UCtlmenu*>(e.getSource());
-  if (m && e.getCond() == UOn::mdrag) mdrag((UMouseEvent&)e, *m);
+  ControlMenu* m = dynamic_cast<ControlMenu*>(e.getSource());
+  if (m && e.getCond() == UOn::mdrag) mdrag((MouseEvent&)e, *m);
 }
 
-void UCtlAction::addingTo(Child& child, Element& parent) {
+void ControlAction::addingTo(Child& child, Element& parent) {
   /*
    static MultiCondition* mc = null;
    if (!mc) {
@@ -78,17 +78,17 @@ void UCtlAction::addingTo(Child& child, Element& parent) {
 
 // ==================================================== [Ubit Toolkit] =========
 
-//UZoomAction::UZoomAction(UZoompane& zbox) 
+//ZoomAction::ZoomAction(ZoomPane& zbox) 
 //: pscale(&zbox.scale()), ppos(&zbox.pos()), pbox(&zbox) {}
 
-UZoomAction::UZoomAction(Box& zoomed_box, float _gain) : 
-UCtlAction(_gain), 
+ZoomAction::ZoomAction(Box& zoomed_box, float _gain) : 
+ControlAction(_gain), 
 zbox(zoomed_box),
 posAttr(zoomed_box.obtainAttr<UPos>()),
-scaleAttr(zoomed_box.obtainAttr<UScale>()) {
+scaleAttr(zoomed_box.obtainAttr<Scale>()) {
 }
 
-void UZoomAction::mdrag(UMouseEvent& e, UCtlmenu& m) {
+void ZoomAction::mdrag(MouseEvent& e, ControlMenu& m) {
   View* menuview = e.getView();
   if (!menuview) return;
   
@@ -103,7 +103,7 @@ void UZoomAction::mdrag(UMouseEvent& e, UCtlmenu& m) {
     View* zbox_view = zbox->getView(e);
     if (!zbox_view) {
       zbox_view = zbox->getView(0);
-      //cerr << "UZoomAction: null box view"<<endl;
+      //cerr << "ZoomAction: null box view"<<endl;
       //return;
     }
     mouse_in_zbox0 = e.getPosIn(*zbox_view);
@@ -140,13 +140,13 @@ void UZoomAction::mdrag(UMouseEvent& e, UCtlmenu& m) {
 
 // ==================================================== [Ubit Toolkit] =========
 
-UPanAction::UPanAction(Box& panned_box, float _gain) : 
-UCtlAction(_gain), 
+PanAction::PanAction(Box& panned_box, float _gain) : 
+ControlAction(_gain), 
 box(panned_box),
 posAttr(panned_box.obtainAttr<UPos>()) {
 }
 
-void UPanAction::mdrag(UMouseEvent& e, UCtlmenu& m) {
+void PanAction::mdrag(MouseEvent& e, ControlMenu& m) {
   if (e.isFirstDrag()) {
     // Unit ignoré : peut poser probleme !!!
     pos0.set(posAttr->getX().val, posAttr->getY().val);   // !!! convesrion afaire
@@ -167,15 +167,15 @@ void UPanAction::mdrag(UMouseEvent& e, UCtlmenu& m) {
 
 // ==================================================== [Ubit Toolkit] =========
 
-UScrollAction::UScrollAction(UScrollpane& _pane, float _gain)
-: UCtlAction(_gain), pane(&_pane) {}
+ScrollAction::ScrollAction(Scrollpane& _pane, float _gain)
+: ControlAction(_gain), pane(&_pane) {}
 
-UScrollAction::UScrollAction(float _gain)
-: UCtlAction(_gain), pane(null) {}
+ScrollAction::ScrollAction(float _gain)
+: ControlAction(_gain), pane(null) {}
 
-void UScrollAction::setPane(UScrollpane& p) {pane = &p;}
+void ScrollAction::setPane(Scrollpane& p) {pane = &p;}
 
-void UScrollAction::mdrag(UMouseEvent& e, UCtlmenu& m) {
+void ScrollAction::mdrag(MouseEvent& e, ControlMenu& m) {
   if (!pane) return;
   
   if (e.isFirstDrag()) {

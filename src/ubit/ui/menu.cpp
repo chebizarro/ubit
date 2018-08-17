@@ -42,25 +42,25 @@
 #include <ubit/ueventflow.hpp>
 #include <ubit/ui/umenuImpl.hpp>
 #include <ubit/uconf.hpp>
-#include <ubit/ubackground.hpp>
+#include <ubit/ui/background.h>
 #include <ubit/utimer.hpp>
 using namespace std;
 namespace ubit {
 
 
-UStyle* UPopmenu::createStyle() {
-  return UMenu::createStyle();
+Style* PopupMenu::createStyle() {
+  return Menu::createStyle();
 }
 
-UPopmenu::UPopmenu(const Args& a) : UMenu(a) {
+PopupMenu::PopupMenu(const Args& a) : Menu(a) {
   wmodes.IS_AUTO_OPENED = false;
 }
 
 
-UStyle* UMenubar::createStyle() {
-  UStyle* style = new UStyle();
+Style* UMenubar::createStyle() {
+  Style* style = new Style();
   style->textSeparator = new String("\t");
-  style->orient = UOrient::HORIZONTAL;
+  style->orient = Orientation::HORIZONTAL;
   style->halign = Halign::LEFT;
   style->valign = Valign::FLEX;
   style->hspacing = 4;
@@ -85,16 +85,16 @@ UMenubar::UMenubar(const Args& a): UBar(a) {
   observeChildrenEvents(*cond / ucall(this, &UMenubar::menuChildCB));
 }
 
-void UMenubar::menuChildCB(UInputEvent& e) {
-  UMenuManager& mc = e.getFlow()->getMenuManager();
+void UMenubar::menuChildCB(InputEvent& e) {
+  MenuManager& mc = e.getFlow()->getMenuManager();
   mc.menuChildCB(e, this);
 }
 
 
-UStyle* UMenu::createStyle() {
-  UStyle& s = *new UStyle();
+Style* Menu::createStyle() {
+  Style& s = *new Style();
   s.textSeparator = &ustr("\n");
-  s.orient = UOrient::VERTICAL;
+  s.orient = Orientation::VERTICAL;
   s.halign = Halign::FLEX;
   s.valign = Valign::TOP;
   s.hspacing = 1;
@@ -106,7 +106,7 @@ UStyle* UMenu::createStyle() {
 }
 
 
-UMenu::UMenu(const Args& a) : 
+Menu::Menu(const Args& a) : 
 Window(a),
 menu_opener_cb(null),
 placement(null)
@@ -123,12 +123,12 @@ placement(null)
     *cond += UOn::mrelease;
   }
   // recupere evenements dans les enfants
-  observeChildrenEvents(*cond / ucall(this, &UMenu::menuChildCB));
+  observeChildrenEvents(*cond / ucall(this, &Menu::menuChildCB));
 }
 
 // necessaire a cause de removingFrom (car les fct ne sont pas virtuelles
 // dans les desctructeurs!)
-UMenu::~UMenu() {
+Menu::~Menu() {
   // att: reset du MenuCtrl si on detruit le menu
   EventFlow* fl = Application::getFlow(0);   // DEFAULT IFLOW : A REVOIR
   if (fl) fl->getMenuManager().closeAllMenus(true);
@@ -136,26 +136,26 @@ UMenu::~UMenu() {
   destructs();
 }
 
-bool UMenu::realize() {
+bool Menu::realize() {
   if (wmodes.IS_HARDWIN) return realizeHardwin(UWinImpl::MENU);
   else {
-    Application::internalError("UMenu::realize",
-                          "can't realize the soft window of this UMenu (%p)",this);
+    Application::internalError("Menu::realize",
+                          "can't realize the soft window of this Menu (%p)",this);
     return false;
   }
 }
 
-void UMenu::closeAllMenus(UInputEvent& e) {
+void Menu::closeAllMenus(InputEvent& e) {
   e.getFlow()->getMenuManager().closeAllMenus(true);
 }
 
-void UMenu::setPlacement(const UWinPlacement& pl) {
+void Menu::setPlacement(const WindowPlacement& pl) {
   if (placement) delete placement;
-  placement = new UWinPlacement(pl);
+  placement = new WindowPlacement(pl);
 }
 
 
-void UMenu::addingTo(Child& c, Element& parent) {
+void Menu::addingTo(Child& c, Element& parent) {
   Window::addingTo(c, parent);
   
   static MultiCondition* cond = null;
@@ -167,13 +167,13 @@ void UMenu::addingTo(Child& c, Element& parent) {
     *cond += UOn::disarm;
   }
   if (wmodes.IS_AUTO_OPENED) {
-    if (!menu_opener_cb) menu_opener_cb = &ucall(this, &UMenu::menuOpenerCB);
+    if (!menu_opener_cb) menu_opener_cb = &ucall(this, &Menu::menuOpenerCB);
     parent.addAttr(*cond / *menu_opener_cb);
   }
 }
 
 //NB: removingFrom() requires a destructor to be defined
-void UMenu::removingFrom(Child& c, Element& parent) {
+void Menu::removingFrom(Child& c, Element& parent) {
   // don't delete the ucalls as they are shared
   if (menu_opener_cb) parent.removeAttr(*menu_opener_cb);
   
@@ -182,12 +182,12 @@ void UMenu::removingFrom(Child& c, Element& parent) {
 
 // Cette fonction est appelee par les boutons qui ouvrent un submenu.
 
-void UMenu::menuOpenerCB(UInputEvent& e) {
-  UMenuManager& mc = e.getFlow()->getMenuManager();
+void Menu::menuOpenerCB(InputEvent& e) {
+  MenuManager& mc = e.getFlow()->getMenuManager();
   View* opener_view = e.getView();
   
   if (e.getCond() == UOn::arm) {
-    //cerr<< endl << "UMenu::armOpener"<< endl;
+    //cerr<< endl << "Menu::armOpener"<< endl;
     openImpl(mc, opener_view, true, null);
     
     // noter que top_menu est esnuite ecrase par menuChildCB() si le bouton 
@@ -196,7 +196,7 @@ void UMenu::menuOpenerCB(UInputEvent& e) {
   }
   
   else if (e.getCond() == UOn::disarm) {
-    //cerr<< endl<< "UMenu::disarmOpener"<< endl;
+    //cerr<< endl<< "Menu::disarmOpener"<< endl;
     mc.active_menu = this;
     mc.active_opener = e.getView(); //verif
   }
@@ -218,12 +218,12 @@ void UMenu::menuOpenerCB(UInputEvent& e) {
   }
 }
 
-void UMenu::menuChildCB(UInputEvent& e) {
-  UMenuManager& mc = e.getFlow()->getMenuManager();
+void Menu::menuChildCB(InputEvent& e) {
+  MenuManager& mc = e.getFlow()->getMenuManager();
   mc.menuChildCB(e, this);
 }
 
-void UMenuManager::menuChildCB(UInputEvent& e, Box* menu_or_menubar) {
+void MenuManager::menuChildCB(InputEvent& e, Box* menu_or_menubar) {
   if (e.getCond() == UOn::mrelease) {
     if (active_opener != e.getView() && !e.dontCloseMenu()) {
       //cerr << "menuChildCB: release" << endl;
@@ -245,7 +245,7 @@ void UMenuManager::menuChildCB(UInputEvent& e, Box* menu_or_menubar) {
   }
 }  
 
-void UMenuManager::openMenuAfterDelay() {
+void MenuManager::openMenuAfterDelay() {
   if (possible_opener && possible_opener_menu) {
     possible_opener_menu->openImpl(*this, possible_opener,
                                    true, //autoplace
@@ -255,7 +255,7 @@ void UMenuManager::openMenuAfterDelay() {
   }
 }
 
-void UMenuManager::closeMenuAfterDelay() {
+void MenuManager::closeMenuAfterDelay() {
   if (possible_closer && possible_closer_menu) {
     closeSubMenus(possible_closer_menu, false);
     possible_closer = null;
@@ -264,15 +264,15 @@ void UMenuManager::closeMenuAfterDelay() {
 }
 
 
-void UPopmenu::open(UMouseEvent& e) {
+void PopupMenu::open(MouseEvent& e) {
   // the menu will behave as a "spring menu" if x>=0 and y>=0 because it will
   // catch the mouse release event. x or y should be set to a negative value
   // to avoid this behavior.
   setPos(e, 2, -2);
-  UMenu::show(true, e.getDisp());
+  Menu::show(true, e.getDisp());
 }
 
-void UMenu::show(bool state, Display* disp) {
+void Menu::show(bool state, Display* disp) {
   if (Application::isExiting()) return;
   
   if (wmodes.IS_HARDWIN) 
@@ -288,7 +288,7 @@ void UMenu::show(bool state, Display* disp) {
     if (!disp) disp = Application::getDisp();
     EventFlow* ef = const_cast<Display*>(disp)->obtainChannelFlow(0);
     if (ef) openImpl(ef->getMenuManager(), null, /*null,*/ false, disp);
-    else Application::internalError("UMenu::show","null event flow; menu: %p",this);
+    else Application::internalError("Menu::show","null event flow; menu: %p",this);
   }
   
   else {  // !state
@@ -304,27 +304,27 @@ void UMenu::show(bool state, Display* disp) {
 
 
 // a generaliser avec Element::closeWinCB
-static UMenu* getMenuParent(View* opener) {
+static Menu* getMenuParent(View* opener) {
   for (View *v = opener; v != null; v = v->getParentView()) {
     Box* box = v->getBox();
     if (box) {
       if (dynamic_cast<UMenubar*>(box)) return null;
-      UMenu* menu = dynamic_cast<UMenu*>(box);
+      Menu* menu = dynamic_cast<Menu*>(box);
       if (menu) return menu;
     }
   }
   return null;
 }
 
-void UMenu::openImpl(UMenuManager& mc, View* opener, 
+void Menu::openImpl(MenuManager& mc, View* opener, 
                      bool auto_place, Display* disp) {
   View* winview = getWinView(opener ? opener->getDisp() : null);
   if (!winview)  {
-    Application::error("UMenu::openImpl","the window of this UMenu (%p) is not realized; check if this menu has a valid parent",this);
+    Application::error("Menu::openImpl","the window of this Menu (%p) is not realized; check if this menu has a valid parent",this);
     return;
   };
   
-  UMenu* parent_menu = null;
+  Menu* parent_menu = null;
   bool is_cascaded = false;   // sert a positionner le menu en dessous ou a droite
   
   // s'il y a deja un menu ouvert et qu'un parent (indirect) de l'opener
@@ -368,7 +368,7 @@ void UMenu::openImpl(UMenuManager& mc, View* opener,
   if (opener) {
     if (placement) setPos(*opener, *placement);
     else if (auto_place) {	 // default rules
-      UWinPlacement pl;
+      WindowPlacement pl;
       if (is_cascaded) {
         pl.halign = &Halign::right;
         pl.hoppositeBorder = true;
@@ -409,9 +409,9 @@ void UMenu::openImpl(UMenuManager& mc, View* opener,
 }
 
 
-UMenuManager::~UMenuManager() {}
+MenuManager::~MenuManager() {}
 
-UMenuManager::UMenuManager(EventFlow* _eflow) : eflow(*_eflow) {
+MenuManager::MenuManager(EventFlow* _eflow) : eflow(*_eflow) {
   disp = null;
   // grabbed menus
   menu_count = 0;
@@ -422,15 +422,15 @@ UMenuManager::UMenuManager(EventFlow* _eflow) : eflow(*_eflow) {
   possible_closer = null;
   possible_closer_menu = null;
   //open_timer = new Timer();
-  //open_timer->onAction(ucall(this, &UMenuManager::openMenuAfterDelay));
+  //open_timer->onAction(ucall(this, &MenuManager::openMenuAfterDelay));
   //close_timer = new Timer();
-  //close_timer->onAction(ucall(this, &UMenuManager::closeMenuAfterDelay));
+  //close_timer->onAction(ucall(this, &MenuManager::closeMenuAfterDelay));
   top_menu = null;
 }
 
-//bool UMenuManager::empty() const {return (menu_count == 0);}
+//bool MenuManager::empty() const {return (menu_count == 0);}
 
-bool UMenuManager::contains(UMenu* menu) const {
+bool MenuManager::contains(Menu* menu) const {
   if (!menu) return false;
   for (int k = 0; k < menu_count; k++) {
     if (menustack[k] == menu) return true;
@@ -438,13 +438,13 @@ bool UMenuManager::contains(UMenu* menu) const {
   return false;   // not found
 }
 
-bool UMenuManager::contains(View* v) const {
+bool MenuManager::contains(View* v) const {
   while (v && !v->getBox()->toMenu()) v = v->getParentView();
   if (!v) return false;
   return contains(v->getBox()->toMenu());
 }
 
-void UMenuManager::openMenu(View* opener, UMenu* menu, Display*_disp) {
+void MenuManager::openMenu(View* opener, Menu* menu, Display*_disp) {
   active_menu = menu;
   active_opener = opener;
   disp = _disp;
@@ -458,11 +458,11 @@ void UMenuManager::openMenu(View* opener, UMenu* menu, Display*_disp) {
   menu->Window::show(true, disp);
 }
 
-void UMenuManager::closeAllMenus(bool clear_top_menu) {
+void MenuManager::closeAllMenus(bool clear_top_menu) {
   if (Application::isExiting()) return;
   
   for (int k = 0; k < menu_count; k++) {
-    // !ATT: uses Window::show(), not the specific UMenu::show() method.
+    // !ATT: uses Window::show(), not the specific Menu::show() method.
     menustack[k]->Window::show(false, null);
   }
   menu_count = 0;
@@ -478,7 +478,7 @@ void UMenuManager::closeAllMenus(bool clear_top_menu) {
 // closes menus that are after 'menu' in the menustack (ie. does not close 'menu'
 // nor the menus that opend 'menu'
 //
-void UMenuManager::closeSubMenus(UMenu* menu, bool including_this_menu) {
+void MenuManager::closeSubMenus(Menu* menu, bool including_this_menu) {
   int k;  // must be unsigned because k becomes<0 in: for (..; k >=0 ; k--) {
   int found = -1;
   
@@ -509,7 +509,7 @@ void UMenuManager::closeSubMenus(UMenu* menu, bool including_this_menu) {
   k++; found++;
   
   for ( ; k < menu_count; k++) {
-    // !ATT: uses Window::show(), not the specific UMenu::show() method.
+    // !ATT: uses Window::show(), not the specific Menu::show() method.
     menustack[k]->Window::show(false, null);
   }
   menu_count = found;
@@ -517,7 +517,7 @@ void UMenuManager::closeSubMenus(UMenu* menu, bool including_this_menu) {
 
 
 
-/* $$$void UMenuManager::enterMenuOpener(UInputEvent& e, UMenu* menu_to_open) {
+/* $$$void MenuManager::enterMenuOpener(InputEvent& e, Menu* menu_to_open) {
  // si autoOpenMode et meme browsing group, alors auto ouvrir
  //if (eflow.getBrowsingGroup() && e.getBrowsingGroup() == eflow.getBrowsingGroup()) { @@@@!!!!!
  possible_opener = e.getView();
@@ -528,7 +528,7 @@ void UMenuManager::closeSubMenus(UMenu* menu, bool including_this_menu) {
  //}
  }
  
- void UMenuManager::enterMenubarChild(UInputEvent& e, bool inside_menubar) {
+ void MenuManager::enterMenubarChild(InputEvent& e, bool inside_menubar) {
  //if (eflow.getBrowsingGroup() && e.getBrowsingGroup() == eflow.getBrowsingGroup()) 
  
  Element* opener = e.getSource();
@@ -536,7 +536,7 @@ void UMenuManager::closeSubMenus(UMenu* menu, bool including_this_menu) {
  
  if (top_menu && opener && opener->isChildOf(*top_menu)) {
  
- UMenu* menu = null;
+ Menu* menu = null;
  opener->attributes().findClass(menu);
  
  cerr << " - enterMenubarChild" <<  " menu" << menu << endl;
@@ -560,7 +560,7 @@ void UMenuManager::closeSubMenus(UMenu* menu, bool including_this_menu) {
  }
  }
  
- void UMenuManager::leaveMenubarChild(UInputEvent& e, bool inside_menubar) {
+ void MenuManager::leaveMenubarChild(InputEvent& e, bool inside_menubar) {
  Element* opener = e.getSource();
  cerr << "leaveMenubarChild" <<  opener << endl;
  
@@ -573,7 +573,7 @@ void UMenuManager::closeSubMenus(UMenu* menu, bool including_this_menu) {
  //}
  }
  
- void UMenuManager::enterMenuChild(UInputEvent& e, UMenu* containing_menu) {
+ void MenuManager::enterMenuChild(InputEvent& e, Menu* containing_menu) {
  // on est toujours sur le meme bouton (enterMenuChild est apppele
  // apres enterMeuOpener)
  if (possible_opener == e.getView()) {
@@ -606,12 +606,12 @@ void UMenuManager::closeSubMenus(UMenu* menu, bool including_this_menu) {
  }
  }
  
- void UMenuManager::leaveMenuChild(UInputEvent& e) {
+ void MenuManager::leaveMenuChild(InputEvent& e) {
  if (possible_closer == e.getView()) possible_closer = null;
  if (possible_opener == e.getView()) possible_opener = null;
  }
  
- void UMenuManager::releaseMenuChild(UInputEvent& e) {
+ void MenuManager::releaseMenuChild(InputEvent& e) {
  if (active_opener != e.getView() && !e.isMenuClosingDisabled()) closeAllMenus();
  }
  

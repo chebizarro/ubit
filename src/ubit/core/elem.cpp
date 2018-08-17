@@ -27,7 +27,7 @@
 #include <ubit/ucall.hpp>
 #include <ubit/uwin.hpp>
 #include <ubit/udialogs.hpp>
-#include <ubit/uupdatecontext.hpp>
+#include <ubit/ui/updatecontext.h>
 #include <ubit/ueventflow.hpp>
 #include <ubit/ucursor.hpp>
 #include <ubit/uboxgeom.hpp>
@@ -42,17 +42,17 @@ const String* Element::getTextSeparator() const {
   return getStyle(null).textSeparator;
 }
 
-const UStyle& Element::getStyle(UpdateContext* ctx) const {  
+const Style& Element::getStyle(UpdateContext* ctx) const {  
   const Class& c = getClass();
   
-  const UStyle& style =
+  const Style& style =
   c.obtainStyle() ? c.obtainStyle()->getStyle(ctx) : Application::getDefaultStyle();
   
   // determiner l'orient si PAS definie explicitement par attr ou child
   //if (!hasBMode(UOn::HAS_ORIENT)) {
   if (!emodes.HAS_ORIENT) {
-    if (style.orient != UOrient::INHERIT) {
-      emodes.IS_VERTICAL = (style.orient==UOrient::VERTICAL);
+    if (style.orient != Orientation::INHERIT) {
+      emodes.IS_VERTICAL = (style.orient==Orientation::VERTICAL);
     }
     else {
       if (ctx && ctx->parent_ctx && ctx->parent_ctx->obj)
@@ -62,14 +62,14 @@ const UStyle& Element::getStyle(UpdateContext* ctx) const {
   return style;
 }
 
-UStyle* Element::createStyle() {
-  UStyle* s = new UStyle();
+Style* Element::createStyle() {
+  Style* s = new Style();
   //valign, halign;  // rendu heritable
   s->halign = Halign::INHERIT;
   s->valign = Valign::INHERIT;
   // vspacing, hspacing; // rendu heritable
-  s->hspacing = UHspacing::INHERIT;
-  s->vspacing = UVspacing::INHERIT;
+  s->hspacing = HSpacing::INHERIT;
+  s->vspacing = VSpacing::INHERIT;
   return s;
 }
 
@@ -441,7 +441,7 @@ Element& Element::removeAllAttrs(bool autodel) {
 */
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void Element::closeWin(UInputEvent& e, int status) {
+void Element::closeWin(InputEvent& e, int status) {
   for (View* v = e.getView(); v != null; v = v->getParentView()) {
     Box* box = v->getBox();
     if (box) {
@@ -866,7 +866,7 @@ bool Element::fire(Event& e) const {
   }  // endif((callback_mask & on->callback_mask) != 0)
   
   // fire the callbacks of the observer if there is one
-  UMouseEvent* me = e.toMouseEvent();
+  MouseEvent* me = e.toMouseEvent();
   
   //cerr << "FIRE src " << this << " " << (this ? this->getClassName() : "none") 
   //<<" / ev " << me  << " / on " << on->ID;
@@ -937,7 +937,7 @@ UBehavior::UBehavior(InputType it) {
 }
 
 static EventFlow& getEventFlow(Event& e) {
-  UInputEvent* ie = e.toInputEvent();
+  InputEvent* ie = e.toInputEvent();
   EventFlow* f = ie ? ie->getFlow() : null;
   return f ? *f : *Application::getFlow(0);
 };
@@ -946,7 +946,7 @@ static EventFlow& getEventFlow(Event& e) {
 // comportement standard: le redraw et le change mouse ne sont faits 
 // que si l'on rentre dans l'objet avec la souris non enfoncee
 
-void Element::enterBehavior(UInputEvent& e, bool is_browsing) {
+void Element::enterBehavior(InputEvent& e, bool is_browsing) {
   EventFlow& f = *e.getFlow();
     
   //if (bp.intype == UBehavior::MOUSE) {
@@ -986,7 +986,7 @@ void Element::enterBehavior(UInputEvent& e, bool is_browsing) {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void Element::leaveBehavior(UInputEvent& e, bool is_browsing) {
+void Element::leaveBehavior(InputEvent& e, bool is_browsing) {
   EventFlow& f = *e.getFlow();
   
   // jamais execute SAUF CALLBACK si disabled
@@ -1029,10 +1029,10 @@ void Element::leaveBehavior(UInputEvent& e, bool is_browsing) {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void Element::armBehavior(UInputEvent& e, bool is_browsing) {
+void Element::armBehavior(InputEvent& e, bool is_browsing) {
   EventFlow& f = getEventFlow(e);
 
-  UMouseEvent* me = e.toMouseEvent();
+  MouseEvent* me = e.toMouseEvent();
   int btns = me ? me->getButtons() : 0;
   
   if (ostate == UOn::DISABLED) return;    // jamais execute si disabled
@@ -1056,7 +1056,7 @@ void Element::armBehavior(UInputEvent& e, bool is_browsing) {
       e.setCond(UOn::dragStart);
       fire(e);
       // changer curseur!     // NB: pourrait avoir cursor propre 
-      f.setCursor(e, &UCursor::dnd);
+      f.setCursor(e, &Cursor::dnd);
     }
   }
   
@@ -1132,7 +1132,7 @@ void Element::armBehavior(UInputEvent& e, bool is_browsing) {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void Element::disarmBehavior(UInputEvent& e, bool is_browsing) {
+void Element::disarmBehavior(InputEvent& e, bool is_browsing) {
   EventFlow& f = getEventFlow(e);
 
   // jamais execute si disabled
@@ -1176,7 +1176,7 @@ void Element::disarmBehavior(UInputEvent& e, bool is_browsing) {
     
     //if (bp.intype != UBehavior::BROWSE && f.beingClicked == this) {
     if (!is_browsing && f.beingClicked == this) {
-      UMouseEvent *me = e.toMouseEvent();
+      MouseEvent *me = e.toMouseEvent();
       if (me
           && me->getScreenPos().x > f.click_pos.x - Application::conf.click_radius
           && me->getScreenPos().x < f.click_pos.x + Application::conf.click_radius
@@ -1232,7 +1232,7 @@ void Element::disarmBehavior(UInputEvent& e, bool is_browsing) {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void Element::actionBehavior(UInputEvent& e) {
+void Element::actionBehavior(InputEvent& e) {
   //f.inAction = this;
   
   // mis en premier sinon fire(action) est appele avec une valeur 

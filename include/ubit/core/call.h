@@ -47,7 +47,7 @@ namespace ubit {
    *
    *   Test* t = new Test();
    *
-   *   UButton& btn = 
+   *   Button& btn = 
    *   ubutton("Press Me"
    *            + UOn::action / ucall(foo)             // callback function
    *            + UOn::mpress / ucall(t, &Test::doit)  // callback method of Test
@@ -83,7 +83,7 @@ namespace ubit {
    *
    *   Test* t = new Test();
    *
-   *   UButton& btn = 
+   *   Button& btn = 
    *   ubutton("Press Me"
    *            + UOn::action / ucall(0.5, foo)
    *            + UOn::mpress / ucall(t, 30, 20, &Test::doit)
@@ -96,17 +96,17 @@ namespace ubit {
    *   refers to the event that provoked the call
    * - the actual event type that can be used as a parameter depends on the callback
    *   condition (see the corresponding UOn condition for details). For instance,
-   *   doit() can have UMouseEvent as a parameter because it is fired by UOn::mdrag.
+   *   doit() can have MouseEvent as a parameter because it is fired by UOn::mdrag.
    * - event parameters can be superclasses of the event class specified by the UOn
    *   condition, but they cannot be sublasses (this will generate an execution error).
-   *   For instance, Event& would be a valid parameter for doit() but UMouseEvent&
+   *   For instance, Event& would be a valid parameter for doit() but MouseEvent&
    *   would not be a valid parameter for foo().
    * <pre>
    *   void foo(Event& e, double value) {...}
    *
    *   class Test {
    *   public:
-   *     virtual void doit(UMouseEvent& e, int x, int y) {...}
+   *     virtual void doit(MouseEvent& e, int x, int y) {...}
    *     ...
    *   };
    * </pre>
@@ -136,7 +136,7 @@ namespace ubit {
    * - ucloseWin()      closes the first parent window that contains this expression
    * 
    * <pre>
-   *   uptr<UDialog> dial = 
+   *   uptr<Dialog> dial = 
    *     udialog(...whatever... 
    *             + ubutton( "Close" + ucloseWin() )
    *             );
@@ -181,7 +181,7 @@ namespace ubit {
   
   
   
-  /// Callback object that closes the first window (UDialog, UMenu...) that contains this element.
+  /// Callback object that closes the first window (Dialog, Menu...) that contains this element.
   UCall& ucloseWin(int stat = 0);
   
   
@@ -193,7 +193,7 @@ namespace ubit {
   public:
     UCall_open(CC _o) : obj(_o) {}
     void operator()(Event& e) {
-      UMouseEvent*_e = checkType<UMouseEvent>(e); if (_e) obj.open(*_e);
+      MouseEvent*_e = checkType<MouseEvent>(e); if (_e) obj.open(*_e);
     }
   };
   

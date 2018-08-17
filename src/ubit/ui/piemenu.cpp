@@ -30,8 +30,8 @@ using namespace std;
 #define NAMESPACE_UBIT namespace ubit {
 NAMESPACE_UBIT
 
-UStyle* UPiemenu::createStyle() {
-  UStyle* style = UMenu::createStyle();
+Style* PieMenu::createStyle() {
+  Style* style = Menu::createStyle();
   //style->local.alpha = 0.;
   style->local.background = null;    // !! alpha et background sont lies !!!!
   style->local.border = null;
@@ -44,7 +44,7 @@ UStyle* UPiemenu::createStyle() {
 }
 
 
-UPiemenu::UPiemenu() :
+PieMenu::PieMenu() :
 menu_style(COMPOUND), 
 spring_mode(true), ctlmenu_mode(false),
 novice_mode(false), in_show_function(false),
@@ -79,12 +79,12 @@ item_radius(7)
   // the menu won't close on a mrelease event
   //this->disableMenuClosing();
   
-  add(UOn::mdrag  / ucall(this, &UPiemenu::motionCB)   // DRAG dans tous les cas
-      + UOn::mpress / ucall(this, &UPiemenu::pressCB)
-      + UOn::mrelease / ucall(this, &UPiemenu::releaseCB)
-      + UOn::paint  / ucall(this, &UPiemenu::paintCB)
-      + UOn::resize / ucall(this, &UPiemenu::resizeCB)
-      + UOn::hide / ucall(this, &UPiemenu::hideCB)
+  add(UOn::mdrag  / ucall(this, &PieMenu::motionCB)   // DRAG dans tous les cas
+      + UOn::mpress / ucall(this, &PieMenu::pressCB)
+      + UOn::mrelease / ucall(this, &PieMenu::releaseCB)
+      + UOn::paint  / ucall(this, &PieMenu::paintCB)
+      + UOn::resize / ucall(this, &PieMenu::resizeCB)
+      + UOn::hide / ucall(this, &PieMenu::hideCB)
       + pie_size
       + gitems
       );
@@ -94,10 +94,10 @@ item_radius(7)
   
   // this timer starts the novice mode after novice_mode_delay
   ptimer = new Timer();
-  ptimer->onAction(ucall(this, &UPiemenu::startNoviceMode));
+  ptimer->onAction(ucall(this, &PieMenu::startNoviceMode));
 }
 
-UPiemenu::~UPiemenu() {
+PieMenu::~PieMenu() {
   unlinkFromAndToMenus();
 }
 
@@ -118,39 +118,39 @@ UPiemenu::~UPiemenu() {
  // changes the radius of the items from the center.
  */
 
-void UPiemenu::setMenuType(int type) {
+void PieMenu::setMenuType(int type) {
   menu_style = type;
   for (ChildIter it = cbegin(); it != cend(); ++it) {
-    UPiemenu* ch = dynamic_cast<UPiemenu*>(*it);
+    PieMenu* ch = dynamic_cast<PieMenu*>(*it);
     if (ch) ch->setMenuType(type);
   }
 }
 
-UScale* UPiemenu::getScale() {  // !!!
-  UScale* s = null;
+Scale* PieMenu::getScale() {  // !!!
+  Scale* s = null;
   attributes().findClass(s);
   if (!s) children().findClass(s);
   return s;
 }
 
-float UPiemenu::getScaleValue() {  // !!!
-  UScale* s = getScale();
+float PieMenu::getScaleValue() {  // !!!
+  Scale* s = getScale();
   return s ? float(*s) : 1.;
 }
 
-Box* UPiemenu::createItem() {
-  Box* b = new UButton();
+Box* PieMenu::createItem() {
+  Box* b = new Button();
   b->addAttr(Background::none); // + UOn::arm/Color::yellow);
   return b;
 }
 
-Box* UPiemenu::getItem(int n) const {
+Box* PieMenu::getItem(int n) const {
   if (n < 0 || n >= 7) return null;
   Node* i = gitems.getChild(n);
   return i ? dynamic_cast<Box*>(i) : null;
 }
 
-Box& UPiemenu::item(int n) {
+Box& PieMenu::item(int n) {
   if (n < 0 || n >= 7) n = 7;  // take the last one
   Box* i = getItem(n);
   if (!i) {
@@ -161,11 +161,11 @@ Box& UPiemenu::item(int n) {
   return *i;
 }
 
-Box* UPiemenu::getSelectedItem() const {return parmed;}
-int UPiemenu::getSelectedIndex() const {return curitem >= 0 ? curitem : -1;}
+Box* PieMenu::getSelectedItem() const {return parmed;}
+int PieMenu::getSelectedIndex() const {return curitem >= 0 ? curitem : -1;}
 
 /*
- Box* UPiemenu::setItem(int n, Box& child, bool auto_del) {
+ Box* PieMenu::setItem(int n, Box& child, bool auto_del) {
  if (n < 0 || n >= 8) return null;
  gitems.remove(gitems.child(n), auto_del);
  gitems.add(child, n);
@@ -173,18 +173,18 @@ int UPiemenu::getSelectedIndex() const {return curitem >= 0 ? curitem : -1;}
  }
  */
 
-void UPiemenu::show(bool state, Display* disp) {
+void PieMenu::show(bool state, Display* disp) {
   if (state) {
     novice_mode = true;
     gitems.show(novice_mode);
     reset(null);
   }
   // NB: unlinkFromAndToMenus: fait dans hideCB()
-  UPopmenu::show(state, disp);
+  PopupMenu::show(state, disp);
 }
 
 
-void UPiemenu::open(UMouseEvent& e) {
+void PieMenu::open(MouseEvent& e) {
   // we have a pbm here because of f->boxMousePress(): this may generate an
   // infinite loop if the coordinates are incorrect. in_show_function avoid this
   // pbm in the stange buggy cases when this might happen
@@ -205,7 +205,7 @@ void UPiemenu::open(UMouseEvent& e) {
   novice_mode = (show_delay == 0);  // starts novice mode (and show items) if delay = 0
   gitems.show(novice_mode);
   
-  UPopmenu::show(true, e.getDisp());  // shows the menu on the screen
+  PopupMenu::show(true, e.getDisp());  // shows the menu on the screen
   
   // this will generate a MousePress on the menu (si motionCB est
   // active par des MouseDrag comme dans les CtlMenus)
@@ -217,7 +217,7 @@ void UPiemenu::open(UMouseEvent& e) {
 }
 
 
-void UPiemenu::reset(UMouseEvent* e) {
+void PieMenu::reset(MouseEvent* e) {
   curitem = -2;  
   // il faut 2 appels a update(LAYOUT) :
   // - le 1er update() calcule la taille de chaque item
@@ -233,14 +233,14 @@ void UPiemenu::reset(UMouseEvent* e) {
   mousepos.x = mousepos.y = 0;
 }
 
-void UPiemenu::startNoviceMode() {
+void PieMenu::startNoviceMode() {
   novice_mode = true;
   gitems.show(true);
 }
 
 /* ==================================================== [Elc] ======= */
 
-void UPiemenu::resizeCB(UResizeEvent& e) {
+void PieMenu::resizeCB(UResizeEvent& e) {
   float scale = getScaleValue();
   float rad = 0;
   
@@ -346,7 +346,7 @@ void UPiemenu::resizeCB(UResizeEvent& e) {
 }
 
 
-void UPiemenu::paintCB(PaintEvent& e) {
+void PieMenu::paintCB(PaintEvent& e) {
   View* v = e.getView();
   if (!v || !novice_mode) return;
   Graph g(e);
@@ -382,7 +382,7 @@ void UPiemenu::paintCB(PaintEvent& e) {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UPiemenu::forwardToMenu(UPiemenu* submenu) {
+void PieMenu::forwardToMenu(PieMenu* submenu) {
   if (to_menu != submenu) {
     if (to_menu) to_menu->from_menu = null;
     to_menu = submenu;
@@ -390,7 +390,7 @@ void UPiemenu::forwardToMenu(UPiemenu* submenu) {
   }
 }
 
-void UPiemenu::receiveFromMenu(UPiemenu* supermenu) {
+void PieMenu::receiveFromMenu(PieMenu* supermenu) {
   if (from_menu != supermenu) {
     if (from_menu) from_menu->to_menu = null;
     from_menu = supermenu;
@@ -398,7 +398,7 @@ void UPiemenu::receiveFromMenu(UPiemenu* supermenu) {
   }
 }
 
-void UPiemenu::unlinkFromAndToMenus() {
+void PieMenu::unlinkFromAndToMenus() {
   if (from_menu) {
     from_menu->forwardToMenu(null);
     from_menu = null;
@@ -409,7 +409,7 @@ void UPiemenu::unlinkFromAndToMenus() {
   }
 }  
 
-void UPiemenu::addSubMenu(int N, UPiemenu* submenu) {
+void PieMenu::addSubMenu(int N, PieMenu* submenu) {
   Box& btn = item(N);
   if (!submenu) return;
   submenu->setShowDelay(0);
@@ -417,14 +417,14 @@ void UPiemenu::addSubMenu(int N, UPiemenu* submenu) {
   btn.add(submenu
           //+ (UOn::arm/showSubmenu)(&submenu)
           //+ (UOn::disarm/hideSubmenu)(&submenu)
-          + UOn::arm / ucall(this, submenu, &UPiemenu::armItemCB)
-          + UOn::disarm / ucall(this, submenu, &UPiemenu::disarmItemCB)
+          + UOn::arm / ucall(this, submenu, &PieMenu::armItemCB)
+          + UOn::disarm / ucall(this, submenu, &PieMenu::disarmItemCB)
           );
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-float UPiemenu::getCentredCoords(UMouseEvent& e, Point& p, bool& must_forward) {
+float PieMenu::getCentredCoords(MouseEvent& e, Point& p, bool& must_forward) {
   View* v = getView();
   Point c = getCenterInContainingWin();
   p.x = e.getScreenPos().x - e.getWinView()->getScreenPos().x - c.x;
@@ -451,7 +451,7 @@ float UPiemenu::getCentredCoords(UMouseEvent& e, Point& p, bool& must_forward) {
   return d;
 }
 
-short UPiemenu::getItemFromPos(const Point& p) const {
+short PieMenu::getItemFromPos(const Point& p) const {
   float ang;     // value in [-PI/2, +PI/2]
   if (p.x == 0) ang = p.y > 0 ? -M_PI/2 : M_PI/2;
   else ang = ::atan(double(-p.y / p.x));
@@ -486,12 +486,12 @@ short UPiemenu::getItemFromPos(const Point& p) const {
 // !!! DE MEME: meme pbm pour View::getWin() : comportement different
 //     pour hardwin et softwin!
 
-Window* UPiemenu::getContainingWin(Display* disp) const {   // !!BUGGY si hardwin!!
+Window* PieMenu::getContainingWin(Display* disp) const {   // !!BUGGY si hardwin!!
   View* v = getWinView(disp);
   return v ? v->getWin() : null;
 }
 
-Point UPiemenu::getCenterInContainingWin(Display* disp) const {
+Point PieMenu::getCenterInContainingWin(Display* disp) const {
   Window* w = getContainingWin(disp);
   Dimension dim = getSize(disp);
   Point p = w ? getPos(*w, disp) : Point(0,0);
@@ -502,7 +502,7 @@ Point UPiemenu::getCenterInContainingWin(Display* disp) const {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UPiemenu::armItemCB(UMouseEvent& e, UPiemenu* m2) {
+void PieMenu::armItemCB(MouseEvent& e, PieMenu* m2) {
   if (!m2) return;
   
   if (getSelectedIndex() < 0) return;  
@@ -514,7 +514,7 @@ void UPiemenu::armItemCB(UMouseEvent& e, UPiemenu* m2) {
     m2->item_radius = getWidth()/2.;
   }
   
-  // sinon le 1er getWidth est pas a jour (a cause de UPiemenu::resizeCB)
+  // sinon le 1er getWidth est pas a jour (a cause de PieMenu::resizeCB)
   m2->doUpdate(Update::LAYOUT | Update::HIDDEN_OBJECTS);
   
   Point c = getCenterInContainingWin();
@@ -556,7 +556,7 @@ void UPiemenu::armItemCB(UMouseEvent& e, UPiemenu* m2) {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UPiemenu::disarmItem(UInputEvent& e, bool is_browsing) {
+void PieMenu::disarmItem(InputEvent& e, bool is_browsing) {
   if (parmed) {
     parmed->disarmBehavior(e, is_browsing);     // NB: the source is the menu!!!
   }
@@ -564,7 +564,7 @@ void UPiemenu::disarmItem(UInputEvent& e, bool is_browsing) {
   curitem = -2;
 }
 
-void UPiemenu::disarmItemCB(UInputEvent& e, UPiemenu* m2) {
+void PieMenu::disarmItemCB(InputEvent& e, PieMenu* m2) {
   if (!m2) return;
   m2->disarmItem(e, true);
   m2->show(false);
@@ -573,7 +573,7 @@ void UPiemenu::disarmItemCB(UInputEvent& e, UPiemenu* m2) {
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // att: e.getSource() incorrect si forwarded (toujours le menu principal)
 
-void UPiemenu::motionCB(UMouseEvent& e) {
+void PieMenu::motionCB(MouseEvent& e) {
   //if ((mmodes & RADIANT) && e.getButtonState() == 0) return;
   
   // dont do anything if no mouse button is pressed
@@ -654,7 +654,7 @@ DRAG:    // send mdrag whatever the mmode
 }
 
 
-void UPiemenu::pressCB(UMouseEvent& e) {
+void PieMenu::pressCB(MouseEvent& e) {
   Point p;
   bool must_forward;
   getCentredCoords(e, p, must_forward);
@@ -668,7 +668,7 @@ void UPiemenu::pressCB(UMouseEvent& e) {
 }
 
 
-void UPiemenu::releaseCB(UMouseEvent& e) {
+void PieMenu::releaseCB(MouseEvent& e) {
   ptimer->stop();
   
   //if (!ctlmenu_mode) {
@@ -695,17 +695,17 @@ void UPiemenu::releaseCB(UMouseEvent& e) {
   else {
     // the menu system (= this menu and its parents) is closed if the parmed
     // item is a leaf (ie. if it does not contain a submenu)
-    UPiemenu* submenu = null;
+    PieMenu* submenu = null;
     parmed->children().findClass(submenu);  // searches if parmed contains a Piemenu
     
     if (!submenu) {
       disarmItem(e, false);
       // chose this menu and its parents
-      UPiemenu* m = this;
+      PieMenu* m = this;
       while (m) {
         // show(false) calls hideCB that calls unlinkFromAndToMenus
         // that sets from_menu to null
-        UPiemenu* from = m->from_menu; 
+        PieMenu* from = m->from_menu; 
         m->show(false);
         m = from;
       }
@@ -714,7 +714,7 @@ void UPiemenu::releaseCB(UMouseEvent& e) {
 }
 
 
-void UPiemenu::hideCB(Event& e) {
+void PieMenu::hideCB(Event& e) {
   //cerr << "hideCB " << this << endl;
   
   // ATT: keep last 'opener' value because the menu is hidden when the 
@@ -724,7 +724,7 @@ void UPiemenu::hideCB(Event& e) {
   
   // !! hideCB devrait recupere un UViewEvent !!!
   
-  UInputEvent ie(UOn::hide, getView(0), null, 0, 0);
+  InputEvent ie(UOn::hide, getView(0), null, 0, 0);
   disarmItem(ie, true);  // BROWSE ?
   
   unlinkFromAndToMenus();  
@@ -733,7 +733,7 @@ void UPiemenu::hideCB(Event& e) {
 
 /* obsolete: for the old WaveMenu subclass:
  
-void UPiemenu::closeMenus(UMouseEvent& e, bool close_submenus) {
+void PieMenu::closeMenus(MouseEvent& e, bool close_submenus) {
   ptimer->stop();
   
   Point p;
@@ -745,7 +745,7 @@ void UPiemenu::closeMenus(UMouseEvent& e, bool close_submenus) {
     return;
   }
   
-  UPiemenu* from = from_menu;
+  PieMenu* from = from_menu;
   unlinkFromAndToMenus();
   if (parmed) {
     // NB: the source is menu  !!!@@@@

@@ -50,16 +50,16 @@ namespace ubit {
   /** Compiled Object Style.
    * specify the appearance of Element/Box/Window objects and subclasses.
    */
-  class UStyle {
+  class Style {
   public:
-    UStyle();
-    virtual ~UStyle();
-    virtual const UStyle& getStyle(UpdateContext*) const {return *this;}
+    Style();
+    virtual ~Style();
+    virtual const Style& getStyle(UpdateContext*) const {return *this;}
     
     void setAlpha(float a) {local.alpha = a;}
     //void setBackground(const Background*);
     void setBorder(const Border* b) {local.border = b;}
-    void setCursor(const UCursor* c) {cursor = c;}
+    void setCursor(const Cursor* c) {cursor = c;}
     void setFont(const Font* f) {font = f;}
     void setSize(Length width, Length height);
     void setPadding(Length horiz, Length vert);
@@ -85,7 +85,7 @@ namespace ubit {
     const ViewStyle* viewStyle;
     //TextEdit* edit;
     const Font* font;
-    const UCursor* cursor;
+    const Cursor* cursor;
     const String* textSeparator;  // text separator between children when printing
     Color* colors[2 * UOn::ACTION_COUNT];
     Color* bgcolors[2 * UOn::ACTION_COUNT];

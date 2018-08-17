@@ -86,7 +86,7 @@ void UNatWin::getTitle(String& s) const {
   }
 }
 
-void UNatWin::setCursor(const UCursor* curs) {
+void UNatWin::setCursor(const Cursor* curs) {
   Cursor xc = (!curs) ? None : curs->getCursorImpl(disp)->cursor;
   XDefineCursor(SYS_DISP, sys_win, xc);
 }
@@ -119,7 +119,7 @@ void UHardWinGDK::realize(WinType wtype, float w, float h) {
   attr.wclass = GDK_INPUT_OUTPUT;  // normal window
   attr.visual = nd->getSysVisual();
   attr.window_type = GDK_WINDOW_TOPLEVEL;
-  attr.cursor = nd->getCursor(UCursor::pointer);
+  attr.cursor = nd->getCursor(Cursor::pointer);
   
   if (nd->getSysColormap() != null) {
     attr.colormap = nd->getSysColormap();

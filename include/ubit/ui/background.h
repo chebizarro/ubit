@@ -126,7 +126,6 @@ namespace ubit {
   inline Background& ubackground(Image& ima) {return *new Background(ima);}
   ///< shortcut for *new Background(ima).
 
-  // ==================================================== Ubit Toolkit =========
   /** Widget transparency.
    * value must be in range [0.0, 1.0]. A value of 1. makes the widget opaque,
    * a value of 0. makes it fully transparent

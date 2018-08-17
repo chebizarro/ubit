@@ -35,18 +35,18 @@ NOTE: this port cannot work beacuse it has not been fully updated
   
 // ==================================================== [Ubit Toolkit] =========
 
-UCursor UCursor::pointer(GDK_LEFT_PTR, UCONST);
-UCursor UCursor::crosshair(GDK_CROSS, UCONST);
-UCursor UCursor::text(GDK_XTERM, UCONST);
-UCursor UCursor::hand(GDK_HAND2, UCONST);
-UCursor UCursor::pencil(GDK_PENCIL, UCONST);
-UCursor UCursor::wait(GDK_WATCH, UCONST);
-UCursor UCursor::question(GDK_QUESTION_ARROW, UCONST);
-UCursor UCursor::hresize(GDK_SB_H_DOUBLE_ARROW, UCONST);
-UCursor UCursor::vresize(GDK_SB_V_DOUBLE_ARROW, UCONST);
-UCursor UCursor::move(GDK_FLEUR, UCONST);
-UCursor UCursor::dnd(GDK_GUMBY, UCONST);
-//UCursor UCursor::plus(GDK_PLUS, UCONST);
+Cursor Cursor::pointer(GDK_LEFT_PTR, UCONST);
+Cursor Cursor::crosshair(GDK_CROSS, UCONST);
+Cursor Cursor::text(GDK_XTERM, UCONST);
+Cursor Cursor::hand(GDK_HAND2, UCONST);
+Cursor Cursor::pencil(GDK_PENCIL, UCONST);
+Cursor Cursor::wait(GDK_WATCH, UCONST);
+Cursor Cursor::question(GDK_QUESTION_ARROW, UCONST);
+Cursor Cursor::hresize(GDK_SB_H_DOUBLE_ARROW, UCONST);
+Cursor Cursor::vresize(GDK_SB_V_DOUBLE_ARROW, UCONST);
+Cursor Cursor::move(GDK_FLEUR, UCONST);
+Cursor Cursor::dnd(GDK_GUMBY, UCONST);
+//Cursor Cursor::plus(GDK_PLUS, UCONST);
 
 // ==================================================== [Ubit Toolkit] =========
 
@@ -276,7 +276,7 @@ int UDispGDK::getPointerState() const {
 }
 
 /*
-bool UDispGDK::grabPointer(const UCursor* c) {
+bool UDispGDK::grabPointer(const Cursor* c) {
   USysCursor cursor = c ? getCursor(*c) : None;
   return gdk_pointer_grab(getSysFrame(),
                           true, //owner
@@ -291,7 +291,7 @@ void UDispGDK::ungrabPointer() {
   gdk_pointer_ungrab(GDK_CURRENT_TIME);
 }
 
-bool UDispGDK::pickWindow(UNatWin& nw, int& x, int& y, UCall* call, UCursor* curs) {
+bool UDispGDK::pickWindow(UNatWin& nw, int& x, int& y, UCall* call, Cursor* curs) {
   Application::error("Display::pickWindow","Not available with GDK");
   return false;
 }

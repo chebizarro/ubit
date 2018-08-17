@@ -31,7 +31,7 @@ namespace ubit {
   /**
    * Base class for Ubit conditions.
    * 
-   * main subclasses: UOn, UFlag, UInscale.
+   * main subclasses: UOn, Flag, UInscale.
    * Example:
    * <pre>
    *    ubutton("Click Me" + UOn::action / ucall(arg, myfunc))

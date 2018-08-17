@@ -30,7 +30,7 @@
 
 namespace ubit {
   
-  class UZoommenu;
+  class ZoomMenu;
   
   /** Zoom pane for zooming and panning children.
    * - widgets to be zoomed must be added to the zoompane viewport (returned by viewport()).
@@ -40,11 +40,11 @@ namespace ubit {
    * - additionally, the scaling and panning values can be changed programmatically 
    *   through the scale() and pos() properties.
    */
-  class UZoompane : public Box {
+  class ZoomPane : public Box {
   public:
-    UCLASS(UZoompane)
+    UCLASS(ZoomPane)
     
-    UZoompane(Args arglist = Args::none);
+    ZoomPane(Args arglist = Args::none);
     
     Box& viewport() {return *pviewport;}
     ///< returns the viewport that is controlled by this zoompane.
@@ -54,12 +54,12 @@ namespace ubit {
      * example: my_zoombox.viewportPos().set(25, 100);
      */
     
-    UScale& viewportScale() {return *pscale;}
+    Scale& viewportScale() {return *pscale;}
     /**< returns the scale attribute of the viewport.
      * example: my_zoombox.viewportScale() = 0.5;
      */    
        
-    UZoommenu& zoommenu() {return *pmenu;}
+    ZoomMenu& zoommenu() {return *pmenu;}
     /**< returns the menu that controls this zoompane.
      * this menu is automatically created.  By default, it is opened by pressing
      *  the right button mouse OR the CTRL key and the left mouse button. 
@@ -69,35 +69,35 @@ namespace ubit {
     
    private:
     uptr<Box> pviewport;
-    uptr<UZoommenu> pmenu;
+    uptr<ZoomMenu> pmenu;
     uptr<UPos> ppos;
-    uptr<UScale> pscale;
+    uptr<Scale> pscale;
   };
   
-  inline UZoompane& uzoompane(Args arglist = Args::none) {return *new UZoompane(arglist);}
-  ///< shortcut function that creates a new UZoompane.
+  inline ZoomPane& uzoompane(Args arglist = Args::none) {return *new ZoomPane(arglist);}
+  ///< shortcut function that creates a new ZoomPane.
 
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   /** Zoom menu for zooming and panning widgets.
-   * used in UZoompane among other things.
+   * used in ZoomPane among other things.
    */
-  class UZoommenu: public UCtlmenu {
+  class ZoomMenu: public ControlMenu {
   public:
-    UCLASSDEF("UZoommenu", UZoommenu, null)  //  UZoommenu() not defined
+    UCLASSDEF("ZoomMenu", ZoomMenu, null)  //  ZoomMenu() not defined
     
-    UZoommenu(Box& zoomed_box, Box& panned_box);
+    ZoomMenu(Box& zoomed_box, Box& panned_box);
     /**< a Control menu that will zoom and pan a widget.
      * zoomed_box and panned_box may differ as one may pan a widget (e.g. a UPalette)
      * but only zoom its content (e.g. UPalette::content())
      */
     
     void openMenuOn(int event_mask);
-    virtual void openMenuCB(UMouseEvent&);
+    virtual void openMenuCB(MouseEvent&);
 
   protected:
-    uptr<UZoomAction> pzoom_action; 
-    uptr<UPanAction> ppan_action;
+    uptr<ZoomAction> pzoom_action; 
+    uptr<PanAction> ppan_action;
     int event_mask;
   };
   
@@ -105,7 +105,7 @@ namespace ubit {
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   /** Zooming conditions (for semantic zooming).
    * objects prefixed by this range condition will only appear or be effective
-   * if the scale (see UScale) is inside this range.
+   * if the scale (see Scale) is inside this range.
    * example:
    * <pre>
    *      uinscale(0.75,2.50) / ubox(Color::red + "Hello World!")

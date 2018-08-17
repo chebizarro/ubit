@@ -32,9 +32,9 @@ namespace ubit {
    * Box container.
    * 
    * Box is the base class for widgets:
-   * - interactors: Button, UItem, UTextfield, UTextarea...
+   * - interactors: Button, Item, TextField, TextArea...
    * - containers: Hbox, Vbox, UMenubar...
-   * - windows: Window, UDialog, UMenu...
+   * - windows: Window, Dialog, Menu...
    * Most widgets' methods are inherited from Box and Element.
    *
    *
@@ -136,7 +136,7 @@ namespace ubit {
      * </pre>
      */
     
-    virtual View* getView(const UInputEvent&) const;
+    virtual View* getView(const InputEvent&) const;
     ///< returns the view of this box that contains the event location.
       
     virtual View* getView(Window&, const Point& pos_in_win, Display* = null) const;

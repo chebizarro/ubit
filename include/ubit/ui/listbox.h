@@ -32,14 +32,14 @@ namespace ubit {
   
   /** Radiobox container: makes buttons (and items, checkboxes, etc) contained in 
    * this box exclusive.
-   * A Radiobox is horizontal by default, add attribute UOrient::vertical to make
+   * A Radiobox is horizontal by default, add attribute Orientation::vertical to make
    * it vertical. 
    */
-  class URadiobox: public Box {
+  class RadioBox: public Box {
   public:
-    UCLASS(URadiobox)
+    UCLASS(RadioBox)
     
-    URadiobox(const Args& args = Args::none);
+    RadioBox(const Args& args = Args::none);
     ///< creates a new Radiobox widget (see also shortcut function uradiobox()).
     
     virtual Box* getSelectedItem() const;
@@ -48,52 +48,52 @@ namespace ubit {
     virtual int getSelectedIndex() const;
     ///< returns the index of the selected item; -1 if there is no selected item.
     
-    virtual URadiobox& setSelectedItem(Box& item);
+    virtual RadioBox& setSelectedItem(Box& item);
     ///< selects this item.
     
-    virtual URadiobox& setSelectedItem(Box* item);
+    virtual RadioBox& setSelectedItem(Box* item);
     ///< selects this item or clear the selection if this item is null.
 
-    virtual URadiobox& setSelectedIndex(int n);
+    virtual RadioBox& setSelectedIndex(int n);
     ///< selects the Nth item; selects the last selectable item if n = -1.
     
-    URadiobox& select(Box& item) {return setSelectedItem(item);}
+    RadioBox& select(Box& item) {return setSelectedItem(item);}
     ///< selects this item (synonym for setSelectedItem()).
 
-    URadiobox& select(int n) {return setSelectedIndex(n);}
+    RadioBox& select(int n) {return setSelectedIndex(n);}
     ///< selects the Nth item (synonym for setSelectedIndex()).    
      
-    UChoice& choice() {return *pchoice;}
-    ///< returns the internal UChoice object that controls the selection.
+    Choice& choice() {return *pchoice;}
+    ///< returns the internal Choice object that controls the selection.
     
-    const UChoice& choice() const {return *pchoice;}
-    ///< returns the internal UChoice object that controls the selection.
+    const Choice& choice() const {return *pchoice;}
+    ///< returns the internal Choice object that controls the selection.
     
   protected:
-    uptr<UChoice> pchoice;
+    uptr<Choice> pchoice;
   };
   
-  inline URadiobox& uradiobox(Args args = Args::none) {return *new URadiobox(args);}
-  ///< shortcut function that returns *new URadiobox(args).
+  inline RadioBox& uradiobox(Args args = Args::none) {return *new RadioBox(args);}
+  ///< shortcut function that returns *new RadioBox(args).
   
   
   /** List widget: enforces a list layout and makes buttons (and items, checkboxes, etc)
    * contained in this box exclusive
    *
-   * A Listbox is vertical by default, add attribute UOrient::horizontal to make 
-   * it horizontal. Although, it can contain any widget, UItem widgets should be
-   * included in a Listbox to obtain the usual look of list widgets. Note that there
+   * A ListBox is vertical by default, add attribute Orientation::horizontal to make 
+   * it horizontal. Although, it can contain any widget, Item widgets should be
+   * included in a ListBox to obtain the usual look of list widgets. Note that there
    * is no restriction on what included widgets may contain (ie. text, images, 
    * nested widgets, etc.)
    *
-   * Strings and non selectable widgets (such as ULabel) can be added to a Listbox.
+   * Strings and non selectable widgets (such as Label) can be added to a ListBox.
    * They will be displayed but won't be selected (and won't be taken into account
    * by getSelectedIndex(), setSelectedIndex()).
    *
    * The background is white by default, the font and the foreground color are 
    * inherited from parents.
    *
-   * A Listbox can have UOn::change and UOn::action callbacks. Both are fired when
+   * A ListBox can have UOn::change and UOn::action callbacks. Both are fired when
    * an item is selected, except that UOn::change is not fired if the same item was
    * already selected, while UOn::action is always fired. UOn::action is the default,
    * which means that is can be omitted in ucall() expressions.
@@ -108,7 +108,7 @@ namespace ubit {
    *
    * Example* ex = new Example;
    *
-   * Listbox& list = ulistbox
+   * ListBox& list = ulistbox
    *    (UOn::change / ucall(ex, &GUI::changeCB)
    *    + ulabel("Modes")     // this object won't be selected as it is a Label
    *    + uitem(select_image + "Select") 
@@ -123,39 +123,39 @@ namespace ubit {
    * }
    * </pre>
    */
-  class Listbox: public URadiobox {
+  class ListBox: public RadioBox {
   public:
-    UCLASS(Listbox)
+    UCLASS(ListBox)
     
-    Listbox(const Args& args = Args::none);
+    ListBox(const Args& args = Args::none);
     ///< creates a new List widget (see also shortcut function ulistbox()).
     
-    static UStyle* createStyle();
+    static Style* createStyle();
     
     bool isTransparent() const {return transp_style;}
-    Listbox& setTransparent(bool s = true) {transp_style = s; return *this;}
+    ListBox& setTransparent(bool s = true) {transp_style = s; return *this;}
     
     
-    Listbox& setSelectedItem(Box& item);
+    ListBox& setSelectedItem(Box& item);
     ///< selects this item.
     
-    Listbox& setSelectedIndex(int n);
+    ListBox& setSelectedIndex(int n);
     ///< selects the Nth item; selects the last selectable item if n = -1.
          
-    Listbox& select(Box& item) {return setSelectedItem(item);}
+    ListBox& select(Box& item) {return setSelectedItem(item);}
     ///< selects this item (synonym for setSelectedItem()).
     
-    Listbox& select(int n) {return setSelectedIndex(n);}
+    ListBox& select(int n) {return setSelectedIndex(n);}
     ///< selects the Nth item (synonym for setSelectedIndex()).
 
         
-    virtual Listbox& addItem(const String& string);
-    virtual Listbox& addItem(String& string, bool duplicate);
+    virtual ListBox& addItem(const String& string);
+    virtual ListBox& addItem(String& string, bool duplicate);
     /**< adds an item to the listbox.
      * the string argument is duplicated except if 'duplicate' if false
      * (in which case it is shared and directly added to the scene graph)
      *
-     * Objects can also be be added/removed to the Listbox by using
+     * Objects can also be be added/removed to the ListBox by using
      * the add()/remove() methods that are inherited from Element
      *
      * addItem() is equivalent to: 
@@ -163,8 +163,8 @@ namespace ubit {
      * - add(uitem(s))         if duplicate is false
      */
     
-    virtual Listbox& addItems(const String& strings, const String& separ = ",");
-    virtual Listbox& addItems(const Args& prefix, const String& strings, const String& separ = ",");
+    virtual ListBox& addItems(const String& strings, const String& separ = ",");
+    virtual ListBox& addItems(const Args& prefix, const String& strings, const String& separ = ",");
     /**< adds a list of items to the listbox.
      * - parses a string containing the item names separated by a character
      *   in 'separ' (the , char by default) and adds each item to the list
@@ -174,10 +174,10 @@ namespace ubit {
      * - see addItem() for more details.
      */
     
-    virtual Listbox& addItems(const char* items[]);
-    virtual Listbox& addItems(const std::vector<String*>& items, bool duplicate = true);
-    virtual Listbox& addItems(const Args& prefix, const char* items[]);
-    virtual Listbox& addItems(const Args& prefix, const std::vector<String*>& items, 
+    virtual ListBox& addItems(const char* items[]);
+    virtual ListBox& addItems(const std::vector<String*>& items, bool duplicate = true);
+    virtual ListBox& addItems(const Args& prefix, const char* items[]);
+    virtual ListBox& addItems(const Args& prefix, const std::vector<String*>& items, 
                                bool duplicate = true);
     /**< adds a list of items to the listbox.
      * - performs addItem() for each string in the 'items' vector
@@ -189,19 +189,19 @@ namespace ubit {
     bool transp_style;
   };
   
-  inline Listbox& ulistbox(Args args = Args::none) {return *new Listbox(args);}
-  ///< shortcut function that returns *new Listbox(args).
+  inline ListBox& ulistbox(Args args = Args::none) {return *new ListBox(args);}
+  ///< shortcut function that returns *new ListBox(args).
   
   
   /** Combo box gadget.
    *
    *  Geometry:
-   *  - Same geometry as UTextfield: keeps its initial size, which is calculated
+   *  - Same geometry as TextField: keeps its initial size, which is calculated
    *    to make the first item of the list entirely visible in the textfield.
    *
    *  List and Selection:
-   * - list() returns the Listbox that was passed as an argument to the constructor
-   * - choice() returns the UChoice object that manages the selection in list()
+   * - list() returns the ListBox that was passed as an argument to the constructor
+   * - choice() returns the Choice object that manages the selection in list()
    *
    *  Callbacks
    *  - UOn::action (default callback) is fired when an item is selected or re-selected
@@ -212,56 +212,56 @@ namespace ubit {
    * Exemple
    * <pre>
    *    XXX* obj = new XXX();
-   *    Listbox& list = ulistbox( ... );   // see UList
-   *    UCombobox& combo = ucombobox(list, 
+   *    ListBox& list = ulistbox( ... );   // see UList
+   *    ComboBox& combo = ucombobox(list, 
    *                                 UOn::action / ucall(obj, &XXX::actionCB)
    *                                 + UOn::change / ucall(obj, &XXX::changeCB));
    * </pre>
    */
-  class UCombobox : public UTextfield  {
+  class ComboBox : public TextField  {
   public:
-    UCLASS(UCombobox)
+    UCLASS(ComboBox)
     
-    UCombobox();
+    ComboBox();
     
-    UCombobox(Listbox&, const Args& = Args::none);
+    ComboBox(ListBox&, const Args& = Args::none);
     /* creates a new Combo Box widget (see also shortcut function ucombobox()).
      * arguments:
-     * - 1st arg: the Listbox that is displayed in the menu
+     * - 1st arg: the ListBox that is displayed in the menu
      * - 2nd arg: a standard arglist (callback specs should be added here)
      */
 
     bool isTextMode() const {return text_only;};
-    UCombobox& setTextMode(bool = true);
+    ComboBox& setTextMode(bool = true);
     ///< the textfield only contains the textual part of the selected item in text mode.
     
-    Listbox& list() {return *plist;}
-    class UChoice& choice();
+    ListBox& list() {return *plist;}
+    class Choice& choice();
     Element& entry() {return *pentry;}
-    UMenu&  menu()  {return *pmenu;}
+    Menu&  menu()  {return *pmenu;}
     ///< gives access to combobox subcomponents.
     
-    static UStyle* createStyle();
+    static Style* createStyle();
     
   protected:
     virtual void changedCB(Event&);  //UElemEvent
     virtual void actionCB(Event&);   //UElemEvent
-    virtual void openMenuCB(UInputEvent&);
+    virtual void openMenuCB(InputEvent&);
     virtual void syncText();
     
   private:
-    uptr<Listbox> plist;
+    uptr<ListBox> plist;
     uptr<Element> pentry;
-    uptr<class UMenu> pmenu;
+    uptr<class Menu> pmenu;
     bool text_only;
     
-    //UCombobox(const Args& = Args::none);
+    //ComboBox(const Args& = Args::none);
     void constructs(const Args&);
   };
   
   
-  inline UCombobox& ucombobox(Listbox& l, Args a = Args::none) {return *new UCombobox(l,a);}
-  ///< shortcut function that returns *new UCombobox(l,a).
+  inline ComboBox& ucombobox(ListBox& l, Args a = Args::none) {return *new ComboBox(l,a);}
+  ///< shortcut function that returns *new ComboBox(l,a).
   
 } 
 #endif

@@ -41,9 +41,9 @@ namespace ubit {
 
 
 
-UStyle* USubwin::createStyle() {
-  UStyle* s = Window::createStyle();
-  // necessaire, surtout pour UGlcanvas
+Style* USubwin::createStyle() {
+  Style* s = Window::createStyle();
+  // necessaire, surtout pour GLCanvas
   s->setBgcolors(Color::none);
   return s;
 }

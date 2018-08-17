@@ -36,7 +36,7 @@
 #include <ubit/ugraph.hpp>
 #include <ubit/uwin.hpp>
 #include <ubit/uappli.hpp>
-#include <ubit/uupdatecontext.hpp>
+#include <ubit/ui/updatecontext.h>
 #include <ubit/uglcanvas.hpp>     // !!!! DEPENDANCE A OPEN GL UTILISER SUBWIN !!!
 #include <ubit/udispX11.hpp>
 #include <ubit/udispGLUT.hpp>
@@ -102,7 +102,7 @@ Graph::Graph(View* v) {
   rc = disp->getDefaultContext();
 #endif
   
-  UGlcanvas* glcanvas = dynamic_cast<UGlcanvas*>(hardwin->win);
+  GLCanvas* glcanvas = dynamic_cast<GLCanvas*>(hardwin->win);
   if (glcanvas) {
     Point pt = hardwin->getPos();
     rc->setDest(hardwin, -pt.x, -pt.y);

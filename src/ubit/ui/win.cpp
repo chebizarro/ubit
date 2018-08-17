@@ -24,7 +24,7 @@
 #include <ubit/uappli.hpp>
 #include <ubit/core/uappliImpl.hpp>
 #include <ubit/uinteractors.hpp>
-#include <ubit/ubackground.hpp>
+#include <ubit/ui/background.h>
 #include <ubit/ucolor.hpp>
 #include <ubit/ucall.hpp>
 using namespace std;
@@ -36,10 +36,10 @@ static const char* Unrealized_Window =
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-UStyle* Window::createStyle() {
-  UStyle* style = new UStyle;
+Style* Window::createStyle() {
+  Style* style = new Style;
   style->textSeparator = new String("\n");
-  style->orient = UOrient::VERTICAL;
+  style->orient = Orientation::VERTICAL;
   style->halign = Halign::FLEX;
   //NB: dialogs a la fois hflex et vflex
   style->valign = Valign::FLEX;
@@ -278,7 +278,7 @@ View* Window::initViewImpl(View* parview, Display* disp) {
   // !note: winview est une var. d'instance!
   if (render) winview = (render->createView)(this, null, hardwin);
   else {
-    Application::internalError("Window::initView","can't retreive object UStyle of Window object %p",this);
+    Application::internalError("Window::initView","can't retreive object Style of Window object %p",this);
     winview = new View(this, null, hardwin);
   }
     
@@ -868,7 +868,7 @@ Point Window::getPos(const Window& win, Display* d) const {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void Window::setPos(UMouseEvent& e, float x, float y) {
+void Window::setPos(MouseEvent& e, float x, float y) {
   Point p = e.getScreenPos();
   p.x += x; p.y += y;
   setScreenPos(p, e.getDisp());
@@ -1012,7 +1012,7 @@ static void checkUpdate(Window* win, Display* disp) {
   }
 }
 
-void Window::setPos(const View& view, const UWinPlacement& pl) {
+void Window::setPos(const View& view, const WindowPlacement& pl) {
   Display* disp = view.getDisp();
   float _x = 0, _y = 0;  // ext int
   
@@ -1064,7 +1064,7 @@ void Window::setPos(const View& view, const UWinPlacement& pl) {
   setPos(view, Point(_x, _y));
 }
 
-UWinPlacement::UWinPlacement() {
+WindowPlacement::WindowPlacement() {
   halign = null;
   valign = null;
   hoppositeBorder = voppositeBorder = false;

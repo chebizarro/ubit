@@ -17,7 +17,7 @@
 #include <ubit/ubit_features.h>
 #include <ubit/uzoom.hpp>
 #include <ubit/uboxgeom.hpp>
-#include <ubit/uupdatecontext.hpp>
+#include <ubit/ui/updatecontext.h>
 #include <ubit/ucolor.hpp>
 #include <ubit/upix.hpp>
 
@@ -32,9 +32,9 @@ bool UInscale::verifies(const UpdateContext& ctx, const Element&) const {
 
 // ==================================================== [Ubit Toolkit] =========
 
-UZoommenu::UZoommenu(Box& zoomed_box, Box& panned_box) :
-pzoom_action(new UZoomAction(zoomed_box)),  // for centred zooming
-ppan_action(new UPanAction(panned_box)),    // for panning
+ZoomMenu::ZoomMenu(Box& zoomed_box, Box& panned_box) :
+pzoom_action(new ZoomAction(zoomed_box)),  // for centred zooming
+ppan_action(new PanAction(panned_box)),    // for panning
 event_mask(Modifier::RightButton | Modifier::ControlDown)
 {
   itemRadius() = 0;
@@ -54,12 +54,12 @@ event_mask(Modifier::RightButton | Modifier::ControlDown)
   item(6).add(UPix::bigDown);
 }
 
-void UZoommenu::openMenuOn(int _event_mask) {
+void ZoomMenu::openMenuOn(int _event_mask) {
   event_mask = _event_mask;
 }
 
 // opens menu on event_mask on event_box and propagates events to children otherwise
-void UZoommenu::openMenuCB(UMouseEvent& e) {
+void ZoomMenu::openMenuCB(MouseEvent& e) {
   if ((e.getButton() & event_mask) || (e.getModifiers() & event_mask))
     open(e);   // open the menu
   else
@@ -68,17 +68,17 @@ void UZoommenu::openMenuCB(UMouseEvent& e) {
 
 // ==================================================== [Ubit Toolkit] =========
 
-UZoompane::UZoompane(Args a) : 
+ZoomPane::ZoomPane(Args a) : 
 pviewport(new Box(a)),
-pmenu(new UZoommenu(*pviewport, *pviewport)),  // creates pos and scale
+pmenu(new ZoomMenu(*pviewport, *pviewport)),  // creates pos and scale
 ppos(pviewport->obtainAttr<UPos>()),
-pscale(pviewport->obtainAttr<UScale>())
+pscale(pviewport->obtainAttr<Scale>())
 {
   add(*pviewport);
-  catchEvents(UOn::mpress / ucall(pmenu(), &UZoommenu::openMenuCB));  
+  catchEvents(UOn::mpress / ucall(pmenu(), &ZoomMenu::openMenuCB));  
 }
 
-void UZoompane::openMenuOn(int event_mask) {
+void ZoomPane::openMenuOn(int event_mask) {
   pmenu->openMenuOn(event_mask);
 }
 

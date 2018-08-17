@@ -28,7 +28,7 @@
 #include <ubit/ucall.hpp>
 #include <ubit/uon.hpp>
 #include <ubit/ubox.hpp>
-#include <ubit/uupdatecontext.hpp>
+#include <ubit/ui/updatecontext.h>
 #include <ubit/ugraph.hpp>
 #include <ubit/uedit.hpp>
 #include <ubit/ufontmetrics.hpp>
@@ -85,7 +85,7 @@ void TextEdit::addingTo(Child& selflink, Element& parent) {
   parent.addAttr(UOn::mpress / *calls);
   parent.addAttr(UOn::mrelease / *calls);
   parent.addAttr(UOn::kpress / *calls);
-  parent.addAttr(UCursor::text);
+  parent.addAttr(Cursor::text);
   parent.addAttr(UOn::click / *calls2);
 }
 
@@ -101,7 +101,7 @@ void TextEdit::removingFrom(Child& c, Element& parent) {
   parent.removeAttr(*calls);
   parent.removeAttr(*calls);
   parent.removeAttr(*calls);
-  parent.removeAttr(UCursor::text);
+  parent.removeAttr(Cursor::text);
   parent.removeAttr(*calls2);
   Attribute::removingFrom(c, parent);
 }
@@ -126,11 +126,11 @@ void TextEdit::update() {
 /* ==================================================== [Elc:] ======= */
 /*
 static void scroll(View* view, int dir) {
-  UScrollpane* spane = null;
+  Scrollpane* spane = null;
   view = view->getParentView();
   while (view) {
     Box* par = view->getBox();
-    if (par && (spane = dynamic_cast<UScrollpane*>(par)))
+    if (par && (spane = dynamic_cast<Scrollpane*>(par)))
       break;
     view = view->getParentView();
   }
@@ -618,17 +618,17 @@ void TextEdit::paint(Graph& g, UpdateContext& ctx, const Rectangle& r) const {
 // NB: press et non arm car arm provoque un reaffichage 
 //     (on reafficherait donc 2 fois)
 
-void TextEdit::inputCB(UInputEvent& e) {
+void TextEdit::inputCB(InputEvent& e) {
   if (e.getCond() == UOn::mpress)
-    mpressed((UMouseEvent&)e);
+    mpressed((MouseEvent&)e);
   else if (e.getCond() == UOn::mrelease)
-    mreleased((UMouseEvent&)e);
+    mreleased((MouseEvent&)e);
   else if (e.getCond() == UOn::kpress)
     kpressed((UKeyEvent&)e);
 }
 
 
-void TextEdit::mpressed(UMouseEvent& e) {
+void TextEdit::mpressed(MouseEvent& e) {
   UDataContext dc;
   String* s = null;
   int btn = e.getButton();
@@ -651,7 +651,7 @@ void TextEdit::mpressed(UMouseEvent& e) {
 }
 
 
-void TextEdit::mreleased(UMouseEvent& e) {
+void TextEdit::mreleased(MouseEvent& e) {
   UDataContext dc;
   String* newstr = null;
   // mrelease1 necessaire pour que le Drag selection fonctionne
@@ -661,7 +661,7 @@ void TextEdit::mreleased(UMouseEvent& e) {
 }
 
 
-void TextEdit::callbacks2(UMouseEvent& e) {  // multiple clicks
+void TextEdit::callbacks2(MouseEvent& e) {  // multiple clicks
   int btn = e.getButton();
 
   if (btn == Application::conf.mouse_select_button) {
@@ -679,7 +679,7 @@ void TextEdit::callbacks2(UMouseEvent& e) {  // multiple clicks
 }
 
 
-Selection* TextEdit::getSelection(UInputEvent& e, String& sel_text) {
+Selection* TextEdit::getSelection(InputEvent& e, String& sel_text) {
   sel_text.clear();
   Display* d = e.getDisp(); 
   Selection* sel = d ? d->getChannelSelection(0) : null;  // on devrait tenir compte du flow !!!

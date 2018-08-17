@@ -46,7 +46,7 @@ namespace ubit {
     static UOn
     idle,
     /**< no event condition.
-     * this condition is useful for UStyle specs.
+     * this condition is useful for Style specs.
      */
     
     action,
@@ -68,7 +68,7 @@ namespace ubit {
      * the mouse enters even if the initial mouse press was performed on another item.
      *
      * Any widget deriving from Box can be made "armable" by Element::setArmable(). 
-     * Most interactors (e.g. UButton, UCheckbox...) are armable by default.
+     * Most interactors (e.g. Button, Checkbox...) are armable by default.
      *
      * Callback functions triggered by UOn::arm and UOn::disarm can have an optional 
      * Event parameter. @see also UOn::action, UOn::mpress.
@@ -76,7 +76,7 @@ namespace ubit {
     
     &select, &deselect,
     /**< detects that a widget was "selected" or "deselected".
-     * Certain widgets, such as UCheckbox or Listbox items can be selected. Besides,   
+     * Certain widgets, such as Checkbox or ListBox items can be selected. Besides,   
      * any widget deriving from Box can be made "selectable" by Element::setSelectable().
      *
      * Callback functions triggered by UOn::select and UOn::deselect can have an optional
@@ -88,7 +88,7 @@ namespace ubit {
      * These conditions are applicable to any widget that derives from Box.
      *
      * Callback functions triggered by UOn::enter and UOn::leave can have an optional
-     * UMouseEvent parameter.
+     * MouseEvent parameter.
      */
     
     click, doubleClick,
@@ -96,7 +96,7 @@ namespace ubit {
      * These conditions are applicable to any widget that derives from Box.
      *
      * Callback functions triggered by UOn::click and UOn::doubleClick can have an
-     * optional UMouseEvent parameter which has a getClickCount() method.
+     * optional MouseEvent parameter which has a getClickCount() method.
      *   
      * The radius and the delay for detecting mouse clicks depend on 
      * UConf::click_radius and UConf::click_delay.
@@ -108,7 +108,7 @@ namespace ubit {
     /**< detects that the mouse was pressed, released, dragged or moved.
      * These conditions are applicable to any widget that derives from Box.
      *
-     * Callback functions triggered by these conditions can have an optional UMouseEvent
+     * Callback functions triggered by these conditions can have an optional MouseEvent
      * parameter which have several useful methods such as getSource(), getX(), getY()
      * that return the corresponding widget and the position of the mouse relatively
      * from its origin.
@@ -225,12 +225,12 @@ namespace ubit {
     /**< fires callbacks when the value of an object is changed.
      * this condition detects when:
      * - the value of UScrollbar, USlider objects is changed
-     * - the selection is changed in UChoice, Listbox, UCombobox objects
+     * - the selection is changed in Choice, ListBox, ComboBox objects
      *   (= when a item, that was previously unselected, becomes selected)
      *
-     * Notes for UChoice, Listbox, UCombobox:
+     * Notes for Choice, ListBox, ComboBox:
      *  - Event::getTarget() returns the item that was selected (while
-     *    Event::getSource() returns the UChoice, Listbox... container)
+     *    Event::getSource() returns the Choice, ListBox... container)
      *  - UOn::change is not triggered if the user selects an item that was
      *    already selected (in contrast with UOn::action which would be
      *    fired in this case)

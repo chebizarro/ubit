@@ -19,7 +19,7 @@
 #include <ubit/uon.hpp>
 #include <ubit/uboxgeom.hpp>
 #include <ubit/ucursor.hpp>
-#include <ubit/uupdatecontext.hpp>
+#include <ubit/ui/updatecontext.h>
 #include <ubit/uwin.hpp>
 #include <ubit/uscrollpane.hpp>
 #include <ubit/uappli.hpp>
@@ -31,34 +31,34 @@ using namespace std;
 NAMESPACE_UBIT
 
 
-UScale::UScale(float v) : value(v) {}
-UScale::UScale(const Float& v) : value(v.floatValue()) {}
+Scale::Scale(float v) : value(v) {}
+Scale::Scale(const Float& v) : value(v.floatValue()) {}
 
-void UScale::set(float v) {
+void Scale::set(float v) {
   if (checkConst()) return;
   if (value == v) return;
   value = v;
   changed();
 }
 
-void UScale::mult(float v) {
+void Scale::mult(float v) {
   if (checkConst()) return; 
   value *= v;
   changed();
 }
 
-void UScale::div(float v) {
+void Scale::div(float v) {
   if (checkConst()) return;
   value /= v;
   changed();
 }
 
-void UScale::putProp(UpdateContext *props, Element&) {
+void Scale::putProp(UpdateContext *props, Element&) {
   props->xyscale *= value;
   props->fontdesc.setScale(props->xyscale);
 }
 
-void UScale::update() {
+void Scale::update() {
   updateAutoParents(Update::LAYOUT_PAINT);
 }
 
@@ -252,19 +252,19 @@ void UPadding::putProp(UpdateContext* props, Element&) {
 
 // ==================================================== Ubit Gui Toolkit =======
 
-UOrient UOrient::vertical(VERTICAL, UCONST);
-UOrient UOrient::horizontal(HORIZONTAL, UCONST);
+Orientation Orientation::vertical(VERTICAL, UCONST);
+Orientation Orientation::horizontal(HORIZONTAL, UCONST);
 
-UOrient::UOrient() : value(VERTICAL) {}
-UOrient::UOrient(const UOrient& v) : value(v.value) {}
-UOrient::UOrient(char v, UConst c) : Attribute(c), value(v) {}
+Orientation::Orientation() : value(VERTICAL) {}
+Orientation::Orientation(const Orientation& v) : value(v.value) {}
+Orientation::Orientation(char v, UConst c) : Attribute(c), value(v) {}
 
-void UOrient::addingTo(Child& c, Element& parent) {
+void Orientation::addingTo(Child& c, Element& parent) {
   Attribute::addingTo(c, parent);
   
   // ca ne va pas: messages absurdes !!
   //if (parent->hasBMode(UMode::HAS_ORIENT)) {
-  // Application::warning("UOrient::addingTo","This UOrient object (%p) has a parent (%s %p) that contains another UOrient object", this, parent->getTypeName(), parent);
+  // Application::warning("Orientation::addingTo","This Orientation object (%p) has a parent (%s %p) that contains another Orientation object", this, parent->getTypeName(), parent);
   //}
   
   parent.emodes.HAS_ORIENT = true;
@@ -272,14 +272,14 @@ void UOrient::addingTo(Child& c, Element& parent) {
   else parent.emodes.IS_VERTICAL = false;
 }
 
-void UOrient::removingFrom(Child& c, Element& parent) {
+void Orientation::removingFrom(Child& c, Element& parent) {
   //parent.removeBModes(UMode::HAS_ORIENT | UMode::IS_VERTICAL);
   parent.emodes.HAS_ORIENT = false; 
   parent.emodes.IS_VERTICAL = false;
   Attribute::removingFrom(c, parent);
 }
 
-UOrient& UOrient::operator=(const UOrient &o) {
+Orientation& Orientation::operator=(const Orientation &o) {
   if (checkConst()) return *this;
   if (value == o.value) return *this;
   value = o.value;
@@ -287,11 +287,11 @@ UOrient& UOrient::operator=(const UOrient &o) {
   return *this;
 }
 
-void UOrient::update() {
+void Orientation::update() {
   updateAutoParents(Update::SHOW);   // pourquoi show ???
 }
 
-void UOrient::putProp(UpdateContext* props, Element& par) {
+void Orientation::putProp(UpdateContext* props, Element& par) {
   // nb: inherited => ne fait rien
   //if (value == VERTICAL) par.addBModes(UMode::IS_VERTICAL);
   //else if (value == HORIZONTAL) par.removeBModes(UMode::IS_VERTICAL);
@@ -358,11 +358,11 @@ void Halign::putProp(UpdateContext *props, Element&) {
 
 // ==================================================== Ubit Gui Toolkit =======
 
-UHspacing UHspacing::none(0);
+HSpacing HSpacing::none(0);
 
-UHspacing::UHspacing(float val) : value(val) {}
+HSpacing::HSpacing(float val) : value(val) {}
 
-UHspacing& UHspacing::operator=(float val) {
+HSpacing& HSpacing::operator=(float val) {
   if (checkConst()) return *this;
   if (value == val) return *this;
   value = val;
@@ -370,25 +370,25 @@ UHspacing& UHspacing::operator=(float val) {
   return *this;
 }
 
-UHspacing& UHspacing::operator=(const UHspacing& v) {
+HSpacing& HSpacing::operator=(const HSpacing& v) {
   return (*this = v.value);
 }
 
-void UHspacing::update() {
+void HSpacing::update() {
   updateAutoParents(Update::LAYOUT_PAINT);
 }
 
-void UHspacing::putProp(UpdateContext *props, Element&) {
+void HSpacing::putProp(UpdateContext *props, Element&) {
   props->hspacing = value;
 }
 
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
-UVspacing UVspacing::none(0);
+VSpacing VSpacing::none(0);
 
-UVspacing::UVspacing(float val) : value(val) {}
+VSpacing::VSpacing(float val) : value(val) {}
 
-UVspacing& UVspacing::operator=(float val) {
+VSpacing& VSpacing::operator=(float val) {
   if (checkConst()) return *this;
   if (value == val) return *this;
   value = val;
@@ -396,15 +396,15 @@ UVspacing& UVspacing::operator=(float val) {
   return *this;
 }
 
-UVspacing& UVspacing::operator=(const UVspacing& v) {
+VSpacing& VSpacing::operator=(const VSpacing& v) {
   return (*this = v.value);
 }
 
-void UVspacing::update() {
+void VSpacing::update() {
   updateAutoParents(Update::LAYOUT_PAINT);
 }
 
-void UVspacing::putProp(UpdateContext *props, Element&) {
+void VSpacing::putProp(UpdateContext *props, Element&) {
   props->vspacing = value;
 }
 
@@ -447,13 +447,13 @@ UPosControl& UPosControl::freezeY(bool state)
 // les drags ne doivent pas bouger l'objet quand on en sort d'ou des calculs
 // en absolu entre les x/yev0 et les x/ybox_pos0
 
-void UPosControl::mouseCB(UMouseEvent& e) {
+void UPosControl::mouseCB(MouseEvent& e) {
   if (e.getCond() == UOn::mdrag) dragCB(e);
   else if (e.getCond() == UOn::mpress) pressCB(e);
   else if (e.getCond() == UOn::mrelease) releaseCB(e);
 }
 
-void UPosControl::pressCB(UMouseEvent& e) {
+void UPosControl::pressCB(MouseEvent& e) {
   // !! NOTE for multitouch: this function should be locked so that several handles
   // !! cannot change the position simultaneously  
   moved_view = null;
@@ -468,15 +468,15 @@ void UPosControl::pressCB(UMouseEvent& e) {
   pt_in_pane0 = e.getPosIn(*paneview);
   //xev0 = e.getScreenPos().x; yev0 = e.getScreenPos().y;
   box_pos0.set(posAttr->getX().val, posAttr->getY().val);
-  if (change_cursor) e.getFlow()->setCursor(e, &UCursor::move);
+  if (change_cursor) e.getFlow()->setCursor(e, &Cursor::move);
 }
 
-void UPosControl::releaseCB(UMouseEvent& e) {
+void UPosControl::releaseCB(MouseEvent& e) {
   moved_view = null;
   if (change_cursor) e.getFlow()->setCursor(e, null);
 }
 
-void UPosControl::dragCB(UMouseEvent& e) {
+void UPosControl::dragCB(MouseEvent& e) {
   View* paneview = null;
   if (!moved_view || !(paneview = moved_view->getParentView())) return;
 
@@ -541,16 +541,16 @@ void UPosControl::dragCB(UMouseEvent& e) {
 
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
-//UMagicLensControl::UMagicLensControl(UPos& _pos, UScrollpane& _pane) 
+//UMagicLensControl::UMagicLensControl(UPos& _pos, Scrollpane& _pane) 
 //: UPosControl(_pos), pane(_pane) {}
 
-UMagicLensControl::UMagicLensControl(UPos* p, UScrollpane* spane) 
+UMagicLensControl::UMagicLensControl(UPos* p, Scrollpane* spane) 
 : UPosControl(p), pane(spane) {}
 
-UMagicLensControl& UMagicLensControl::setModel(UPos* p, UScrollpane* spane) 
+UMagicLensControl& UMagicLensControl::setModel(UPos* p, Scrollpane* spane) 
 {posAttr = p; pane = spane; return *this;}
 
-void UMagicLensControl::dragCB(UMouseEvent& e) {
+void UMagicLensControl::dragCB(MouseEvent& e) {
   if (!posAttr || !pane) return;
   UPosControl::dragCB(e);
   
@@ -599,25 +599,25 @@ USizeControl& USizeControl::freezeHeight(bool state)
 // les drags ne doivent pas bouger l'objet quand on en sort d'ou des calculs
 // en absolu entre les x/yev0 et les x/ybox_pos0
 
-void USizeControl::mouseCB(UMouseEvent& e) {
+void USizeControl::mouseCB(MouseEvent& e) {
   if (e.getCond() == UOn::mdrag) dragCB(e);
   else if (e.getCond() == UOn::mpress) pressCB(e);
   else if (e.getCond() == UOn::mrelease) releaseCB(e);
 }
 
-void USizeControl::pressCB(UMouseEvent& e) {
+void USizeControl::pressCB(MouseEvent& e) {
   xev0 = e.getScreenPos().x;
   yev0 = e.getScreenPos().y;
   w0 = psize->getWidth().val;
   h0 = psize->getHeight().val;
-  e.getFlow()->setCursor(e, &UCursor::hresize);
+  e.getFlow()->setCursor(e, &Cursor::hresize);
 }
 
-void USizeControl::releaseCB(UMouseEvent& e) {
+void USizeControl::releaseCB(MouseEvent& e) {
   e.getFlow()->setCursor(e, null);
 }
 
-void USizeControl::dragCB(UMouseEvent& e) {
+void USizeControl::dragCB(MouseEvent& e) {
   float dx = e.getScreenPos().x - xev0;
   float dy = e.getScreenPos().y - yev0;
   
@@ -698,8 +698,8 @@ public:
 protected:
   uptr<Box> phandle;
   float curpos;
-  virtual void press(UMouseEvent&);
-  virtual void drag(UMouseEvent&);
+  virtual void press(MouseEvent&);
+  virtual void drag(MouseEvent&);
 #endif
 };
 
@@ -720,14 +720,14 @@ public:
 protected:
   uptr<Box> phandle;
   float curpos;
-  virtual void press(UMouseEvent&);
-  virtual void drag(UMouseEvent&);
+  virtual void press(MouseEvent&);
+  virtual void drag(MouseEvent&);
 #endif
 };
 
 
 UWidthChooser::UWidthChooser(Length w) : UWidth(w) {
-  phandle = ubox(uwidth(3) + Border::shadowIn + UCursor::hresize);
+  phandle = ubox(uwidth(3) + Border::shadowIn + Cursor::hresize);
   phandle->addAttr(UOn::mdrag / ucall(this, &UWidthChooser::drag));
   phandle->addAttr(UOn::mpress / ucall(this, &UWidthChooser::press));
 }
@@ -755,7 +755,7 @@ void UWidthChooser::removingFrom(Child& c, Element& p) {
   Attribute::removingFrom(c, p);
 }
 
-void UWidthChooser::press(UMouseEvent& e) {
+void UWidthChooser::press(MouseEvent& e) {
   View *v, *parv;
   if ((v = e.getView()) && (parv = e.getView()->getParentView())) {
     //curpos = e.getWinX();
@@ -766,7 +766,7 @@ void UWidthChooser::press(UMouseEvent& e) {
   }
 }
 
-void UWidthChooser::drag(UMouseEvent& e) {
+void UWidthChooser::drag(MouseEvent& e) {
   View *v, *parv;
   if ((v = e.getView()) && (parv = e.getView()->getParentView())) {
     float new_w = width.val + (e.getScreenPos().x - curpos);
@@ -780,7 +780,7 @@ void UWidthChooser::drag(UMouseEvent& e) {
 
 
 UHeightChooser::UHeightChooser(Length h) : UHeight(h) {
-  phandle = ubox(uwidth(3) + Border::shadowIn + UCursor::vresize);
+  phandle = ubox(uwidth(3) + Border::shadowIn + Cursor::vresize);
   phandle->addAttr(UOn::mdrag / ucall(this, &UHeightChooser::drag));
   phandle->addAttr(UOn::mpress / ucall(this, &UHeightChooser::press));
 }
@@ -804,7 +804,7 @@ void UHeightChooser::removingFrom(Child& c, Element& p) {
   Attribute::removingFrom(c, p);
 }
 
-void UHeightChooser::press(UMouseEvent& e) {
+void UHeightChooser::press(MouseEvent& e) {
   View *v, *parv;
   if ((v = e.getView()) && (parv = e.getView()->getParentView())) {
     //curpos = e.getWinY();
@@ -815,7 +815,7 @@ void UHeightChooser::press(UMouseEvent& e) {
   }
 }
 
-void UHeightChooser::drag(UMouseEvent& e) {
+void UHeightChooser::drag(MouseEvent& e) {
   View *v, *parv;
   if ((v = e.getView()) && (parv = e.getView()->getParentView())) {
     float new_h = height.val + (e.getScreenPos().y - curpos);

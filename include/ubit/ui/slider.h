@@ -30,11 +30,11 @@
 
 namespace ubit {
   
-  struct USliderStyle : public UStyle {
+  struct USliderStyle : public Style {
     USliderStyle();
-    const UStyle& getStyle(UpdateContext* ctx) const;
+    const Style& getStyle(UpdateContext* ctx) const;
     // default is hstyle
-    UStyle vstyle;
+    Style vstyle;
   };
   
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -43,7 +43,7 @@ namespace ubit {
    *
    * Geometry:
    *  - horizontal orientation by default 
-   *  - addAttr(UOrient::vertical) makes slider vertical
+   *  - addAttr(Orientation::vertical) makes slider vertical
    *  - shortcut functions uhslider() and uvslider() specify the orientation
    *
    * Callbacks
@@ -56,7 +56,7 @@ namespace ubit {
     
     USlider(const Args& = Args::none);
     /**< creates a new slider (@see also shortcut uslider(Args&)).
-     * Default orientation is horizontal. new USlider(UOrient::vertical) creates
+     * Default orientation is horizontal. new USlider(Orientation::vertical) creates
      * a vertical slider. The slider's value is in the range [0., 100.]
      */
     
@@ -64,7 +64,7 @@ namespace ubit {
     /**< creates a new slider with a model value (@see also shortcut uslider(Float&, Args&)).
      * the slider is synchronized with this value. Several widgets (eg. sliders)
      * that share the same value are synchronized.
-     * Default orientation is horizontal. new USlider(value, UOrient::vertical) creates
+     * Default orientation is horizontal. new USlider(value, Orientation::vertical) creates
      * a vertical slider. The slider's value is in the range [0., 100.]
      */
   
@@ -86,7 +86,7 @@ namespace ubit {
     
     // - - - impl.  - - - - - - - - - - - - - - - - - - - - - - - - - - -
     
-    static UStyle* createStyle() {return createSliderStyle();}
+    static Style* createStyle() {return createSliderStyle();}
     static USliderStyle* createSliderStyle() {return new USliderStyle;}
     
     virtual Box* createKnob();
@@ -102,7 +102,7 @@ namespace ubit {
     uptr<class UPosControl> pknob_ctrl;
     
     void constructs();
-    virtual void gotoPosCB(UMouseEvent&);
+    virtual void gotoPosCB(MouseEvent&);
     virtual void actionCB(Event&);  //UNodeEvent
     virtual void changeCB(Event&);  //UNodeEvent
   };

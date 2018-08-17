@@ -60,7 +60,7 @@ namespace ubit {
      * The argument can either be a single object pointer or reference, or a list 
      * of object pointers or references separated by + operators, example:
      * <pre>
-     *   UButton* b = new UButton(UPix::disquette + "Save" + ucall(obj, saveFunc));
+     *   Button* b = new Button(UPix::disquette + "Save" + ucall(obj, saveFunc));
      * </pre>
      *
      * @see also the Element() shortcut, that returns: *new Element(arglist)
@@ -161,19 +161,19 @@ namespace ubit {
      * The argument can either be a single object pointer or reference, or a list 
      * of object pointers or references separated by + operators:
      * <pre>
-     *   UButton* b = new UButton();    // creates a UButton (that derives from Element)
+     *   Button* b = new Button();    // creates a Button (that derives from Element)
      *   b->add(UPix::disquette);       // adds a pixmap image to the button
      *   b->add("Save");                // adds a string that serves as a label
      *   b->add(ucall(obj, saveFunc));  // adds a callback function (@see UCall)
      * </pre>
      * is equivalent to:
      * <pre>
-     *   UButton* b = new UButton();
+     *   Button* b = new Button();
      *   b->add(UPix::disquette + "Save" + ucall(obj, saveFunc));
      * </pre>
      * and also to:
      * <pre>
-     *   UButton* b = new UButton(UPix::disquette + "Save" + ucall(obj, saveFunc));
+     *   Button* b = new Button(UPix::disquette + "Save" + ucall(obj, saveFunc));
      * </pre>
      *
      * Objects added to the CHILD list should derive from Element (typically, widgets
@@ -336,7 +336,7 @@ namespace ubit {
      */
     
     static void closeWin(InputEvent&, int status);
-    /**< closes the first window (UDialog, UMenu...) that contains this element.
+    /**< closes the first window (Dialog, Menu...) that contains this element.
      * @see: Window::close() and ucloseWin().
      */
     

@@ -33,7 +33,7 @@ namespace ubit {
   class UPalette : public Box {
   public:
     UCLASS(UPalette)
-    static UStyle* createStyle();
+    static Style* createStyle();
 
     UPalette(Args content_args = Args::none);
 
@@ -54,7 +54,7 @@ namespace ubit {
 
     UPos&   pos()   {return *ppos;}
     USize&  size()  {return *psize;}
-    UScale& contentScale() {return *pcontent_scale;}  
+    Scale& contentScale() {return *pcontent_scale;}  
   
     void setPosModel(UPos*);
     void setPosControlModel(UPosControl*);
@@ -64,7 +64,7 @@ namespace ubit {
     uptr<UPosControl> ppos_ctrl;
     uptr<USize> psize;
     uptr<USizeControl> psize_ctrl;
-    uptr<UScale> pcontent_scale;
+    uptr<Scale> pcontent_scale;
     uptr<Box> pcontent;
     uptr<Element> ptitle;
     uptr<Element> pcontrols;

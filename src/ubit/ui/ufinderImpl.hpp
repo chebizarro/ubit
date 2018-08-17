@@ -31,38 +31,38 @@
 
 namespace ubit {
   
-  /* [Impl] A directory in the UFinder.
+  /* [Impl] A directory in the Finder.
    */ 
-  class UFinderDir : public UItem {
-    friend class UFinder;
+  class UFinderDir : public Item {
+    friend class Finder;
     String fpath, fname;
-    uptr<UIconbox> iconbox;
-    UPopmenu popmenu;
+    uptr<IconBox> iconbox;
+    PopupMenu popmenu;
     bool keep_open;
     int path_type;
     
   public:
-    UFinderDir(class UFinder*, const String& path, int path_type);
+    UFinderDir(class Finder*, const String& path, int path_type);
     ~UFinderDir();
     
     const String& getDir() const;
-    class UIconbox* getIconbox() const;
+    class IconBox* getIconbox() const;
     
     void setDir(const String& dirname);
-    void setIconbox(class UIconbox*);
+    void setIconbox(class IconBox*);
     
     void emph(bool state);
     void setKeepOpen(bool st) {keep_open = st;}
     bool isKeepOpen() {return keep_open;}
   };
   
-  /* [Impl] A host in the UFinder.
+  /* [Impl] A host in the Finder.
    */ 
   class UFinderHost : public Box {   // UVbox
   public:
     typedef void (UFinderHost::*HostMethod)();
     
-    UFinderHost(class UFinder*, const String& hostname);
+    UFinderHost(class Finder*, const String& hostname);
     void resolve(HostMethod);
     void createClone();
     void deleteClone();
@@ -72,8 +72,8 @@ namespace ubit {
     void putFile();
     
   protected:
-    friend class UFinder;
-    class UFinder& fd;
+    friend class Finder;
+    class Finder& fd;
     String hostname, address;
     Box *clone_btn, *xhost_btn, *put_btn, *get_btn;
     Window *clone_win;
@@ -85,11 +85,11 @@ namespace ubit {
     void putFileImpl();
   };
   
-  /* [Impl] UFinder communication (remote file access by using ssh, etc)
+  /* [Impl] Finder communication (remote file access by using ssh, etc)
    */ 
   class UFinderCom {
   public:
-    UFinderCom(UFinder*, const String& path, int path_type);
+    UFinderCom(Finder*, const String& path, int path_type);
     
   protected:
     enum {INVALID_URL=-2};
@@ -97,7 +97,7 @@ namespace ubit {
     void showDoc();
     
     pthread_t thread_id;
-    UFinder* fd;
+    Finder* fd;
     String path, cachepath;
     int type, mode;
     int stat;

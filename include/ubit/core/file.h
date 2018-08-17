@@ -108,7 +108,7 @@ namespace ubit {
     
   protected:
     friend class UFileDir;
-    friend class UFilebox;
+    friend class FileChooser;
     unsigned long size;
     unsigned long modtime;
     uptr<String> pname;
@@ -159,7 +159,7 @@ namespace ubit {
     ///< expands the directory path (if there are path symbols in the dirpath).
     
   private:
-    friend class UIconbox;
+    friend class IconBox;
     UFileInfo dir_info;
     UFileInfos file_infos;
     std::vector<String*> filters;

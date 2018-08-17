@@ -51,13 +51,13 @@ namespace ubit {
    *
    *    // 's' is displayed in (and edited by) the textfield
    *    // (as expected, the strCB() callback will be called when 's' is modified)
-   *    Box* tf = new UTextfield(*s);
+   *    Box* tf = new TextField(*s);
    *    ....
    * </pre>
    *
    * Alternatively:
    * <pre>
-   *    // utextfield(...) is a shortcut for *new UTextfield(...)
+   *    // utextfield(...) is a shortcut for *new TextField(...)
    *    Box& tf = utextfield(s + UOn::strChange / ucall(d, &Demo::textCB));
    * </pre>
    *

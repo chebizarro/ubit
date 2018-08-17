@@ -26,7 +26,7 @@
 #include <iostream>
 #include <ubit/uon.hpp>
 #include <ubit/uboxgeom.hpp>
-#include <ubit/ubackground.hpp>
+#include <ubit/ui/background.h>
 #include <ubit/uboxes.hpp>
 #include <ubit/ucolor.hpp>  
 #include <ubit/upix.hpp>
@@ -35,7 +35,7 @@
 #include <ubit/uinteractors.hpp>
 #include <ubit/ulistbox.hpp>
 #include <ubit/uscrollpane.hpp>
-#include <ubit/uupdatecontext.hpp>
+#include <ubit/ui/updatecontext.h>
 using namespace std;
 #define NAMESPACE_UBIT namespace ubit {
 NAMESPACE_UBIT
@@ -51,7 +51,7 @@ public:
   UVbox(Args args = Args::none) : Box(args) {}
   ///< creates a new vertical box; @see also shortcut: uvbox().
   
-  static UStyle* createStyle();
+  static Style* createStyle();
 };
 
  * UHbox = horizontal Box.
@@ -64,13 +64,13 @@ public:
   UHbox(Args args = Args::none) : Box(args) {}
   ///< creates a new horizontal box; @see also shortcut: uhbox().
   
-  static UStyle* createStyle();
+  static Style* createStyle();
 };
 
-UStyle* UHbox::createStyle() {
-  UStyle* style = new UStyle();
+Style* UHbox::createStyle() {
+  Style* style = new Style();
   style->textSeparator  =  &ustr(" ");
-  style->orient   = UOrient::HORIZONTAL;
+  style->orient   = Orientation::HORIZONTAL;
   style->halign   = Halign::LEFT;
   style->valign   = Valign::FLEX;
   style->hspacing = 1;
@@ -79,10 +79,10 @@ UStyle* UHbox::createStyle() {
   return style;
 }
 
-UStyle* UVbox::createStyle() {
-  UStyle* style = new UStyle();
+Style* UVbox::createStyle() {
+  Style* style = new Style();
   style->textSeparator  = &ustr("\n");
-  style->orient   = UOrient::VERTICAL;
+  style->orient   = Orientation::VERTICAL;
   style->halign   = Halign::FLEX;
   style->valign   = Valign::TOP;
   style->hspacing = 1;
@@ -94,10 +94,10 @@ UStyle* UVbox::createStyle() {
 */
 // ==================================================== [Ubit Toolkit] =========
 
-UStyle* UBar::createStyle() {
-  UStyle* s = new UStyle;
+Style* UBar::createStyle() {
+  Style* s = new Style;
   s->textSeparator = &ustr("\t");
-  s->orient = UOrient::HORIZONTAL;
+  s->orient = Orientation::HORIZONTAL;
   s->halign = Halign::LEFT;
   s->valign  = Valign::FLEX;
   s->hspacing = 4;
@@ -107,10 +107,10 @@ UStyle* UBar::createStyle() {
   return s;
 }
 
-UStyle* UStatusbar::createStyle() {
-  UStyle* s = new UStyle();
+Style* UStatusbar::createStyle() {
+  Style* s = new Style();
   s->textSeparator  = &ustr("\t");
-  s->orient = UOrient::HORIZONTAL;
+  s->orient = Orientation::HORIZONTAL;
   s->halign = Halign::LEFT;
   s->valign  = Valign::FLEX;
   s->hspacing = 2;
@@ -122,11 +122,11 @@ UStyle* UStatusbar::createStyle() {
 
 // ==================================================== [Ubit Toolkit] =========
 
-UStyle* UFlowbox::createStyle() {
-  UStyle& s = *new UStyle();
+Style* UFlowbox::createStyle() {
+  Style& s = *new Style();
   s.viewStyle = &FlowView::style;
   s.textSeparator = new String("\n");
-  s.orient = UOrient::HORIZONTAL;
+  s.orient = Orientation::HORIZONTAL;
   s.halign = Halign::FLEX;
   s.valign = Valign::FLEX;
   s.hspacing = 1;
@@ -146,10 +146,10 @@ UFlowbox::UFlowbox(Args a): Box(a) {
 
 // ==================================================== [Ubit Toolkit] =========
 
-UStyle* UCardbox::createStyle() {
-  UStyle& s = *new UStyle();
+Style* UCardbox::createStyle() {
+  Style& s = *new Style();
   s.viewStyle = &UPaneView::style;
-  s.orient = UOrient::HORIZONTAL;
+  s.orient = Orientation::HORIZONTAL;
   s.halign = Halign::FLEX;
   s.valign = Valign::FLEX;
   s.hspacing = 1;
@@ -162,17 +162,17 @@ UStyle* UCardbox::createStyle() {
   return &s; 
 }
 
-UCardbox::UCardbox(Args args) : Box(args), ptabs(new Listbox()) 
+UCardbox::UCardbox(Args args) : Box(args), ptabs(new ListBox()) 
 {
   ptabs->addAttr(ucall(this, &UCardbox::setSelectedImpl)
-                 + UOrient::horizontal + uhflex() + uvflex()
+                 + Orientation::horizontal + uhflex() + uvflex()
                  + upadding(0,0) + Background::none + Border::none);
   setAttr(*new UCompositeBorder(utop() + uhcenter() + *ptabs));
 }
 
 UCardbox::~UCardbox() {}
 
-UChoice& UCardbox::choice() {return ptabs->choice();}
+Choice& UCardbox::choice() {return ptabs->choice();}
 
 void UCardbox::setSelectedImpl() {
   int index = ptabs->choice().getSelectedIndex();
@@ -262,7 +262,7 @@ void UCardbox::setSelectedIndex(int index) {
  border->add(utop() + uhcenter() + ucombobox(*ptabs));
  }
  else {
- ptabs->addAttr(UOrient::horizontal);
+ ptabs->addAttr(Orientation::horizontal);
  ptabs->addAttr(uhspacing(0));
  ptabs->addAttr(uhmargin(1));
  ptabs->addAttr(uvmargin(1));
@@ -282,14 +282,14 @@ UDocbox::UDocbox(Args args) {
   zoom_quantum = 1.166;
   
   ptitlebar = uhbox();
-  pscale = new UScale;
+  pscale = new Scale;
   pcontent = uvbox(args);
   pcontent->addAttr(*pscale);
   
   pspane = uscrollpane(true, false);
   pspane->add(*pcontent);
   
-  addAttr(UOrient::vertical + utop());
+  addAttr(Orientation::vertical + utop());
   add(uhflex() + utop() + *ptitlebar + uvflex() + *pspane);
 }
 
@@ -322,8 +322,8 @@ void UDocbox::iconify(bool state) {
 
 // ==================================================== [Ubit Toolkit] =========
 
-UAlertbox::UAlertbox(Args args) {
-  add(UOrient::vertical + Background::white + ualpha(0.8)
+AlertBox::AlertBox(Args args) {
+  add(Orientation::vertical + Background::white + ualpha(0.8)
       + uhcenter() + uvcenter()
       + Font::bold + Font::large
       + args
@@ -345,22 +345,22 @@ UAlertbox::UAlertbox(Args args) {
       );
 }
 
-UStyle* UAlertbox::createStyle() {
-  UStyle*s = Box::createStyle();
-  s->orient = UOrient::VERTICAL;
+Style* AlertBox::createStyle() {
+  Style*s = Box::createStyle();
+  s->orient = Orientation::VERTICAL;
   return s;
 }
 
-void UAlertbox::showMsg(const String& msg) {
+void AlertBox::showMsg(const String& msg) {
   message.removeAll();
   message.add(ustr(msg));
   update();
   Box::show();
 }
 
-//void UAlertbox::showMsg(const String* msg) {if (msg) showMsg(*msg);}
+//void AlertBox::showMsg(const String* msg) {if (msg) showMsg(*msg);}
 
-void UAlertbox::showMsg(const char* msg) {
+void AlertBox::showMsg(const char* msg) {
   message.removeAll();
   message.add(ustr(msg));
   update();

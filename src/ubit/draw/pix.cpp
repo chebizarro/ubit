@@ -27,7 +27,7 @@
 #include <iostream>
 #include <cstring>
 #include <ubit/ucall.hpp>
-#include <ubit/uupdatecontext.hpp>
+#include <ubit/ui/updatecontext.h>
 #include <ubit/ugraph.hpp>
 #include <ubit/uview.hpp>
 #include <ubit/ucolor.hpp>

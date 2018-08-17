@@ -1,5 +1,5 @@
 /*
- *  finder.h: UFinder element
+ *  finder.h: Finder element
  *  Ubit GUI Toolkit - Version 8
  *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
@@ -24,7 +24,7 @@
 #ifndef _ufinder_hpp_
 #define _ufinder_hpp_
 #include <ubit/ucolor.hpp>
-#include <ubit/ubackground.hpp>
+#include <ubit/ui/background.h>
 #include <ubit/umenu.hpp>
 #include <ubit/udoc.hpp>
 #include <ubit/uicon.hpp>
@@ -37,10 +37,10 @@ namespace ubit {
  class UFinderControls;
  class UFinderCom;
 
-/** UFinder Listener.
+/** Finder Listener.
 */
-struct UFinderListener {
-  virtual ~UFinderListener() {}
+struct FinderListener {
+  virtual ~FinderListener() {}
   virtual void fileRequest(const String& pathname) {}
   virtual void docLoaded(const String& pathname, Document*) {}
   virtual void docShown(const String& pathname, Document*) {}
@@ -50,12 +50,12 @@ struct UFinderListener {
 
 /** file finder.
 */
-class UFinder : public Box {
+class Finder : public Box {
 public:
-  UCLASS(UFinder)
+  UCLASS(Finder)
 
   struct Options : Element {
-    friend class UFinder;
+    friend class Finder;
     Options();
     USize  clone_frame_size;
     Background default_background;
@@ -65,8 +65,8 @@ public:
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  UFinder(const String& pathname = ".");
-  virtual ~UFinder();
+  Finder(const String& pathname = ".");
+  virtual ~Finder();
     
   virtual void open(const String& pathname);
   ///< opens a directory or a file (the second variant normalizes pathname).
@@ -96,26 +96,26 @@ public:
   virtual void setTracking(bool doc, bool icons);
   ///< tracking mode updates the value while the scrollbar is being dragged (default is true).
 
-  virtual UFinderListener* getListener();
-  virtual void setListener(UFinderListener*);
+  virtual FinderListener* getListener();
+  virtual void setListener(FinderListener*);
   /**< gets/set the current listener.
     * the finder creates a default listener that opens documents
-    * when hyperlinks are clicked (see UFinderListener)
+    * when hyperlinks are clicked (see FinderListener)
     * limitation: only one listener in this version!
     */
     
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   Options& getOptions() {return opts;}
-  ///< returns the options of the UFinder.
+  ///< returns the options of the Finder.
   
   UDocbox*  getDocbox() {return pdocbox;}
-  UIconbox* getIconbox() {return piconbox;}
+  IconBox* getIconbox() {return piconbox;}
 
   UDocbox* getCurrentBox();
   ///< returns docbox or iconbox depending on which is currently shown.
   
-  UIcon* getSelectedIcon();
+  Icon* getSelectedIcon();
   ///< return the icon box that is currently shown (if any, null otherwise).
   
   Document* getDoc() {return pdocument;}
@@ -126,11 +126,11 @@ public:
   virtual void zoomOut();
   virtual void setZoomQuantum(float);
     
-  UCtlmenu& getContextMenu() {return *ctlmenu;}
+  ControlMenu& getContextMenu() {return *ctlmenu;}
   ///< returns the Contextual menu of the Finder.
   
   virtual void openContextMenuIn(Box&);
-  virtual UCtlmenu& createContextMenu();
+  virtual ControlMenu& createContextMenu();
  
   void showSideBar(bool state);
   ///< shows/hides the side bar (located on the left side).
@@ -147,7 +147,7 @@ public:
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 protected:
   // documents.
-  void openFBox(UFilebox&);
+  void openFBox(FileChooser&);
   void openMsg(MessageEvent&);
   virtual void openImpl(const String& path, int path_mode, int path_type);
   virtual int openFile(const String& path, int path_type);
@@ -155,8 +155,8 @@ protected:
   virtual int openDir(UFinderDir*);
   virtual void showFile(const String& path, Document*);
   virtual void showDir(const String& path);
-  virtual void showPreview(UIcon*);
-  virtual void showPreviewRequest(UIcon*);
+  virtual void showPreview(Icon*);
+  virtual void showPreviewRequest(Icon*);
   virtual void showIconPreviews();  
   
   // dirs and icons.
@@ -165,9 +165,9 @@ protected:
   virtual UFinderDir* findDir(const String& path);
   virtual void showDirInfo(UFinderDir*);
   virtual void removeIconbox(UFinderDir*, bool upd);
-  virtual void iconSelectCB(UIconbox*);
-  virtual void iconActionCB(UIconbox*);
-  virtual void linkActionCB(UInputEvent&, Document*);
+  virtual void iconSelectCB(IconBox*);
+  virtual void iconActionCB(IconBox*);
+  virtual void linkActionCB(InputEvent&, Document*);
 
   // hosts and clones.
   virtual void browseCB(MessageEvent&);
@@ -192,22 +192,22 @@ private:
   UBar toolbar;
   Box mainbox, optbox, folderlist, hostlist, filelist;
   uptr<Box> optbox_btn, filelist_btn;
-  uptr<UDialog> ask_dialog;
+  uptr<Dialog> ask_dialog;
   uptr<String> ask_dialog_msg;
-  UFinderListener* listener;
-  uptr<UAlertbox> alertbox;
-  uptr<UCtlmenu> ctlmenu;
+  FinderListener* listener;
+  uptr<AlertBox> alertbox;
+  uptr<ControlMenu> ctlmenu;
   MessageService *local_ums, *remote_ums;
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // current selection
   uptr<Document> pdocument;
   uptr<UDocbox> pdocbox;
-  uptr<UIconbox> piconbox;
+  uptr<IconBox> piconbox;
   //uptr<Box> docglass;
   uptr<UFinderDir>last_direntry;
-  UIcon* last_preview_request;
-  UIcon* last_preview;
+  Icon* last_preview_request;
+  Icon* last_preview;
   ChildIter previews_current, previews_end;
   uptr<Timer> preview_timer;
  };

@@ -35,7 +35,7 @@
 #include <ubit/core/uclassImpl.hpp>  // for StyleSheet (bizarrement)
 #include <ubit/core/event.h>
 #include <ubit/uima.hpp>
-#include <ubit/ubackground.hpp>
+#include <ubit/ui/background.h>
 using namespace std;
 namespace ubit {
 
@@ -95,9 +95,9 @@ scale(1.),	         // default=1. : no scaling factor
 filebox_width(400),
 filebox_height(230),
 filebox_line_count(10),
-mouse_select_button(UMouseEvent::LeftButton),
-mouse_menu_button(UMouseEvent::RightButton),
-mouse_alt_button(UMouseEvent::MidButton),
+mouse_select_button(MouseEvent::LeftButton),
+mouse_menu_button(MouseEvent::RightButton),
+mouse_alt_button(MouseEvent::MidButton),
 locale(""),   // default="" : the locale is given by the environment (ex: "iso_8859_1")
 default_background(*new Background(Color::lightgrey))
 {

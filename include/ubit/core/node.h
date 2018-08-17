@@ -164,10 +164,10 @@ public:
     * intermediate Element parents are ignored (ie. traversed) by this function.
     */
   
-  virtual Box*  getParent(const UInputEvent&) const;
+  virtual Box*  getParent(const InputEvent&) const;
   
   
-  virtual View* getParentView(const UInputEvent&) const;
+  virtual View* getParentView(const InputEvent&) const;
   /* returns the direct or *indirect* Box parent (resp. parent's view) that contains this event.
     * intermediate Element parents are ignored (ie. traversed) by this function.
     */
@@ -192,12 +192,12 @@ public:
     *       ....
     *    };
     *    Demo* d = new Demo;
-    *    // NB: ubutton(...) returns *new UButton(...)
+    *    // NB: ubutton(...) returns *new Button(...)
     *    Box& b = ubutton(" Save..." + UOn::action / ucall(d, &Demo::saveFile));
     *    ....
     *    b.addAttr(UOn::enter / ucall(d, "Saves the file", &Demo::showMsg)
     * </pre>
-    * @see: addAttr(), UCall, UOn, UFlag for more details.
+    * @see: addAttr(), UCall, UOn, Flag for more details.
     */
   
   friend Child operator/(const Condition&, Node*);

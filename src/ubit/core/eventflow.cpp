@@ -37,8 +37,8 @@
 #include <ubit/uon.hpp>
 #include <ubit/utimer.hpp>
 #include <ubit/ucolor.hpp>
-#include <ubit/ubackground.hpp>
-#include <ubit/uupdatecontext.hpp>
+#include <ubit/ui/background.h>
+#include <ubit/ui/updatecontext.h>
 #include <ubit/ui/uviewImpl.hpp>
 #include <ubit/u3d.hpp>
 using namespace std;
@@ -77,8 +77,8 @@ currentFocus(null),
 beingClicked(null),
 auto_repeat_timer(new Timer(Application::conf.auto_repeat_delay, -1, false)),
 tip_timer(new Timer(false)),
-tip_win(*new UMenu()),
-menu_man(*new UMenuManager(this)),
+tip_win(*new Menu()),
+menu_man(*new MenuManager(this)),
 selection(*new Selection(disp.getConf().selection_color,
                           disp.getConf().selection_bgcolor,
                           disp.getConf().selection_font)),
@@ -137,14 +137,14 @@ void EventFlow::setFocus(View* v) {
   currentFocus = v;
 }
 
-void EventFlow::setCursor(Event& e, const UCursor* c) {
+void EventFlow::setCursor(Event& e, const Cursor* c) {
   if (channel != 0) return;            // Cursor pas gere pour flowID > 0
   
   if (c != lastCursor) {
     lastCursor = c;
     UHardwinImpl* win = null;
     View* v = null;
-    UInputEvent* ie = e.toInputEvent();
+    InputEvent* ie = e.toInputEvent();
 
     if (ie && (v = ie->getView()) && (win = v->getHardwin())) win->setCursor(c);
     // hum, un peu problematique, le curseur devrait etre un atribut du display
@@ -183,7 +183,7 @@ bool EventFlow::mustCloseMenus(View* source_view) {
        ));
 }
   
-void EventFlow::redirectMousePress(UMouseEvent& e, View* winview) {
+void EventFlow::redirectMousePress(MouseEvent& e, View* winview) {
   //e.setBrowsingGroup(getBrowsingGroup());
   //cerr << "redirect " << winview << " " << winview->getBox()->getClassName() << endl;
   mousePress(winview,  // should be the view of the menu
@@ -214,7 +214,7 @@ void EventFlow::mousePress(View* winview, unsigned long time, int state,
   
   if (!source_view) return;   // must be AFTER test with closeAllMenus() !
   
-  UMouseEvent e(UOn::mpress, source_view, this, time, state, source_pos, screen_pos, btn);  
+  MouseEvent e(UOn::mpress, source_view, this, time, state, source_pos, screen_pos, btn);  
   e.event_observer = vf.bp.event_observer;
   e.modes.DONT_CLOSE_MENU = vf.bp.DONT_CLOSE_MENU;
   e.modes.SOURCE_IN_MENU = vf.bp.SOURCE_IN_MENU;
@@ -305,7 +305,7 @@ void EventFlow::mouseRelease(View* winview, unsigned long time, int state,
     << endl << endl;
     */
     
-    UMouseEvent e(UOn::mrelease, lastPressed.view, this, time, state, where, 
+    MouseEvent e(UOn::mrelease, lastPressed.view, this, time, state, where, 
                   screen_pos, btn);
     e.event_observer = lastPressed.behavior.event_observer;
     e.modes.DONT_CLOSE_MENU = lastPressed.behavior.DONT_CLOSE_MENU;
@@ -354,7 +354,7 @@ void EventFlow::mouseMotion(View* winview, unsigned long time, int state,
     //cerr << where  << " / win " << win_pos << " / scr " << screen_pos << endl;
 
     // the button number is 0 for drag and movve events    
-    UMouseEvent e(UOn::mdrag, lastPressed.view, this, time, state, where, screen_pos, 0);
+    MouseEvent e(UOn::mdrag, lastPressed.view, this, time, state, where, screen_pos, 0);
     e.event_observer = lastPressed.behavior.event_observer;
     e.modes.DONT_CLOSE_MENU = lastPressed.behavior.DONT_CLOSE_MENU;
     e.modes.SOURCE_IN_MENU = lastPressed.behavior.SOURCE_IN_MENU;
@@ -377,7 +377,7 @@ void EventFlow::mouseMotion(View* winview, unsigned long time, int state,
     View* source_view = winview->findSource(vf, source_pos);
     if (!source_view) return;
   
-    UMouseEvent e(UOn::mmove, source_view, this, time, state, source_pos, screen_pos, 0);
+    MouseEvent e(UOn::mmove, source_view, this, time, state, source_pos, screen_pos, 0);
     e.event_observer = vf.bp.event_observer;
     e.modes.DONT_CLOSE_MENU = vf.bp.DONT_CLOSE_MENU;
     e.modes.SOURCE_IN_MENU = vf.bp.SOURCE_IN_MENU;
@@ -542,11 +542,11 @@ void EventFlow::winLeave(View* winview, unsigned long time) {
 }
   
 void EventFlow::boxCross(View* new_view, unsigned long time, int state, 
-                           const UCursor* cursor, bool is_browing) {   
+                           const Cursor* cursor, bool is_browing) {   
   if (lastEntered == new_view) return;
 
   if (lastEntered) {
-    UInputEvent e(UOn::leave, lastEntered, this, time, state);
+    InputEvent e(UOn::leave, lastEntered, this, time, state);
     lastEntered->getBox()->leaveBehavior(e, is_browing);
     lastEntered = null;
   }
@@ -556,7 +556,7 @@ void EventFlow::boxCross(View* new_view, unsigned long time, int state,
   if (new_view) {
     // ATT: e.source_view==null si on est hors de la window (auquel cas
     // il ne faut PAS faire boxEnter()
-    UInputEvent e(UOn::enter, lastEntered, this, time, state);
+    InputEvent e(UOn::enter, lastEntered, this, time, state);
     setCursor(e, cursor);
     lastEntered->getBox()->enterBehavior(e, is_browing);
   }
@@ -628,7 +628,7 @@ Window* EventFlow::retrieveTelePointer(Display* rem_disp) {
     for (unsigned int k = tele_pointers.size(); k <= disp_id; k++) 
       tele_pointers.push_back(null);
     
-    Window* ptr = new UMenu(Border::none
+    Window* ptr = new Menu(Border::none
                           + Color::red
                           + Background::red
                           + UOn::select/Background::green
@@ -649,7 +649,7 @@ Window* EventFlow::retrieveTelePointer(Display* rem_disp) {
   // telepointeurs car ces vues conditionnelles n'ont pas de sens
   // (et ne sont d'ailleurs pas affichees)
   
-void EventFlow::showTelePointers(UMouseEvent& e, int mode)  {
+void EventFlow::showTelePointers(MouseEvent& e, int mode)  {
   Box* source = e.getSource() ? e.getSource()->toBox() : null;
   if (!source) return;
   

@@ -16,26 +16,26 @@
 #include <ubit/ubit_features.h>
 #include <iostream>
 #include <ubit/uflag.hpp>
-#include <ubit/uupdatecontext.hpp>
+#include <ubit/ui/updatecontext.h>
 using namespace std;
 #define NAMESPACE_UBIT namespace ubit {
 NAMESPACE_UBIT
 
-const UFlag UFlag::none;
+const Flag Flag::none;
 
-bool UFlag::verifies(const UpdateContext& ctx, const Element&) const {
+bool Flag::verifies(const UpdateContext& ctx, const Element&) const {
   return (ctx.getFlagdef(this) != null);
 }
 
-bool UNotFlag::verifies(const UpdateContext& ctx, const Element& par) const {
+bool NotFlag::verifies(const UpdateContext& ctx, const Element& par) const {
   return !cond.verifies(ctx, par);
 }
 
 
 UFlagdef::UFlagdef() : flag(null) {}
-UFlagdef::UFlagdef(const UFlag& f) : flag(&f) {}
+UFlagdef::UFlagdef(const Flag& f) : flag(&f) {}
 
-UFlagdef& UFlagdef::set(const UFlag& f) {
+UFlagdef& UFlagdef::set(const Flag& f) {
   if (checkConst()) return *this;
   // test equals ???
   flag = &f;
@@ -54,18 +54,18 @@ void UFlagdef::update() {
 }
 
 void UFlagdef::putProp(UpdateContext* ctx, Element&) {
-  if (flag && flag != &UFlag::none) ctx->addFlagdef(this);
+  if (flag && flag != &Flag::none) ctx->addFlagdef(this);
 }
 
 
 UPropdef::UPropdef() : prop(null) {}
-UPropdef::UPropdef(const UFlag& _f) : UFlagdef(_f), prop(null) {}
-UPropdef::UPropdef(const UFlag& _f, Attribute& _p) : UFlagdef(_f), prop(&_p) {}
+UPropdef::UPropdef(const Flag& _f) : UFlagdef(_f), prop(null) {}
+UPropdef::UPropdef(const Flag& _f, Attribute& _p) : UFlagdef(_f), prop(&_p) {}
 
 UPropdef& upropdef() {return *new UPropdef();}
-UPropdef& upropdef(const class UFlag& _f, Attribute& _p) {return *new UPropdef(_f, _p);}
+UPropdef& upropdef(const class Flag& _f, Attribute& _p) {return *new UPropdef(_f, _p);}
 
-UPropdef& UPropdef::set(const UFlag& _f) {
+UPropdef& UPropdef::set(const Flag& _f) {
   if (checkConst()) return *this;
   // test equals ???
   flag = &_f;
@@ -81,7 +81,7 @@ UPropdef& UPropdef::set(Attribute& _p) {
   return *this;
 }
 
-UPropdef& UPropdef::set(const UFlag& _f, Attribute& _p) {
+UPropdef& UPropdef::set(const Flag& _f, Attribute& _p) {
   if (checkConst()) return *this;
   // test equals ???
   flag = &_f;
@@ -99,15 +99,15 @@ UPropdef& UPropdef::clear() {
 }
 
 void UPropdef::putProp(UpdateContext *ctx, Element&) {
-  if (prop && flag && flag != &UFlag::none)
+  if (prop && flag && flag != &Flag::none)
     ctx->addFlagdef(this);
 }
 
 
 UPropval::UPropval() : flag(null) {}
-UPropval::UPropval(const UFlag& _f) : flag(&_f) {}
+UPropval::UPropval(const Flag& _f) : flag(&_f) {}
 
-UPropval& upropval(const class UFlag& _f) {
+UPropval& upropval(const class Flag& _f) {
   return *new UPropval(_f);
 }
 

@@ -27,7 +27,7 @@
 #include <ubit/uon.hpp>
 #include <ubit/uboxgeom.hpp>
 #include <ubit/ui/uviewImpl.hpp>
-#include <ubit/uupdatecontext.hpp>
+#include <ubit/ui/updatecontext.h>
 #include <ubit/uappli.hpp>
 #include <ubit/utable.hpp>
 using namespace std;
@@ -35,11 +35,11 @@ namespace ubit {
 
 
 
-UStyle* UTable::createStyle() {
-  UStyle* style = new UStyle();
+Style* UTable::createStyle() {
+  Style* style = new Style();
   style->viewStyle = &UTableView::style;
   style->textSeparator = &ustr("\n");
-  style->orient   = UOrient::HORIZONTAL;
+  style->orient   = Orientation::HORIZONTAL;
   style->halign   = Halign::LEFT;
   style->valign   = Valign::TOP;
   style->hspacing = 0; //EX 1;
@@ -49,10 +49,10 @@ UStyle* UTable::createStyle() {
 }
 
 
-UStyle* UTrow::createStyle() {
-  UStyle* style = new UStyle();
+Style* UTrow::createStyle() {
+  Style* style = new Style();
   style->textSeparator  = &ustr("\t");
-  style->orient = UOrient::HORIZONTAL;
+  style->orient = Orientation::HORIZONTAL;
 
   // il faut left car hflex a un resultat imprevu (bug?)
   style->halign = Halign::LEFT;
@@ -69,10 +69,10 @@ UStyle* UTrow::createStyle() {
 }
 
 
-UStyle* UTcell::createStyle() {
-  UStyle* style = new UStyle();
+Style* UTcell::createStyle() {
+  Style* style = new Style();
   style->viewStyle = &FlowView::style;
-  style->orient = UOrient::HORIZONTAL;
+  style->orient = Orientation::HORIZONTAL;
   style->halign = Halign::FLEX;
   style->valign = Valign::FLEX;
   style->hspacing = 0;

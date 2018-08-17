@@ -55,8 +55,8 @@ namespace ubit {
     ///< returns auxilliary data.
     
     /// dynamic cast: returns 'this' converted to the requested class or null.
-    virtual UInputEvent*   toInputEvent()  {return null;}
-    virtual UMouseEvent*   toMouseEvent()  {return null;}
+    virtual InputEvent*   toInputEvent()  {return null;}
+    virtual MouseEvent*   toMouseEvent()  {return null;}
     virtual UKeyEvent*     toKeyEvent()    {return null;}
     virtual UWheelEvent*   toWheelEvent()  {return null;}
     virtual UViewEvent*    toViewEvent()   {return null;}
@@ -77,16 +77,16 @@ namespace ubit {
   };
   
 
-  /** Base class for UMouseEvent and UKeyEvent
+  /** Base class for MouseEvent and UKeyEvent
    * Note that this class inherits from class Modifier that defines modifier masks 
    * such as LeftButton, RightButton... 
    */
-  class UInputEvent : public Event, public Modifier {     
+  class InputEvent : public Event, public Modifier {     
   public:
-    UInputEvent(const Condition&, View* source_view, EventFlow*, 
+    InputEvent(const Condition&, View* source_view, EventFlow*, 
                 unsigned long when, int state);
 
-     virtual UInputEvent* toInputEvent() {return this;}
+     virtual InputEvent* toInputEvent() {return this;}
     
     virtual Element* getSource() const;  
     ///< returns the object that received this event.
@@ -108,7 +108,7 @@ namespace ubit {
     virtual int getModifiers() const;
     /**< returns an ORed mask of mouse buttons and modifiers that are pressed.
      * Modifier masks are defined in class Modifier. They are inherited by Event,
-     * and thus, UInputEvent. Exemple:
+     * and thus, InputEvent. Exemple:
      * <pre>
      * void callbackFunc(Event& e) {
      *    if (e.getModifiers() & (e.LeftButton | e.ControlDown))
@@ -177,12 +177,12 @@ namespace ubit {
   /** mouse events
    * @see UOn::mpress, UOn::mrelease, UOn::mdrag, UOn::mmove for explanations.
    */
-  class UMouseEvent : public UInputEvent {
+  class MouseEvent : public InputEvent {
   public:
-    UMouseEvent(const Condition&, View* source, EventFlow*, unsigned long time, int state,
+    MouseEvent(const Condition&, View* source, EventFlow*, unsigned long time, int state,
                 const Point& pos, const Point& abs_pos, int btn);
     
-    virtual UMouseEvent* toMouseEvent() {return this;}
+    virtual MouseEvent* toMouseEvent() {return this;}
     
     float getX() const {return pos.x;}
     ///< returns the X coordinate of the mouse in getView().
@@ -223,7 +223,7 @@ namespace ubit {
      * public:
      *    Myclass();  // contructor
      * private:
-     *    void pressCB(UMouseEvent&);
+     *    void pressCB(MouseEvent&);
      * };
      *
      * MyClass::MyClass() {
@@ -232,7 +232,7 @@ namespace ubit {
      *    ....
      * }
      *
-     * void MyClass::pressCB(UMouseEvent& e) {
+     * void MyClass::pressCB(MouseEvent& e) {
      *    if (e.getButton() == e.RightButton && e.isControlDown()) 
      *         // done when the left mouse button AND the control key are pressed
      * }
@@ -243,7 +243,7 @@ namespace ubit {
     /**< returns an ORed mask of mouse buttons *after* the event occured.
      * button mask are Event::LeftButton, MidButton, RightButton. They are defined
      * in class Modifier and inherited by Event.
-     * see UInputEvent::getModifiers() for examples.
+     * see InputEvent::getModifiers() for examples.
      */
     
     void translatePos(float x, float y);
@@ -289,7 +289,7 @@ namespace ubit {
   /** wheel events
    * @see UOn::wheel;
    */
-  class UWheelEvent : public UMouseEvent {
+  class UWheelEvent : public MouseEvent {
   public:
     enum {WHEEL_DELTA = 120};
     
@@ -318,7 +318,7 @@ namespace ubit {
   /** keyboard events
    * @see UOn::kpress, UOn::krelease, UOn::ktype for explanations.
    */
-  class UKeyEvent : public UInputEvent {
+  class UKeyEvent : public InputEvent {
   public:
     UKeyEvent(const Condition&, View* source, EventFlow*, 
               unsigned long time, int state, 
@@ -546,7 +546,7 @@ namespace ubit {
     
     ChildIter it, it2;
     // points to the data object that is located under the mouse when calling 
-    // UMouseEvent::getData() or UMouseEvent::getStr().
+    // MouseEvent::getData() or MouseEvent::getStr().
     
     Data* data;
     View* source_view;

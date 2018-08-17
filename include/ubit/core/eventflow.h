@@ -30,7 +30,7 @@
 
 namespace ubit {
   
-  class UMenuManager;
+  class MenuManager;
   
   /** Event Flow.
    * a Ubit application can manage 1 or several Event Flows that are 
@@ -79,7 +79,7 @@ namespace ubit {
     Selection* getSelection() {return &selection;}
     ///< returns the text selection of this event flow.
     
-    UMenuManager& getMenuManager() const {return menu_man;}
+    MenuManager& getMenuManager() const {return menu_man;}
     
     UObject* getUserData() {return user_data;}
     ///< gets a handle to user data.  
@@ -93,7 +93,7 @@ namespace ubit {
     void deleteNotify(View* deleted_view);
     void deleteNotify(Element* deleted_group);
     
-    void redirectMousePress(UMouseEvent&, View* winview);
+    void redirectMousePress(MouseEvent&, View* winview);
     
     // - - - Impl.  - - - - - - - - - - - - - - - - - - - - - - - - - - -
     
@@ -110,19 +110,19 @@ namespace ubit {
     void winEnter(View* win_view, unsigned long time);
     void winLeave(View* win_view, unsigned long time);
     
-    void setCursor(Event&, const UCursor*);
+    void setCursor(Event&, const Cursor*);
     void startAutoRepeat(Event&);
     void stopAutoRepeat(Event&);
     
   protected:
-    void boxCross(View* box_view, unsigned long time, int state, const UCursor*, bool is_browsing);
+    void boxCross(View* box_view, unsigned long time, int state, const Cursor*, bool is_browsing);
     bool mustCloseMenus(View* source_view);
     void autoRepeatCB(TimerEvent&);
     void openTipCB(TimerEvent&);
     void openTipRequest(Event&);
     void closeTipRequest(Event&);
     Window* retrieveTelePointer(Display*);
-    void showTelePointers(UMouseEvent&, int mode = 0);  
+    void showTelePointers(MouseEvent&, int mode = 0);  
     
   private:
     friend class Application;
@@ -149,11 +149,11 @@ namespace ubit {
     Point click_pos;
     int    click_count;
     unsigned long click_time;
-    const class UCursor* lastCursor;    // cursor being currently shown
+    const class Cursor* lastCursor;    // cursor being currently shown
     uptr<Timer> auto_repeat_timer;     // timer fo auto_repeat actions
     uptr<Timer> tip_timer;             // timer for tool tips
     Window& tip_win;                      // window for tool tips
-    UMenuManager& menu_man;             // menubars & pulldown menus manager
+    MenuManager& menu_man;             // menubars & pulldown menus manager
     Selection& selection;              // text selection management
     std::vector<class Window*> tele_pointers;  // remote pointers
     UObject* user_data;

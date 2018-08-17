@@ -29,7 +29,7 @@
 
 namespace ubit {
   
-  class UMenuManager;
+  class MenuManager;
   
   /** Menu bar.
    */
@@ -40,13 +40,13 @@ namespace ubit {
     UMenubar(const Args& a = Args::none);
     ///< create a new Menu Bar; see also shortcut function umenubar().
     
-    static  UStyle* createStyle();
+    static  Style* createStyle();
     
     // - - -impl - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #ifndef NO_DOC
     //virtual Element* getBrowsingGroup() {return this;}  
   protected:
-    virtual void menuChildCB(UInputEvent&);
+    virtual void menuChildCB(InputEvent&);
 #endif
   };
   
@@ -54,9 +54,9 @@ namespace ubit {
   ///< shortcut function that return *new UMenubar(args).
   
   
-    /** UMenu: pulldown and cascaded menux. 
+    /** Menu: pulldown and cascaded menux. 
    *
-   * A UMenu is automatically opened when the mouse is pressed in one of its parents.
+   * A Menu is automatically opened when the mouse is pressed in one of its parents.
    * Most methods are inherited from Window. Example:
    * <pre>
    *   umenubar( ubutton("Menu 1" + umenu( ubutton("aaa") + ubutton("bbb") ))
@@ -64,34 +64,34 @@ namespace ubit {
    *           )
    * </pre>
    *
-   * Note that the UPopmenu class must be used to create contextual menus (and that
+   * Note that the PopupMenu class must be used to create contextual menus (and that
    * popmenus are not automatically opened to allow more programming control)
    * 
-   * @see: Window, UMenubar, UPopmenu.
+   * @see: Window, UMenubar, PopupMenu.
    */
-  class UMenu : public Window {
+  class Menu : public Window {
   public:
-    UCLASS(UMenu)
+    UCLASS(Menu)
     
-    UMenu(const Args& a = Args::none);
+    Menu(const Args& a = Args::none);
     ///< creates a new pulldown (or cascaded) Menu; see also shortcut function umenu().
     
-    virtual ~UMenu();
+    virtual ~Menu();
     
-    static  UStyle* createStyle();
-    virtual UMenu* toMenu() {return this;}
-    virtual const UMenu* toMenu() const {return this;}
+    static  Style* createStyle();
+    virtual Menu* toMenu() {return this;}
+    virtual const Menu* toMenu() const {return this;}
     
-    virtual void show(bool state = true) {UMenu::show(state, null);}
+    virtual void show(bool state = true) {Menu::show(state, null);}
     ///< shows/hides the menu at its current location.
     
     virtual void show(bool state, Display*);
     ///< shows/hides the menu at its current location on the specified display.
 
-    void closeAllMenus(UInputEvent&);
+    void closeAllMenus(InputEvent&);
     ///< closes all menus that are currently opened.
       
-    virtual void setPlacement(const UWinPlacement&);
+    virtual void setPlacement(const WindowPlacement&);
     /**< specifies automatic placement rules (see UPlacement).
      * update() must be called to enforce new rules
      */
@@ -105,27 +105,27 @@ namespace ubit {
     ///< NOTE that this function require a specific destructor.
   private:
     friend class Application;
-    friend class UMenuManager;
+    friend class MenuManager;
     uptr<UCall> menu_opener_cb;
-    class UWinPlacement *placement;
+    class WindowPlacement *placement;
   protected:
-    virtual void openImpl(UMenuManager&, View* opener, bool auto_place, Display*);
-    virtual void menuOpenerCB(UInputEvent&);
-    virtual void menuChildCB(UInputEvent&);
+    virtual void openImpl(MenuManager&, View* opener, bool auto_place, Display*);
+    virtual void menuOpenerCB(InputEvent&);
+    virtual void menuChildCB(InputEvent&);
 #endif
   };
   
-  inline UMenu& umenu(const Args& args = Args::none) {return *new UMenu(args);}
-  ///< shortcut function that return *new UMenu(args).
+  inline Menu& umenu(const Args& args = Args::none) {return *new Menu(args);}
+  ///< shortcut function that return *new Menu(args).
   
   
-    /** UPopmenu: Contextual Menu.
+    /** PopupMenu: Contextual Menu.
    *
-   * Unlike UMenu(s) which are automaticcally opened, UPopmenu(s) must be opened 
+   * Unlike Menu(s) which are automaticcally opened, PopupMenu(s) must be opened 
    * by calling their open() or show() methods:
    * <pre>
    *   // a popmenu containing 3 buttons
-   *   UPopmenu& menu = upopmenu(ubutton(...) + ubutton(...) + ubutton(...));
+   *   PopupMenu& menu = upopmenu(ubutton(...) + ubutton(...) + ubutton(...));
    *
    *   // any widget deriving from Box
    *   Box& box = ...;
@@ -134,7 +134,7 @@ namespace ubit {
    *   box.add(UOn::mpress / uopen(menu));
    *
    *   // the previous piece of code if equivalent to:
-   *   box.add(UOn::mpress / ucall(menu, &UPopmenu::open));
+   *   box.add(UOn::mpress / ucall(menu, &PopupMenu::open));
    * </pre>
    *
    * open() opens the menu at the mouse press location. show() would open it at
@@ -144,31 +144,31 @@ namespace ubit {
    * depending on which mouse button (or keyboard key) was pressed. In the following
    * example, the menu is onlmy opened when the right mouse button is pressed:
    * <pre>
-   *   void openMenuCB(UMouseEvent& e, UPopmenu* m) {
+   *   void openMenuCB(MouseEvent& e, PopupMenu* m) {
    *      if (e.getButton() == e.RightButton) m->open(e);
    *   }
    *
    *   box.add(UOn::mpress / ucall(&menu, openMenuCB));
    * </pre>
    *
-   * See also: UMenu, Window.
+   * See also: Menu, Window.
    */
-  class UPopmenu : public UMenu {
+  class PopupMenu : public Menu {
   public:
-    UCLASS(UPopmenu)
-    static UStyle* createStyle();
+    UCLASS(PopupMenu)
+    static Style* createStyle();
     
-    UPopmenu(const Args& a = Args::none);
+    PopupMenu(const Args& a = Args::none);
     ///< create a new contextual menu; see also shortcut function upopmenu().
     
-    virtual void open(UMouseEvent&);
+    virtual void open(MouseEvent&);
     /** opens the menu at the mouse event location.
      * this method shows the menu at a mouse event location so that it will appear 
      * where the mouse was pressed. Example:
      * <pre>    
      *   Box* canvas = ...;
-     *   UPopmenu* popmenu = new UPopmenu(....);
-     *   canvas->add(UOn::mpress / ucall(popmenu, &UMenu::open));
+     *   PopupMenu* popmenu = new PopupMenu(....);
+     *   canvas->add(UOn::mpress / ucall(popmenu, &Menu::open));
      * </pre>
      *
      * Notes:
@@ -178,8 +178,8 @@ namespace ubit {
      */                      
   };
   
-  inline UPopmenu& upopmenu(const Args& args = Args::none) {return *new UPopmenu(args);}
-  ///< shortcut function that returns *new UPopmenu(args).
+  inline PopupMenu& upopmenu(const Args& args = Args::none) {return *new PopupMenu(args);}
+  ///< shortcut function that returns *new PopupMenu(args).
   
 }
 #endif

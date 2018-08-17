@@ -38,7 +38,7 @@ namespace ubit {
     
     virtual ~U3Dcanvas();
     
-    static UStyle* createStyle();
+    static Style* createStyle();
     
     float getFovy() const   {return fovy;}
     float getAspect() const {return aspect;}
@@ -78,7 +78,7 @@ namespace ubit {
     U3Dbox(Args = Args::none);
     ///< creates a new 3D box; @see also shortcut: u3dbox().
     
-    static UStyle* createStyle();
+    static Style* createStyle();
     
     U3Dpos& pos() {return *ppos;}
     /**< returns a reference to the 3D position of this 3D window.
@@ -107,7 +107,7 @@ namespace ubit {
     U3Dwin(Args = Args::none);
     ///< creates a new 3D window; @see also shortcut: u3dwin().
     
-    static UStyle* createStyle();
+    static Style* createStyle();
     
   protected:
     virtual Box& createTitleBar(const String& title);

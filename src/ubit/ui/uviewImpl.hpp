@@ -26,7 +26,7 @@
 
 #include <ubit/core/event.h>
 #include <ubit/uborder.hpp>
-#include <ubit/uupdatecontext.hpp>
+#include <ubit/ui/updatecontext.h>
 
 namespace ubit {
   
@@ -45,7 +45,7 @@ namespace ubit {
     InputType intype;
     bool SOURCE_IN_MENU;   ///< is the source (indirectly) included in a menu?.
     bool DONT_CLOSE_MENU;     ///< the source does not close menus.
-    const UCursor* cursor;
+    const Cursor* cursor;
     Element* browsing_group;
     Box* event_observer;
   };

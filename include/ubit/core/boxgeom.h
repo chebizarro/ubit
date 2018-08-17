@@ -31,32 +31,32 @@
 namespace ubit {
   
   /** Widget scale.
-   * The UScale attribute specifies the scaling factor of widgets (Box subclasses)
+   * The Scale attribute specifies the scaling factor of widgets (Box subclasses)
    * and their direct and indirect children in the instance graph. 
    *
-   * If a child widget has also a UScale attribute, this scale spec. is multiplied
+   * If a child widget has also a Scale attribute, this scale spec. is multiplied
    * with the scale spec. of the parent (and so on, recursively)
    */
-  class UScale : public Attribute {
+  class Scale : public Attribute {
   public:
-    UCLASS(UScale)
+    UCLASS(Scale)
     
-    UScale(float value = 1.);
+    Scale(float value = 1.);
     ///< creates a new scale attribute; see also shortcut uscale().
     
-    UScale(const Float&);
+    Scale(const Float&);
     ///< creates a new scale attribute; see also shortcut uscale().
     
     operator float() const {return value;}
     ///< type conversion: returns scale value.
     
-    UScale& operator=(float v)         {set(v); return *this;}
-    UScale& operator=(const Float& v) {set(v); return *this;}
-    UScale& operator=(const UScale& v) {set(v.value); return *this;}
+    Scale& operator=(float v)         {set(v); return *this;}
+    Scale& operator=(const Float& v) {set(v); return *this;}
+    Scale& operator=(const Scale& v) {set(v.value); return *this;}
     
     bool operator==(float v) const         {return v == value;}
     bool operator==(const Float& v) const {return v == value;}
-    bool operator==(const UScale& v) const {return value == v.value;}
+    bool operator==(const Scale& v) const {return value == v.value;}
     
     virtual void set(float);
     virtual void mult(float);
@@ -68,11 +68,11 @@ namespace ubit {
     virtual void putProp(UpdateContext*, Element&);
   };
   
-  inline UScale& uscale(float v = 1.)    {return *new UScale(v);}
-  ///< shortcut that creates a new UScale.
+  inline Scale& uscale(float v = 1.)    {return *new Scale(v);}
+  ///< shortcut that creates a new Scale.
   
-  inline UScale& uscale(const Float& v) {return *new UScale(v);}
-  ///< shortcut that creates a new UScale.
+  inline Scale& uscale(const Float& v) {return *new Scale(v);}
+  ///< shortcut that creates a new Scale.
   
   
   // ==================================================== Ubit Toolkit =========  
@@ -162,7 +162,6 @@ namespace ubit {
   ///< shortcut that creates a new UPos.
 
   
-  // ==================================================== Ubit Toolkit =========
   /** Position Control: interactive control of the position of a widget.
    * when dragged interactivelly, a handle widget (typically a button) having  
    * this attribute changes the UPos of another widget (typically a palette) 
@@ -195,10 +194,10 @@ namespace ubit {
     virtual void removingFrom(Child&, Element& parent);
     // NOTE that removingFrom() requires a destructor to be defined.
     
-    virtual void mouseCB(UMouseEvent&);
-    virtual void pressCB(UMouseEvent&);
-    virtual void releaseCB(UMouseEvent&);
-    virtual void dragCB(UMouseEvent&);
+    virtual void mouseCB(MouseEvent&);
+    virtual void pressCB(MouseEvent&);
+    virtual void releaseCB(MouseEvent&);
+    virtual void dragCB(MouseEvent&);
 #endif
   };
   
@@ -208,20 +207,19 @@ namespace ubit {
   class UMagicLensControl : public UPosControl {
   public:
     UCLASS(UMagicLensControl)
-    UMagicLensControl(UPos* = null, UScrollpane* = null);
-    UMagicLensControl& setModel(UPos*, UScrollpane*);
+    UMagicLensControl(UPos* = null, Scrollpane* = null);
+    UMagicLensControl& setModel(UPos*, Scrollpane*);
   private:
-    uptr<UScrollpane> pane;
-    virtual void dragCB(UMouseEvent&);
+    uptr<Scrollpane> pane;
+    virtual void dragCB(MouseEvent&);
   };
   
   
-  // ==================================================== Ubit Toolkit =========
   /** Widget Size.
    * The USize attribute specifies the size of a widget (a node deriving from Box).
    *
    * USize specifies the preferred size of the widget and its behavior. The actual
-   * widget size may depend on other factors such as its scale (see UScale) and 
+   * widget size may depend on other factors such as its scale (see Scale) and 
    * layout constraints (see uhflex(), uvflex())
    *
    * The type of the width and the height of the USize is Length, which makes it
@@ -287,7 +285,6 @@ namespace ubit {
   ///< shortcut function that returns *new USize(d).
   
   
-  // ==================================================== Ubit Toolkit =========
   /** Size Control: interactive control of the size of a widget.
    * when dragged interactivelly, a handle widget (typically a button) having  
    * this attribute changes the USize of another widget (typically a palette) 
@@ -316,15 +313,14 @@ namespace ubit {
     bool freeze_w, freeze_h;
     uptr<UCall> callbacks;
     uptr<USize> psize;
-    virtual void mouseCB(UMouseEvent&);
-    virtual void pressCB(UMouseEvent&);
-    virtual void releaseCB(UMouseEvent&);
-    virtual void dragCB(UMouseEvent&);
+    virtual void mouseCB(MouseEvent&);
+    virtual void pressCB(MouseEvent&);
+    virtual void releaseCB(MouseEvent&);
+    virtual void dragCB(MouseEvent&);
 #endif
   };
   
   
-  // ==================================================== Ubit Toolkit =========
   /** Widget padding.
    */
   class UPadding : public Attribute {
@@ -366,25 +362,24 @@ namespace ubit {
   ///< shortcut function that returns *new UPadding(horiz,vert).
 
   
-  // ==================================================== Ubit Toolkit =========
   /** Widget Orientation.
    * specifies the orientation of box(es) that contain this brick.
-   * Possible values: UOrient::vertical or UOrient::horizontal
+   * Possible values: Orientation::vertical or Orientation::horizontal
    */
-  class UOrient : public Attribute {
+  class Orientation : public Attribute {
   public:
-    UCLASS(UOrient)
+    UCLASS(Orientation)
     
-    static UOrient horizontal, vertical;
+    static Orientation horizontal, vertical;
     
-    UOrient();
-    ///< creates a new UOrient object; @see also shortcut uorient().
+    Orientation();
+    ///< creates a new Orientation object; @see also shortcut Orientation().
     
-    UOrient(const UOrient&);
-    ///< creates a new UOrient object; @see also shortcut uorient().
+    Orientation(const Orientation&);
+    ///< creates a new Orientation object; @see also shortcut Orientation().
     
-    UOrient& operator=(const UOrient& v);
-    bool operator==(const UOrient& v) const {return value == v.value;}
+    Orientation& operator=(const Orientation& v);
+    bool operator==(const Orientation& v) const {return value == v.value;}
     
     virtual void update();
     virtual void putProp(UpdateContext*, Element&);
@@ -396,15 +391,14 @@ namespace ubit {
     void removingFrom(Child&, Element& parent);
   private:
     char value;
-    UOrient(char value, UConst);
+    Orientation(char value, UConst);
 #endif
   };
   
-  inline UOrient& uorient(const UOrient& val) {return *new UOrient(val);}
-  ///< shortcut function that creates a new UOrient object.
+  inline Orientation& Orientation(const Orientation& val) {return *new Orientation(val);}
+  ///< shortcut function that creates a new Orientation object.
   
   
-  // ==================================================== Ubit Toolkit =========
   /** Box horizontal layout.
    * specify the horizontal layout of the children that *follow* this brick.
    * Possible values: Halign::left, ::right, ::center, ::flex.
@@ -477,7 +471,6 @@ namespace ubit {
    */
   
   
-  // ==================================================== Ubit Toolkit =========
   /** Box vertical layout.
    * specify the vertical layout of the children that follow this brick.
    * Possible values: Halign::top, ::bottom, ::center, ::flex.
@@ -544,25 +537,24 @@ namespace ubit {
    */
   
   
-  // ==================================================== Ubit Toolkit =========
   /** Box vertical spacing.
    */
-  class UVspacing : public Attribute {
+  class VSpacing : public Attribute {
   public:
-    UCLASS(UVspacing)
+    UCLASS(VSpacing)
 
-    static UVspacing none;
+    static VSpacing none;
     
-    UVspacing(float = 0);
+    VSpacing(float = 0);
     
     operator float() const {return value;}
     ///< type conversion: returns value.
     
-    UVspacing& operator=(float);
-    UVspacing& operator=(const UVspacing&);
+    VSpacing& operator=(float);
+    VSpacing& operator=(const VSpacing&);
     
     bool operator==(float v) const {return value == v;}  
-    bool operator==(const UVspacing& v) const {return value == v.value;}
+    bool operator==(const VSpacing& v) const {return value == v.value;}
     
     virtual void update();
     
@@ -573,28 +565,27 @@ namespace ubit {
     float value;
   };
   
-  inline UVspacing& uvspacing(float val = 0) {return *new UVspacing(val);}
-  ///< shortcut function that returns a new UVspacing.
+  inline VSpacing& uvspacing(float val = 0) {return *new VSpacing(val);}
+  ///< shortcut function that returns a new VSpacing.
   
-  // ==================================================== Ubit Toolkit =========
   /** Box horizontal spacing.
   */
-  class UHspacing : public Attribute {
+  class HSpacing : public Attribute {
   public:
-    UCLASS(UHspacing)
+    UCLASS(HSpacing)
     
-    static UHspacing none;
+    static HSpacing none;
     
-    UHspacing(float = 0);
+    HSpacing(float = 0);
     
     operator float() const {return value;}
     ///< type conversion: returns value.
     
-    UHspacing& operator=(float);
-    UHspacing& operator=(const UHspacing&);
+    HSpacing& operator=(float);
+    HSpacing& operator=(const HSpacing&);
     
     bool operator==(float v) const {return value == v;}  
-    bool operator==(const UHspacing& v) const {return value == v.value;}
+    bool operator==(const HSpacing& v) const {return value == v.value;}
     
     virtual void update();
     
@@ -605,8 +596,8 @@ namespace ubit {
     float value;
   };
   
-  inline UHspacing& uhspacing(float val) {return *new UHspacing(val);}
-  ///< shortcut function that returns a new UHspacing.
+  inline HSpacing& uhspacing(float val) {return *new HSpacing(val);}
+  ///< shortcut function that returns a new HSpacing.
   
 }  
 #endif

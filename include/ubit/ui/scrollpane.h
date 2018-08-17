@@ -43,22 +43,22 @@ namespace ubit {
    * Note: a scrollpane should only have children that derive from Box, Attribute, UCall
    * (it should not have Element or Data/String children)
    */ 
-  class UScrollpane: public Box {
+  class Scrollpane: public Box {
   public:
-    UCLASS(UScrollpane)
+    UCLASS(Scrollpane)
 
-    UScrollpane(Args = Args::none);
+    Scrollpane(Args = Args::none);
     ///< create a scroll pane with 2 scrollbars; see also shortcut functions uscrollpane().
     
-    UScrollpane(int vert_scrollbar, int horiz_scrollbar, Args = Args::none);
+    Scrollpane(int vert_scrollbar, int horiz_scrollbar, Args = Args::none);
     /**< create a scroll pane with 0, 1 or 2 scrollbars; see also shortcut functions uscrollpane().
      * - the vertical scrollbar is created if 'vert_scrollbar' is true 
      * - the horizontal scrollbar is created if 'horiz_scrollbar' is true 
      */
          
-    virtual ~UScrollpane();
+    virtual ~Scrollpane();
     
-    static UStyle* createStyle();
+    static Style* createStyle();
 
     void setTracking(bool);
     ///< tracking mode updates the value while the scrollbar is being dragged (default is true).
@@ -69,13 +69,13 @@ namespace ubit {
     float getYScroll() const {return yscroll;}
     ///< returns the current Y scroll value (float value in [0,100]).
   
-    UScrollpane& setXScroll(float _xscroll) {return setScroll(_xscroll, yscroll);}
+    Scrollpane& setXScroll(float _xscroll) {return setScroll(_xscroll, yscroll);}
     ///< changes the X scroll value (float value in [0,100]).
     
-    UScrollpane& setYScroll(float _yscroll) {return setScroll(xscroll, _yscroll);}
+    Scrollpane& setYScroll(float _yscroll) {return setScroll(xscroll, _yscroll);}
     ///< changes the Y scroll value (float value in [0,100]).
     
-    virtual UScrollpane& setScroll(float xscroll, float yscroll);
+    virtual Scrollpane& setScroll(float xscroll, float yscroll);
     ///< changes the X and Y scroll values (float values in [0,100]).
 
     virtual void makeVisible(Box& child);
@@ -83,11 +83,11 @@ namespace ubit {
      * 'child' must be a direct or indirect child of the scrollpane
      */
       
-    UScrollpane& showHScrollbar(bool state);
-    UScrollpane& showVScrollbar(bool state);
+    Scrollpane& showHScrollbar(bool state);
+    Scrollpane& showVScrollbar(bool state);
     
-    UScrollpane& showHScrollButtons(bool state);
-    UScrollpane& showVScrollButtons(bool state);
+    Scrollpane& showHScrollButtons(bool state);
+    Scrollpane& showVScrollButtons(bool state);
 
     UScrollbar* getHScrollbar() {return hscrollbar;}
     ///< returns the horizontal scrollbar (if any; null otherwise)
@@ -121,13 +121,13 @@ namespace ubit {
 #endif
   };
   
-  inline UScrollpane& uscrollpane(const Args& args = Args::none) 
-  {return *new UScrollpane(args);}
-  ///< shortcut function that returns *new UScrollpane(args).
+  inline Scrollpane& uscrollpane(const Args& args = Args::none) 
+  {return *new Scrollpane(args);}
+  ///< shortcut function that returns *new Scrollpane(args).
   
-  inline UScrollpane& uscrollpane(int vscrollbar, int hscrollbar, const Args& args = Args::none)
-  {return *new UScrollpane(vscrollbar, hscrollbar, args);}
-  ///< shortcut function that returns *new UScrollpane(vert_scrollbar, horiz_scrollbar, args).
+  inline Scrollpane& uscrollpane(int vscrollbar, int hscrollbar, const Args& args = Args::none)
+  {return *new Scrollpane(vscrollbar, hscrollbar, args);}
+  ///< shortcut function that returns *new Scrollpane(vert_scrollbar, horiz_scrollbar, args).
   
   
     /** [Impl] UPane View.
@@ -153,7 +153,7 @@ namespace ubit {
     void setPadding(const PaddingSpec& p) {padding = p;} // for View::initLayoutViewport
     
 #ifndef NO_DOC
-    friend class UScrollpane;
+    friend class Scrollpane;
     PaddingSpec padding;
     float xscroll, yscroll;
 #endif

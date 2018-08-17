@@ -41,19 +41,19 @@ namespace ubit {
    *   displaying the widgets of the Application. It can be set by calling: 
    *   Application::conf.setBpp(int) *before* the Application instance is created
    * - the other widgets of the Application can't be rendered by using OpenGL if
-   *   UGlcanvas is used (hence Application::conf.useGLRender() won't work properly)
+   *   GLCanvas is used (hence Application::conf.useGLRender() won't work properly)
    *
    */
-  class UGlcanvas : public USubwin {
+  class GLCanvas : public USubwin {
   public:
-    UCLASS(UGlcanvas)
+    UCLASS(GLCanvas)
         
-    UGlcanvas(Args = Args::none);
-    virtual ~UGlcanvas();
+    GLCanvas(Args = Args::none);
+    virtual ~GLCanvas();
     
     //void shareContextResources(GLContext* = DEFAULT_GC);
     /**< specifies that the resources of the GL context are shared with this argument.
-     * This function must be called immediately after the UGlcanvas is created:
+     * This function must be called immediately after the GLCanvas is created:
      * - the resources of the GL context of this canvas will be shared with those
      *   of the given argument if it encapsulates a GL context.
      * - the default argument DEFAULT_GC indicates that the ressources will be shared
@@ -118,8 +118,8 @@ namespace ubit {
     //GLContext *glcontext, *shared_res_ctx;
   };
   
-  inline UGlcanvas& uglcanvas(Args a = Args::none) {return *new UGlcanvas(a);}
-  ///< shortcut function that creates a new UGlcanvas.
+  inline GLCanvas& uglcanvas(Args a = Args::none) {return *new GLCanvas(a);}
+  ///< shortcut function that creates a new GLCanvas.
   
 }
 #endif // UBIT_WITH_GL

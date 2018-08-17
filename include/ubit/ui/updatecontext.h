@@ -66,10 +66,10 @@ namespace ubit {
     ///< rescales the coordinates according to the current scale.
     
     void addFlagdef(const UFlagdef*);
-    const UFlagdef* getFlagdef(const UFlag&) const;
-    const UFlagdef* getFlagdef(const UFlag*) const;
-    const UPropdef* getPropdef(const UFlag&) const;
-    const UPropdef* getPropdef(const UFlag*) const;
+    const UFlagdef* getFlagdef(const Flag&) const;
+    const UFlagdef* getFlagdef(const Flag*) const;
+    const UPropdef* getPropdef(const Flag&) const;
+    const UPropdef* getPropdef(const Flag*) const;
     
 #ifndef NO_DOC
     // cette implementation est dangereuse car dans certains cas win_ctx est undef
@@ -80,7 +80,7 @@ namespace ubit {
     Element* obj;
     View* view;
     UViewUpdateImpl* view_impl;
-    const UStyle* obj_style;
+    const Style* obj_style;
     ULocalProps local;
     UPos* pos;                // UPos ou U3dpos, UPos peut etre proportionnelle
     FontDescription fontdesc;
@@ -90,7 +90,7 @@ namespace ubit {
     float vspacing, hspacing;
     TextEdit* edit;
     const Color *color, *bgcolor;
-    const UCursor *cursor;
+    const Cursor *cursor;
     Graph* graph;
 
   protected:

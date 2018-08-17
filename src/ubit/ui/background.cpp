@@ -24,8 +24,8 @@
 
 #include <ubit/ubit_features.h>
 #include <iostream>
-#include <ubit/ubackground.hpp>
-#include <ubit/uupdatecontext.hpp>
+#include <ubit/ui/background.h>
+#include <ubit/ui/updatecontext.h>
 #include <ubit/ucolor.hpp>
 #include <ubit/upix.hpp>
 #include <ubit/uappli.hpp>

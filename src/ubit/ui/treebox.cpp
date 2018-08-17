@@ -25,13 +25,13 @@ Treebox& utreebox(const Args& a) {return *new Treebox(a);}
 Treebox::~Treebox() {}
 
 // ATT: TYPES LIES !
-static struct IsSelectableByTree : public UChoice::IsSelectable {
+static struct IsSelectableByTree : public Choice::IsSelectable {
   virtual bool operator()(const Box* box) const {
-    return dynamic_cast<const UItem*>(box);   // !!!!!!!!
+    return dynamic_cast<const Item*>(box);   // !!!!!!!!
   }
 } is_selectable_by_tree;
 
-Treebox::Treebox(const Args& a) : Listbox(a) {
+Treebox::Treebox(const Args& a) : ListBox(a) {
   choice().setSelectionRule(is_selectable_by_tree);
   addAttr(Border::none);
 }
@@ -76,8 +76,8 @@ void Treenode::constructs(const Args& _title, const Args& children) {
   static UPadding& offset = upadding(0, UIGNORE).setLeft(40);
   psubnodes = &uvbox(children);
   psubnodes->addAttr(offset);
-  psubnodes->addAttr(UVspacing::none);
-  addAttr(UVspacing::none);
+  psubnodes->addAttr(VSpacing::none);
+  addAttr(VSpacing::none);
   
   pexpander = new Box
     (UOn::select   / USymbol::down
@@ -88,7 +88,7 @@ void Treenode::constructs(const Args& _title, const Args& children) {
   pexpander->setSelected(false);
   psubnodes->show(false);
   
-  plabel = new UItem(*pexpander +  " " + _title);
+  plabel = new Item(*pexpander +  " " + _title);
   Box::add(*plabel + *psubnodes);
 }
 

@@ -103,40 +103,40 @@ namespace ubit {
    */
   class UCssStyles {
   public:
-    static UStyle* create_body_style();
-    static UStyle* create_div_style();
-    static UStyle* create_p_style();
+    static Style* create_body_style();
+    static Style* create_div_style();
+    static Style* create_p_style();
     
-    static UStyle* create_ul_style();
-    static UStyle* create_ol_style();
-    static UStyle* create_li_style();
+    static Style* create_ul_style();
+    static Style* create_ol_style();
+    static Style* create_li_style();
     
-    static UStyle* create_pre_style();
-    static UStyle* create_blockquote_style();
-    static UStyle* create_center_style();
+    static Style* create_pre_style();
+    static Style* create_blockquote_style();
+    static Style* create_center_style();
     
-    static UStyle* create_h1_style();
-    static UStyle* create_h2_style();
-    static UStyle* create_h3_style();
-    static UStyle* create_h4_style();
-    static UStyle* create_h5_style();
-    static UStyle* create_h6_style();
+    static Style* create_h1_style();
+    static Style* create_h2_style();
+    static Style* create_h3_style();
+    static Style* create_h4_style();
+    static Style* create_h5_style();
+    static Style* create_h6_style();
     
-    static UStyle* create_table_style();
-    static UStyle* create_tr_style();
-    static UStyle* create_td_style();
-    static UStyle* create_th_style();
+    static Style* create_table_style();
+    static Style* create_tr_style();
+    static Style* create_td_style();
+    static Style* create_th_style();
     
-    static UStyle* create_span_style();
-    static UStyle* create_b_style();
-    static UStyle* create_i_style();
-    static UStyle* create_em_style();
-    static UStyle* create_u_style();
-    static UStyle* create_font_style();
+    static Style* create_span_style();
+    static Style* create_b_style();
+    static Style* create_i_style();
+    static Style* create_em_style();
+    static Style* create_u_style();
+    static Style* create_font_style();
     
-    static UStyle* create_a_style();
-    static UStyle* create_img_style();
-    static UStyle* create_br_style();
+    static Style* create_a_style();
+    static Style* create_img_style();
+    static Style* create_br_style();
   };
   
 }

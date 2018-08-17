@@ -155,7 +155,7 @@ namespace ubit {
     
     
     static void add(Window&);
-    /**< adds a window (UFrame, UDialog, etc) to the Application.
+    /**< adds a window (UFrame, Dialog, etc) to the Application.
      * Note that:
      * - the first UFrame that is shown or added to the Application is said to be the
      *   "Main Frame" of the application. It will be returned by Application::getMainFrame()
@@ -167,7 +167,7 @@ namespace ubit {
      * - the size of windows is computed when their show() method is called for the
      *   first time. It won't change afterwards excepts if Window::adjustSize() is called.
      *
-     * @see also: Window:show(), Window:update() and Window, UFrame and UDialog classes.
+     * @see also: Window:show(), Window:update() and Window, UFrame and Dialog classes.
      */ 
     
     static void add(Window*);
@@ -317,7 +317,7 @@ namespace ubit {
     static Display* openDisp(const String& display_name);
     /**< opens a connection on another X display.
      * returns null if the connection failed. Otherwise, windows (UFrame,
-     * UDialog...) can be added to the returned Display by using its add()
+     * Dialog...) can be added to the returned Display by using its add()
      * method. 
      * - 'display' is the name of the X Window server. It follows the syntax:
      *    hostname[:display_no[:screen_no]] such as in: hendrix.tsne.fr:0.0

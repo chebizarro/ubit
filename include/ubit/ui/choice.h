@@ -33,17 +33,17 @@ namespace ubit {
    * This object makes the CHILDREN of a widget selectable. It must be added to
    * the chilsd or attribute list of this widget. Selection is exclusive. 
    * No child is initially selected. 
-   * Listbox, Treebox, UCombobox use an internal UChoice
+   * ListBox, Treebox, ComboBox use an internal Choice
    * @see also: URadioSelect.
    */
-  class UChoice : public Attribute {
+  class Choice : public Attribute {
   public:
-    UCLASS(UChoice)
+    UCLASS(Choice)
     
-    UChoice();  
-    ///< create a new UChoice object; @see also shortcut uchoice().
+    Choice();  
+    ///< create a new Choice object; @see also shortcut uchoice().
     
-    virtual ~UChoice();
+    virtual ~Choice();
     
     virtual void clearSelection();
     ///< deselects the selected object.
@@ -94,7 +94,7 @@ namespace ubit {
     virtual void setSelectionRule(IsSelectable&);
     /**< define which objects can be selected in the list.
      * by default, ARMable objects that derive from Box can be selected, such as
-     * UItem, UButton ... or any box that has been made armable by adding its 
+     * Item, Button ... or any box that has been made armable by adding its 
      * setArmable() method.
      */
     
@@ -134,22 +134,22 @@ namespace ubit {
     uptr<Element> sel_items;
     IsSelectable*is_selectable;
     //short sel_mode, sel_style;
-    virtual void mouseCB(UInputEvent&);
-    virtual void actionCB(UInputEvent*);
-    virtual void changeCB(UInputEvent*);
+    virtual void mouseCB(InputEvent&);
+    virtual void actionCB(InputEvent*);
+    virtual void changeCB(InputEvent*);
     virtual void changed(bool update = true);
-    virtual Box* setSelectedItemImpl(Box* item, UInputEvent*);
+    virtual Box* setSelectedItemImpl(Box* item, InputEvent*);
     virtual Box* getSelectedItemImpl() const;
 #endif
   };
   
-  inline UChoice& uchoice() {return *new UChoice;}
-  ///< shortcut function that returns *new UChoice().
+  inline Choice& uchoice() {return *new Choice;}
+  ///< shortcut function that returns *new Choice().
   
   /* ==================================================== [Elc] ======= */
   /** Makes widgets (exclusively) selectable.
    *
-   * This object makes widgets (such as: UCheckbox, URadiobutton, UButton) selectable.
+   * This object makes widgets (such as: Checkbox, RadioButton, Button) selectable.
    * The same URadioSelect must be added to the child or attribute list of all widgets 
    * that must become exclusively selectable. No widget is initially selected.
    *  <pre>
@@ -157,7 +157,7 @@ namespace ubit {
    *    ubox( ucheckbox(sel+"One") + ucheckbox(sel+"Two") + ubutton(sel+"Three") ) 
    *    sel.setSelectedItem(0);
    *  </pre>
-   * @see also: UChoice.
+   * @see also: Choice.
    */
   class URadioSelect : public Attribute {
   public:
@@ -214,7 +214,7 @@ namespace ubit {
     bool can_unselect_mode;
     uptr<Int> pindex;
     uptr<UCall> pselect_callback;
-    void itemChanged(UInputEvent&);
+    void itemChanged(InputEvent&);
     void setIndexImpl();
     void _selectItem(Element*);
 #endif

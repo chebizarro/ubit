@@ -32,26 +32,26 @@ namespace ubit {
   
   /** Separator gadget: horizontal or vertical separator for menus and boxes.
    */
-  class USepar: public Box {
+  class Separator: public Box {
   public:
-    UCLASS(USepar)
-    static UStyle* createStyle();
+    UCLASS(Separator)
+    static Style* createStyle();
     
-    USepar();
+    Separator();
     /**< create a new separator.
      * the orientation of the separator depends on the orientation of its parent box
      */
   };
   
   
-  inline USepar& usepar() {return *new USepar();}
+  inline Separator& usepar() {return *new Separator();}
   ///< create a new separator.
 
   
   /** Label widget: can display any combination of text, images, and other widgets.
    *
    * Default look and feel (can be changed by adding appropriate Attribute(s)):
-   * - horizontal layout (see attribute UOrient)
+   * - horizontal layout (see attribute Orientation)
    * - font and foreground color inherited from parents (see Font and Color)
    * - transparent backgound (see UBackgound and UAlpha)
    * - automatically resized when children (text, images, and other widgets) are 
@@ -67,37 +67,37 @@ namespace ubit {
    *  Example:
    *  <pre>  
    *     String& s = "ON";
-   *     ULabel& mylabel = ulabel(uima("myimage.jpg") + "Current state: " + s)
+   *     Label& mylabel = ulabel(uima("myimage.jpg") + "Current state: " + s)
    *  </prep>
    *  Creates a label that contains an image followed by "Current state: " and the
    *  content of string 's'. The label will be updated whenever 's' content is changed.
    *
-   *  ulabel(...) is a shortcut for *new ULabel(...)
+   *  ulabel(...) is a shortcut for *new Label(...)
    */
-  class ULabel: public Box {
+  class Label: public Box {
   public:
-    UCLASS(ULabel)
-    static UStyle* createStyle();
+    UCLASS(Label)
+    static Style* createStyle();
 
-    ULabel(Args arglist = Args::none) : Box(arglist) {}
+    Label(Args arglist = Args::none) : Box(arglist) {}
     ///< create a new label.
     
-    ULabel(int nbchars, Args arglist = Args::none);
+    Label(int nbchars, Args arglist = Args::none);
     ///< create a new label with a size of nbchars.    
   };
   
   
-  inline ULabel& ulabel(Args arglist = Args::none) 
-  {return *new ULabel(arglist);}
-  ///< shortcut function that return *new ULabel(arglist).
+  inline Label& ulabel(Args arglist = Args::none) 
+  {return *new Label(arglist);}
+  ///< shortcut function that return *new Label(arglist).
 
-  inline ULabel& ulabel(int nbchars, Args arglist = Args::none) 
-  {return *new ULabel(nbchars, arglist);}
-  ///< shortcut function that return *new ULabel(nbchars, arglist).
+  inline Label& ulabel(int nbchars, Args arglist = Args::none) 
+  {return *new Label(nbchars, arglist);}
+  ///< shortcut function that return *new Label(nbchars, arglist).
 
   
   /** Textfield widget: single line editor.
-   * A textfield is (roughly) similar to a ULabel except that it can edit text.
+   * A textfield is (roughly) similar to a Label except that it can edit text.
    *
    * Default look and feel (can be changed by adding appropriate Attribute()):
    *  - horizontal layout (can't be changed)
@@ -116,13 +116,13 @@ namespace ubit {
    * Example:
    *  <pre>
    *      String& s = ustr("World!");
-   *      UTextfield& tf = utextfield(UPix::doc + "Hello " + UPix::ray + s)
+   *      TextField& tf = utextfield(UPix::doc + "Hello " + UPix::ray + s)
    *  </pre>
    * Creates a textfield that contains an image followed by "Hello ", another image
    * and the content of string 's'. The textfield will be updated when the content
    * of 's' is changed.
    *
-   *  utextfield(...) is a shortcut for *new UTextfield(...)
+   *  utextfield(...) is a shortcut for *new TextField(...)
    *
    * CALLBACKS:
    * Any Box callback can be added to a textfield (see UOn and UCall). However,
@@ -138,7 +138,7 @@ namespace ubit {
    *    };
    * 
    *    Demo* d = new Demo();
-   *    UTextfield& tf = utextfield("Hi Folks!"
+   *    TextField& tf = utextfield("Hi Folks!"
    *                                + UOn::action / ucall(d, &Demo::enterCB)
    *                                + UOn::strChange / ucall(d, &Demo::changeCB));
    * </pre>
@@ -166,60 +166,60 @@ namespace ubit {
    * The Event argument is optional: ucall() could refer to an instance method
    * that has no such argument.
    */
-  class UTextfield: public Box {
+  class TextField: public Box {
   public:
-    UCLASS(UTextfield)
-    static UStyle* createStyle();
+    UCLASS(TextField)
+    static Style* createStyle();
 
-    UTextfield(Args arglist = Args::none);
+    TextField(Args arglist = Args::none);
     ///< creates a widget for editing a line of text (@see also shortcut utextfield()).
     
-    UTextfield(int nbchars, Args arglist = Args::none);
+    TextField(int nbchars, Args arglist = Args::none);
     /**< creates a widget for editing one line of text (@see also shortcut utextfield()).
      * the textbox will be large enough to display nbchars.
      */
     
     virtual bool isEditable() const;
     
-    virtual UTextfield& setEditable(bool state = true);
+    virtual TextField& setEditable(bool state = true);
     
     TextEdit& edit();
     ///< returns the TextEdit attribute that controls the edition of the textfield.
     
   };
   
-  inline UTextfield& utextfield(Args arglist = Args::none) 
-  {return *new UTextfield(arglist);}
-  ///< shortcut that returns *new UTextfield(arglist).
+  inline TextField& utextfield(Args arglist = Args::none) 
+  {return *new TextField(arglist);}
+  ///< shortcut that returns *new TextField(arglist).
   
-  inline UTextfield& utextfield(int nbchars, Args arglist = Args::none)
-  {return *new UTextfield(nbchars, arglist);}
-  ///< shortcut that returns *new UTextfield(nbchars, arglist).
+  inline TextField& utextfield(int nbchars, Args arglist = Args::none)
+  {return *new TextField(nbchars, arglist);}
+  ///< shortcut that returns *new TextField(nbchars, arglist).
   
   
   /** Textarea widget: multiple line editor.
-   * This widget does the same as UTextfield except that is can contains as many
+   * This widget does the same as TextField except that is can contains as many
    * lines as needed. Children are layed out as a continuous flow: see FlowView.
    */
-  class UTextarea: public UTextfield {
+  class TextArea: public TextField {
   public:
-    UCLASS(UTextarea)
-    static UStyle* createStyle();
+    UCLASS(TextArea)
+    static Style* createStyle();
 
-    UTextarea(Args arglist = Args::none) : UTextfield(arglist) {}
+    TextArea(Args arglist = Args::none) : TextField(arglist) {}
     ///< creates a new text area (@see also shortcut utextarea()).    
   };
   
-  inline UTextarea& utextarea(Args arglist = Args::none) 
-  {return *new UTextarea(arglist);}
-  ///< shortcut thar returns *new UTextarea(arglist).
+  inline TextArea& utextarea(Args arglist = Args::none) 
+  {return *new TextArea(arglist);}
+  ///< shortcut thar returns *new TextArea(arglist).
   
   
   /** Button widget.
-   * A UButton is similar to a UButton except that:
+   * A Button is similar to a Button except that:
    * - it is clickable (see the "callback" section below)
    * - its "look" depends on parent(s): its backgound is transparent if the button
-   *   is contained in a UMenu, a UMenubar or a UBar and grey otherwise.
+   *   is contained in a Menu, a UMenubar or a UBar and grey otherwise.
    *
    * As other widgets, a button can contain any combination of text, images and  
    * other widgets and its look can be changed by adding appropriate Attribute(s)
@@ -243,7 +243,7 @@ namespace ubit {
    *                      + UOn::action / ucall(d, &Demo::saveFile)
    *                      + utip("Saves the current file"));
    * </pre>
-   *  ubutton(...) is a shortcut for *new UButton(...)
+   *  ubutton(...) is a shortcut for *new Button(...)
    *
    * saveFile() is an instance methods of class Demo. It will called when the button
    * is activated (i.e. clicked). Note that 'd' must be given as the first argument 
@@ -254,86 +254,86 @@ namespace ubit {
    * UOn::action can be omitted, because it is the default callback condition for
    * this widget:  ucall(...) alone is thus identical to: UOn::action / ucall(...)
    *
-   * saveFile() could have an optional Event argument (see UTextfield as an example)
+   * saveFile() could have an optional Event argument (see TextField as an example)
    * or some specific arguments given bu ucall (see UCall)
    *
    * utip(..) adds a tool tip to this button that will show the corresponding message
    * (utip() can in fact be added to any Ubit widget)
    *   
    * IMPLICIT CALLBACKS:
-   * special rules applies when a UDialog or a UMenu is a *direct* child of a button:
+   * special rules applies when a Dialog or a Menu is a *direct* child of a button:
    * these widgets are then automatically opened when the button is (respectively)
    * clicked or pressed.
    *
-   * @see also: UItem, URadiobutton, UCheckbox
+   * @see also: Item, RadioButton, Checkbox
    */
-  class UButton: public Box {
+  class Button: public Box {
   public:
-    UCLASS(UButton)
-    static UStyle* createStyle();
+    UCLASS(Button)
+    static Style* createStyle();
     enum ButtonType {AUTO, NORMAL, MENU, BAR, TAB};
 
-    UButton(Args arglist = Args::none);
+    Button(Args arglist = Args::none);
     ///< creates a standard push button.
  
-    UButton(int button_style, Args arglist = Args::none);
+    Button(int button_style, Args arglist = Args::none);
     ///< creates a push button wich the specified 'button_style'.
     
   private:
-    friend class UButtonStyle;
+    friend class ButtonStyle;
     unsigned char button_type;
   };
   
-  inline UButton& ubutton(Args arglist = Args::none) {return *new UButton(arglist);}
+  inline Button& ubutton(Args arglist = Args::none) {return *new Button(arglist);}
   ///< creates a button.
   
-  UButton& uflatbutton(Args arglist = Args::none);
+  Button& uflatbutton(Args arglist = Args::none);
   ///< creates a "flat" button with a thin line border.
   
-  UButton& utabbutton(Args arglist = Args::none);
+  Button& utabbutton(Args arglist = Args::none);
   ///< creates a "tab" button (for tabbed panes, @see UCardbox).
 
      
-  /** Item Button widget (a kind of button that is used in Listbox(es)).
+  /** Item Button widget (a kind of button that is used in ListBox(es)).
    *
-   *  Same behavior as UButton but with a different decoration (no visible
-   *  border). UItems are typically used as Listbox or UTrow children.
+   *  Same behavior as Button but with a different decoration (no visible
+   *  border). UItems are typically used as ListBox or UTrow children.
    *
    *  Properties and callbacks: 
-   *  - same default properties, layout and resize behavior as ULabel.
-   *  - same callbacks as UButton.
+   *  - same default properties, layout and resize behavior as Label.
+   *  - same callbacks as Button.
    */
-  class UItem: public Box {
+  class Item: public Box {
   public:
-    UCLASS(UItem)
-    static UStyle* createStyle();
+    UCLASS(Item)
+    static Style* createStyle();
 
-    UItem(Args = Args::none);
+    Item(Args = Args::none);
     ///< creates a new "item" button.
   };
   
-  inline UItem& uitem(Args a = Args::none) {return *new UItem(a);}
+  inline Item& uitem(Args a = Args::none) {return *new Item(a);}
   ///< creates a new "item" button.
   
   
   /** Radio Button gadget.
-   * See UButton.
+   * See Button.
    */
-  class URadiobutton: public UButton {
+  class RadioButton: public Button {
   public:
-    UCLASS(URadiobutton)
-    static UStyle* createStyle();
+    UCLASS(RadioButton)
+    static Style* createStyle();
 
-    URadiobutton(Args arglist = Args::none);
+    RadioButton(Args arglist = Args::none);
     ///< create a radio button.
   };
   
-  inline URadiobutton& uradiobutton(Args a = Args::none) {return *new URadiobutton(a);}
+  inline RadioButton& uradiobutton(Args a = Args::none) {return *new RadioButton(a);}
   ///< creates a radio button.
   
   /** Checkbox gadget.
    *
-   * in addition to UButton's Callbacks :
+   * in addition to Button's Callbacks :
    * - UOn::select fire callbacks when the the checkbox is selected
    * - UOn::deselect fires callbacks when the the checkbox is deselected
    *
@@ -344,18 +344,18 @@ namespace ubit {
    *    or deselected by a function call or a radio selection behavior)
    *    
    */
-  class UCheckbox: public UButton {
+  class Checkbox: public Button {
   public:
-    UCLASS(UCheckbox)
-    static UStyle* createStyle();
+    UCLASS(Checkbox)
+    static Style* createStyle();
 
-    UCheckbox(Args arglist = Args::none);
+    Checkbox(Args arglist = Args::none);
     ///< creates a checkbox.
     
-    UCheckbox& select(bool state = true) {return setSelected(state);}
+    Checkbox& select(bool state = true) {return setSelected(state);}
     ///< shortcut for setSelected(bool state = true).
     
-    virtual UCheckbox& setSelected(bool state = true, bool call_callbacks = true) 
+    virtual Checkbox& setSelected(bool state = true, bool call_callbacks = true) 
     {Element::setSelected(state, call_callbacks); return *this;}
     /**< specifies whether this object is selected.
      * fire related callbacks if 'call_callbacks' is true
@@ -364,44 +364,44 @@ namespace ubit {
     bool isSelected() const {return emodes.IS_SELECTED;}
   };
   
-  inline UCheckbox& ucheckbox(Args arglist = Args::none) {return *new UCheckbox(arglist);}
+  inline Checkbox& ucheckbox(Args arglist = Args::none) {return *new Checkbox(arglist);}
   ///< creates a checkbox.
   
   
   /** Link Button gadget.
    * used for HTML links (no border and specific properties).
-   * See UButton.
+   * See Button.
    */
-  class ULinkbutton: public UButton {
+  class LinkButton: public Button {
   public:
-    UCLASS(ULinkbutton)
-    static UStyle* createStyle();
+    UCLASS(LinkButton)
+    static Style* createStyle();
     
-    ULinkbutton(Args = Args::none);
+    LinkButton(Args = Args::none);
     
     virtual String getHRef() const;// {String val; getAttrValue(val,"href"); return val;}  // pas tres efficace!
   };
   
-  inline ULinkbutton& ulinkbutton(Args a = Args::none) {return *new ULinkbutton(a);}
-  ///< creates a "link" button (@see ULinkbutton).
+  inline LinkButton& ulinkbutton(Args a = Args::none) {return *new LinkButton(a);}
+  ///< creates a "link" button (@see LinkButton).
   
   
   /** Spinbox gadget.
    *  Geometry:
-   *  - Same geometry as UTextfield: keeps its initial size
+   *  - Same geometry as TextField: keeps its initial size
    *  Callbacks
    *  - UOn::action (default callback, can be omitted) is fired when the value is changed
    *  - UOn::change is fired when the value is changed
    */
-  class USpinbox : public Box {
+  class SpinBox : public Box {
   public:
-    UCLASS(USpinbox)
-    static UStyle* createStyle();
+    UCLASS(SpinBox)
+    static Style* createStyle();
 
-    USpinbox(Args = Args::none);
+    SpinBox(Args = Args::none);
     ///< creates a spin box.
     
-    USpinbox(Int& value, Args = Args::none);
+    SpinBox(Int& value, Args = Args::none);
     ///< creates a spin box that is linked to an integer model.
         
     virtual int getValue() const {return *pvalue;}
@@ -437,11 +437,11 @@ namespace ubit {
   private:
     uptr<Int> pvalue;
     uptr<String> pstr;
-    uptr<UTextfield> ptextfield;
+    uptr<TextField> ptextfield;
     int increment;
   };
   
-  inline USpinbox& uspinbox(Args a = Args::none) {return *new USpinbox(a);}
+  inline SpinBox& uspinbox(Args a = Args::none) {return *new SpinBox(a);}
   ///< creates a spin box.
   
 }

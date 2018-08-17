@@ -29,12 +29,12 @@
 
 namespace ubit {
   
-  class UWinPlacement;
+  class WindowPlacement;
   class UWinImpl;
   
   /** Base class for windows and menus.
-   * Window is the base class for all windows (UFrame, UDialog...) and menus
-   * (UMenu, UPopmenu, UCtlmenu...)
+   * Window is the base class for all windows (UFrame, Dialog...) and menus
+   * (Menu, PopupMenu, ControlMenu...)
    *
    * A Window can be added as a child of any widget. If this widget is "armable", such as
    * a button, this window is automatically opened when the widget is clicked.
@@ -65,7 +65,7 @@ namespace ubit {
     virtual Window* toWin() {return this;}  // redefined
     virtual const Window* toWin() const {return this;}  // redefined
     
-    static UStyle* createStyle();  // redefined
+    static Style* createStyle();  // redefined
     virtual int getDisplayType() const {return wmodes.IS_HARDWIN ? HARDWIN : SOFTWIN;}
     
     // - - - position - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -76,7 +76,7 @@ namespace ubit {
     virtual String getTitle() const;
     ///< returns the title of the window.
     
-    virtual void setPos(UMouseEvent&, float x = 0, float y = 0);
+    virtual void setPos(MouseEvent&, float x = 0, float y = 0);
     /**< moves the upper left corner of the window to the event location.
      * (x, y) are added to the event location.
      */
@@ -87,8 +87,8 @@ namespace ubit {
     virtual void setPos(const View& view, const Point&);
     ///< moves the upper left corner of the window relatively to this position in 'view'.
     
-    virtual void setPos(const View& view, const UWinPlacement&);
-    ///< moves the window according to this UWinPlacement and relatively to 'view' .
+    virtual void setPos(const View& view, const WindowPlacement&);
+    ///< moves the window according to this WindowPlacement and relatively to 'view' .
     
     virtual void setScreenPos(const Point&, Display* = null);
     ///< moves the upper left corner of the window to this position on the screen.
@@ -223,7 +223,7 @@ namespace ubit {
     bool isSoftwin() const {return !wmodes.IS_HARDWIN;}
     /**< returns true if this is a "soft" window.
      * a soft window simulates an window that is displayed inside a "hard" window
-     * (which is a UFrame or a UDialog)
+     * (which is a UFrame or a Dialog)
      * @see also: isHardwin(). 
      */
     
@@ -313,9 +313,9 @@ namespace ubit {
    *  - TT      hplace = uleft(),   hoppositeBorder = true,  hdist = 0
    *   TT RR    vplace = ubottom(), hoppositeBorder = false, vdist = 0
    */
-  class UWinPlacement {
+  class WindowPlacement {
   public:
-    UWinPlacement();
+    WindowPlacement();
     
     // Horizontal placement. 
     // -- Explicit if &uleft() or &uright()

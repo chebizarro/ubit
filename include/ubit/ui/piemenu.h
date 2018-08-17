@@ -34,8 +34,8 @@ namespace ubit {
   * order, starting from the right direction of the x axis.
   * Pie menus can be nested by using the addSubMenu() method. 
   *
-  * @see: show() methods and UPopmenu class to see how to open menus
-  * @see also: UCtlmenu subclass for creating control menus.
+  * @see: show() methods and PopupMenu class to see how to open menus
+  * @see also: ControlMenu subclass for creating control menus.
   *
   * Event management:
   * each menu item can have callbacks that are fired on these conditions:
@@ -44,7 +44,7 @@ namespace ubit {
   * - UOn::disarm : this item has been deselected (the mouse leaves this item)
   * - UOn::mdrag : the mouse is dragged in this item
   *
-  * Item callbacks can have a UMouseEvent argument.
+  * Item callbacks can have a MouseEvent argument.
   * - getSource() returns the menu (NOT the item!)
   * - getView() returns the view of the menu
   * - getTarget() returns the item that is selected
@@ -64,7 +64,7 @@ namespace ubit {
   *   };
   *
   *   Demo* d = new Demo();
-  *   UPiemenu* pmenu = new UPiemenu(); 
+  *   PieMenu* pmenu = new PieMenu(); 
   *
   *   pmenu->item(0).add("Cut" + UOn::action / ucall(d, &Demo::cut))
   *   pmenu->item(1).add("Copy" + UOn::action / ucall(d, &Demo::copy))
@@ -72,16 +72,16 @@ namespace ubit {
   * </pre>
   * @see also: UCall  
  */
-class UPiemenu : public UPopmenu {
+class PieMenu : public PopupMenu {
 public:
-  UCLASS(UPiemenu)
+  UCLASS(PieMenu)
 
-  UPiemenu();
-  ///< creates a new pie menu; @see also UCtlmenu and shortcut function upiemenu().
+  PieMenu();
+  ///< creates a new pie menu; @see also ControlMenu and shortcut function upiemenu().
   
-  virtual ~UPiemenu();
+  virtual ~PieMenu();
 
-  static UStyle* createStyle();
+  static Style* createStyle();
 
   virtual Box& item(int n);
   /**< gets or creates the Nth item in the menu.
@@ -92,7 +92,7 @@ public:
   
   virtual Box* getItem(int n) const;
   /**< returns the Nth item in the menu.
-    * N must be a valid value (@see UPiemenu), null is returned otherwise. 
+    * N must be a valid value (@see PieMenu), null is returned otherwise. 
     * The item is NOT created if it does not exist.
     * @see also: item(int n);
     */
@@ -103,21 +103,21 @@ public:
   virtual int getSelectedIndex() const;
   ///< returns the index of item that is currently selected (-1 if none).
 
-  virtual void addSubMenu(int N, UPiemenu* submenu);
+  virtual void addSubMenu(int N, PieMenu* submenu);
   ///< adds a submenu to this menu.
   
-  void addSubMenu(int N, UPiemenu& submenu) {addSubMenu(N, &submenu);}
+  void addSubMenu(int N, PieMenu& submenu) {addSubMenu(N, &submenu);}
   ///< adds a submenu to this menu.
   
-  virtual void open(UMouseEvent&);
+  virtual void open(MouseEvent&);
   /** opens the menu at the mouse event location (after waiting for getShowDelay()); MUST be used in UCall statements.
    * the delay can be changed by setShowDelay().
    */
     
   virtual void show(bool state, Display*);
   
-  virtual void show(bool state = true) {UPiemenu::show(state,null);}
-  ///< shows/hides the menu immediately (@see: UMenu::show(bool state)).
+  virtual void show(bool state = true) {PieMenu::show(state,null);}
+  ///< shows/hides the menu immediately (@see: Menu::show(bool state)).
    
   unsigned long getShowDelay() const {return show_delay;}
   ///< returns the delay before the menu is opened (default = 300 ms)
@@ -151,13 +151,13 @@ public:
     
   // - - callbacks - - 
 
-  virtual void pressCB(UMouseEvent&);
+  virtual void pressCB(MouseEvent&);
   ///< [impl] called when the mouse is pressed.
  
-  virtual void releaseCB(UMouseEvent&);
+  virtual void releaseCB(MouseEvent&);
   ///< [impl] called when the mouse is released.
   
-  virtual void motionCB(UMouseEvent&);
+  virtual void motionCB(MouseEvent&);
   ///< [impl] called when the mouse is dragged.
 
   virtual void hideCB(Event&);
@@ -169,10 +169,10 @@ public:
   virtual void resizeCB(UResizeEvent&);
   ///< [impl] called when the menu is resized.
     
-  virtual void armItemCB(UMouseEvent& e, UPiemenu* submenu);
+  virtual void armItemCB(MouseEvent& e, PieMenu* submenu);
   ///< [impl] called when an item is armed.
 
-  virtual void disarmItemCB(UInputEvent& e, UPiemenu* submenu);
+  virtual void disarmItemCB(InputEvent& e, PieMenu* submenu);
   ///< [impl] called when an item is disarmed.
 
   // - - - impl - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -183,30 +183,30 @@ public:
   void setMenuType(int);
   MenuType getMenuType(int) {return MenuType(menu_style);}
   
-  UScale* getScale();
+  Scale* getScale();
   float getScaleValue();
     
   virtual Box* createItem();
   ///< called internally to create a new pie item (can be redefined).
 
-  virtual void disarmItem(UInputEvent&, bool is_browsing);
+  virtual void disarmItem(InputEvent&, bool is_browsing);
   ///< [impl] disarms the item that is currently armed (if any).
  
-  virtual float getCentredCoords(UMouseEvent&, Point& p, bool& must_forward);
+  virtual float getCentredCoords(MouseEvent&, Point& p, bool& must_forward);
   ///< [impl] tranforms events coords to centred coords.
 
   virtual short getItemFromPos(const Point&) const;
 
-  virtual void reset(UMouseEvent*);
+  virtual void reset(MouseEvent*);
   ///< [impl] called when the menu is reset by show().
 
   virtual void startNoviceMode();
   ///< [impl] starts the novide mode: called by show().
   
-  virtual void forwardToMenu(UPiemenu* submenu);
+  virtual void forwardToMenu(PieMenu* submenu);
   ///< [impl] sets the submenu that is currently active.
  
-   virtual void receiveFromMenu(UPiemenu* supermenu);
+   virtual void receiveFromMenu(PieMenu* supermenu);
    ///< [impl] sets the supermenu that is currently active.
  
    virtual void unlinkFromAndToMenus();
@@ -222,14 +222,14 @@ protected:
   uptr<Timer> ptimer;
   //uptr<Box> parmed; plantage: parmed n'appartient pas au menu!
   Box* parmed;
-  UPiemenu *from_menu, *to_menu;
+  PieMenu *from_menu, *to_menu;
   Element gitems;
   Length pie_radius, center_radius, item_radius;
   uptr<Color> ppie_color, pcenter_color, pslice_color, ppie_border_color, pcenter_border_color;
 #endif
 };
 
-inline UPiemenu& upiemenu() {return *new UPiemenu();}
+inline PieMenu& upiemenu() {return *new PieMenu();}
 ///< shortcut function that creates a new pie menu.
 
 }

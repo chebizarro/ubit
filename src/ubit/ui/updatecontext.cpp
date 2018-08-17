@@ -18,7 +18,7 @@
 #include <ubit/ucolor.hpp>
 #include <ubit/uboxgeom.hpp>
 #include <ubit/ubox.hpp>
-#include <ubit/uupdatecontext.hpp>
+#include <ubit/ui/updatecontext.h>
 #include <ubit/uappli.hpp>
 #include <ubit/uflag.hpp>
 using namespace std;
@@ -49,19 +49,19 @@ graph(parctx.graph)
   // si pas de spec de l'orient prendre celle du style par defaut
   /*
   if (!obj->hasBMode(UMode::HAS_ORIENT)) {
-    if (style.orient == UOrient::INHERIT)
+    if (style.orient == Orientation::INHERIT)
       obj->setBmodes(UMode::IS_VERTICAL, parp.obj->hasBMode(UMode::IS_VERTICAL));
     else
-      obj->setBmodes(UMode::IS_VERTICAL, style.orient == UOrient::VERTICAL);
+      obj->setBmodes(UMode::IS_VERTICAL, style.orient == Orientation::VERTICAL);
   }
    */
-  const UStyle& style = *obj_style;
+  const Style& style = *obj_style;
   valign = (style.valign == Valign::INHERIT ? parctx.valign : style.valign);
   halign = (style.halign == Halign::INHERIT ? parctx.halign : style.halign);
 
   // diviser par /xyscale car sera multiplie par UpdateContext::rescale() 
-  vspacing = (style.vspacing == UVspacing::INHERIT ? parctx.vspacing/xyscale : style.vspacing);
-  hspacing = (style.hspacing == UHspacing::INHERIT ? parctx.hspacing/xyscale : style.hspacing);
+  vspacing = (style.vspacing == VSpacing::INHERIT ? parctx.vspacing/xyscale : style.vspacing);
+  hspacing = (style.hspacing == HSpacing::INHERIT ? parctx.hspacing/xyscale : style.hspacing);
   cursor = (style.cursor ? style.cursor : parctx.cursor);
   //edit = (style.edit ? style.edit : parp.edit);
   edit = parctx.edit;  // !!!ATT un button dans un textarea va etre editable A REVOIR !!!
@@ -126,15 +126,15 @@ graph(null)
   // si pas de prop qui definit l'orient prendre celle du style par defaut
   /*
    if (!obj->hasBMode(UMode::HAS_ORIENT)) {
-   obj->setBmodes(UMode::IS_VERTICAL, style.orient == UOrient::VERTICAL);
+   obj->setBmodes(UMode::IS_VERTICAL, style.orient == Orientation::VERTICAL);
    }
    */
   
-  const UStyle& style = *obj_style;
+  const Style& style = *obj_style;
   valign = (style.valign == Valign::INHERIT ? 0 : style.valign);
   halign = (style.halign == Halign::INHERIT ? 0 : style.halign);
-  vspacing = (style.vspacing == UVspacing::INHERIT ? 0 : style.vspacing);
-  hspacing = (style.hspacing == UHspacing::INHERIT ? 0 : style.hspacing);
+  vspacing = (style.vspacing == VSpacing::INHERIT ? 0 : style.vspacing);
+  hspacing = (style.hspacing == HSpacing::INHERIT ? 0 : style.hspacing);
   cursor = style.cursor;
   //edit = (style.edit ? style.edit : null);
   edit = null;
@@ -172,11 +172,11 @@ void UpdateContext::addFlagdef(const UFlagdef* flagdef) {
   flag_count++;
 }
 
-const UFlagdef* UpdateContext::getFlagdef(const UFlag& f) const {
+const UFlagdef* UpdateContext::getFlagdef(const Flag& f) const {
   return getFlagdef(&f);
 }
 
-const UFlagdef* UpdateContext::getFlagdef(const UFlag* f) const {
+const UFlagdef* UpdateContext::getFlagdef(const Flag* f) const {
   for (int k = 0; k < flag_count; k++) {
     if (win_ctx->flags[k]->getFlag() == f) return win_ctx->flags[k];
   }
@@ -184,11 +184,11 @@ const UFlagdef* UpdateContext::getFlagdef(const UFlag* f) const {
 }
 
 
-const UPropdef* UpdateContext::getPropdef(const UFlag& f) const {
+const UPropdef* UpdateContext::getPropdef(const Flag& f) const {
   return getPropdef(&f);
 }
   
-const UPropdef* UpdateContext::getPropdef(const UFlag* f) const {
+const UPropdef* UpdateContext::getPropdef(const Flag* f) const {
   // att: comme il peut y avoir plusieurs propdef empilees il faut
   // toujours prendre la derniere
   const UPropdef* last_pdef = null;

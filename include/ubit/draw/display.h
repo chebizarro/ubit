@@ -44,7 +44,7 @@ class UCursorImpl;
   * logically separated, ie. when a window cannot move freely from one screen
   * to another one).
   *
-  * Window objects (and UFrame, UDialog, UMenu subclasses) can be attached to a
+  * Window objects (and UFrame, Dialog, Menu subclasses) can be attached to a
   * specific Display by using Display::add(). Widgets that are contained in several 
   * Window objects ("contained" meaning they are a child of them) are AUTOMATICCALY
   * REPLICATED and synchronized on all these windows.
@@ -103,11 +103,11 @@ public:
   // - - - windows - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   virtual void add(Window&);
-  /**< add a window (UFrame, UDialog, etc) to this display.
+  /**< add a window (UFrame, Dialog, etc) to this display.
    * Note that windows are initially hidden, their show() method must be called
    * to make them visible. Moreover, as show() calculates the window size, it should
    * called after adding the window children (see also: Window::adjustSize()).
-   * @see: Application::add() and classes Window, UFrame, UDialog, UMenu.
+   * @see: Application::add() and classes Window, UFrame, Dialog, Menu.
    */ 
   
   void add(Window*);
@@ -132,10 +132,10 @@ public:
   virtual int getPointerState() const = 0;
   ///< returns the state of the modifier keys and pointer buttons.
 
-  virtual bool grabPointer(const UCursor* = null) = 0;
+  virtual bool grabPointer(const Cursor* = null) = 0;
   /**< starts a physical grab of the native pointer.
-    * the UCursor arg is the cursor that is shown during the grab. A default
-    * value (such as UCursor::crosshair) is used if this argument is null.
+    * the Cursor arg is the cursor that is shown during the grab. A default
+    * value (such as Cursor::crosshair) is used if this argument is null.
     * returns true if the pointer could be grabbed.
     * BEWARE that grabPointer() may lock the X server! @see ungrabPointer().
     */
@@ -146,7 +146,7 @@ public:
     */
 
   virtual bool pickWindow(int& x_in_win, int& y_in_win, UHardwinImpl* window,
-                          UCursor* cursor = null, UCall* callback = null) = 0;
+                          Cursor* cursor = null, UCall* callback = null) = 0;
   /**< grabs the pointer and lets the user pick a window interactively with the mouse.
     * (note: this function only works when X11 is used).
     * - returns false if no window was picked
@@ -154,7 +154,7 @@ public:
     * - 'window' must be previously created by createWinImpl(null). Its content is set
     *   so that it points to teh picked window
     * - 'cursor' specifies the cursor that is shown during the grab operation 
-    *   (UCursor::crosshair is used is this arg. is null)
+    *   (Cursor::crosshair is used is this arg. is null)
     * - if 'callback' is not null, it is fired when the mouse is pressed, moved, 
     *   released during the grab operation. 'callback' is a callback object created
     *   by one of the ucall<> templates (@see UCall).
@@ -194,12 +194,12 @@ public:
   void clearPasteTarget();
   ///< [impl] clears the paste target.
 
-  virtual void copySelection(UMouseEvent&, Selection&);
+  virtual void copySelection(MouseEvent&, Selection&);
   /**< [impl] copies the content of the selection in the copy buffer and tells the X server we own the X selection.
   * note: there is 1 selection per EventFlow but only 1 copy_buffer per Display
   */
   
-  virtual void pasteSelection(UMouseEvent&, String* paste_str, int paste_pos);
+  virtual void pasteSelection(MouseEvent&, String* paste_str, int paste_pos);
   /**< [impl] pastes the X selection into this String at this pos.
     * ATTENTION: c'est lie a *chaque* disp et c'est ASYNCHRONE: le paste
     * n'est pas fait immediatement mais par appel ulterieur d'un callback
@@ -258,10 +258,10 @@ public:
   virtual void onResize(View* winview, const Dimension& size);
   void onResizeCB(View* winview);
 
-  virtual bool setSelectionOwner(UMouseEvent&) {return false;}
+  virtual bool setSelectionOwner(MouseEvent&) {return false;}
   ///< [X11 only] tells the X-server the appli owns the X selection.
   
-  virtual void pasteSelectionRequest(UMouseEvent&) {}
+  virtual void pasteSelectionRequest(MouseEvent&) {}
   /**< [X11 only] asks the X selection.
     * cette fct ne recupere PAS tout de suite le contenu de la selection
     * mais entrainera un appel ulterieur de pasteSelectionCallback().
@@ -292,7 +292,7 @@ private:
   friend class FontFamily;
   friend class FontMetrics;
   friend class GLContext;
-  friend class UGlcanvas;
+  friend class GLCanvas;
   friend class Length;
   friend class Font;
   Display(const Display&);

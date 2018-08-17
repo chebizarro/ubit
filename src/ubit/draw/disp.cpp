@@ -223,12 +223,12 @@ void Display::clearPasteTarget() {
   paste_pos = 0;
 }
 
-void Display::copySelection(UMouseEvent& e, Selection& textsel) {
+void Display::copySelection(MouseEvent& e, Selection& textsel) {
   textsel.copyText(copy_buffer);
   setSelectionOwner(e);
 }
 
-void Display::pasteSelection(UMouseEvent& e, String* _paste_str, int _paste_pos) {
+void Display::pasteSelection(MouseEvent& e, String* _paste_str, int _paste_pos) {
   // il faut effacer toutes les selections avant de faire un paste (sinon tout
   // va se melanger n'importe comment)  
   const UFlowList& flist = Application::getFlowList();

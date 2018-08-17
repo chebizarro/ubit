@@ -36,22 +36,22 @@ namespace ubit {
 
 
 
-UGlcanvas::UGlcanvas(Args a) :
+GLCanvas::GLCanvas(Args a) :
 USubwin(a), is_init(false), share_glresources(false)
 {
-  addAttr(UOn::paint / ucall(this, &UGlcanvas::paintImpl));
+  addAttr(UOn::paint / ucall(this, &GLCanvas::paintImpl));
   // resizeImpl est ajouté dans USubwin
-  //addAttr(UOn::resize / ucall(this, &UGlcanvas::resizeImpl));
+  //addAttr(UOn::resize / ucall(this, &GLCanvas::resizeImpl));
 } 
 
-UGlcanvas::~UGlcanvas() {}
+GLCanvas::~GLCanvas() {}
 
-GLContext* UGlcanvas::getGlcontext() const {
+GLContext* GLCanvas::getGlcontext() const {
   return hardImpl()->getGlcontext();
 }
 
-//void UGlcanvas::shareContextResources(GLContext* gc) {shared_res_ctx = gc;}
-//void UGlcanvas::setAutoBufferSwap(bool state) {is_autoswap = state;}
+//void GLCanvas::shareContextResources(GLContext* gc) {shared_res_ctx = gc;}
+//void GLCanvas::setAutoBufferSwap(bool state) {is_autoswap = state;}
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -71,9 +71,9 @@ void disableClips() {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-bool UGlcanvas::realize() {
+bool GLCanvas::realize() {
   if (! wmodes.IS_HARDWIN) {
-    Application::error("UGlcanvas::realize","can't be a SOFTWIN: can't realize object %p",this);
+    Application::error("GLCanvas::realize","can't be a SOFTWIN: can't realize object %p",this);
     return false;
   }
   if (! USubwin::realize()) return false;
@@ -88,7 +88,7 @@ bool UGlcanvas::realize() {
 #endif
   
   if (! hw->glcontext) {
-    error("UGlcanvas::realize","the Graphic Context could not be created for *p",this);
+    error("GLCanvas::realize","the Graphic Context could not be created for *p",this);
     return false;
   }
   else {
@@ -99,7 +99,7 @@ bool UGlcanvas::realize() {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UGlcanvas::initImpl() {
+void GLCanvas::initImpl() {
   is_init = true;
   UHardwinImpl* hw = hardImpl();
   hw->glcontext->makeCurrent();
@@ -109,7 +109,7 @@ void UGlcanvas::initImpl() {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UGlcanvas::resizeImpl(UResizeEvent& e) 
+void GLCanvas::resizeImpl(UResizeEvent& e) 
 {
   USubwin::resizeImpl(e); // ne pas oublier !!
   
@@ -119,22 +119,22 @@ void UGlcanvas::resizeImpl(UResizeEvent& e)
 
   if (is_init) {
     UHardwinImpl* hw = hardImpl();
-    //cerr << "@UGlcanvas: begin resizeGL gc " <<hw->glcontext<<endl;
+    //cerr << "@GLCanvas: begin resizeGL gc " <<hw->glcontext<<endl;
     hw->glcontext->setDest(hw,0,0);
     hw->glcontext->makeCurrent();
     disableClips();
     resizeGL(e, int(getView()->getWidth()), int(getView()->getHeight()));
-    //cerr << "@UGlcanvas: end resizeGL gc "<< hw->glcontext<<endl;
+    //cerr << "@GLCanvas: end resizeGL gc "<< hw->glcontext<<endl;
    }
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UGlcanvas::paintImpl(PaintEvent& e) 
+void GLCanvas::paintImpl(PaintEvent& e) 
 {
   if (is_init) {
     UHardwinImpl* hw = hardImpl();
-    //cerr << ">>> UGlcanvas paintGL: HW: " << hw << " / winGC "<< hw->glcontext<<endl;
+    //cerr << ">>> GLCanvas paintGL: HW: " << hw << " / winGC "<< hw->glcontext<<endl;
     hw->glcontext->setDest(hw,0,0);  // set hardwin and adapts drawing to its size
     hw->glcontext->makeCurrent();
     disableClips();
@@ -153,13 +153,13 @@ void UGlcanvas::paintImpl(PaintEvent& e)
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UGlcanvas::makeCurrent() {
+void GLCanvas::makeCurrent() {
   UHardwinImpl* hw = hardImpl();
   if (hw->glcontext) hw->glcontext->makeCurrent();
   disableClips();
 }
 
-void UGlcanvas::swapBuffers() {
+void GLCanvas::swapBuffers() {
   UHardwinImpl* hw = hardImpl();
   if (hw->glcontext) hw->glcontext->swapBuffers();
 }

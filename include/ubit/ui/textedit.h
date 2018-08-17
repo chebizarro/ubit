@@ -119,7 +119,7 @@ namespace ubit {
     
     // - - - impl - - - - -- - - - - - - - - - - - - - - - - - - - - - - -
     
-    Selection* getSelection(UInputEvent& e, String& sel_text);
+    Selection* getSelection(InputEvent& e, String& sel_text);
     void deleteSelection(Selection* sel, String& sel_text, Element& container);
     void deletePreviousChar(Element& container, View* view);
     void deleteChar(Element& container, View* view);
@@ -157,11 +157,11 @@ namespace ubit {
     long caret_pos;             // the position of the caret in 'caret_str'
     bool is_editable, is_visible;
     mutable bool repainted;
-    virtual void inputCB(UInputEvent&);
+    virtual void inputCB(InputEvent&);
     virtual void kpressed(UKeyEvent&);
-    virtual void mpressed(UMouseEvent&);
-    virtual void mreleased(UMouseEvent&);
-    virtual void callbacks2(UMouseEvent&);
+    virtual void mpressed(MouseEvent&);
+    virtual void mreleased(MouseEvent&);
+    virtual void callbacks2(MouseEvent&);
   };
   
   inline TextEdit& uedit() {return *new TextEdit();}

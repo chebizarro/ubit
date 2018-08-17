@@ -21,7 +21,7 @@
 #include <ubit/ubox.hpp>
 #include <ubit/ustr.hpp>
 #include <ubit/ukey.hpp>
-#include <ubit/uupdatecontext.hpp>
+#include <ubit/ui/updatecontext.h>
 #include <ubit/ui/uviewImpl.hpp>
 #include <ubit/ui/uwinImpl.hpp>
 #include <ubit/ucolor.hpp>
@@ -91,13 +91,13 @@ public:
 #ifndef NO_DOC
   //protected:  
   void addFlagdef(const UFlagdef*);
-  ///< [advanced] adds a Flag to the Event (for transparent tools, etc); see: UFlag.
+  ///< [advanced] adds a Flag to the Event (for transparent tools, etc); see: Flag.
   
-  const UFlagdef* getFlagdef(const UFlag&) const;
-  ///< [advanced] returns the flagdef associated to this flag (if any); see: UFlag.
+  const UFlagdef* getFlagdef(const Flag&) const;
+  ///< [advanced] returns the flagdef associated to this flag (if any); see: Flag.
   
-  const UPropdef* getPropdef(const UFlag&) const;
-  ///< [advanced] returns the flagprop associated to this flag (if any); see: UFlag.
+  const UPropdef* getPropdef(const Flag&) const;
+  ///< [advanced] returns the flagprop associated to this flag (if any); see: Flag.
   
   // void goThrough(Box*, bool go_through_children = true);
   // events will go through this object.
@@ -110,14 +110,14 @@ public:
  flagdefs.push_back(f);
  }
  
- const class UFlagdef* Event::getFlagdef(const UFlag &f) const {
+ const class UFlagdef* Event::getFlagdef(const Flag &f) const {
  for (unsigned int k = 0; k < flagdefs.size(); ++k) {
  if ((flagdefs)[k]->getFlag() == &f) return flagdefs[k];
  }
  return null;  // not found
  }
  
- const UPropdef* Event::getPropdef(const UFlag& f) const {
+ const UPropdef* Event::getPropdef(const Flag& f) const {
  const UPropdef* last_pdef = null;
  // att: comme il peut y avoir plusieurs propdef empilees il faut
  // toujours prendre la derniere
@@ -175,7 +175,7 @@ sys_event(sev) {
   
 // ==================================================== ======== ===============
 
-UInputEvent::UInputEvent(const Condition& c, View* v, EventFlow* f, 
+InputEvent::InputEvent(const Condition& c, View* v, EventFlow* f, 
                          unsigned long time, int st) : 
 Event(c, (v? v->getBox(): null)), 
 state(st), 
@@ -188,79 +188,79 @@ event_observer(null) {
   = modes.DONT_CLOSE_MENU = modes.SOURCE_IN_MENU = false;
 } 
 
-Element* UInputEvent::getSource() const {
+Element* InputEvent::getSource() const {
   return source_view ? source_view->getBox() : null;
 }
 
-View* UInputEvent::getViewOf(const Box& box) const {
+View* InputEvent::getViewOf(const Box& box) const {
   return box.getView(*this);
 }
 
-View* UInputEvent::getWinView() const {
+View* InputEvent::getWinView() const {
   return source_view ? source_view->getWinView() : null;
 }
   
-Window* UInputEvent::getWin() const {
+Window* InputEvent::getWin() const {
   return (source_view && source_view->hardwin) ? source_view->hardwin->win : null;
 }
 
-Display* UInputEvent::getDisp() const {
+Display* InputEvent::getDisp() const {
   return (source_view && source_view->hardwin) ? source_view->hardwin->disp : null;
 }
   
 //#if UBIT_WITH_GLUT
-//int UInputEvent::getModifiers() const {return glutGetModifiers();}
+//int InputEvent::getModifiers() const {return glutGetModifiers();}
 //#endif
 
-int UInputEvent::getModifiers() const {return state;}
+int InputEvent::getModifiers() const {return state;}
 
-bool UInputEvent::isShiftDown() const 
+bool InputEvent::isShiftDown() const 
 {return (getModifiers() & Modifier::ShiftDown) != 0;}
 
-bool UInputEvent::isControlDown() const 
+bool InputEvent::isControlDown() const 
 {return (getModifiers() & Modifier::ControlDown) != 0;}
 
-bool UInputEvent::isAltDown() const 
+bool InputEvent::isAltDown() const 
 {return (getModifiers() & Modifier::AltDown) != 0;}
 
-bool UInputEvent::isMetaDown() const
+bool InputEvent::isMetaDown() const
 {return (getModifiers() & Modifier::MetaDown) != 0;}
 
-bool UInputEvent::isAltGraphDown() const 
+bool InputEvent::isAltGraphDown() const 
 {return (getModifiers() & Modifier::AltGraphDown) != 0;}
 
 // ==================================================== ======== ===============
   
-UMouseEvent::UMouseEvent(const Condition& c, View* source, EventFlow* f, 
+MouseEvent::MouseEvent(const Condition& c, View* source, EventFlow* f, 
                          unsigned long time, int state,
                          const Point& pos, const Point& abs_pos, int btn) :
-UInputEvent(c, source, f, time, state), 
+InputEvent(c, source, f, time, state), 
 button(btn), click_count(0),
 pos(pos), abs_pos(abs_pos) {
 }
   
-int UMouseEvent::getButtons() const {
+int MouseEvent::getButtons() const {
   return state & _BUTTONS;
 }
 
-void UMouseEvent::translatePos(float x, float y) {  // NB: change pas source !
+void MouseEvent::translatePos(float x, float y) {  // NB: change pas source !
   pos.x += x; pos.y += y;
   abs_pos.x += x; abs_pos.y += y;
 }
 
-Point UMouseEvent::getPosIn(const View& view) const {
+Point MouseEvent::getPosIn(const View& view) const {
   if (!source_view) return Point(0,0);
   else return View::convertPosTo(view, *source_view, pos);
 }
 
-Point UMouseEvent::getPosIn(const Box& parent) const {
+Point MouseEvent::getPosIn(const Box& parent) const {
   if (!source_view) return Point(0,0);
   View* v = parent.getViewContaining(*source_view);
   if (v) return View::convertPosTo(*v, *source_view, pos);
   else return Point(0,0);
 }
 
-Point UMouseEvent::getPosAndViewIn(const Box& parent, View*& parent_view) const {
+Point MouseEvent::getPosAndViewIn(const Box& parent, View*& parent_view) const {
   if (!source_view) return Point(0,0);
   parent_view = parent.getViewContaining(*source_view);
   if (parent_view) return View::convertPosTo(*parent_view, *source_view, pos);
@@ -269,26 +269,26 @@ Point UMouseEvent::getPosAndViewIn(const Box& parent, View*& parent_view) const 
 
 // ==================================================== ======== ===============
 
-Data* UMouseEvent::getData() {
+Data* MouseEvent::getData() {
   if (!source_view) return null;
   UDataContext dc;
   return source_view->findData(dc, pos, null, 0, -1);
 }
 
-Data* UMouseEvent::getData(UDataContext& dc) {
+Data* MouseEvent::getData(UDataContext& dc) {
   if (!source_view) return null;
   return source_view->findData(dc, pos, null, 0, -1);
 }
 
 // same as findData() but discards UDatas that are not Strings
-String* UMouseEvent::getStr() {
+String* MouseEvent::getStr() {
   if (!source_view) return null;
   UDataContext dc;
   Data* data = getData(dc);
   return (data ? data->toStr() : null);
 }
 
-String* UMouseEvent::getStr(UDataContext& dc) {
+String* MouseEvent::getStr(UDataContext& dc) {
   if (!source_view) return null;
   Data* data = getData(dc);
   return (data ? data->toStr() : null);
@@ -300,7 +300,7 @@ UWheelEvent::UWheelEvent(const Condition& c, View* source, EventFlow* f,
                          unsigned long time, int state,
                          const Point& pos, const Point& abs_pos, 
                          int wheel_btn, int wheel_delta) :
-UMouseEvent(c, source, f, time, state, pos, abs_pos, wheel_btn), 
+MouseEvent(c, source, f, time, state, pos, abs_pos, wheel_btn), 
 delta(wheel_delta) {
 } 
     
@@ -308,7 +308,7 @@ delta(wheel_delta) {
 
 UKeyEvent::UKeyEvent(const Condition& c, View* source, EventFlow* f, unsigned long when, 
                      int mods, int kcode, short kchar)
-: UInputEvent(c, source, f, when, mods), keycode(kcode), keychar(kchar) {}
+: InputEvent(c, source, f, when, mods), keycode(kcode), keychar(kchar) {}
 
 void UKeyEvent::setKeyChar(short ch) {keychar = ch;}
 void UKeyEvent::setKeyCode(int ks) {keycode = ks;}
