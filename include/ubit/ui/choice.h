@@ -128,10 +128,10 @@ namespace ubit {
      * SELECT_ON_DISARM, SELECT_ON_ARM, SELECT_ON_DRAG
      */
   protected:
-    uptr<UCall>  callbacks;
-    uptr<Box>   container;
-    uptr<Element> last_browsing_group;
-    uptr<Element> sel_items;
+    unique_ptr<UCall>  callbacks;
+    unique_ptr<Box>   container;
+    unique_ptr<Element> last_browsing_group;
+    unique_ptr<Element> sel_items;
     IsSelectable*is_selectable;
     //short sel_mode, sel_style;
     virtual void mouseCB(InputEvent&);
@@ -212,8 +212,8 @@ namespace ubit {
     
   protected:
     bool can_unselect_mode;
-    uptr<Int> pindex;
-    uptr<UCall> pselect_callback;
+    unique_ptr<Int> pindex;
+    unique_ptr<UCall> pselect_callback;
     void itemChanged(InputEvent&);
     void setIndexImpl();
     void _selectItem(Element*);

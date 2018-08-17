@@ -25,7 +25,7 @@ namespace ubit {
 * Example:
 * <pre>
 *    int source = ...;
-*    uptr<USource> i = new USource(source);
+*    unique_ptr<USource> i = new USource(source);
 *    i->onAction( ucall(x, y, printArgs) );
 *    i->onAction( ucall(obj, val, &Demo::doIt) );
 * </pre>

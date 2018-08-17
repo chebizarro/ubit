@@ -122,7 +122,7 @@ namespace ubit {
     virtual void putProp(UpdateContext*, Element&);
     
   private:
-    uptr<Attribute> prop;
+    unique_ptr<Attribute> prop;
   };
   
   /* [impl] gets the value of an inherited property.

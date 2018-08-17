@@ -31,12 +31,13 @@
 #include <ubit/ui/updatecontext.h>
 #include <ubit/uappli.hpp>
 using namespace std;
-#define NAMESPACE_UBIT namespace ubit {
-NAMESPACE_UBIT
+
+namespace ubit {
+
 
 //bool Attribute::isSpecified() const {return getClass().isSpecified();}
 
-// defini dans impl sinon pbms compil (a cause du uptr<>) avce gcc2
+// defini dans impl sinon pbms compil (a cause du unique_ptr<>) avce gcc2
 Attribute::Attribute() {}
 Attribute::Attribute(UConst) {omodes.IS_CONST = true;}
 
@@ -78,10 +79,9 @@ struct UNamedValue: public Attribute {
   virtual const String& getName() const {return *pname;}   //attention herite!!!
   virtual bool getValue(String& val) const {val = *pvalue; return true;}  //attention herite!!!  
   
-  uptr<String> pname, pvalue;
+  unique_ptr<String> pname, pvalue;
 };
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
 void AttributeList::addAttr(Attribute& c) {
   _addAttr(c);

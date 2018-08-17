@@ -22,15 +22,15 @@
 #include <ubit/upix.hpp>
 
 using namespace std;
-#define NAMESPACE_UBIT namespace ubit {
-NAMESPACE_UBIT
+
+namespace ubit {
+
 
 
 bool UInscale::verifies(const UpdateContext& ctx, const Element&) const {
   return (ctx.xyscale >= smin && ctx.xyscale <= smax);
 }
 
-// ==================================================== [Ubit Toolkit] =========
 
 ZoomMenu::ZoomMenu(Box& zoomed_box, Box& panned_box) :
 pzoom_action(new ZoomAction(zoomed_box)),  // for centred zooming
@@ -66,7 +66,6 @@ void ZoomMenu::openMenuCB(MouseEvent& e) {
     e.propagate();  // propagate to children
 }
 
-// ==================================================== [Ubit Toolkit] =========
 
 ZoomPane::ZoomPane(Args a) : 
 pviewport(new Box(a)),

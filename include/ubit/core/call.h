@@ -136,7 +136,7 @@ namespace ubit {
    * - ucloseWin()      closes the first parent window that contains this expression
    * 
    * <pre>
-   *   uptr<Dialog> dial = 
+   *   unique_ptr<Dialog> dial = 
    *     udialog(...whatever... 
    *             + ubutton( "Close" + ucloseWin() )
    *             );

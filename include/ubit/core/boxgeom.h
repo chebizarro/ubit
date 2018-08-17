@@ -186,8 +186,8 @@ namespace ubit {
     Point box_pos0, pt_in_pane0;
     bool change_cursor, freeze_x, freeze_y;
     View* moved_view;
-    uptr<UCall> callbacks;
-    uptr<UPos> posAttr;
+    unique_ptr<UCall> callbacks;
+    unique_ptr<UPos> posAttr;
     
     virtual void putProp(UpdateContext*, Element&) {}
     virtual void addingTo(Child&, Element& parent);
@@ -210,7 +210,7 @@ namespace ubit {
     UMagicLensControl(UPos* = null, Scrollpane* = null);
     UMagicLensControl& setModel(UPos*, Scrollpane*);
   private:
-    uptr<Scrollpane> pane;
+    unique_ptr<Scrollpane> pane;
     virtual void dragCB(MouseEvent&);
   };
   
@@ -311,8 +311,8 @@ namespace ubit {
     float w0, h0;
     float xev0, yev0;
     bool freeze_w, freeze_h;
-    uptr<UCall> callbacks;
-    uptr<USize> psize;
+    unique_ptr<UCall> callbacks;
+    unique_ptr<USize> psize;
     virtual void mouseCB(MouseEvent&);
     virtual void pressCB(MouseEvent&);
     virtual void releaseCB(MouseEvent&);

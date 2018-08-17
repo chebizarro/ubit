@@ -40,7 +40,7 @@ namespace ubit {
    *
    * IMPORTANT NOTE ON RECURSIVE DESTRUCTION AND SMART POINTERS:
    * When a Box is destroyed, its direct and indirect children are ALSO destroyed
-   * EXCEPT if they have other parents OR if they are pointed by a uptr<> Smart Pointer.
+   * EXCEPT if they have other parents OR if they are pointed by a unique_ptr<> Smart Pointer.
    * @see class Node for details.
    *
    * Multiple parents and multiple views:
@@ -90,7 +90,7 @@ namespace ubit {
     /**
      * recursive destructor.
      * children are automatically destroyed if not pointed elsewhere
-     * (in the instance graph or by a uptr<>). see class Node for details.
+     * (in the instance graph or by a unique_ptr<>). see class Node for details.
      */
     virtual ~Box() {destructs();}
     

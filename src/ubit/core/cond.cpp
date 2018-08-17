@@ -30,8 +30,9 @@
 #include <ubit/core/event.h>
 #include <ubit/ustr.hpp>
 using namespace std;
-#define NAMESPACE_UBIT namespace ubit {
-NAMESPACE_UBIT
+
+namespace ubit {
+
 
 /* TEST
  template <class A, class R> 

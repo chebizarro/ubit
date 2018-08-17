@@ -111,7 +111,7 @@ namespace ubit {
     friend class FileChooser;
     unsigned long size;
     unsigned long modtime;
-    uptr<String> pname;
+    unique_ptr<String> pname;
     void stat(const char* path);
   };
   

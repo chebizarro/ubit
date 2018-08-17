@@ -28,8 +28,9 @@
 #include <ubit/nat/udispGLUT.hpp>
 #include <ubit/nat/uglcontext.hpp>
 using namespace std;
-#define NAMESPACE_UBIT namespace ubit {
-NAMESPACE_UBIT
+
+namespace ubit {
+
 
 //void glutIconifyWindow(void);
 //void glutFullScreen(void)
@@ -225,7 +226,6 @@ String UHardwinGLUT::getIconTitle() const {
 void UHardwinGLUT::setClassProperty(const String& instance_name, const String& class_name) {
 }
 
-// ==================================================== [Ubit Toolkit] =========
 
 UHardwinGLUT::UHardwinGLUT(UDispGLUT* d, Window* w)
 : UHardwinImpl(d, w), sys_win(0) {
@@ -240,7 +240,6 @@ UHardwinGLUT::~UHardwinGLUT() {
   // fait par ~UHardwin: delete glcontext;
 }
 
-// ==================================================== [Ubit Toolkit] =========
 
 void UHardwinGLUT::realize(WinType wtype, float w, float h) {
   if (isRealized()) return;  
@@ -280,7 +279,7 @@ void UHardwinGLUT::realize(WinType wtype, float w, float h) {
     if (parw) parent_win = ((UHardwinGLUT*)parw->getHardwin())->sys_win;
     
     if (parent_win == 0) {
-      Application::error("UHardwinGLUT::realize","the parent of the USubwin is not realized, using the main frame as a parent");
+      Application::error("UHardwinGLUT::realize","the parent of the SubWindow is not realized, using the main frame as a parent");
       parent_win = 1;
     }
 

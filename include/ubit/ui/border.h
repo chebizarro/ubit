@@ -103,7 +103,7 @@ namespace ubit {
     short decoration;
     bool is_overlaid, is_rounded;
     PaddingSpec padding;
-    uptr<const Color> pcolor, pbgcolor;
+    unique_ptr<const Color> pcolor, pbgcolor;
     
     Border(int decoration, const Color& color, const Color& bgcolor,
             float width, float height, UConst);    
@@ -153,7 +153,7 @@ class UCompositeBorder : public Border {
     virtual void putProp(UpdateContext*, Element&);
 
 protected:    
-    uptr<Element> pchildren;
+    unique_ptr<Element> pchildren;
   };
   
 }

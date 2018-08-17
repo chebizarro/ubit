@@ -30,8 +30,9 @@
 #include <ubit/upix.hpp>
 #include <ubit/uappli.hpp>
 using namespace std;
-#define NAMESPACE_UBIT namespace ubit {
-NAMESPACE_UBIT
+
+namespace ubit {
+
 
 
 UAlpha::UAlpha(float v) : Attribute() {val = v;}

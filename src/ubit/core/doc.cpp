@@ -218,7 +218,7 @@ Document* UPluginDocCreator::create(DocumentSource& so) {
 
   UFileMode fm(*so.path);
   if (fm.isExec()) {
-    doc->add(uhbox(uleft() + USymbol::right + " "
+    doc->add(uhbox(uleft() + Symbol::right + " "
                    + ulinkbutton(Font::bold + "Execute"
                                  + ucall(this, doc, &UPluginDocCreator::exec))));
   }
@@ -227,19 +227,19 @@ Document* UPluginDocCreator::create(DocumentSource& so) {
     String& help_s = ustr();
     if (command !="open") help_s = " (using " & command & " )";
     
-    doc->add(uhbox(uleft() + USymbol::right + " "
+    doc->add(uhbox(uleft() + Symbol::right + " "
                    + ulinkbutton(Font::bold + "Open"
                                  + ucall(this, doc, &UPluginDocCreator::open))
                    + help_s));
   }
 
   UCall& call = ucall(this, doc, &UPluginDocCreator::openWith);
-  doc->add(uhbox(uleft() + USymbol::right + " "
+  doc->add(uhbox(uleft() + Symbol::right + " "
                  + ulinkbutton(Font::bold + "Open With" + call)
                  + "  "
                  + utextfield(usize(200) + alt_command + call)));
 
-  doc->add(uhbox(uleft() + USymbol::right + " "
+  doc->add(uhbox(uleft() + Symbol::right + " "
                  + ulinkbutton(Font::bold + "Open As Text"
                                + ucall(this, doc, &UPluginDocCreator::openAsText))));
   status = "";

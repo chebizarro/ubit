@@ -32,8 +32,9 @@
 #include <ubit/utimer.hpp>
 #include <iostream>
 using namespace std; 
-#define NAMESPACE_UBIT namespace ubit {
-NAMESPACE_UBIT
+
+namespace ubit {
+
 
 void UCall::wrongEventType(const char* evname, const char* callname) {
   error("operator",

@@ -110,8 +110,8 @@ namespace ubit {
     Background(Color&, UConst);
     Background(Image&, UConst);
   protected:
-    uptr<Color> pcolor;
-    uptr<Image> pima;
+    unique_ptr<Color> pcolor;
+    unique_ptr<Image> pima;
     float alpha;
     bool tiling;
 #endif

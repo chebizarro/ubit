@@ -107,7 +107,7 @@ struct U3DposHandle : public Attribute {
   
 protected:
   Transform transform;
-  uptr<U3Dpos> pos;
+  unique_ptr<U3Dpos> pos;
   UCall* callbacks;
   Point prev;
 

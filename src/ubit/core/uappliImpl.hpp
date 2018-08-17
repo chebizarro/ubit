@@ -93,7 +93,7 @@ namespace ubit {
     Display* disp;
     String *app_name;
     bool is_terminated;   // true if the Application has been terminated
-    uptr<UErrorHandler> error_handler;
+    unique_ptr<UErrorHandler> error_handler;
     UFrame* main_frame;   // the main frame of the Application
     // Note: the display list must be static to avoid seg faults if the Application
     // is distroyed before the widgets by the client program 

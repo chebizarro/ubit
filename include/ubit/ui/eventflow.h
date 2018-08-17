@@ -150,8 +150,8 @@ namespace ubit {
     int    click_count;
     unsigned long click_time;
     const class Cursor* lastCursor;    // cursor being currently shown
-    uptr<Timer> auto_repeat_timer;     // timer fo auto_repeat actions
-    uptr<Timer> tip_timer;             // timer for tool tips
+    unique_ptr<Timer> auto_repeat_timer;     // timer fo auto_repeat actions
+    unique_ptr<Timer> tip_timer;             // timer for tool tips
     Window& tip_win;                      // window for tool tips
     MenuManager& menu_man;             // menubars & pulldown menus manager
     Selection& selection;              // text selection management

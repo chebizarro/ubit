@@ -70,7 +70,7 @@ namespace ubit {
     ///< returns the internal Choice object that controls the selection.
     
   protected:
-    uptr<Choice> pchoice;
+    unique_ptr<Choice> pchoice;
   };
   
   inline RadioBox& uradiobox(Args args = Args::none) {return *new RadioBox(args);}
@@ -250,9 +250,9 @@ namespace ubit {
     virtual void syncText();
     
   private:
-    uptr<ListBox> plist;
-    uptr<Element> pentry;
-    uptr<class Menu> pmenu;
+    unique_ptr<ListBox> plist;
+    unique_ptr<Element> pentry;
+    unique_ptr<class Menu> pmenu;
     bool text_only;
     
     //ComboBox(const Args& = Args::none);

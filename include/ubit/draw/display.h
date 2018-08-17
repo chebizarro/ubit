@@ -333,8 +333,8 @@ protected:
   String copy_buffer;
 
   // pasteSelection() specifies that the selection will be pasted in this String
-  // at this pos (uptr<> to avoid deletion)
-  uptr<String> paste_str;
+  // at this pos (unique_ptr<> to avoid deletion)
+  unique_ptr<String> paste_str;
   int paste_pos;
 
   // attention: winlist doit etre detruit en premier!

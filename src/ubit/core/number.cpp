@@ -23,8 +23,9 @@
 #include <ubit/unumber.hpp>
 #include <ubit/uappli.hpp>
 using namespace std;
-#define NAMESPACE_UBIT namespace ubit {
-NAMESPACE_UBIT
+
+namespace ubit {
+
 
   
 Number& Number::onChange(UCall &c) {   // @@@ devrait heriter de UObject !!!

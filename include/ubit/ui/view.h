@@ -35,7 +35,7 @@ namespace ubit {
   class UTableView;
   class UPaneView;
   class ViewFind;
-  class UViewLayout;
+  class ViewLayout;
   class UViewUpdate;
   class UViewLayoutImpl;
   class UViewUpdateImpl;
@@ -134,7 +134,7 @@ namespace ubit {
     /**< returns the position of the view relatively to its hard window. 
      * y is relative to the TOP left corner
      * - @see getGLPos() to obtain x,y in OpenGL coordinates
-     * - NB: coordinates are always relative to the topmost hard window (USubwin
+     * - NB: coordinates are always relative to the topmost hard window (SubWindow
      *   hard windows are not taken into account)
      */
     
@@ -271,7 +271,7 @@ namespace ubit {
     void incrVFlexCount() {++vflex_count;}
     void setScale(float s) {scale = s;}
     
-    virtual bool doLayout(UpdateContext&, UViewLayout&);
+    virtual bool doLayout(UpdateContext&, ViewLayout&);
     virtual void doUpdate(UpdateContext&, Rectangle r, Rectangle clip, UViewUpdate&);
 
   protected:
@@ -289,7 +289,7 @@ namespace ubit {
     void setParentView(View* parent_view);
     void setNext(View* v) {next = v;}
             
-    virtual void doLayout2(UViewLayoutImpl&, Element&, UpdateContext&, UViewLayout&);
+    virtual void doLayout2(UViewLayoutImpl&, Element&, UpdateContext&, ViewLayout&);
     
     virtual void doUpdate2(UViewUpdateImpl&, Element&, UpdateContext&,
                            Rectangle& r, Rectangle& clip, UViewUpdate&);
@@ -325,7 +325,7 @@ namespace ubit {
     friend class Box;
     friend class Window;
     friend class UHardwinImpl;
-    friend class USubwin;
+    friend class SubWindow;
     friend class Child;
     friend class UViewLayoutImpl;
     friend class UViewUpdateImpl;
@@ -357,7 +357,7 @@ namespace ubit {
     virtual bool caretPosToXY(long caret_pos, int& xcol, int& yline) const; // ex int
     virtual bool xyToCaretPos(int xcol, int yline, long& caret_pos) const;
     
-    virtual bool doLayout(UpdateContext& parent_context, UViewLayout&);
+    virtual bool doLayout(UpdateContext& parent_context, ViewLayout&);
     virtual void doUpdate(UpdateContext& parent_context, Rectangle r, Rectangle clip, UViewUpdate&);
     
     float getMaxWidth() const;

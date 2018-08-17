@@ -28,8 +28,9 @@ possible, and they will totally occypy
 #include <ubit/ubit_features.h>
 #include <ubit/uxpm.hpp>
 #include <ubit/upix.hpp>
-#define NAMESPACE_UBIT namespace ubit {
-NAMESPACE_UBIT
+
+namespace ubit {
+
 
 const char *UXpm::select[] = {
   " 16 16 3 1",

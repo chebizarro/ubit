@@ -88,8 +88,8 @@ public:
   
 private:
   friend class Treebox;
-  uptr<Box> plabel, psubnodes;
-  uptr<Box> pexpander;
+  unique_ptr<Box> plabel, psubnodes;
+  unique_ptr<Box> pexpander;
   void constructs(const Args& label, const Args& subnode_list);
 };
 

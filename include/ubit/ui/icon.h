@@ -48,8 +48,8 @@ namespace ubit {
     void setDir(bool state) {is_dir = state;}
     
   protected:
-    uptr<Box> ima_box, text_box;
-    uptr<String> pname;
+    unique_ptr<Box> ima_box, text_box;
+    unique_ptr<String> pname;
     bool is_dir;
   };
   
@@ -95,10 +95,10 @@ namespace ubit {
     // - - - impl.  - - - - - - - - - - - - - - - - - - - - - - - - - -
   protected:
     friend class Finder;
-    uptr<String> ppathname, ptitle;
-    uptr<ListBox> picons;
-    uptr<HSpacing> icon_hspacing;
-    uptr<VSpacing> icon_vspacing;
+    unique_ptr<String> ppathname, ptitle;
+    unique_ptr<ListBox> picons;
+    unique_ptr<HSpacing> icon_hspacing;
+    unique_ptr<VSpacing> icon_vspacing;
     unsigned long filetime;
     bool show_parent_dir;
     virtual void okBehavior(InputEvent&); 

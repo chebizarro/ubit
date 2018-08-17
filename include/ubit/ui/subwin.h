@@ -39,11 +39,11 @@ namespace ubit {
    *
    * @see also subclass: GLCanvas.
    */
-  class USubwin : public Window {
+  class SubWindow : public Window {
   public:
-    UCLASS(USubwin)
+    UCLASS(SubWindow)
     
-    USubwin(Args = Args::none);
+    SubWindow(Args = Args::none);
     
     virtual bool isSubWin() const {return true;}
     

@@ -32,7 +32,6 @@ using namespace std;
 namespace ubit {
 
 
-// ==================================================== [Ubit Toolkit] =========
 
 inline void drawWallPaperLine(Graph& g, UpdateContext& ctx, float y, 
                               bool is_htiled, const Image* wallp, float ima_w,
@@ -137,7 +136,6 @@ void UViewUpdateImpl::updateBackground(Graph& g, UpdateContext& ctx,
   }
 }
 
-// ==================================================== [Ubit Toolkit] =========
 
 void UViewUpdateImpl::setPadding(Graph& g, const UpdateContext& ctx,
                                  const Rectangle& r, bool add_frame_and_padding) {
@@ -166,7 +164,6 @@ void UViewUpdateImpl::setPadding(Graph& g, const UpdateContext& ctx,
   height = r.height - pad.top.val - pad.bottom.val;
 }
 
-// ==================================================== [Ubit Toolkit] =========
   
 void UViewUpdateImpl::callPaintCallbacks(Element& grp, UpdateContext& cur_ctx) {
   // the view has been destructed in the meanwhile: may happen if 
@@ -211,7 +208,6 @@ void UViewUpdateImpl::callMoveResizeCallbacks(Element& grp, UpdateContext& cur_c
   }
 }
   
-// ==================================================== [Ubit Toolkit] =========
 
 UViewUpdateImpl::UViewUpdateImpl(View *v, const Rectangle &r, UViewUpdate &_upmode) :
 pad(0,0),                 // !! ??? pas est-il vraiment utile ??? !!!
@@ -320,7 +316,6 @@ UViewUpdateImpl::~UViewUpdateImpl() {
   }
 }
 
-// ==================================================== [Ubit Toolkit] =========
 
 static void nextH(UViewUpdateImpl&, const UpdateContext&);
 static void nextV(UViewUpdateImpl&, const UpdateContext&);
@@ -786,7 +781,6 @@ void View::doUpdate2(UViewUpdateImpl& vd, Element& grp, UpdateContext& ctx,
   if (g && g->in_3d_mode) endUpdate3d(vd, grp, ctx);
 }
 
-// ==================================================== [Ubit Toolkit] =========
 
 void View::initLayoutH(UViewUpdateImpl& vd, const UpdateContext& ctx, const Rectangle& r) 
 {
@@ -879,7 +873,6 @@ void View::initLayoutViewport(UViewUpdateImpl& vd, const UpdateContext& ctx, con
   paneview->setPadding(vd.pad);
 }
 
-// ==================================================== [Ubit Toolkit] =========
 
 void View::layoutH(UViewUpdateImpl& vd, const UpdateContext& ctx, ChildIter link,
                     const Dimension& dim, Element* chgrp, View* chview) {
@@ -1085,7 +1078,6 @@ static void layoutBorder(UViewUpdateImpl& vd, const UpdateContext& ctx,
   }
 }
 
-// ==================================================== [Ubit Toolkit] =========
 
 static void nextH(UViewUpdateImpl& vd, const UpdateContext& ctx) {
   // increment vd.chr.x in all cases

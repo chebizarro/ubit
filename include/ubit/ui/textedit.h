@@ -150,10 +150,10 @@ namespace ubit {
     virtual void  paint(Graph&, UpdateContext&, const Rectangle&, int offset, int cellen) const;
     
   private:
-    uptr<UCall>  calls;        // callback object
-    uptr<UCall>  calls2;        // callback object
-    uptr<Color> caret_color;  // specific color for displaying the caret (if any)
-    uptr<String>   caret_str;    // the string that contains the caret (if any)
+    unique_ptr<UCall>  calls;        // callback object
+    unique_ptr<UCall>  calls2;        // callback object
+    unique_ptr<Color> caret_color;  // specific color for displaying the caret (if any)
+    unique_ptr<String>   caret_str;    // the string that contains the caret (if any)
     long caret_pos;             // the position of the caret in 'caret_str'
     bool is_editable, is_visible;
     mutable bool repainted;

@@ -40,7 +40,7 @@ UViewLayoutImpl::UViewLayoutImpl(View *v) {
 
 void UViewLayoutImpl::computeWidth(const UpdateContext& ctx,
                                    const PaddingSpec& padding,
-                                   UViewLayout& vl, bool minmax_defined) {
+                                   ViewLayout& vl, bool minmax_defined) {
   const SizeSpec& size = ctx.local.size;
   
   // !!!!!!  A COMPLETER !!! prendre en compte les Units du padding !!!!!!!
@@ -57,7 +57,7 @@ void UViewLayoutImpl::computeWidth(const UpdateContext& ctx,
   // keep into account vl.strategy for embedded uflowboxes
   /*
    // 28sept08: sert a quoi? pose pbm avec les tables
-  if (vl.strategy == UViewLayout::IMPOSE_WIDTH) {
+  if (vl.strategy == ViewLayout::IMPOSE_WIDTH) {
     spec_width = vl.spec_w;       // imposer la taille donnee par parent
     if (spec_width > 0.) mode = FIXED_SIZE; else mode = KEEP_SIZE;
   }
@@ -75,7 +75,7 @@ void UViewLayoutImpl::computeWidth(const UpdateContext& ctx,
   }
     
   // DIFFERS from computeHeight!
-  if (vl.strategy == UViewLayout::NESTED) {
+  if (vl.strategy == ViewLayout::NESTED) {
     // cas nested flowboxes -> les retailler (sauf si taille specifiee)
     if (mode == KEEP_SIZE) mode = ADJUST;
   }
@@ -133,7 +133,7 @@ void UViewLayoutImpl::computeWidth(const UpdateContext& ctx,
 
 void UViewLayoutImpl::computeHeight(const UpdateContext& ctx,
                                     const PaddingSpec& padding,
-                                    UViewLayout& vl, bool minmax_defined) {
+                                    ViewLayout& vl, bool minmax_defined) {
   const SizeSpec& size = ctx.local.size;
 
   // !!!!!!  A COMPLETER !!! prendre en compte les Units du padding !!!!!!!
@@ -200,14 +200,14 @@ void UViewLayoutImpl::computeHeight(const UpdateContext& ctx,
 
 /* ==================================================== [Elc] ======= */
 
-bool View::doLayout(UpdateContext& parp, UViewLayout& vl) {
+bool View::doLayout(UpdateContext& parp, ViewLayout& vl) {
   UViewLayoutImpl vd(this); 
   Box* box = getBox();
   if (!box) {Application::internalError("View::doLayout", "Null box!"); return false;}
 
   UpdateContext curp(parp, box, this, null);
   
-  if (vl.strategy == UViewLayout::IMPOSE_WIDTH) {
+  if (vl.strategy == ViewLayout::IMPOSE_WIDTH) {
     //imposer la taille donnee par parent
     width = vl.spec_w;  // curp.local.width modified in computeWidth()
   }
@@ -223,16 +223,16 @@ bool View::doLayout(UpdateContext& parp, UViewLayout& vl) {
 
 
 static void hintElemVert(UViewLayoutImpl& vd, const UpdateContext& curp,
-                         const UViewLayout& chvl, Element* box);
+                         const ViewLayout& chvl, Element* box);
 static void hintElemHoriz(UViewLayoutImpl& vd, const UpdateContext& curp,
-                          const UViewLayout& chvl, Element* box);
+                          const ViewLayout& chvl, Element* box);
 static void hintElemViewport(UViewLayoutImpl& vd, const UpdateContext& curp,
-                             const UViewLayout& chvl, Element* box);
+                             const ViewLayout& chvl, Element* box);
 static void hintElemBorder(UViewLayoutImpl& vd, const UpdateContext& curp,
-                           const UViewLayout& chvl, Element* box);
+                           const ViewLayout& chvl, Element* box);
 
 
-void View::doLayout2(UViewLayoutImpl& vd, Element& grp, UpdateContext& curp, UViewLayout& vl) {
+void View::doLayout2(UViewLayoutImpl& vd, Element& grp, UpdateContext& curp, ViewLayout& vl) {
   UMultiList mlist(curp, grp);
   if (curp.xyscale != 1.) curp.rescale();
   scale = curp.xyscale;
@@ -264,7 +264,7 @@ void View::doLayout2(UViewLayoutImpl& vd, Element& grp, UpdateContext& curp, UVi
 
       b = (*ch);
       chboxview = null;
-      UViewLayout chvl; // !att: reinit by constr.
+      ViewLayout chvl; // !att: reinit by constr.
       chgrp = null;
 
       // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -362,7 +362,7 @@ void View::doLayout2(UViewLayoutImpl& vd, Element& grp, UpdateContext& curp, UVi
 /* ==================================================== [Elc] ======= */
 
 void hintElemHoriz(UViewLayoutImpl& vd, const UpdateContext& curp,
-                   const UViewLayout& chvl, Element* chbox) {
+                   const ViewLayout& chvl, Element* chbox) {
   if (chbox) {
     // number of horizontally flexible child objects
     // ATT: jamais flexible si CANT_RESIZE_WIDTH
@@ -386,7 +386,7 @@ void hintElemHoriz(UViewLayoutImpl& vd, const UpdateContext& curp,
 
 
 void hintElemVert(UViewLayoutImpl& vd, const UpdateContext& curp,
-                  const UViewLayout& chvl, Element* chbox) {
+                  const ViewLayout& chvl, Element* chbox) {
   if (chbox) {
     // number of vertically flexible child objects
     // ATT: jamais flexible si CANT_RESIZE_HEIGHT
@@ -410,7 +410,7 @@ void hintElemVert(UViewLayoutImpl& vd, const UpdateContext& curp,
 
 
 void hintElemViewport(UViewLayoutImpl& vd, const UpdateContext& curp,
-                      const UViewLayout& chvl, Element* chbox) {
+                      const ViewLayout& chvl, Element* chbox) {
   if (!chbox) {
     Application::error("View::doLayout","a UPane can only contain UBoxes in its central area");
     return;
@@ -424,7 +424,7 @@ void hintElemViewport(UViewLayoutImpl& vd, const UpdateContext& curp,
 
 
 void hintElemBorder(UViewLayoutImpl& vd, const UpdateContext& curp,
-                    const UViewLayout& chvl, Element* chbox) {
+                    const ViewLayout& chvl, Element* chbox) {
   UViewBorderProp* vb = null;           
   if (!vd.view->getProp(vb)) {
     Application::internalError("View::doLayout","Invalid border");

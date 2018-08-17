@@ -153,7 +153,7 @@ namespace ubit {
     
 #ifndef NO_DOC
   protected:
-    uptr<ListBox> ptabs;
+    unique_ptr<ListBox> ptabs;
     virtual void setSelectedImpl();
 #endif
   };
@@ -188,9 +188,9 @@ namespace ubit {
     
 #ifndef NO_DOC
   protected:
-    uptr<Box> ptitlebar, pcontent;
-    uptr<Scrollpane> pspane;
-    uptr<Scale> pscale;
+    unique_ptr<Box> ptitlebar, pcontent;
+    unique_ptr<Scrollpane> pspane;
+    unique_ptr<Scale> pscale;
     float zoom_quantum;
 #endif
   };

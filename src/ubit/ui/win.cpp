@@ -154,7 +154,6 @@ void Window::addWinView(View* view) {
   views = view;
 }
 
-// ==================================================== [Ubit toolkit] =========
 
 //ATT: cette fct doit etre appelee a la creation de la Window
 Window& Window::setSoftwin(bool state) {
@@ -207,7 +206,6 @@ USoftwinImpl::USoftwinImpl(Window& win) {
 
 USoftwinImpl::~USoftwinImpl() {}
 
-// ==================================================== [Ubit toolkit] =========
 // ATT: voir aussi + voir cas Displays separes!!
 // !!POUR L'instant winview UNIQUE!!!
 // NOTE: les Windows sont creees une seule fois mais ouvertes par tous 
@@ -295,7 +293,6 @@ View* Window::initViewImpl(View* parview, Display* disp) {
   return winview;
 }
 
-// ==================================================== [Ubit toolkit] =========
 
 bool Window::realize() {
   if (wmodes.IS_HARDWIN) return realizeHardwin(UHardwinImpl::FRAME);  // FRAME???
@@ -388,7 +385,6 @@ void Window::realizeChildren(View* winview) {
   }
 }
 
-// ==================================================== [Ubit toolkit] =========
 
 Window& Window::setTitle(const String& title) {
   if (isHardwin()) {
@@ -471,7 +467,6 @@ void Window::setFullScreen(bool state, Display* disp) {
   //else ... a faire...
 }
 
-// ==================================================== [Ubit toolkit] =========
 
 bool Window::isShown() const {
   return isShown(null);
@@ -586,7 +581,6 @@ void Window::update(const Update& upd, Display* disp) {
  */
 }
       
-// ==================================================== [Ubit toolkit] =========
   
 void Window::doUpdate(const Update& upd, Display* disp) {
   if (Application::isExiting()) return;
@@ -786,7 +780,6 @@ void UHardwinImpl::doUpdateImpl(const Update& upd, Window* _win, View* winview,
   if (winview->height <= 0) winview->height = 1;
 }
 
-// ==================================================== [Ubit toolkit] =========
 //ATT: contrairement a update(), resize() impose une taille donnee
 // (si les valeurs sont >0)
 
@@ -850,7 +843,6 @@ float Window::getHeight(Display* disp) const {
   return getSize(disp).height;
 }
 
-// ==================================================== [Ubit toolkit] =========
 
 Point Window::getPos(const View& view) const {
   Point p = getScreenPos(view.getDisp());
@@ -997,7 +989,6 @@ void Window::centerOnScreen(Display* disp) {
   }
 }
 
-// ==================================================== [Ubit toolkit] =========
 // updates object layout to get correct size when necessay
 
 static void checkUpdate(Window* win, Display* disp) {

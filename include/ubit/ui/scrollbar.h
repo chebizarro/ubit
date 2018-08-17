@@ -126,10 +126,10 @@ namespace ubit {
   private:
     friend class UScrollbarView;
     friend class Scrollpane;
-    uptr<Float> pvalue;	        // scrollbar value (percentage)
-    uptr<Scrollpane> ppane;	    // the pane controlled by this scrollbar
-    uptr<Box> pless_btn, pmore_btn, pknob, prail;
-    uptr<UPos> pknob_pos;		      // current position of the knob
+    unique_ptr<Float> pvalue;	        // scrollbar value (percentage)
+    unique_ptr<Scrollpane> ppane;	    // the pane controlled by this scrollbar
+    unique_ptr<Box> pless_btn, pmore_btn, pknob, prail;
+    unique_ptr<UPos> pknob_pos;		      // current position of the knob
     float unit_increment, block_increment;
     float delta_mouse;
     bool press_rail_goto_pos;     // dont scroll but goes to pos is trus

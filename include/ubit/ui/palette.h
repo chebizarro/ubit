@@ -60,16 +60,16 @@ namespace ubit {
     void setPosControlModel(UPosControl*);
 
   protected:
-    uptr<UPos> ppos;
-    uptr<UPosControl> ppos_ctrl;
-    uptr<USize> psize;
-    uptr<USizeControl> psize_ctrl;
-    uptr<Scale> pcontent_scale;
-    uptr<Box> pcontent;
-    uptr<Element> ptitle;
-    uptr<Element> pcontrols;
-    uptr<Box> ptitle_bar;
-    uptr<Box> presize_btn;
+    unique_ptr<UPos> ppos;
+    unique_ptr<UPosControl> ppos_ctrl;
+    unique_ptr<USize> psize;
+    unique_ptr<USizeControl> psize_ctrl;
+    unique_ptr<Scale> pcontent_scale;
+    unique_ptr<Box> pcontent;
+    unique_ptr<Element> ptitle;
+    unique_ptr<Element> pcontrols;
+    unique_ptr<Box> ptitle_bar;
+    unique_ptr<Box> presize_btn;
   };
   
   inline UPalette& upalette(Args content = Args::none) {return *new UPalette(content);}

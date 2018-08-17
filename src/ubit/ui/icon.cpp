@@ -20,8 +20,9 @@
 #include <ubit/ufile.hpp>
 #include <ubit/uicon.hpp>
 using namespace std;
-#define NAMESPACE_UBIT namespace ubit {
-NAMESPACE_UBIT
+
+namespace ubit {
+
 
 
 Style* IconBox::createStyle() {
@@ -218,7 +219,7 @@ int Icon::loadImage(const String& ima_path) {
       || fext.equals("jpeg",true)
       || fext.equals("xpm",true)
       ) {
-    uptr<Image> ima = new Image;
+    unique_ptr<Image> ima = new Image;
     stat = ima->read(ima_path, CONTENT_WIDTH, CONTENT_HEIGHT);
 
     //delete full_ima; automatic deletion

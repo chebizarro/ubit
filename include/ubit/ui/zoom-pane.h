@@ -68,10 +68,10 @@ namespace ubit {
     void openMenuOn(int event_mask);
     
    private:
-    uptr<Box> pviewport;
-    uptr<ZoomMenu> pmenu;
-    uptr<UPos> ppos;
-    uptr<Scale> pscale;
+    unique_ptr<Box> pviewport;
+    unique_ptr<ZoomMenu> pmenu;
+    unique_ptr<UPos> ppos;
+    unique_ptr<Scale> pscale;
   };
   
   inline ZoomPane& uzoompane(Args arglist = Args::none) {return *new ZoomPane(arglist);}
@@ -96,8 +96,8 @@ namespace ubit {
     virtual void openMenuCB(MouseEvent&);
 
   protected:
-    uptr<ZoomAction> pzoom_action; 
-    uptr<PanAction> ppan_action;
+    unique_ptr<ZoomAction> pzoom_action; 
+    unique_ptr<PanAction> ppan_action;
     int event_mask;
   };
   

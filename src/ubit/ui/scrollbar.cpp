@@ -127,8 +127,8 @@ public:
 
 Box* UScrollbar::createLessButton(bool vertical) {
   Box* scroller;
-  if (vertical) scroller = new UScrollbutton(USymbol::up);  
-  else scroller = new UScrollbutton(USymbol::left);
+  if (vertical) scroller = new UScrollbutton(Symbol::up);  
+  else scroller = new UScrollbutton(Symbol::left);
   scroller->setAutoRepeat(true);
   scroller->disableMenuClosing();
   return scroller;
@@ -136,8 +136,8 @@ Box* UScrollbar::createLessButton(bool vertical) {
 
 Box* UScrollbar::createMoreButton(bool vertical) {
   Box* scroller;
-  if (vertical) scroller = new UScrollbutton(USymbol::down);
-  else scroller = new UScrollbutton(USymbol::right);
+  if (vertical) scroller = new UScrollbutton(Symbol::down);
+  else scroller = new UScrollbutton(Symbol::right);
   scroller->setAutoRepeat(true);
   scroller->disableMenuClosing();
   return scroller;

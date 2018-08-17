@@ -41,14 +41,14 @@ namespace ubit {
 
 
 
-Style* USubwin::createStyle() {
+Style* SubWindow::createStyle() {
   Style* s = Window::createStyle();
   // necessaire, surtout pour GLCanvas
   s->setBgcolors(Color::none);
   return s;
 }
 
-USubwin::USubwin(Args a) : Window(a) {
+SubWindow::SubWindow(Args a) : Window(a) {
   // Contrairement aux Window, sont affichees par defaut et sont en mode BOX (= tiled)
   emodes.IS_SHOWABLE = true;
   wmodes.IS_HARDWIN = true;
@@ -56,8 +56,8 @@ USubwin::USubwin(Args a) : Window(a) {
 }
 
 // must be redefined to init parent view
-// void USubwin::initView(Child *selflink, View *parview) {
-  void USubwin::initView(View* parview) {
+// void SubWindow::initView(Child *selflink, View *parview) {
+  void SubWindow::initView(View* parview) {
   Window::initViewImpl(/*selflink,*/ parview, parview->getDisp());
   
   // as the subwin is laid out as a normal Box, it must have
@@ -71,9 +71,9 @@ USubwin::USubwin(Args a) : Window(a) {
   if (isShowable()) show(true);
 }
 
-bool USubwin::realize() {
+bool SubWindow::realize() {
   if (! wmodes.IS_HARDWIN) {
-    Application::error("USubwin::realize","can't be a SOFTWIN: can't realize object %p",this);
+    Application::error("SubWindow::realize","can't be a SOFTWIN: can't realize object %p",this);
     return false;
   }
   
@@ -83,8 +83,8 @@ bool USubwin::realize() {
   if (!realizeHardwin(UHardwinImpl::SUBWIN)) return false;
   
   //cerr << "SUBWIN win " <<((UHardwinImplX11*)hw)->getSysWin() <<endl;
-  addAttr(UOn::motion / ucall(this, &USubwin::motionImpl));
-  addAttr(UOn::resize / ucall(this, &USubwin::resizeImpl));
+  addAttr(UOn::motion / ucall(this, &SubWindow::motionImpl));
+  addAttr(UOn::resize / ucall(this, &SubWindow::resizeImpl));
     
 #if UBIT_WITH_X11
   UHardwinX11* _hw = (UHardwinX11*)hw;
@@ -97,7 +97,7 @@ bool USubwin::realize() {
   return true;
 }
 
-void USubwin::resizeImpl(UResizeEvent& e) {
+void SubWindow::resizeImpl(UResizeEvent& e) {
   View* v = e.getView();
   UHardwinImpl* hw = hardImpl();
   if (hw) {
@@ -107,7 +107,7 @@ void USubwin::resizeImpl(UResizeEvent& e) {
   }
 }
   
-void USubwin::motionImpl(UViewEvent& e) {
+void SubWindow::motionImpl(UViewEvent& e) {
   View* v = e.getView();
   UHardwinImpl* hw = hardImpl();
   if (hw) {

@@ -28,8 +28,9 @@
 #include <ubit/nat/udispGLUT.hpp>
 #include <ubit/nat/urendercontext.hpp>
 using namespace std;
-#define NAMESPACE_UBIT namespace ubit {
-NAMESPACE_UBIT
+
+namespace ubit {
+
 
 Cursor Cursor::pointer(GLUT_CURSOR_LEFT_ARROW, UCONST);
 Cursor Cursor::crosshair(GLUT_CURSOR_CROSSHAIR, UCONST);
@@ -44,7 +45,6 @@ Cursor Cursor::move(GLUT_CURSOR_INFO, UCONST);  // same sa hand
 Cursor Cursor::dnd(GLUT_CURSOR_CYCLE, UCONST);  // ???
 //Cursor Cursor::plus(GDK_PLUS, UCONST);
   
-// ==================================================== [Ubit Toolkit] =========
 
 UDispGLUT::UDispGLUT(const String& _dname) : Display(_dname)
 {
@@ -94,7 +94,6 @@ UDispGLUT::~UDispGLUT() {
   // if (sys_disp) ???CloseDisplay(sys_disp);
 }
 
-// ==================================================== [Ubit Toolkit] =========
   
 unsigned long UDispGLUT::createColorPixel(const Rgba& rgba) {
   return 0;
@@ -146,7 +145,6 @@ bool UDispGLUT::pickWindow(int& x_in_win, int& y_in_win, UHardwinImpl* window,
   return false;
 }
 
-// ==================================================== [Ubit Toolkit] =========
 
 void UDispGLUT::startAppli() {}
 void UDispGLUT::quitAppli() {}

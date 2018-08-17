@@ -58,10 +58,10 @@ namespace ubit {
     virtual void setValue(const String& val) {setValueImpl(pvalue, val);}
     virtual bool getValue(String& val) const {return getValueImpl(pvalue, val);}
     
-    static void setValueImpl(uptr<String>& pvalue, const String& value);
-    static bool getValueImpl(const uptr<String>& pvalue, String& value);
+    static void setValueImpl(unique_ptr<String>& pvalue, const String& value);
+    static bool getValueImpl(const unique_ptr<String>& pvalue, String& value);
 
-    uptr<String> pvalue;
+    unique_ptr<String> pvalue;
   };
   
 
@@ -71,7 +71,7 @@ namespace ubit {
     void setValue(const String& val) {HtmlAttribute::setValueImpl(pvalue, val);}
     bool getValue(String& val) const {return HtmlAttribute::getValueImpl(pvalue, val);}
   private:
-    uptr<String> pvalue;  
+    unique_ptr<String> pvalue;  
   };
   
   struct HtmlClass : public HtmlAttribute {
@@ -113,7 +113,7 @@ namespace ubit {
     void setValue(const String& value);    
     bool getValue(String& val) const {return HtmlAttribute::getValueImpl(pvalue, val);}
   private:
-    uptr<String> pvalue;
+    unique_ptr<String> pvalue;
   };
   
   struct HtmlBgcolor : public Background {
@@ -121,7 +121,7 @@ namespace ubit {
     void setValue(const String&);
     bool getValue(String& val) const {return HtmlAttribute::getValueImpl(pvalue, val);}
   private:
-    uptr<String> pvalue;
+    unique_ptr<String> pvalue;
   }; 
   
   struct HtmlBorder : public Border {
@@ -129,7 +129,7 @@ namespace ubit {
     void setValue(const String& v);
     bool getValue(String& val) const {return HtmlAttribute::getValueImpl(pvalue, val);}
   private:
-    uptr<String> pvalue;
+    unique_ptr<String> pvalue;
   };
   
   struct HtmlFontFace : public Font {
@@ -137,7 +137,7 @@ namespace ubit {
     void setValue(const String&);    
     bool getValue(String& val) const {return HtmlAttribute::getValueImpl(pvalue, val);}
   private:
-    uptr<String> pvalue;
+    unique_ptr<String> pvalue;
   };
   
   struct HtmlFontSize : public Font {
@@ -145,7 +145,7 @@ namespace ubit {
     void setValue(const String&);
     bool getValue(String& val) const {return HtmlAttribute::getValueImpl(pvalue, val);}
   private:
-    uptr<String> pvalue;
+    unique_ptr<String> pvalue;
   };
   
   
@@ -170,7 +170,7 @@ namespace ubit {
     void setValue(const String&);
     bool getValue(String& val) const {return HtmlAttribute::getValueImpl(pvalue, val);}
   private:    
-    uptr<String> pvalue;
+    unique_ptr<String> pvalue;
   };
   
   struct HtmlValign : public Valign {
@@ -178,7 +178,7 @@ namespace ubit {
     void setValue(const String&);
     bool getValue(String& val) const {return HtmlAttribute::getValueImpl(pvalue, val);}
   private:    
-    uptr<String> pvalue;
+    unique_ptr<String> pvalue;
   };
 
   struct HtmlColspan : public HtmlAttribute {

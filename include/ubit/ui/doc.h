@@ -110,7 +110,7 @@ namespace ubit {
     Map rmap;
     DocumentCreator* default_creator;
     int stat;
-    uptr<String> errors;
+    unique_ptr<String> errors;
   };
   
 
@@ -180,8 +180,8 @@ namespace ubit {
     ///< NB: the constr is protected: use read() or a subclass to create a Document.
     
   private:
-    uptr<String> ppath;
-    uptr<Element> call_list;
+    unique_ptr<String> ppath;
+    unique_ptr<Element> call_list;
     Document(const Document&);             // these operators are forbidden
     Document& operator=(const Document&);
   };
@@ -207,7 +207,7 @@ namespace ubit {
   
     int from;
     int stat;
-    uptr<const String> path, fullpath;
+    unique_ptr<const String> path, fullpath;
     const String* buffer;
     String* errors;
   };
@@ -231,7 +231,7 @@ namespace ubit {
     FlatDocument(const String& _pathname);
     virtual bool isEditable() const;
     virtual void setEditable(bool state = true);
-    uptr<class TextEdit> edit;
+    unique_ptr<class TextEdit> edit;
   };
   
   

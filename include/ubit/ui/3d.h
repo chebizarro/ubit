@@ -91,7 +91,7 @@ namespace ubit {
     U3Dbox& rotate(float delta_x_rot, float delta_y_rot, float delta_z_rot);
     
   protected:
-    uptr<U3Dpos> ppos;
+    unique_ptr<U3Dpos> ppos;
   };
   
   inline U3Dbox& u3dbox(Args a = Args::none) {return *new U3Dbox(a);}

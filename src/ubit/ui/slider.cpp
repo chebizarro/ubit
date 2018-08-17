@@ -26,8 +26,9 @@
 #include <ubit/uappli.hpp>
 #include <ubit/uboxgeom.hpp>
 using namespace std;
-#define NAMESPACE_UBIT namespace ubit {
-NAMESPACE_UBIT
+
+namespace ubit {
+
 
 
 class USliderRail : public Box {
@@ -278,8 +279,8 @@ protected:
   virtual void dragSlider2(Event&);
   
 private:
-  uptr<Float> pvalue2; 
-  uptr<Box> pslider2;
+  unique_ptr<Float> pvalue2; 
+  unique_ptr<Box> pslider2;
   UPos slider_pos2;
   int delta_mouse2;
   void constructs2();

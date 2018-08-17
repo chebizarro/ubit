@@ -30,8 +30,9 @@
 #include <ubit/uctlmenu.hpp>
 //#include <ubit/ueventImpl.hpp>  // TST
 using namespace std;
-#define NAMESPACE_UBIT namespace ubit {
-NAMESPACE_UBIT
+
+namespace ubit {
+
   
 
 Style* ControlMenu::createStyle() {
@@ -49,7 +50,6 @@ ControlMenu::ControlMenu() {
   ctlmenu_mode = true;
 }
 
-// ==================================================== [Ubit Toolkit] =========
 
 void ControlAction::operator()(Event& e) {
   // NB: getSource() renvoie le menu
@@ -76,7 +76,6 @@ void ControlAction::addingTo(Child& child, Element& parent) {
   Node::addingTo(child, parent);
 }
 
-// ==================================================== [Ubit Toolkit] =========
 
 //ZoomAction::ZoomAction(ZoomPane& zbox) 
 //: pscale(&zbox.scale()), ppos(&zbox.pos()), pbox(&zbox) {}
@@ -138,7 +137,6 @@ void ZoomAction::mdrag(MouseEvent& e, ControlMenu& m) {
   }
 }
 
-// ==================================================== [Ubit Toolkit] =========
 
 PanAction::PanAction(Box& panned_box, float _gain) : 
 ControlAction(_gain), 
@@ -165,7 +163,6 @@ void PanAction::mdrag(MouseEvent& e, ControlMenu& m) {
   }
 }
 
-// ==================================================== [Ubit Toolkit] =========
 
 ScrollAction::ScrollAction(Scrollpane& _pane, float _gain)
 : ControlAction(_gain), pane(&_pane) {}

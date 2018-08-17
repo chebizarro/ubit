@@ -39,8 +39,9 @@
 #include <ubit/ukey.hpp>
 #include <ubit/uappli.hpp>
 using namespace std;
-#define NAMESPACE_UBIT namespace ubit {
-NAMESPACE_UBIT
+
+namespace ubit {
+
 
 
 TextEdit::TextEdit() :

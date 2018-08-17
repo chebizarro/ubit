@@ -44,7 +44,7 @@ namespace ubit {
    *   GLCanvas is used (hence Application::conf.useGLRender() won't work properly)
    *
    */
-  class GLCanvas : public USubwin {
+  class GLCanvas : public SubWindow {
   public:
     UCLASS(GLCanvas)
         
@@ -110,7 +110,7 @@ namespace ubit {
     
     virtual void resizeImpl(UResizeEvent&);    
     /**< Impl: calls makeCurrent() then resizeGL().
-     * note that this function first calls USubwin::resizeImpl().
+     * note that this function first calls SubWindow::resizeImpl().
      */
     
   private:

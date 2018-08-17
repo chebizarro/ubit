@@ -218,7 +218,7 @@ void Finder::showSideBar(bool state) {
 
 void Finder::initOptbox() {
   optbox_btn = 
-  ubutton(USymbol::square 
+  ubutton(Symbol::square 
           + UOn::select   / ushow(optbox, true)
           + UOn::deselect / ushow(optbox, false)
           );
@@ -235,8 +235,8 @@ void Finder::initOptbox() {
   // opens/closes history
   optbox.add(uhbox(UOn::select / ushow(folders, true)
                    + UOn::deselect / ushow(folders, false)
-                   + UOn::select / USymbol::down
-                   + UOn::deselect / USymbol::right
+                   + UOn::select / Symbol::down
+                   + UOn::deselect / Symbol::right
                    + Font::bold + "History")
              + folders
              + ubox(usize(UAUTO,6))   // separator
@@ -266,8 +266,8 @@ void Finder::initOptbox() {
   // opens/closes hosts
   optbox.add(uhbox(UOn::select / ushow(hosts, true)
                    + UOn::deselect / ushow(hosts, false)
-                   + UOn::select / USymbol::down
-                   + UOn::deselect / USymbol::right
+                   + UOn::select / Symbol::down
+                   + UOn::deselect / Symbol::right
                    + Font::bold + "Remote Hosts")
              + hosts
              + ubox(usize(UAUTO,6))   // separator
@@ -277,7 +277,7 @@ void Finder::initOptbox() {
   
   filelist.addAttr(uhcenter());
   filelist.addAttr(uvflex());
-  filelist_btn = uhbox(USymbol::down + Font::bold + "Folder Files");
+  filelist_btn = uhbox(Symbol::down + Font::bold + "Folder Files");
   optbox.add(*filelist_btn + uvflex() + filelist);
 }
 
@@ -432,7 +432,7 @@ namespace impl {
     Finder& browser;
     double base;
     int incr, last_incr;
-    uptr<Scale> scale;
+    unique_ptr<Scale> scale;
     
     static const int QUANTUM;
     static const float ZOOM_QUANTUM;

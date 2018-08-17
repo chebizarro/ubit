@@ -36,7 +36,7 @@ namespace ubit {
   class UFinderDir : public Item {
     friend class Finder;
     String fpath, fname;
-    uptr<IconBox> iconbox;
+    unique_ptr<IconBox> iconbox;
     PopupMenu popmenu;
     bool keep_open;
     int path_type;

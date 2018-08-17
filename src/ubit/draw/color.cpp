@@ -35,8 +35,9 @@
 #include <ubit/ucolor.hpp>
 #include <ubit/uappli.hpp>
 #include <ubit/ubox.hpp>
-#define NAMESPACE_UBIT namespace ubit {
-NAMESPACE_UBIT
+
+namespace ubit {
+
 
 #define UNSET_PIXEL ULONG_MAX
 enum {RGBA_COLOR = 1, NONE_COLOR = 8, INHERIT_COLOR = 9};

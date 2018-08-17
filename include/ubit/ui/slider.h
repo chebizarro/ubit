@@ -96,10 +96,10 @@ namespace ubit {
     ///< [impl] creates the rail; may be redefined by subclasses.
     
   protected:
-    uptr<Float> pvalue;        // corresponding value (percent)
-    uptr<Box> prail, pknob;
-    uptr<UPos> pknob_pos;
-    uptr<class UPosControl> pknob_ctrl;
+    unique_ptr<Float> pvalue;        // corresponding value (percent)
+    unique_ptr<Box> prail, pknob;
+    unique_ptr<UPos> pknob_pos;
+    unique_ptr<class UPosControl> pknob_ctrl;
     
     void constructs();
     virtual void gotoPosCB(MouseEvent&);

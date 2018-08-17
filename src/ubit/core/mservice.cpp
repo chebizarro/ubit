@@ -128,7 +128,7 @@ MessageService::BrowseReply::BrowseReply(MessageEvent& e) {
 
 
 struct _UMSResolveData : public UCall {
-  uptr<UCall>pc;
+  unique_ptr<UCall>pc;
 
   _UMSResolveData(UCall& _c) : pc(_c) {}
 

@@ -303,7 +303,7 @@ void View::updateLayout(const Dimension* size, bool upd_paint_data) {
   View* winview = getWinView();
   if (!winview) return;
   
-  UViewLayout vl;
+  ViewLayout vl;
   WindowUpdateContext winctx1(winview, null);
   winctx1.xyscale = parview ? parview->scale : 1.;
   //cerr << this << " " << getClassName() << " " << parview->scale << endl; 
@@ -597,7 +597,7 @@ static bool findView(UViewLink* l, UViewContext& vc) {
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 bool View::findContext(UViewContext& vc, FindMode fmode) {
-  delete vc.upd_context; vc.upd_context = null; // faudrait un uptr<> !!!
+  delete vc.upd_context; vc.upd_context = null; // faudrait un unique_ptr<> !!!
   vc.find_mode = fmode;
   vc.is_clip_set = false;
   vc.layout_view = null;

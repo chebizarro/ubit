@@ -78,7 +78,7 @@ namespace ubit {
     void doUpdate(const Update&, Window*, View* winview);
     
   private:
-    uptr<UPos> ppos;
+    unique_ptr<UPos> ppos;
     View* actual_view;  
   };
   

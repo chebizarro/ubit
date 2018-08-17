@@ -36,8 +36,9 @@
 #include <ubit/uwin.hpp>
 #include <ubit/uappli.hpp>
 using namespace std;
-#define NAMESPACE_UBIT namespace ubit {
-NAMESPACE_UBIT
+
+namespace ubit {
+
 
 //String String::none((char*)null, UMode::UCONST);
 //String String::newline("\n", UMode::UCONST);

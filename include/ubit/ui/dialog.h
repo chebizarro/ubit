@@ -167,7 +167,7 @@ namespace ubit {
     UOptionDialog& setButtons(Args buttons);
 
   protected:
-    uptr<Box> picon, pmessage, pbuttons;
+    unique_ptr<Box> picon, pmessage, pbuttons;
     void constructs(Args message);
   };
   

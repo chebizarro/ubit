@@ -191,25 +191,25 @@ private:
   Options opts;
   UBar toolbar;
   Box mainbox, optbox, folderlist, hostlist, filelist;
-  uptr<Box> optbox_btn, filelist_btn;
-  uptr<Dialog> ask_dialog;
-  uptr<String> ask_dialog_msg;
+  unique_ptr<Box> optbox_btn, filelist_btn;
+  unique_ptr<Dialog> ask_dialog;
+  unique_ptr<String> ask_dialog_msg;
   FinderListener* listener;
-  uptr<AlertBox> alertbox;
-  uptr<ControlMenu> ctlmenu;
+  unique_ptr<AlertBox> alertbox;
+  unique_ptr<ControlMenu> ctlmenu;
   MessageService *local_ums, *remote_ums;
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // current selection
-  uptr<Document> pdocument;
-  uptr<UDocbox> pdocbox;
-  uptr<IconBox> piconbox;
-  //uptr<Box> docglass;
-  uptr<UFinderDir>last_direntry;
+  unique_ptr<Document> pdocument;
+  unique_ptr<UDocbox> pdocbox;
+  unique_ptr<IconBox> piconbox;
+  //unique_ptr<Box> docglass;
+  unique_ptr<UFinderDir>last_direntry;
   Icon* last_preview_request;
   Icon* last_preview;
   ChildIter previews_current, previews_end;
-  uptr<Timer> preview_timer;
+  unique_ptr<Timer> preview_timer;
  };
 
 }

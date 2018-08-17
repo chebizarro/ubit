@@ -22,8 +22,9 @@
 #include <ubit/ugraph.hpp>
 #include <ubit/uupdate.hpp>
 using namespace std;
-#define NAMESPACE_UBIT namespace ubit {
-NAMESPACE_UBIT
+
+namespace ubit {
+
 
 const Update Update::paint(PAINT);
 const Update Update::layoutAndPaint(LAYOUT | PAINT);

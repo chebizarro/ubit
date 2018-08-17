@@ -48,7 +48,7 @@ namespace ubit {
     virtual const String& getData() const {return *data;}
     
   private:
-    uptr<String> data;
+    unique_ptr<String> data;
   };
   
     /** XML CDATASection.
@@ -64,7 +64,7 @@ namespace ubit {
     virtual const String& getData() const {return *data;}
     
   private:
-    uptr<String> data;
+    unique_ptr<String> data;
   };
   
     /** XML ProcessingInstruction.
@@ -81,7 +81,7 @@ namespace ubit {
     virtual const String& getData() const {return *data;}
     
   private:
-    uptr<String> target, data;
+    unique_ptr<String> target, data;
   };
   
     /** XML DocType.
@@ -100,7 +100,7 @@ namespace ubit {
     
   private:
     friend class XmlDocument;
-    uptr<String> name, public_id, system_id;
+    unique_ptr<String> name, public_id, system_id;
     //XmlDocType();
   };
   
@@ -161,7 +161,7 @@ namespace ubit {
   protected:
     friend class XmlParser;
     static const String NodeName;
-    uptr<String> xml_version, xml_encoding;
+    unique_ptr<String> xml_version, xml_encoding;
     bool xml_standalone;
     XmlDocType* doc_type;
     XmlGrammars* grammars;

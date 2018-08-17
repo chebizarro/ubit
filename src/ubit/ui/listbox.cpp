@@ -17,8 +17,9 @@
 #include <iostream>
 #include <ubit/ubit.hpp>
 using namespace std;
-#define NAMESPACE_UBIT namespace ubit {
-NAMESPACE_UBIT
+
+namespace ubit {
+
 
 
 RadioBox::RadioBox(const Args& a) 
@@ -180,7 +181,7 @@ void ComboBox::constructs(const Args& _a) {
   
   setAttr(*new UCompositeBorder
           (Valign::flex + Halign::right
-           + uitem(USymbol::down + UOn::action /ucall(this, &ComboBox::openMenuCB))
+           + uitem(Symbol::down + UOn::action /ucall(this, &ComboBox::openMenuCB))
            + *pmenu
            ));
   addAttr(uvcenter());

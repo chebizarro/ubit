@@ -129,9 +129,9 @@ namespace ubit {
   public:
     ZoomAction(Box& zoomed_box, float gain = 0.5);
   protected:
-    uptr<Box> zbox;     // zoomed box
-    uptr<UPos> posAttr; // box pos attribute (NB: its value is scale independent)
-    uptr<Scale> scaleAttr; // box scale attribute
+    unique_ptr<Box> zbox;     // zoomed box
+    unique_ptr<UPos> posAttr; // box pos attribute (NB: its value is scale independent)
+    unique_ptr<Scale> scaleAttr; // box scale attribute
     float  zbox_scale0;    // initial scale of box 
     Point zbox_pos0;     // initial (scale indep) pos of box in its container
     Point mouse_in_zbox0;
@@ -146,8 +146,8 @@ namespace ubit {
   public:
     PanAction(Box& panned_box, float gain = 1.);
   protected:
-    uptr<Box> box;     // panned box
-    uptr<UPos> posAttr; // box pos attribute (NB: its value is scale independent)
+    unique_ptr<Box> box;     // panned box
+    unique_ptr<UPos> posAttr; // box pos attribute (NB: its value is scale independent)
     Point pos0;        // initial (scale indep) pos of box in its container
     //float container_scale;
     virtual void mdrag(MouseEvent&, ControlMenu&);

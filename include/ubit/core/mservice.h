@@ -97,7 +97,7 @@ namespace ubit {
      * Args:
      * - 'name' : the UMS server name to resolve
      * - 'callback' is fired when the address is resolved and is then 
-     *    automatically destroyed (except if it is pointed by a uptr<>).
+     *    automatically destroyed (except if it is pointed by a unique_ptr<>).
      *
      * Exemple:
      <pre><tt>
@@ -190,7 +190,7 @@ namespace ubit {
     ///< [impl].
     
   protected:
-    uptr<UCall> browse_call, neighbor_call; 
+    unique_ptr<UCall> browse_call, neighbor_call; 
   };
   
 }

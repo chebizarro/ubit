@@ -27,8 +27,9 @@
 #include <ubit/ueventflow.hpp>
 #include <ubit/ucursor.hpp>
 using namespace std;
-#define NAMESPACE_UBIT namespace ubit {
-NAMESPACE_UBIT
+
+namespace ubit {
+
 
 
 Scale::Scale(float v) : value(v) {}
@@ -696,7 +697,7 @@ public:
   void addingTo(Child&, Element& parent);
   void removingFrom(Child&, Element& parent);
 protected:
-  uptr<Box> phandle;
+  unique_ptr<Box> phandle;
   float curpos;
   virtual void press(MouseEvent&);
   virtual void drag(MouseEvent&);
@@ -718,7 +719,7 @@ public:
   void addingTo(Child&, Element& parent);
   void removingFrom(Child&, Element& parent);
 protected:
-  uptr<Box> phandle;
+  unique_ptr<Box> phandle;
   float curpos;
   virtual void press(MouseEvent&);
   virtual void drag(MouseEvent&);

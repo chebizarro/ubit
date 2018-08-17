@@ -118,24 +118,24 @@ namespace ubit {
   };
   
   // ==================================================== ===== =======
-  // [Impl] UViewLayout: struct used to layout widget views.
+  // [Impl] ViewLayout: struct used to layout widget views.
   
-  class UViewLayout {
+  class ViewLayout {
   public:
     enum Strategy {BOXVIEW, GET_HINTS, IMPOSE_WIDTH, NESTED} strategy;
     Dimension dim;
     float spec_w, min_w, max_w;
     float spec_h, min_h, max_h;
-    UViewLayout() : strategy(BOXVIEW) {}
+    ViewLayout() : strategy(BOXVIEW) {}
   };
   
   class UViewLayoutImpl {
   public:
     UViewLayoutImpl(View*);
     void computeWidth(const UpdateContext& curp, const PaddingSpec&,
-                      UViewLayout&, bool minmax_defined);
+                      ViewLayout&, bool minmax_defined);
     void computeHeight(const UpdateContext& curp, const PaddingSpec&,
-                       UViewLayout&, bool minmax_defined);
+                       ViewLayout&, bool minmax_defined);
     
     View* view;
     int visibleElemCount;  // Box or Data (not Element, not a PosBox)

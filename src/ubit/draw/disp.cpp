@@ -48,7 +48,6 @@ using namespace std;
 namespace ubit {
 
 
-// ==================================================== [Ubit Toolkit] =========
 
 Display* Display::create(const String& dname) {
   Display* d = null;
@@ -66,7 +65,6 @@ Display* Display::create(const String& dname) {
   return d;
 }
 
-// ==================================================== [Ubit Toolkit] =========
 
 Display::Display(const String& dname) :
 id(Application::impl.displist.size()), 
@@ -109,7 +107,6 @@ Display::~Display() {
  #endif
  }
  */
-// ==================================================== [Ubit Toolkit] =========
 
 RenderContext* Display::getDefaultContext() {
   if (default_context) return default_context;
@@ -144,7 +141,6 @@ void Display::makeDefaultContextCurrentIfNeeded() {
   if (!current_glcontext || !current_glcontext->isSharedWith(dc)) dc->makeCurrent(); 
 }
 
-// ==================================================== [Ubit Toolkit] =========
 
 void Display::add(Window& win) {  
   winlist.add(win);   // add to the window list
@@ -173,7 +169,6 @@ void Display::remove(Window* win, bool auto_delete) {
   else remove(*win, auto_delete);
 }
 
-// ==================================================== [Ubit Toolkit] =========
 
 void Display::addHardwin(Window* win) {
   if (!win) return;
@@ -195,7 +190,6 @@ void Display::removeHardwin(Window* win) {
   if (i != hardwin_list.end()) hardwin_list.erase(i);
 }
 
-// ==================================================== [Ubit Toolkit] =========
 
 void Display::setPixelPerMM(double pixel_per_mm) {
   MM_TO_PX = pixel_per_mm;
@@ -238,7 +232,7 @@ void Display::pasteSelection(MouseEvent& e, String* _paste_str, int _paste_pos) 
   }
   
   // NB: pour interdire un improbable delete de paste_str avant
-  // pasteSelectionCallback() paste_str est un uptr<>
+  // pasteSelectionCallback() paste_str est un unique_ptr<>
   paste_str = _paste_str;
   paste_pos = _paste_pos;
   pasteSelectionRequest(e);
@@ -266,7 +260,6 @@ EventFlow* Display::obtainChannelFlow(int _channel) {
   return fl;
 }
 
-// ==================================================== [Ubit Toolkit] =========
 
 void Display::countBits(unsigned long mask, int& bits, int& shift) {
   bool in_tab = true; shift = 0; bits = 0;
@@ -281,7 +274,6 @@ void Display::countBits(unsigned long mask, int& bits, int& shift) {
   }
 }
 
-// ==================================================== [Ubit Toolkit] =========
 // Fonts
 
 UHardFont* Display::getFont(const FontDescription* f) { // !NOTE: may change the glcontext!
@@ -420,7 +412,6 @@ UHardFont* Display::realizeFont(const FontDescription& _f) {
   return null;
 }
 
-// ==================================================== [Ubit Toolkit] =========
 
 EventFlow* Display::obtainFlow(unsigned int estate, int channel) {
   if (estate & UMS_EVENT_MASK) {                         // ???? !!! PBM si pas X11 ???
@@ -470,12 +461,5 @@ void Display::onPaint(View* winview, float x, float y, float w, float h) {
     winview->updatePaint(&clip);
   }
 }
-
-// Notifies the UMS when a window is opened/closed.
-//void Display::showNotify(USysWindow w, bool shows) {
-// if (!disp.umsclient) return;
-// if (shows) disp.umsclient->winOpened(w);
-// else disp.umsclient->winClosed(w);
-//}
 
 }

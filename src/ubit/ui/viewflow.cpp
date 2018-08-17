@@ -235,7 +235,7 @@ void UFlowLayoutImpl::addCell(UpdateContext*ctx, Child* _link,
 /* ==================================================== [Elc] ======= */
 // att: arg = parctx = PARENT context !
 
-bool FlowView::doLayout(UpdateContext& parctx, UViewLayout& vl) {
+bool FlowView::doLayout(UpdateContext& parctx, ViewLayout& vl) {
   UFlowLayoutImpl vd(this);
   Box* box = getBox();
   if (!box) {Application::internalError("FlowView::doLayout","null box!");return false;}
@@ -254,7 +254,7 @@ bool FlowView::doLayout(UpdateContext& parctx, UViewLayout& vl) {
   // value >=0 means: "fixed size hint" / should be >= 0 in this case
   /*
    // 28sept08: sert a quoi? pose pbm avec les tables
-  if (vl.strategy == UViewLayout::IMPOSE_WIDTH) {
+  if (vl.strategy == ViewLayout::IMPOSE_WIDTH) {
     //imposer la taille donnee par parent;
     width = vl.spec_w;  // ctx.local.width modifie dans ComputeWidth()
   }
@@ -356,7 +356,7 @@ void FlowView::flowDoLayout(UFlowLayoutImpl&vd, Element& grp,
       Element* chgrp = null;
       Box* chbox = null; 
       View* chview = null;
-      UViewLayout chvl; //att: reinit par constr.
+      ViewLayout chvl; //att: reinit par constr.
       
       if (b->toAttr()) {
         b->toAttr()->putProp(&ctx, grp);
@@ -449,7 +449,7 @@ void FlowView::flowDoLayout(UFlowLayoutImpl&vd, Element& grp,
               
               chview->width = vd.wlimit;     // chview->w modifie!
               // pour que View::computeWidth() fonctionne correctement
-              chvl.strategy = UViewLayout::NESTED;
+              chvl.strategy = ViewLayout::NESTED;
             }
             
             // recommencer

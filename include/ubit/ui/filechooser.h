@@ -103,7 +103,7 @@ public:
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 protected:
   String fspec;
-  uptr<String> fname, fdir2, ffilter, fpath;
+  unique_ptr<String> fname, fdir2, ffilter, fpath;
   //Scrollpane* scrollpane;
   Box *mainbox;
   Box *show_list, *show_hidden_files;

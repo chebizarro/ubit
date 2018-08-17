@@ -79,7 +79,7 @@ namespace ubit {
     virtual void update();
     
   private:
-    uptr<String> pstring;
+    unique_ptr<String> pstring;
   };
   
   

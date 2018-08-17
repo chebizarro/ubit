@@ -17,8 +17,9 @@
 #include <iostream>
 #include <ubit/ubit.hpp>
 using namespace std;
-#define NAMESPACE_UBIT namespace ubit {
-NAMESPACE_UBIT
+
+namespace ubit {
+
 
 struct USeparStyle : public Style {
   USeparStyle();
@@ -364,7 +365,7 @@ Style* Checkbox::createStyle() {
   ButtonStyle& s = *new ButtonStyle;
   s.orient = s.menu.orient = s.bar.orient = Orientation::HORIZONTAL;
   s.local.border = s.menu.local.border = s.bar.local.border = null;
-  s.local.content = s.menu.local.content = s.bar.local.content = new Element(USymbol::check);
+  s.local.content = s.menu.local.content = s.bar.local.content = new Element(Symbol::check);
   s.setBgcolors(Color::none, Color::none);
   s.setBgcolor(UOn::DROP_ENTERED, Color::grey);
   s.bar.setBgcolors(Color::none, Color::none);
@@ -378,7 +379,7 @@ Style* RadioButton::createStyle() {
   ButtonStyle& s = *new ButtonStyle;
   s.orient = s.menu.orient = s.bar.orient = Orientation::HORIZONTAL;
   s.local.border = s.menu.local.border = s.bar.local.border = null;
-  s.local.content = s.menu.local.content = s.bar.local.content = new Element(USymbol::radio);
+  s.local.content = s.menu.local.content = s.bar.local.content = new Element(Symbol::radio);
   s.setBgcolors(Color::none, Color::none);
   s.setBgcolor(UOn::DROP_ENTERED, Color::grey);
   s.bar.setBgcolors(Color::none, Color::none);
@@ -432,10 +433,10 @@ void SpinBox::constructs(const Args& a) {
   pvalue->onChange(ucall(this, &SpinBox::changed));
 
   Box& up_btn = ubox
-    (USymbol::up + UOn::arm/ucall(this,+1,&SpinBox::updateValue));
+    (Symbol::up + UOn::arm/ucall(this,+1,&SpinBox::updateValue));
 
   Box& down_btn = ubox
-    (USymbol::down + UOn::arm/ucall(this,-1,&SpinBox::updateValue));
+    (Symbol::down + UOn::arm/ucall(this,-1,&SpinBox::updateValue));
 
   //up_btn.setAutoRepeat(true);
   //down_btn.setAutoRepeat(true);

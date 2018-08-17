@@ -435,9 +435,9 @@ namespace ubit {
     virtual void changed();
     
   private:
-    uptr<Int> pvalue;
-    uptr<String> pstr;
-    uptr<TextField> ptextfield;
+    unique_ptr<Int> pvalue;
+    unique_ptr<String> pstr;
+    unique_ptr<TextField> ptextfield;
     int increment;
   };
   

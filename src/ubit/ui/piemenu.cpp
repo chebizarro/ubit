@@ -27,8 +27,9 @@
 #include <cmath>
 #include <ubit/ubit.hpp>
 using namespace std;
-#define NAMESPACE_UBIT namespace ubit {
-NAMESPACE_UBIT
+
+namespace ubit {
+
 
 Style* PieMenu::createStyle() {
   Style* style = Menu::createStyle();
@@ -60,13 +61,13 @@ item_radius(7)
 {
   // A REVOIR AVEC STYLES ET Background avance !!!!!@@@@@@
   // de plus c'est le backround et le alpha du Piemenu qui devraient etre utilise !
-  static uptr<Color> default_pie_color = new Color(Color::black, 100u);
-  static uptr<Color> default_pie_border_color = new Color(Color::black, 100u);
-  //static uptr<Color> default_slice_color = new Color(Color::black, 75u);  
-  static uptr<Color> default_slice_color = new Color(Color::blue);  
-  //static uptr<Color> default_center_color = new Color(Color::white, 255u);
-  static uptr<Color> default_center_color = new Color(Color::white);
-  static uptr<Color> default_center_border_color = new Color(Color::red, 255u);
+  static unique_ptr<Color> default_pie_color = new Color(Color::black, 100u);
+  static unique_ptr<Color> default_pie_border_color = new Color(Color::black, 100u);
+  //static unique_ptr<Color> default_slice_color = new Color(Color::black, 75u);  
+  static unique_ptr<Color> default_slice_color = new Color(Color::blue);  
+  //static unique_ptr<Color> default_center_color = new Color(Color::white, 255u);
+  static unique_ptr<Color> default_center_color = new Color(Color::white);
+  static unique_ptr<Color> default_center_border_color = new Color(Color::red, 255u);
   
   ppie_color = default_pie_color; 
   ppie_border_color = default_pie_border_color;

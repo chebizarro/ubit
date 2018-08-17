@@ -33,8 +33,9 @@
 #include <ubit/ueventflow.hpp>
 #include <ubit/ucall.hpp>
 using namespace std;
-#define NAMESPACE_UBIT namespace ubit {
-NAMESPACE_UBIT
+
+namespace ubit {
+
   
 static Choice::IsSelectable is_selectable_by_default;
 bool Choice::IsSelectable::operator()(const Box* box) const {return box->isArmable();}

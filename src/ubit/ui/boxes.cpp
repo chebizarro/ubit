@@ -37,10 +37,10 @@
 #include <ubit/uscrollpane.hpp>
 #include <ubit/ui/updatecontext.h>
 using namespace std;
-#define NAMESPACE_UBIT namespace ubit {
-NAMESPACE_UBIT
 
-// ==================================================== [Ubit Toolkit] =========
+namespace ubit {
+
+
 /* UVbox = vertical Box.
  *  Geometry: see class Box for details.
  *
@@ -92,7 +92,6 @@ Style* UVbox::createStyle() {
   return style;
 }
 */
-// ==================================================== [Ubit Toolkit] =========
 
 Style* UBar::createStyle() {
   Style* s = new Style;
@@ -120,7 +119,6 @@ Style* UStatusbar::createStyle() {
   return s;
 }
 
-// ==================================================== [Ubit Toolkit] =========
 
 Style* UFlowbox::createStyle() {
   Style& s = *new Style();
@@ -144,7 +142,6 @@ UFlowbox::UFlowbox(Args a): Box(a) {
   emodes.IS_TEXT_SELECTABLE = true;
 }
 
-// ==================================================== [Ubit Toolkit] =========
 
 Style* UCardbox::createStyle() {
   Style& s = *new Style();
@@ -275,7 +272,6 @@ void UCardbox::setSelectedIndex(int index) {
  return *this;
  }
  */
-// ==================================================== [Ubit Toolkit] =========
 // NB: ex: class UDocbox : public UVbox 
 
 UDocbox::UDocbox(Args args) {
@@ -320,7 +316,6 @@ void UDocbox::iconify(bool state) {
   //piconify_btn->select(state);
 }
 
-// ==================================================== [Ubit Toolkit] =========
 
 AlertBox::AlertBox(Args args) {
   add(Orientation::vertical + Background::white + ualpha(0.8)

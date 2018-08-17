@@ -28,8 +28,9 @@
 #include <ubit/ucss.hpp>
 #include <ubit/udom.hpp>
 using namespace std;
-#define NAMESPACE_UBIT namespace ubit {
-NAMESPACE_UBIT
+
+namespace ubit {
+
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -513,7 +514,7 @@ Style* UCssStyles::create_h6_style() {
 
 
 Style* UCssStyles::create_table_style() {
-  Style* style = UTable::createStyle();
+  Style* style = Table::createStyle();
   style->valign = Valign::BOTTOM;
   style->halign = Halign::LEFT;
   return style;

@@ -413,7 +413,6 @@ struct DefaultStyleMaker: public StyleParser::StyleMaker {
   }
 };
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
 void UConf::readAttributes(const char* conf_file) {
   if (!conf_file || !*conf_file) return;

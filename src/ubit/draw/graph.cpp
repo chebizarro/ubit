@@ -62,7 +62,6 @@ namespace ubit {
   const int Graph::LINE_STRIP = 0x0003, Graph::LINE_LOOP = 0x0002, Graph::FILLED = 0x0009;
 #endif
 
-// ==================================================== [Ubit Toolkit] =========
 
 Graph::Graph(View* v) {
   rc = null; // securite pour ~Graph
@@ -182,7 +181,6 @@ Graph::~Graph() {
    */
 }
 
-// ==================================================== [Ubit Toolkit] =========
 
 int Graph::GLPaint::count = 0;
 
@@ -251,7 +249,6 @@ void Graph::GLPaint::end() {
   hardwin = null;   // dont do it again if called
 }
 
-// ==================================================== [Ubit Toolkit] =========
 /*
 void PaintEvent::beginGL() {
 #if UBIT_WITH_GL
@@ -335,7 +332,6 @@ void Graph::fillBackground(const Rectangle& clip, const Color& c, float _alpha) 
  glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
  }
  */
-// ==================================================== [Ubit Toolkit] =========
 
 void Graph::set3Dmode(bool state) {
   in_3d_mode = state;

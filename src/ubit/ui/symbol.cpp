@@ -31,39 +31,40 @@
 #include <ubit/uwin.hpp>
 #include <ubit/uon.hpp>
 using namespace std;
-#define NAMESPACE_UBIT namespace ubit {
-NAMESPACE_UBIT
+
+namespace ubit {
+
 
 // symbol margin
 #define SM_GETSIZE 4
 #define SM 0
 
-USymbol USymbol::left(S_LEFT, UCONST);
-USymbol USymbol::right(S_RIGHT, UCONST);
-USymbol USymbol::up(S_UP, UCONST);
-USymbol USymbol::down(S_DOWN, UCONST);
-USymbol USymbol::check(S_CHECK, UCONST);
-USymbol USymbol::radio(S_RADIO, UCONST);
-USymbol USymbol::square(S_SQUARE, UCONST);
-USymbol USymbol::circle(S_CIRCLE, UCONST);
+Symbol Symbol::left(S_LEFT, UCONST);
+Symbol Symbol::right(S_RIGHT, UCONST);
+Symbol Symbol::up(S_UP, UCONST);
+Symbol Symbol::down(S_DOWN, UCONST);
+Symbol Symbol::check(S_CHECK, UCONST);
+Symbol Symbol::radio(S_RADIO, UCONST);
+Symbol Symbol::square(S_SQUARE, UCONST);
+Symbol Symbol::circle(S_CIRCLE, UCONST);
 
 /* ==================================================== [Elc] ======= */
 
-USymbol::USymbol(const USymbol &o) : Data() {
+Symbol::Symbol(const Symbol &o) : Data() {
   ix = o.ix;
   color = o.color;
   frontShadowColor = o.frontShadowColor;
   backShadowColor = o.backShadowColor;
 }
 
-USymbol::USymbol(int index, UConst m) : Data(m) {
+Symbol::Symbol(int index, UConst m) : Data(m) {
   ix = index;
   color = null;
   frontShadowColor = null;
   backShadowColor = null;
 }
 
-void USymbol::set(const USymbol& o) {  // a completer!
+void Symbol::set(const Symbol& o) {  // a completer!
   ix = o.ix;
   color = o.color;
   frontShadowColor = o.frontShadowColor;
@@ -71,21 +72,21 @@ void USymbol::set(const USymbol& o) {  // a completer!
   changed(true);
 }
 
-void USymbol::update() {
+void Symbol::update() {
   _parents.updateAutoParents(Update::LAYOUT_PAINT);
 }
 
-void USymbol::setColor(const Color &c) {
+void Symbol::setColor(const Color &c) {
   color = &c;
 }
-void USymbol::setFrontShadowColor(const Color &c) {
+void Symbol::setFrontShadowColor(const Color &c) {
   frontShadowColor = &c;
 }
-void USymbol::setBackShadowColor(const Color &c) {
+void Symbol::setBackShadowColor(const Color &c) {
   backShadowColor = &c;
 }
 
-void USymbol::getSize(UpdateContext& ctx, Dimension& dim) const {
+void Symbol::getSize(UpdateContext& ctx, Dimension& dim) const {
   // les tailles des symbols dependent de celles des fonts !
   // on enleve SM_GETSIZE pour eviter que ca aille du haut jusqu'en bas
   dim.height = FontMetrics(ctx).getHeight() - SM_GETSIZE;
@@ -95,7 +96,7 @@ void USymbol::getSize(UpdateContext& ctx, Dimension& dim) const {
   dim.width = dim.height; // format carre
 }
 
-void USymbol::paint(Graph& g, UpdateContext& ctx, const Rectangle& r) const {
+void Symbol::paint(Graph& g, UpdateContext& ctx, const Rectangle& r) const {
   // xl, yl = length for obtaining the last point (= width-1, height-1)
   // dont't forget to remove the left and right margin (SM)
   float xl = r.width  - 2*SM - 1;

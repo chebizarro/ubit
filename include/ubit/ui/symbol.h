@@ -32,17 +32,17 @@ namespace ubit {
 
 /** Graphical Symbols.
  */
-class USymbol: public Data {
+class Symbol: public Data {
 public:
-  UCLASS(USymbol)
+  UCLASS(Symbol)
 
   /// predefined symbols:
-  static USymbol left, right, up, down, check, radio, square, circle;
+  static Symbol left, right, up, down, check, radio, square, circle;
 
-  USymbol(const USymbol& = USymbol::left);
-  ///< creates a new USymbol; @see also shortcut usymbol().
+  Symbol(const Symbol& = Symbol::left);
+  ///< creates a new Symbol; @see also shortcut usymbol().
   
-  virtual void set(const USymbol&);
+  virtual void set(const Symbol&);
   virtual void update();
 
   void setColor(const Color&);
@@ -58,15 +58,15 @@ protected:
   };
 
   // private constructor (internal implementation):
-  USymbol(int index, UConst);
+  Symbol(int index, UConst);
   int ix;  // internal index
   const class Color *color, *frontShadowColor, *backShadowColor;
   virtual void getSize(UpdateContext&, Dimension&) const;
   virtual void paint(Graph&, UpdateContext&, const Rectangle&) const;
 };
 
-inline USymbol& usymbol(const USymbol& s) {return *new USymbol(s);}
-///< shortcut function that creates a new USymbol.
+inline Symbol& usymbol(const Symbol& s) {return *new Symbol(s);}
+///< shortcut function that creates a new Symbol.
 
 }
 #endif

@@ -117,7 +117,7 @@ void UObject::operator delete(void* p) {
   // NB: ptr_count<0 means that the object has already been destructed
   if (obj->ptr_count > 0) {
     Application::error("delete UObject",
-                  "%p: attempt to delete an object that is pointed by a 'uptr' (Ubit smart pointer)", p);
+                  "%p: attempt to delete an object that is pointed by a 'unique_ptr' (Ubit smart pointer)", p);
     // peut etre rellement detruit plus tard
     obj->omodes.IS_DESTRUCTING = false;
     obj->omodes.IS_DESTRUCTED = false;
@@ -187,8 +187,8 @@ void UObject::removePtr() const {
 }
 
 void UPtr::deferenceError() const {
-  Application::fatalError("uptr::operator * or ->",
-                     "can't derefence a uptr that points to null; uptr address= %p",
+  Application::fatalError("unique_ptr::operator * or ->",
+                     "can't derefence a unique_ptr that points to null; unique_ptr address= %p",
                      this);
 }
 

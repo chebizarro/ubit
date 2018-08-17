@@ -96,7 +96,6 @@ void UNatWin::setNames(const String& res_class, const String& res_name,
   // A IMPLEMENTER !!!
 }
 
-// ==================================================== [Ubit Toolkit] =========
 
 void UHardWinGDK::realize(WinType wtype, float w, float h) {
   if (isRealized()) return;

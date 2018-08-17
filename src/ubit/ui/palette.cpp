@@ -28,8 +28,9 @@
 #include <ubit/ustyle.hpp>
 #include <ubit/ui/background.h>
 using namespace std;
-#define NAMESPACE_UBIT namespace ubit {
-NAMESPACE_UBIT
+
+namespace ubit {
+
 
 UPalette::UPalette(Args a) :
 ppos(new UPos),
@@ -56,7 +57,7 @@ presize_btn(new Box)
   presize_btn->addAttr(*psize_ctrl //+ Background::metal
                        + uhcenter() + uvcenter()
                        + upos(Length(0,UPX,UPos::RIGHT), Length(0,UPX,UPos::BOTTOM)));
-  presize_btn->add(USymbol::circle); //square
+  presize_btn->add(Symbol::circle); //square
   presize_btn->show(false);
   
   //pcontrols->add(Font::small + ubutton("x"));

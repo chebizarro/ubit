@@ -28,8 +28,9 @@
 #include <ubit/ugraph.hpp>
 #include <ubit/nat/ugraphGDK.hpp>
 #include <ubit/nat/uhardfont.hpp>
-#define NAMESPACE_UBIT namespace ubit {
-NAMESPACE_UBIT
+
+namespace ubit {
+
 
 URenderContextGDK::URenderContextGDK(Display* d, RenderContext* notused) : RenderContext(d)
 {

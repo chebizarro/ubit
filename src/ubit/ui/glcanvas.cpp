@@ -37,10 +37,10 @@ namespace ubit {
 
 
 GLCanvas::GLCanvas(Args a) :
-USubwin(a), is_init(false), share_glresources(false)
+SubWindow(a), is_init(false), share_glresources(false)
 {
   addAttr(UOn::paint / ucall(this, &GLCanvas::paintImpl));
-  // resizeImpl est ajouté dans USubwin
+  // resizeImpl est ajouté dans SubWindow
   //addAttr(UOn::resize / ucall(this, &GLCanvas::resizeImpl));
 } 
 
@@ -76,7 +76,7 @@ bool GLCanvas::realize() {
     Application::error("GLCanvas::realize","can't be a SOFTWIN: can't realize object %p",this);
     return false;
   }
-  if (! USubwin::realize()) return false;
+  if (! SubWindow::realize()) return false;
   UHardwinImpl* hw = hardImpl();
   
   GLContext* sharelists = null;
@@ -111,7 +111,7 @@ void GLCanvas::initImpl() {
 
 void GLCanvas::resizeImpl(UResizeEvent& e) 
 {
-  USubwin::resizeImpl(e); // ne pas oublier !!
+  SubWindow::resizeImpl(e); // ne pas oublier !!
   
   if (!is_init && (getView()->getWidth() > 1 && getView()->getHeight() > 1)) {
     initImpl();  // creates the GLContext

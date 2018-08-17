@@ -52,8 +52,7 @@ namespace ubit {
       virtual void end(bool ok) {}
     };
     
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-    
+        
     StyleParser();
     virtual ~StyleParser();
     
@@ -92,7 +91,7 @@ namespace ubit {
     bool permissive;
     int stat;
     const UChar *text_buffer, *p;
-    uptr<UErrorHandler> perrhandler;
+    unique_ptr<UErrorHandler> perrhandler;
   };
   
 }

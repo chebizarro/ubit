@@ -123,7 +123,7 @@ namespace ubit {
     virtual void putProp(UpdateContext*, Element&);
     
   private:
-    uptr<Attribute> prop;
+    unique_ptr<Attribute> prop;
   };
   
   /*

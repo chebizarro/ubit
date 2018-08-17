@@ -60,8 +60,9 @@
 #include <ubit/ugeom.hpp>
 #include <ubit/ugraph.hpp>
 using namespace std;
-#define NAMESPACE_UBIT namespace ubit {
-NAMESPACE_UBIT
+
+namespace ubit {
+
 
 ostream& operator<<(ostream& s, const Point& p) {
   return (s << p.x << " " << p.y);

@@ -32,12 +32,12 @@ HtmlParser::HtmlParser() {
   setCollapseSpaces(true);
 }
 
-void HtmlAttribute::setValueImpl(uptr<String>& pvalue, const String& s) {
+void HtmlAttribute::setValueImpl(unique_ptr<String>& pvalue, const String& s) {
   if (pvalue) *pvalue = s; else pvalue = new String(s);
   pvalue->trim();  // !! attention: ce  n'est pas la norme XML !!
 }
 
-bool HtmlAttribute::getValueImpl(const uptr<String>& pvalue, String& s) {
+bool HtmlAttribute::getValueImpl(const unique_ptr<String>& pvalue, String& s) {
   if (pvalue) {s = *pvalue; return true;}
   else {s.clear(); return false;}
 }
@@ -97,7 +97,7 @@ ELEMENT_CLASS(h3,UFlowbox, 0)
 ELEMENT_CLASS(h4,UFlowbox, 0)
 ELEMENT_CLASS(h5,UFlowbox, 0)
 ELEMENT_CLASS(h6,UFlowbox, 0)
-ELEMENT_CLASS(table, UTable, 0)
+ELEMENT_CLASS(table, Table, 0)
 ELEMENT_CLASS(tr, UTrow, 0)
 ELEMENT_CLASS(td, UTcell, 0)
 ELEMENT_CLASS(th, UTcell, 0)

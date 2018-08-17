@@ -112,7 +112,7 @@ namespace ubit {
     const UChar *text_buffer, *p;
     XmlDocument* doc;
     XmlGrammars* parser_grammars;
-    uptr<UErrorHandler> perrhandler;
+    unique_ptr<UErrorHandler> perrhandler;
   };
 }
 #endif

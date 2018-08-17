@@ -18,8 +18,9 @@
 #include <ubit/uflag.hpp>
 #include <ubit/ui/updatecontext.h>
 using namespace std;
-#define NAMESPACE_UBIT namespace ubit {
-NAMESPACE_UBIT
+
+namespace ubit {
+
 
 const Flag Flag::none;
 

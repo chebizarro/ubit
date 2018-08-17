@@ -30,27 +30,27 @@
 
 namespace ubit {
   
-  /** UTable = class for creating (simplified) HTML like tables.
+  /** Table = class for creating (simplified) HTML like tables.
    * See: UTrow, UTcell
    */
-  class UTable: public Box {
+  class Table: public Box {
   public:
-    UCLASS(UTable)
+    UCLASS(Table)
     
-    UTable(Args a = Args::none): Box(a) {}
+    Table(Args a = Args::none): Box(a) {}
     ///< creates a new table widget (@see also shortcut utable()).
     
     static Style* createStyle();
   };
   
-  inline UTable& utable(Args a = Args::none) {return *new UTable(a);}
-  ///< shortcut that returns *new UTable().
+  inline Table& utable(Args a = Args::none) {return *new Table(a);}
+  ///< shortcut that returns *new Table().
   
   
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   /** Table Row.
-   *  NOTE: MUST be a child of a UTable object
-   *  - See also: UTable, UTcell
+   *  NOTE: MUST be a child of a Table object
+   *  - See also: Table, UTcell
    */
   class UTrow: public Element {
   public:
@@ -69,7 +69,7 @@ namespace ubit {
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   /** Table Cell.
    *  NOTE: MUST be a child of a UTrow object
-   *  - See also: UTable, UTrow
+   *  - See also: Table, UTrow
    */
   class UTcell: public UFlowbox {
   public:
@@ -128,11 +128,11 @@ namespace ubit {
     std::vector<UViewCell> cols, lines;
     int lcur, ccur; 
     int ccount, lcount;
-    virtual bool doLayout(UpdateContext&, class UViewLayout&);
+    virtual bool doLayout(UpdateContext&, class ViewLayout&);
     static void tableDoLayout(class UTableLayoutImpl&, UpdateContext& ctx, 
-                              Element& grp, UViewLayout&);
+                              Element& grp, ViewLayout&);
     static void rowDoLayout(View* row_view, class UTableLayoutImpl&, 
-                            UpdateContext& parctx, Element& grp, UViewLayout&);
+                            UpdateContext& parctx, Element& grp, ViewLayout&);
 #endif
   };
 

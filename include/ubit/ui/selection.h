@@ -69,9 +69,9 @@ private:
   // reordered in the left to right order
   ChildIter fromLink, toLink, pressLink, endPressLink, oldLink;
   long  fromPos, toPos, pressPos, oldPos;
-  uptr <Color> pcolor;
-  uptr <Color> pbgcolor;
-  uptr <Font>  pfont;
+  unique_ptr <Color> pcolor;
+  unique_ptr <Color> pbgcolor;
+  unique_ptr <Font>  pfont;
 
   void update(UDataContext*);
   void paint(long refreshFromPos, long refreshToPos);

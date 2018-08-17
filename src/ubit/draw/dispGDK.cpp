@@ -33,7 +33,6 @@ namespace ubit {
 
 NOTE: this port cannot work beacuse it has not been fully updated
   
-// ==================================================== [Ubit Toolkit] =========
 
 Cursor Cursor::pointer(GDK_LEFT_PTR, UCONST);
 Cursor Cursor::crosshair(GDK_CROSS, UCONST);
@@ -48,7 +47,6 @@ Cursor Cursor::move(GDK_FLEUR, UCONST);
 Cursor Cursor::dnd(GDK_GUMBY, UCONST);
 //Cursor Cursor::plus(GDK_PLUS, UCONST);
 
-// ==================================================== [Ubit Toolkit] =========
 
 void Graph::createRenderContext(XXXX* _nd) {
   UNatDispGDK* nd = (UNatDispGDK*)_nd;  // !!!@@@@
@@ -125,7 +123,6 @@ void Graph::createRenderContext(XXXX* _nd) {
 #endif
 }
 */
-// ==================================================== [Ubit Toolkit] =========
 
 UDispGDK::UDispGDK(const String& _dname) : Display(_dname),
 sys_disp(null),
@@ -221,7 +218,6 @@ UDispGDK::~UDispGDK() {
 }
   
 // =============================================================================
-// ==================================================== [Ubit Toolkit] =========
 
 USysWin UDispGDK::getSysRoot() const {return gdk_screen_get_root_window(sys_screen);}
 USysWin UDispGDK::getSysFrame() const {return mainframe->sys_win;}
@@ -298,7 +294,6 @@ bool UDispGDK::pickWindow(UNatWin& nw, int& x, int& y, UCall* call, Cursor* curs
 */
 
 // =============================================================================
-// ==================================================== [Ubit Toolkit] =========
 
 static GMainLoop *gmainloop = 0, *gsubloop = 0;
 

@@ -80,8 +80,8 @@ void Treenode::constructs(const Args& _title, const Args& children) {
   addAttr(VSpacing::none);
   
   pexpander = new Box
-    (UOn::select   / USymbol::down
-     + UOn::deselect / USymbol::right
+    (UOn::select   / Symbol::down
+     + UOn::deselect / Symbol::right
      + UOn::select   / ushow(*psubnodes, true)
      + UOn::deselect / ushow(*psubnodes, false)
      );

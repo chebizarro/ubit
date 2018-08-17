@@ -35,7 +35,7 @@ namespace ubit {
 
 
 
-Style* UTable::createStyle() {
+Style* Table::createStyle() {
   Style* style = new Style();
   style->viewStyle = &UTableView::style;
   style->textSeparator = &ustr("\n");
@@ -143,7 +143,7 @@ public:
 };
 
 
-bool UTableView::doLayout(UpdateContext&parp, UViewLayout&vl) {
+bool UTableView::doLayout(UpdateContext&parp, ViewLayout&vl) {
   Box* box = getBox();
   UTableLayoutImpl vd(this);
   
@@ -152,7 +152,7 @@ bool UTableView::doLayout(UpdateContext&parp, UViewLayout&vl) {
   vl.dim.height = vl.min_h = vl.max_h = 0;
   
   // !!PREMIER ROUND!!
-  vl.strategy = UViewLayout::GET_HINTS;
+  vl.strategy = ViewLayout::GET_HINTS;
   UpdateContext ctx(parp, box, this, null);
   tableDoLayout(vd, ctx, *box, vl);
   
@@ -236,7 +236,7 @@ bool UTableView::doLayout(UpdateContext&parp, UViewLayout&vl) {
   vl.dim.height = vl.min_h = vl.max_h = 0;
   
   // !!DEUXIEME ROUND!!
-  vl.strategy = UViewLayout::IMPOSE_WIDTH;
+  vl.strategy = ViewLayout::IMPOSE_WIDTH;
   UpdateContext ctx2(parp, box, this, null);
   tableDoLayout(vd, ctx2, *box, vl);
   /*
@@ -252,7 +252,7 @@ bool UTableView::doLayout(UpdateContext&parp, UViewLayout&vl) {
 
 
 void UTableView::tableDoLayout(UTableLayoutImpl& vd, UpdateContext& ctx, 
-                               Element& grp, UViewLayout& vl) {
+                               Element& grp, ViewLayout& vl) {
   UMultiList mlist(ctx, grp);
   ctx.rescale();
   vd.view->setScale(ctx.xyscale);
@@ -270,15 +270,15 @@ void UTableView::tableDoLayout(UTableLayoutImpl& vd, UpdateContext& ctx,
       Node* b = (*ch);
       Element* chgrp = null;  // att reinit!
       View* chboxview = null;
-      UViewLayout chvl;      // att: reset by constr.
+      ViewLayout chvl;      // att: reset by constr.
       
       if (b->toAttr()) {
         b->toAttr()->putProp(&ctx, grp);
       }
       
       else if (b->toData()) {
-        Application::warning("UTable::doLayout",
-        "wrong child (%s %p) in UTable (%p): a UTable can only contain UTRows",
+        Application::warning("Table::doLayout",
+        "wrong child (%s %p) in Table (%p): a Table can only contain UTRows",
         &b->getClassName(), b, &grp);
       }
       
@@ -300,8 +300,8 @@ void UTableView::tableDoLayout(UTableLayoutImpl& vd, UpdateContext& ctx,
             }
             
             else {  // cas normal
-              Application::warning("UTable::doLayout",
-              "wrong child (%s %p) in UTable (%p): a UTable can only contain UTRows", 
+              Application::warning("Table::doLayout",
+              "wrong child (%s %p) in Table (%p): a Table can only contain UTRows", 
               &b->getClassName(), b, &grp);
             } // end cas normal
             
@@ -332,7 +332,7 @@ void UTableView::tableDoLayout(UTableLayoutImpl& vd, UpdateContext& ctx,
   // la suite ne concerne pas les Element
   if (grp.toBox()) {
     // a la ligne final
-    // Les UTable COMMENCENT et se TERMINENT par un alaligne! A COMPTER!!
+    // Les Table COMMENCENT et se TERMINENT par un alaligne! A COMPTER!!
     // alaligne(vl, ctx);
 
     PaddingSpec pad(0, 0);
@@ -442,15 +442,15 @@ static void computeSizes(vector<UViewCell>& cols, int ccur, int span,
 
 static void setSizes(View *chboxview, UpdateContext &ctx,
                      int colspan, int rowspan,
-                     UTableLayoutImpl& vd, UViewLayout& chvl,
-                     UViewLayout::Strategy strategy) {
+                     UTableLayoutImpl& vd, ViewLayout& chvl,
+                     ViewLayout::Strategy strategy) {
   int ccur = vd.t.ccur;
   
-  if (strategy == UViewLayout::GET_HINTS) {
-    chvl.strategy = UViewLayout::GET_HINTS;
+  if (strategy == ViewLayout::GET_HINTS) {
+    chvl.strategy = ViewLayout::GET_HINTS;
   }
-  else if (strategy == UViewLayout::IMPOSE_WIDTH) {
-    chvl.strategy = UViewLayout::IMPOSE_WIDTH;
+  else if (strategy == ViewLayout::IMPOSE_WIDTH) {
+    chvl.strategy = ViewLayout::IMPOSE_WIDTH;
     chvl.spec_w = 0;
     for (int c = ccur; c < ccur + colspan; c++) {
       chvl.spec_w += vd.t.cols[c].spec_d;
@@ -475,7 +475,7 @@ static void setSizes(View *chboxview, UpdateContext &ctx,
 
 
 void UTableView::rowDoLayout(View* row_view, UTableLayoutImpl& vd,
-                             UpdateContext& parp, Element& grp, UViewLayout& vl) {
+                             UpdateContext& parp, Element& grp, ViewLayout& vl) {
   // soit le row est un Box et il a sa propre view soit c'est un Element
   // et il utilise celle de la table
   if (!row_view) row_view = vd.view;
@@ -492,7 +492,7 @@ void UTableView::rowDoLayout(View* row_view, UTableLayoutImpl& vd,
       Node* b = (*ch);
       View *chboxview = null;
       Element *chgrp = null; //!att reinit!
-      UViewLayout chvl; //att: reinit by constr.
+      ViewLayout chvl; //att: reinit by constr.
       
       if (b->toAttr())  
         b->toAttr()->putProp(&ctx, grp);

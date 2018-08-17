@@ -106,7 +106,7 @@ namespace ubit {
   private:
     friend class Application;
     friend class MenuManager;
-    uptr<UCall> menu_opener_cb;
+    unique_ptr<UCall> menu_opener_cb;
     class WindowPlacement *placement;
   protected:
     virtual void openImpl(MenuManager&, View* opener, bool auto_place, Display*);

@@ -258,7 +258,6 @@ View* Box::getViewInImpl(View* parview, /*Child* cnode,*/ Dimension& dim) {
   return v;
 }
 
-// ==================================================== [Ubit Toolkit] =========
 /* debug
  void foo(View* v) {
  for (; v ; v = v->getParentView()) {
@@ -389,7 +388,6 @@ void Window::deleteViewsInside(const std::vector<View*>& parent_views) {
   }
 }
 
-// ==================================================== [Ubit Toolkit] =========
 // performs the actual update when the main loop is idle
 
 void Box::update(const Update& upd, Display*) {

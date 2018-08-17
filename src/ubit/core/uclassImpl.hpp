@@ -55,7 +55,7 @@ namespace ubit {
     virtual const Class& getClass() const {return cid;} 
     
   private:
-    const Class& cid;  // !!ATT aux destructions, un uptr<> serait preferable !!
+    const Class& cid;  // !!ATT aux destructions, un unique_ptr<> serait preferable !!
   };
   
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -82,7 +82,7 @@ namespace ubit {
     virtual const Class& getClass() const {return cid;} 
     
   private:
-    const Class& cid;  // !!ATT aux destructions, un uptr<> serait preferable !!
+    const Class& cid;  // !!ATT aux destructions, un unique_ptr<> serait preferable !!
   };
   
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -109,7 +109,7 @@ namespace ubit {
     virtual const Class& getClass() const {return cid;}
     
   private:
-    const Class& cid;  // !!ATT aux destructions, un uptr<> serait preferable !!
+    const Class& cid;  // !!ATT aux destructions, un unique_ptr<> serait preferable !!
   };
   
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
