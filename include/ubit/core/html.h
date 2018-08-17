@@ -132,7 +132,7 @@ namespace ubit {
     uptr<String> pvalue;
   };
   
-  struct HtmlFontFace : public UFont {
+  struct HtmlFontFace : public Font {
     UCLASSDEF("face", HtmlFontFace, new HtmlFontFace)
     void setValue(const String&);    
     bool getValue(String& val) const {return HtmlAttribute::getValueImpl(pvalue, val);}
@@ -140,7 +140,7 @@ namespace ubit {
     uptr<String> pvalue;
   };
   
-  struct HtmlFontSize : public UFont {
+  struct HtmlFontSize : public Font {
     UCLASSDEF("size", HtmlFontSize, new HtmlFontSize)    
     void setValue(const String&);
     bool getValue(String& val) const {return HtmlAttribute::getValueImpl(pvalue, val);}

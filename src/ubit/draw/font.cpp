@@ -63,89 +63,89 @@ static const FontSize FONT_SIZES[] = {
   {72,"72"}       // word
 };
 */
-//NB: UFontFamily created in uconf.cpp to avoid init dependency problems 
+//NB: FontFamily created in uconf.cpp to avoid init dependency problems 
 
-UFont UFont::plain(null, -BOLD|-ITALIC, 0, UCONST); // NOT bold nor Italic
-//UFont& UFont::normal = UFont::plain;
+Font Font::plain(null, -BOLD|-ITALIC, 0, UCONST); // NOT bold nor Italic
+//Font& Font::normal = Font::plain;
 
-UFont UFont::bold(null,      BOLD,      0, UCONST);
-UFont UFont::italic(null,    ITALIC,    0, UCONST);
-UFont UFont::fill(null,      FILL,      0, UCONST);
-UFont UFont::underline(null, UNDERLINE, 0, UCONST);
-UFont UFont::overline(null,  OVERLINE,  0, UCONST);
-UFont UFont::strikethrough(null, STRIKETHROUGH, 0, UCONST);
+Font Font::bold(null,      BOLD,      0, UCONST);
+Font Font::italic(null,    ITALIC,    0, UCONST);
+Font Font::fill(null,      FILL,      0, UCONST);
+Font Font::underline(null, UNDERLINE, 0, UCONST);
+Font Font::overline(null,  OVERLINE,  0, UCONST);
+Font Font::strikethrough(null, STRIKETHROUGH, 0, UCONST);
 
-UFont UFont::xx_small(null,  0, 6,  UCONST);
-UFont UFont::x_small(null,   0, 8,  UCONST);
-UFont UFont::small(null,     0, 10, UCONST);
-UFont UFont::medium(null,    0, 12, UCONST);
-UFont UFont::large(null,     0, 14, UCONST);
-UFont UFont::x_large(null,   0, 16, UCONST);
-UFont UFont::xx_large(null,  0, 20, UCONST);
+Font Font::xx_small(null,  0, 6,  UCONST);
+Font Font::x_small(null,   0, 8,  UCONST);
+Font Font::small(null,     0, 10, UCONST);
+Font Font::medium(null,    0, 12, UCONST);
+Font Font::large(null,     0, 14, UCONST);
+Font Font::x_large(null,   0, 16, UCONST);
+Font Font::xx_large(null,  0, 20, UCONST);
 
-UFont UFont::sans_serif(&UFontFamily::sans_serif, 0,0, UCONST);
-UFont UFont::serif(&UFontFamily::serif, 0,0, UCONST);
-UFont UFont::monospace(&UFontFamily::monospace, 0,0, UCONST);
-//UFont UFont::fixed(&UFontFamily::fixed, 0,0, UCONST);
+Font Font::sans_serif(&FontFamily::sans_serif, 0,0, UCONST);
+Font Font::serif(&FontFamily::serif, 0,0, UCONST);
+Font Font::monospace(&FontFamily::monospace, 0,0, UCONST);
+//Font Font::fixed(&FontFamily::fixed, 0,0, UCONST);
 
  
-int UFontFamily::family_count = 0;
+int FontFamily::family_count = 0;
 
-UFontFamily::UFontFamily(const char* _name, UConst) {     // constr PRIVE
+FontFamily::FontFamily(const char* _name, UConst) {     // constr PRIVE
   // defs = defaults.defs; PAS pour ce constr PPRIVE
   ffindex = -1;
   ready = false;
   name = _name;
 }
 
-UFontFamily::UFontFamily(const String& _name) {   // constr PUBLIC
+FontFamily::FontFamily(const String& _name) {   // constr PUBLIC
   defs = defaults.defs;  // recopier les defaults !
   ffindex = -1;
   ready = false;
   name = _name;
 }
 
-UFontFamily& UFontFamily::operator=(const UFontFamily& f2) {
+FontFamily& FontFamily::operator=(const FontFamily& f2) {
   defs = f2.defs;
   fsizes.clear();
   ready = false;
   return *this;
 }
 
-void UFontFamily::setFamily(const char* _families) {
+void FontFamily::setFamily(const char* _families) {
   defs.families = _families;
   ready = false;
 }
 
-void UFontFamily::setStyles(const char* _normal_style, const char* _italic_style) {
+void FontFamily::setStyles(const char* _normal_style, const char* _italic_style) {
   if (_normal_style) defs.normal_style = _normal_style;
   if (_italic_style) defs.italic_style = _italic_style;
   ready = false;
 }
   
-void UFontFamily::setWeights(const char* _normal_weight, const char* _bold_weight) {
+void FontFamily::setWeights(const char* _normal_weight, const char* _bold_weight) {
   if (_normal_weight) defs.normal_weight = _normal_weight;
   if (_bold_weight) defs.bold_weight = _bold_weight;
   ready = false;
 }
 
-void UFontFamily::setCompression(const char* arg) {
+void FontFamily::setCompression(const char* arg) {
   defs.compression = arg;
   ready = false;
 }
 
-void UFontFamily::setEncoding(const char* arg) {
+void FontFamily::setEncoding(const char* arg) {
   defs.encoding = arg;
   ready = false;
 }
 
-void UFontFamily::setPreferredSizes(const char* arg) {
+void FontFamily::setPreferredSizes(const char* arg) {
   defs.preferred_sizes = arg;
   fsizes.clear();
   ready = false;
 }
 
-void UFontFamily::setFreeType(const char* regular_files, 
+void FontFamily::setFreeType(const char* regular_files, 
                               const char* bold_files,
                               const char* italic_files, 
                               const char* bold_italic_files) {
@@ -156,7 +156,7 @@ void UFontFamily::setFreeType(const char* regular_files,
   ready = false;
 }
 
-void UFontFamily::initSizes() const {
+void FontFamily::initSizes() const {
   if (fsizes.size() > 0) return;
   const char* p1 = defs.preferred_sizes.c_str();
   char *p2 = 0;
@@ -173,7 +173,7 @@ void UFontFamily::initSizes() const {
 // (si on retourne une taille plus grande le texte va etre clippe
 //  ou ca va entrainer des passages a la ligne
 
-int UFontFamily::sizeToIndex(float size) const {
+int FontFamily::sizeToIndex(float size) const {
   if (size <= 0) return 0;
   if (fsizes.size() == 0) initSizes();
 
@@ -193,36 +193,36 @@ int UFontFamily::sizeToIndex(float size) const {
 
 
 //private constr
-UFont::UFont(const UFontFamily* ff, int _styles, float pixsize, UConst m) : Attribute(m) {
+Font::Font(const FontFamily* ff, int _styles, float pixsize, UConst m) : Attribute(m) {
   family = ff;
   if (pixsize <= 0) fsize = 0; else fsize = pixsize;
   if (_styles > 0) {on_styles = _styles; off_styles = 0;}
   else {on_styles = 0; off_styles = -_styles;}
 }
 
-UFont::UFont(const UFontFamily& ff, int _styles, float pixsize) {
+Font::Font(const FontFamily& ff, int _styles, float pixsize) {
   family = &ff;
   if (pixsize <= 0) fsize = 0; else fsize = pixsize;
   if (_styles > 0) {on_styles = _styles; off_styles = 0;}
   else {on_styles = 0; off_styles = -_styles;}
 }
 
-UFont::UFont(const UFont& f, int _styles, float pixsize) {
+Font::Font(const Font& f, int _styles, float pixsize) {
   family = f.family;
   if (pixsize <= 0) fsize = 0; else fsize = pixsize;
   if (_styles > 0) {on_styles = _styles; off_styles = 0;}
   else {on_styles = 0; off_styles = -_styles;}
 }
 
-UFont::UFont(const UFont& f) {
+Font::Font(const Font& f) {
   family = f.family;
   fsize = f.fsize;
   on_styles = f.on_styles;
   off_styles= f.off_styles;
 }
 
-UFont::UFont() {
-  UFont& f = *Application::conf.default_font;
+Font::Font() {
+  Font& f = *Application::conf.default_font;
   family = f.family;
   fsize = f.fsize;
   on_styles = f.on_styles;
@@ -230,7 +230,7 @@ UFont::UFont() {
 }
 
 
-void UFont::set(const UFont& f) {
+void Font::set(const Font& f) {
   if (checkConst()) return;
   if (equals(f)) return;  
   family = f.family;
@@ -240,7 +240,7 @@ void UFont::set(const UFont& f) {
   changed(true);
 }
 
-void UFont::merge(const UFont& f) {
+void Font::merge(const Font& f) {
   if (checkConst()) return;
   
   if (f.family) family = f.family;
@@ -251,7 +251,7 @@ void UFont::merge(const UFont& f) {
   changed(true);
 }
 
-bool UFont::equals(const UFont& f) const {
+bool Font::equals(const Font& f) const {
   if (this == &f) return true;
   else return (family == f.family && fsize == f.fsize
                && on_styles == f.on_styles && off_styles == f.off_styles);
@@ -260,19 +260,19 @@ bool UFont::equals(const UFont& f) const {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /*
-UFont& UFont::setFamily(const UFont &f) {
+Font& Font::setFamily(const Font &f) {
   if (checkConst()) return *this;
   family = f.family;
   changed(true);
   return *this;
 }
- UFont& UFont::setPixelSize(const UFont &f) {
+ Font& Font::setPixelSize(const Font &f) {
  if (checkConst()) return *this;
  size = f.size;
  changed(true);
  return *this;
  }
- UFont& UFont::setStyles(const UFont &f) {
+ Font& Font::setStyles(const Font &f) {
  if (checkConst()) return *this;
  on_styles  = f.on_styles;
  off_styles = f.off_styles;
@@ -281,21 +281,21 @@ UFont& UFont::setFamily(const UFont &f) {
  }
 */
   
-UFont& UFont::setFamily(const UFontFamily& ff) {
+Font& Font::setFamily(const FontFamily& ff) {
   if (checkConst()) return *this;
   family = &ff;
   changed(true);
   return *this;
 }
 
-UFont& UFont::setFamily(const String& font_families) {
+Font& Font::setFamily(const String& font_families) {
   if (checkConst()) return *this;
   //family = ...;
   changed(true);
   return *this;
 }
 /*
- void UStyleProps::setFontFamily(UFont& f, const String& _val) {
+ void StyleProperties::setFontFamily(Font& f, const String& _val) {
  String v;
  int pos = _val.find(',');
  if (pos > 0) v = _val.substring(0, pos);
@@ -303,20 +303,20 @@ UFont& UFont::setFamily(const String& font_families) {
  v.trim();
  
  if (isEq(v,"sans-serif") || isEq(v,"helvetica") || isEq(v,"arial"))
- f.setFamily(UFont::sans_serif.getFamily());
+ f.setFamily(Font::sans_serif.getFamily());
  else if (isEq(v,"serif") || isEq(v,"times"))
- f.setFamily(UFont::serif.getFamily());
+ f.setFamily(Font::serif.getFamily());
  else if (isEq(v,"monospace") || isEq(v,"courier"))
- f.setFamily(UFont::monospace.getFamily());
+ f.setFamily(Font::monospace.getFamily());
  //else if (isEq(v,"fixed"))
- //  f.setFamily(UFont::fixed);
+ //  f.setFamily(Font::fixed);
  }
  
  */
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-UFont& UFont::setSize(const String& size) {
+Font& Font::setSize(const String& size) {
   if (checkConst()) return *this;
   float val = 0;
   const char* unit = null;
@@ -329,12 +329,12 @@ UFont& UFont::setSize(const String& size) {
   else if (UCstr::equals(unit,"%",true))
     return setPointSize(MEDIUM_FONT_SIZE * val / 100.);
   else {
-    error("UFont::setSize","wrong font unit");
+    error("Font::setSize","wrong font unit");
     return *this;
   }
 }
 
-UFont& UFont::setPixelSize(float s) {
+Font& Font::setPixelSize(float s) {
   if (checkConst()) return *this;
   if (s <= 0) fsize = 0;    // 0 means don't impose a specific size
   else fsize = s;
@@ -342,7 +342,7 @@ UFont& UFont::setPixelSize(float s) {
   return *this;
 }
 
-UFont& UFont::setPointSize(float s) {
+Font& Font::setPointSize(float s) {
   if (checkConst()) return *this;
   if (s <= 0) fsize = 0;
   else fsize = s * Application::getDisp()->PT_TO_PX;  // !!! devrait etre adapté au Display
@@ -353,13 +353,13 @@ UFont& UFont::setPointSize(float s) {
   return *this;
 }
 
-float UFont::getPointSize() const {
+float Font::getPointSize() const {
   return fsize / Application::getDisp()->PT_TO_PX;
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-UFont& UFont::setStyles(int s) {
+Font& Font::setStyles(int s) {
   if (checkConst()) return *this;
   if (s > 0) {on_styles = s; off_styles = 0;}
   else {on_styles = 0; off_styles = -s;}
@@ -367,7 +367,7 @@ UFont& UFont::setStyles(int s) {
   return *this;
 }
 
-UFont& UFont::changeStyles(int s, bool add) {
+Font& Font::changeStyles(int s, bool add) {
   if (checkConst()) return *this;
   if (s > 0) {
     off_styles = off_styles & ~s;
@@ -386,58 +386,58 @@ UFont& UFont::changeStyles(int s, bool add) {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-bool UFont::isPlain()  const {return on_styles == 0;}
-bool UFont::isBold()   const {return (on_styles & BOLD) != 0;}
-bool UFont::isItalic() const {return (on_styles & ITALIC) != 0;}
-bool UFont::isFilled() const {return (on_styles & FILL) != 0;}
-bool UFont::isUnderlined() const {return (on_styles & UNDERLINE) != 0;}
-bool UFont::isOverlined()  const {return (on_styles & OVERLINE) != 0;}
-bool UFont::isStrikethrough() const {return (on_styles & STRIKETHROUGH) != 0;}
+bool Font::isPlain()  const {return on_styles == 0;}
+bool Font::isBold()   const {return (on_styles & BOLD) != 0;}
+bool Font::isItalic() const {return (on_styles & ITALIC) != 0;}
+bool Font::isFilled() const {return (on_styles & FILL) != 0;}
+bool Font::isUnderlined() const {return (on_styles & UNDERLINE) != 0;}
+bool Font::isOverlined()  const {return (on_styles & OVERLINE) != 0;}
+bool Font::isStrikethrough() const {return (on_styles & STRIKETHROUGH) != 0;}
 
-UFont& UFont::setBold(bool state) {
-  return changeStyles(UFont::BOLD, state);
+Font& Font::setBold(bool state) {
+  return changeStyles(Font::BOLD, state);
 }
 
-UFont& UFont::setItalic(bool state) {
-  return changeStyles(UFont::ITALIC, state);
+Font& Font::setItalic(bool state) {
+  return changeStyles(Font::ITALIC, state);
 }
 
-UFont& UFont::setFilled(bool state) {
-  return changeStyles(UFont::FILL, state);
+Font& Font::setFilled(bool state) {
+  return changeStyles(Font::FILL, state);
 }
 
-UFont& UFont::setUnderlined(bool state) {
-  return changeStyles(UFont::UNDERLINE, state);
+Font& Font::setUnderlined(bool state) {
+  return changeStyles(Font::UNDERLINE, state);
 }
 
-UFont& UFont::setOverlined(bool state) {
-  return changeStyles(UFont::OVERLINE, state);
+Font& Font::setOverlined(bool state) {
+  return changeStyles(Font::OVERLINE, state);
 }
 
-UFont& UFont::setStrikethrough(bool state) {
-  return changeStyles(UFont::STRIKETHROUGH, state);
+Font& Font::setStrikethrough(bool state) {
+  return changeStyles(Font::STRIKETHROUGH, state);
 }
 
 
-void UFont::update() {
+void Font::update() {
   updateAutoParents(Update::LAYOUT_PAINT);  // size changed in both directions
 }
 
-// This method initializes a UFont for a given UDisplay (or Application)
+// This method initializes a Font for a given UDisplay (or Application)
 // It returns true if the font could be found and false otherwise
 // (a default font will be used in this case)
 // NOTE: it is not necessary to call this function explicitely since
 // version 99.10 (it will automatically be called the first time 
-// this UFont is used for drawing a string on the screen)
+// this Font is used for drawing a string on the screen)
 //
-void UFont::realize(Display* d) {
+void Font::realize(Display* d) {
   if (!d) d = Application::getDisp();
   d->realizeFont(*this);
 }
 
 
-void UFont::putProp(UpdateContext* props, Element&) {
-  UFontDesc& fd = props->fontdesc;
+void Font::putProp(UpdateContext* props, Element&) {
+  FontDescription& fd = props->fontdesc;
   if (family) fd.family = family;
   
   // ajouter les 'on_styles' et enlever les 'off_styles'
@@ -449,11 +449,11 @@ void UFont::putProp(UpdateContext* props, Element&) {
 }
 
 
-UFontDesc::UFontDesc(const UFont& f) {
+FontDescription::FontDescription(const Font& f) {
   set(f);
 }
 
-void UFontDesc::set(const UFont& f) {
+void FontDescription::set(const Font& f) {
   family = f.family;
   styles = f.on_styles;
   def_size = f.fsize; 
@@ -462,7 +462,7 @@ void UFontDesc::set(const UFont& f) {
   actual_size = 0;  // NOT INIT!
 }
 
-void UFontDesc::merge(const UFont& f) {
+void FontDescription::merge(const Font& f) {
   if (f.family) family = f.family;
   // NB: size = 0 means "any size" and thus, does not change f.size 
   if (f.fsize > 0) {def_size = f.fsize; scaled_size = def_size;}  
@@ -471,11 +471,11 @@ void UFontDesc::merge(const UFont& f) {
   actual_size = 0;  // NOT INIT!
 }
 
-void UFontDesc::setScale(float xyscale) {
-  if (def_size == 0) def_size = UFont::medium.getPixelSize();
+void FontDescription::setScale(float xyscale) {
+  if (def_size == 0) def_size = Font::medium.getPixelSize();
   scaled_size = def_size * xyscale;     // scaled pixel size
   if (!family) {
-    Application::internalError("UFontDesc::setScale","null font family; UFontDef: %p", this);
+    Application::internalError("FontDescription::setScale","null font family; UFontDef: %p", this);
     family = Application::conf.default_font->family;
   }
   // find font index from scaled pixel size
@@ -483,7 +483,7 @@ void UFontDesc::setScale(float xyscale) {
   actual_size = family->fsizes[findex];
 
   // calculate font index and actual rescaled point size
-  findex = (findex << 2) + (styles & UFont::BOLD) + (styles & UFont::ITALIC);
+  findex = (findex << 2) + (styles & Font::BOLD) + (styles & Font::ITALIC);
 }
 
 }

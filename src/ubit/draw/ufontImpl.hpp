@@ -1,5 +1,5 @@
 /*
- *  ufontImpl.hpp
+ *  fontImpl.hpp
  *  Ubit GUI Toolkit - Version 8
  *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
@@ -28,16 +28,16 @@ namespace ubit {
   /** [impl] Internal representation for fonts.
    * should not be used directly
    */
-  class UFontDesc {
+  class FontDescription {
   public:
-    UFontDesc() {}
-    UFontDesc(const UFont&);
+    FontDescription() {}
+    FontDescription(const Font&);
     
-    void set(const UFont&);
-    void merge(const UFont&); // merge only: set NON default values and combine styles.
+    void set(const Font&);
+    void merge(const Font&); // merge only: set NON default values and combine styles.
     void setScale(float xyscale); // MUST be called to init the FontDesc !
     
-    const UFontFamily* family;
+    const FontFamily* family;
     short styles, def_size, actual_size;
     mutable short findex;
     float scaled_size;

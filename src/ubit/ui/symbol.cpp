@@ -88,7 +88,7 @@ void USymbol::setBackShadowColor(const Color &c) {
 void USymbol::getSize(UpdateContext& ctx, Dimension& dim) const {
   // les tailles des symbols dependent de celles des fonts !
   // on enleve SM_GETSIZE pour eviter que ca aille du haut jusqu'en bas
-  dim.height = UFontMetrics(ctx).getHeight() - SM_GETSIZE;
+  dim.height = FontMetrics(ctx).getHeight() - SM_GETSIZE;
     
   // on rend le truc pair car necessaire pour que les fleches... tombent juste
   //if (h % 2 != 0) (h)--;   ????

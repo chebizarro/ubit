@@ -1,5 +1,5 @@
 /*
- *  ucolor.cpp: Color Attribute
+ *  color.cpp: Color Attribute
  *  Ubit GUI Toolkit - Version 8
  *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
@@ -65,7 +65,7 @@ static NamedColorMap* named_colors = null;
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void URgba::setRgbaF(float r, float g, float b, float a) {
+void Rgba::setRgbaF(float r, float g, float b, float a) {
   comps[0] = (unsigned char) (r*255); 
   comps[1] = (unsigned char) (g*255); 
   comps[2] = (unsigned char) (b*255); 
@@ -73,7 +73,7 @@ void URgba::setRgbaF(float r, float g, float b, float a) {
 }
 
 /*
-bool URgba::equals(float r, float g, float b, float a) const {
+bool Rgba::equals(float r, float g, float b, float a) const {
 return (comps[0]==r*255 && comps[1]==g*255 
         && comps[2]==b*255 && comps[3]==a*255);
 }
@@ -129,7 +129,7 @@ Color::Color(const Color& c, unsigned int a) : rgba(c.rgba) {
   unsetPixels();
 }
 
-Color::Color(const URgba& comps) : rgba(comps) {
+Color::Color(const Rgba& comps) : rgba(comps) {
   ostate = RGBA_COLOR;
   unsetPixels();
 }
@@ -176,7 +176,7 @@ Color& Color::operator=(const Color& c) {
   return *this;
 }
   
-Color& Color::setRgba(const URgba& comps) {
+Color& Color::setRgba(const Rgba& comps) {
   if (checkConst()) return *this;
   if (equals(comps)) return *this;
   ostate = RGBA_COLOR;
@@ -187,16 +187,16 @@ Color& Color::setRgba(const URgba& comps) {
 }
 
 Color& Color::setRgbaF(float r, float g, float b, float a) {
-  return setRgba(URgba(r, g, b, a));
+  return setRgba(Rgba(r, g, b, a));
 }
 
 Color& Color::setRgbaI(unsigned int r, unsigned int g, unsigned int b, unsigned int a) {
-  return setRgba(URgba(r, g, b, a));
+  return setRgba(Rgba(r, g, b, a));
 }
 
 Color& Color::setNamedColor(const String& colname, float a) {
   if (checkConst()) return *this;
-  URgba comps;
+  Rgba comps;
   bool found = parseColor(colname.c_str(), comps);
   comps.comps[3] = (unsigned char)(a*255); 
   if (found) return setRgba(comps);
@@ -211,16 +211,16 @@ bool Color::equals(const Color& c) const {
   return (ostate == c.ostate && rgba == c.rgba);
 }
 
-bool Color::equals(const URgba& comps) const {
+bool Color::equals(const Rgba& comps) const {
   return (ostate == RGBA_COLOR && rgba == comps);
 }
 
 bool Color::equals(float r, float g, float b, float a) const {
-  return (ostate == RGBA_COLOR && rgba == URgba(r, g, b, a));
+  return (ostate == RGBA_COLOR && rgba == Rgba(r, g, b, a));
 }
 
 bool Color::equals(unsigned int r, unsigned int g, unsigned int b, unsigned int a) const {
-  return (ostate == RGBA_COLOR && rgba == URgba(r,g,b,a));
+  return (ostate == RGBA_COLOR && rgba == Rgba(r,g,b,a));
 }
 
 void Color::update() {
@@ -257,7 +257,7 @@ unsigned long Color::getPixel(Display* d) const {
 #endif
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-bool Color::parseColor(const char* name, URgba& c) {
+bool Color::parseColor(const char* name, Rgba& c) {
   if (!name || !*name) {
     c.setRgbaI(0, 0, 0); // not found
     return false;
@@ -329,7 +329,7 @@ void NamedColorMap::add(const NamedColor& cspec) {
   map[cspec.colname] = &cspec;
 }
 
-void Color::addNamedColor(const char* name, const URgba& c) { 
+void Color::addNamedColor(const char* name, const Rgba& c) { 
   if (!named_colors) named_colors = new NamedColorMap();
   NamedColor* nc = new NamedColor;
   nc->colname = strdup(name);

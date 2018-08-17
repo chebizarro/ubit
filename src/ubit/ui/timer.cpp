@@ -44,13 +44,13 @@ namespace ubit {
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 namespace impl {
 
-#if UBIT_WITH_GLUT          // !!! bug si uptr<UTimer> et ptr mis a null
+#if UBIT_WITH_GLUT          // !!! bug si uptr<Timer> et ptr mis a null
 
 static void _timerCB(int timer_no) {
   UTimerImpl::Timers& timers = Application::impl.timer_impl.timers;
   
   if (timer_no < 0 || timer_no >= (int)timers.size()) return;
-  UTimer* t = timers[timer_no];
+  Timer* t = timers[timer_no];
 
   // cas ou le timer devrait avoir ete enleve mais GLUT ne permet pas de le faire
   if (timer_no != t->getTimerNo()) {
@@ -68,7 +68,7 @@ static void _timerCB(int timer_no) {
 #elif UBIT_WITH_GDK
 
 static gboolean _timerCB(gpointer timer) {
-  UTimer* t = (UTimer*)timer;
+  Timer* t = (Timer*)timer;
   bool valid = t->timerCB();
   Application::impl.processPendingRequests();
   if (valid  && t->isRunning())  // il faut alors rappeler timerCB
@@ -80,7 +80,7 @@ static gboolean _timerCB(gpointer timer) {
 #endif
 } //namespace utimer
 
-bool UTimer::timerCB() {
+bool Timer::timerCB() {
   if (isDestructed()) return false;
   
   if (is_running) {
@@ -102,7 +102,7 @@ bool UTimer::timerCB() {
   return true;
 }
 
-void UTimer::removeTimer() {
+void Timer::removeTimer() {
   UTimerImpl::Timers& timers = Application::impl.timer_impl.timers;
   if (timer_no >= 0 && timer_no < (int)timers.size()) timers[timer_no] = null;
   timer_no = -1;
@@ -110,8 +110,8 @@ void UTimer::removeTimer() {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-//void UTimer::start(unsigned long d, int ntimes, bool _auto_delete) {
-void UTimer::start(unsigned long d, int _ntimes) {
+//void Timer::start(unsigned long d, int ntimes, bool _auto_delete) {
+void Timer::start(unsigned long d, int _ntimes) {
   //auto_delete = _auto_delete;
   ntimes = _ntimes;
   is_running = true;
@@ -119,12 +119,12 @@ void UTimer::start(unsigned long d, int _ntimes) {
   setDelay(d);
 }
   
-void UTimer::start() {
+void Timer::start() {
   is_running = true;
   setDelay(delay);
 }
 
-void UTimer::setDelay(unsigned long d) {
+void Timer::setDelay(unsigned long d) {
   delay = d;
   if (!is_running) return;
   
@@ -166,7 +166,7 @@ void UTimer::setDelay(unsigned long d) {
 #endif
 }
 
-void UTimer::stop() {
+void Timer::stop() {
   is_running = false;
 #if UBIT_WITH_X11
   removeTimer();
@@ -180,7 +180,7 @@ void UTimer::stop() {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-UTimer::UTimer(bool _auto_delete) :
+Timer::Timer(bool _auto_delete) :
 auto_delete(_auto_delete), is_running(false), is_looping(true),
 timer_no(-1), ntimes(0), delay(0)
 #if UBIT_WITH_X11
@@ -190,7 +190,7 @@ timer_no(-1), ntimes(0), delay(0)
 #endif
 {}
 
-UTimer::UTimer(unsigned long d, int _ntimes, bool _auto_delete) : 
+Timer::Timer(unsigned long d, int _ntimes, bool _auto_delete) : 
 auto_delete(_auto_delete), is_running(false), is_looping(_ntimes <= 0),
 timer_no(-1), ntimes(_ntimes), delay(d)
 #if UBIT_WITH_X11
@@ -200,7 +200,7 @@ timer_no(-1), ntimes(_ntimes), delay(d)
 #endif
 {}
 
-UTimer::~UTimer() {
+Timer::~Timer() {
 #if UBIT_WITH_X11
   delete &timeout;
 #elif UBIT_WITH_GDK
@@ -208,7 +208,7 @@ UTimer::~UTimer() {
 #endif
 }
 
-void UTimer::onAction(UCall& c) {
+void Timer::onAction(UCall& c) {
   Child* l = new Child(&c);
   l->setCond(UOn::action);
   _addAttr(*l);
@@ -282,7 +282,7 @@ bool UTimerImpl::resetTimers(struct timeval& delay) {
   bool timeout_found = false;
   
   for (unsigned int k = 0; k < timers.size(); ++k) {
-    UTimer* t = timers[k];
+    Timer* t = timers[k];
     if (t && t->is_running) {
       timeout_found = true;
       minTime(mintime, t->timeout);
@@ -317,7 +317,7 @@ void UTimerImpl::fireTimers() {
   getTime(curtime);
   
   for (unsigned int k = 0; k < timers.size(); ++k) {
-    UTimer* t = timers[k];
+    Timer* t = timers[k];
     if (t && !t->isDestructed() && t->is_running && lessTime(t->timeout, curtime)) {
       bool valid = t->timerCB();
       if (valid && t->is_running) {   // mettre a jour le prochain timeout

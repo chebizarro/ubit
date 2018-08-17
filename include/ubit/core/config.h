@@ -236,16 +236,16 @@ private:
   friend class Application;
   friend class UAppliImpl;
   friend class UpdateContext;
-  friend class UEventFlow;
+  friend class EventFlow;
   friend class Element;
   friend class Box;
   friend class Window;
-  friend class UEdit;
+  friend class TextEdit;
   friend class Image;
   friend class UPix;
   friend class Graph;
-  friend class UFont;
-  friend class UFontDesc;
+  friend class Font;
+  friend class FontDescription;
   friend class UHardFont;
   friend class UFilebox;
   friend class UGlcanvas;
@@ -266,9 +266,9 @@ protected:
   const int& mouse_alt_button; 
   String locale;   // locale of the application [default = "" : the environment locale]
   String display;         // name of the X11 display [default = "": the local X server is used)
-  UFont* default_font;  // the default font of the application [default = UFont::sans_serif].
+  Font* default_font;  // the default font of the application [default = Font::sans_serif].
   UPix* unknow_image;   // the image that appears instead of an unknown image (when applicable].
-  UFont*  selection_font;    // font of the text selection (can be null)
+  Font*  selection_font;    // font of the text selection (can be null)
   Color* selection_color;   // text color of the text selection (can be null)
   Color* selection_bgcolor; // background color of the text selection (can be null)
   Background& default_background;  // the default background of the application.

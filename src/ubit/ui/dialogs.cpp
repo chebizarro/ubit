@@ -155,7 +155,7 @@ void UOptionDialog::constructs(Args message) {
   pmessage->addAttr(uhflex());
 
   pbuttons = uhbox(ubutton("    OK    " + ucloseWin()));
-  pbuttons->addAttr(uhcenter() + UFont::bold + UFont::large);
+  pbuttons->addAttr(uhcenter() + Font::bold + Font::large);
     
   picon = new Box;
   picon->addAttr(uhcenter() + uvcenter());
@@ -235,7 +235,7 @@ void UDialog::showMessageDialog(const String& title, const String& msg_string, A
 
 void UDialog::showAlertDialog(Args message_nodes) {
   showMessageDialog("Alert", 
-                    UFont::large + upadding(5,5) + message_nodes, 
+                    Font::large + upadding(5,5) + message_nodes, 
                     uscale(1.5) + UPix::ray);      // !!! CHOIX ICON !!!!
 }
 
@@ -245,7 +245,7 @@ void UDialog::showAlertDialog(const String& message_string) {
 
 void UDialog::showErrorDialog(Args message_nodes) {
   showMessageDialog("Error", 
-                    UFont::large + upadding(5,10) + message_nodes, 
+                    Font::large + upadding(5,10) + message_nodes, 
                     uscale(1.5) + UPix::ray);      // !!! CHOIX ICON !!!!
 }
 
@@ -255,7 +255,7 @@ void UDialog::showErrorDialog(const String& message_string) {
 
 void UDialog::showWarningDialog(Args message_nodes) {
   showMessageDialog("Warning", 
-                    UFont::large + upadding(5,10) + message_nodes, 
+                    Font::large + upadding(5,10) + message_nodes, 
                     uscale(1.5) + UPix::ray);      // !!! CHOIX ICON !!!!
 }
 

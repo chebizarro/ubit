@@ -132,7 +132,7 @@ piconbox(null),
 last_direntry(null),
 last_preview_request(null),
 last_preview(null),
-preview_timer(new UTimer(false)) 
+preview_timer(new Timer(false)) 
 {
   preview_timer->onAction(ucall(this, &UFinder::showIconPreviews));
   Application::onMessage("next",    ucall(this, &UFinder::nextEntry));
@@ -158,7 +158,7 @@ preview_timer(new UTimer(false))
   ask_dialog = new UDialog
   (uhcenter() + uvflex()
    + upadding(15,20) + uvspacing(20)
-   + UFont::bold + UFont::large
+   + Font::bold + Font::large
    + uhbox(Color::orange + "Remote Request")
    + uhbox(Color::navy + ask_dialog_msg)
    + uhcenter()
@@ -177,16 +177,16 @@ preview_timer(new UTimer(false))
   initOptbox();
   optbox.show(false);
 
-  toolbar.addAttr(Background::metal + UFont::xx_large + UFont::bold);
+  toolbar.addAttr(Background::metal + Font::xx_large + Font::bold);
   toolbar
   .add(*optbox_btn
        + ubutton(uhcenter() + UPix::bigUp + ucall(this, &UFinder::openParent))
        + ubutton(uhcenter() + UPix::bigLeft + ucall(this, &UFinder::previousEntry))
        + ubutton(UPix::bigRight + ucall(this, &UFinder::nextEntry))
        + " " 
-       + ubutton(UFont::bold + "  Z  " + ucall(this, &UFinder::zoomIn))
-       + ubutton(UFont::bold + "  z  " + ucall(this, &UFinder::zoomOut))
-       + ubutton(UFont::bold + "  =  " + ucall(this, 1.0f, &UFinder::zoom))
+       + ubutton(Font::bold + "  Z  " + ucall(this, &UFinder::zoomIn))
+       + ubutton(Font::bold + "  z  " + ucall(this, &UFinder::zoomOut))
+       + ubutton(Font::bold + "  =  " + ucall(this, 1.0f, &UFinder::zoom))
        );
   
   mainbox.addAttr(UOrient::vertical + uvflex() + uvflex());
@@ -237,7 +237,7 @@ void UFinder::initOptbox() {
                    + UOn::deselect / ushow(folders, false)
                    + UOn::select / USymbol::down
                    + UOn::deselect / USymbol::right
-                   + UFont::bold + "History")
+                   + Font::bold + "History")
              + folders
              + ubox(usize(UAUTO,6))   // separator
              );
@@ -257,7 +257,7 @@ void UFinder::initOptbox() {
         );
   
   hostlist.addAttr(UOrient::vertical + utop());
-  hostlist.add(uitem(UFont::italic + " Add Host" + new_host_menu));
+  hostlist.add(uitem(Font::italic + " Add Host" + new_host_menu));
 
   Box& hosts = uscrollpane(true, false, hostlist);
   hosts.addAttr(usize(UAUTO,100) + upadding().setLeft(15));
@@ -268,7 +268,7 @@ void UFinder::initOptbox() {
                    + UOn::deselect / ushow(hosts, false)
                    + UOn::select / USymbol::down
                    + UOn::deselect / USymbol::right
-                   + UFont::bold + "Remote Hosts")
+                   + Font::bold + "Remote Hosts")
              + hosts
              + ubox(usize(UAUTO,6))   // separator
              );
@@ -277,7 +277,7 @@ void UFinder::initOptbox() {
   
   filelist.addAttr(uhcenter());
   filelist.addAttr(uvflex());
-  filelist_btn = uhbox(USymbol::down + UFont::bold + "Folder Files");
+  filelist_btn = uhbox(USymbol::down + Font::bold + "Folder Files");
   optbox.add(*filelist_btn + uvflex() + filelist);
 }
 
@@ -522,9 +522,9 @@ UCtlmenu& UFinder::createContextMenu() {
   impl::CMenu* cmenu = new impl::CMenu();
   
   impl::ZoomAction* za = new impl::ZoomAction(*cmenu, *this);
-  cmenu->item(4).add(UFont::xx_large + UFont::bold + Color::red + " Z- " 
+  cmenu->item(4).add(Font::xx_large + Font::bold + Color::red + " Z- " 
                       + UOn::mdrag/za);
-  cmenu->item(0).add(UFont::xx_large + UFont::bold + Color::red + " Z+ "
+  cmenu->item(0).add(Font::xx_large + Font::bold + Color::red + " Z+ "
                       + UOn::mdrag/za);
   
   impl::ScrollAction* sa = new impl::ScrollAction(*cmenu, *this);

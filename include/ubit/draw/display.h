@@ -23,8 +23,8 @@
  */
 
 
-#ifndef _udisp_hpp_
-#define	_udisp_hpp_ 1
+#ifndef UBIT_DRAW_DISPLAY_H_
+#define	UBIT_DRAW_DISPLAY_H_
 
 #include <list>
 #include <ubit/udefs.hpp>
@@ -162,7 +162,7 @@ public:
     
   // - - - event flow - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   
-  UEventFlow* getChannelFlow(int channel) const;
+  EventFlow* getChannelFlow(int channel) const;
   /**< returns the Event Flow for this channel on this display (null if not found).
     * 0 is the channel of the native Event Flow on this display. Don't confuse
     * channels with event flow IDs: channels depend on displays, while IDs are
@@ -172,7 +172,7 @@ public:
     * @see: Application class and Application::getFlow()
     */
   
-  UEventFlow* obtainChannelFlow(int channel);
+  EventFlow* obtainChannelFlow(int channel);
   /**< gets or creates the Event Flow that corresponds to this channel on this display.
     * calls getDispFlow() then creates a new flow if getDispFlow() returns null.
     * @see getDispFlow() for details.
@@ -196,7 +196,7 @@ public:
 
   virtual void copySelection(UMouseEvent&, Selection&);
   /**< [impl] copies the content of the selection in the copy buffer and tells the X server we own the X selection.
-  * note: there is 1 selection per UEventFlow but only 1 copy_buffer per Display
+  * note: there is 1 selection per EventFlow but only 1 copy_buffer per Display
   */
   
   virtual void pasteSelection(UMouseEvent&, String* paste_str, int paste_pos);
@@ -205,22 +205,19 @@ public:
     * n'est pas fait immediatement mais par appel ulterieur d'un callback
     */
       
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-  // Internals.
-#ifndef NO_DOC
 public:
-  URenderContext* getDefaultContext();  
+  RenderContext* getDefaultContext();  
   void makeDefaultContextCurrentIfNeeded();
   
   void addHardwin(Window*);
   void removeHardwin(Window*);
   
-  virtual unsigned long createColorPixel(const URgba&) = 0;  // for 2D_GRAPHICS
+  virtual unsigned long createColorPixel(const Rgba&) = 0;  // for 2D_GRAPHICS
   virtual UHardwinImpl* createWinImpl(Window*) = 0;
   virtual UCursorImpl*  createCursorImpl(int curtype) = 0;
   virtual void          deleteCursorImpl(UCursorImpl*) = 0;
   
-  virtual UHardFont* getFont(const UFontDesc*);
+  virtual UHardFont* getFont(const FontDescription*);
   /**< returns (possibily creating) the requested font (see NOTES).
    * IMPORTANT NOTES: 
    * - 1. fonts depends on the default Graphics Context (@see getDefaultGC()).
@@ -231,9 +228,9 @@ public:
    *   multiple GC may need to change the current GC after calling getFont().
    */
   
-  virtual UHardFont* realizeFont(const UFont&);
-  virtual UHardFont* realizeFont(const UFontDesc&);  
-  virtual void realizeFontFamily(const UFontFamily&);
+  virtual UHardFont* realizeFont(const Font&);
+  virtual UHardFont* realizeFont(const FontDescription&);  
+  virtual void realizeFontFamily(const FontFamily&);
   
   // - - - WITHOUT OpenGL 
   
@@ -254,7 +251,7 @@ public:
        
   // - - - Event management 
   
-  UEventFlow* obtainFlow(unsigned int ev_state, int channel);
+  EventFlow* obtainFlow(unsigned int ev_state, int channel);
   ///< returns the corresponding Event Flow (creates it if does not already exist).
   
   virtual void onPaint(View* winview, float x, float y, float w, float h);
@@ -292,12 +289,12 @@ private:
   friend class View;
   friend class Graph;
   friend class Event;
-  friend class UFontFamily;
-  friend class UFontMetrics;
-  friend class UGlcontext;
+  friend class FontFamily;
+  friend class FontMetrics;
+  friend class GLContext;
   friend class UGlcanvas;
   friend class Length;
-  friend class UFont;
+  friend class Font;
   Display(const Display&);
   Display& operator=(const Display&); 
   
@@ -320,8 +317,8 @@ protected:
   int screen_width, screen_height;
   int screen_width_mm, screen_height_mm;
   bool is_opened;
-  URenderContext *default_context;
-  const UGlcontext *current_glcontext;
+  RenderContext *default_context;
+  const GLContext *current_glcontext;
   std::vector<UHardFont**> font_map;
   unsigned long app_motion_time, nat_motion_time;  // for lag control
   unsigned long black_pixel, white_pixel, red_mask, green_mask, blue_mask;
@@ -332,7 +329,7 @@ protected:
   HardwinList hardwin_list;  // list of hardwins that are event managed
 
   // copySelection() copies the content of the selection in this buffer
-  // note: there is 1 selection per UEventFlow but only 1 copy_buffer per Display
+  // note: there is 1 selection per EventFlow but only 1 copy_buffer per Display
   String copy_buffer;
 
   // pasteSelection() specifies that the selection will be pasted in this String
@@ -350,8 +347,7 @@ protected:
     Dimension newsize;
   } last_resize;
   
-#endif // NO_DOC
 };
 
 }
-#endif
+#endif // UBIT_DRAW_DISPLAY_H_

@@ -31,14 +31,14 @@ namespace ubit {
   
   /** Font of a Element or Box container.
    * this property specifies the font in a Element or a Box. It is inherited
-   * by children, except if they have their own UFont, or if their UStyle
+   * by children, except if they have their own Font, or if their UStyle
    * specifies another font.
    * As other Attribute(s), a UScale instance must be added to the attribute list
    * or child list of the container: @see: Attribute.
    */
-  class UFont : public Attribute {
+  class Font : public Attribute {
   public:
-    UCLASS(UFont)
+    UCLASS(Font)
     
     enum Style {
       PLAIN         = 0,
@@ -51,52 +51,52 @@ namespace ubit {
     };
     ///< bitmask values for setStyle().
     
-    static UFont sans_serif, serif, monospace;
+    static Font sans_serif, serif, monospace;
     ///< default font family modifiers.
     
-    static UFont xx_small, x_small, small, medium, large, x_large, xx_large;
+    static Font xx_small, x_small, small, medium, large, x_large, xx_large;
     ///< default font size modifiers.
     
-    static UFont plain, bold, italic, fill, underline, overline, strikethrough;
+    static Font plain, bold, italic, fill, underline, overline, strikethrough;
     /**< font style modifiers.
      * - 'plain' means not bold, not italic, not underlined
      * -  mofifiers can be combined: example:
-     *    <pre>   ubox( UFont::bold + UFont::italic + "abcd" )  </pre>
+     *    <pre>   ubox( Font::bold + Font::italic + "abcd" )  </pre>
      */
     
-    UFont();
-    ///< create a new UFont; @see also shortcut ufont().
+    Font();
+    ///< create a new Font; @see also shortcut ufont().
     
-    UFont(const UFont&);
-    ///< create a new UFont; @see also shortcut ufont().
+    Font(const Font&);
+    ///< create a new Font; @see also shortcut ufont().
     
-    UFont(const UFont& font, int style, float pixel_size);
-    /**< create a new UFont.
+    Font(const Font& font, int style, float pixel_size);
+    /**< create a new Font.
      * keeps the same characteristics as 'font' with a specific 'style' and 'point_size'
-     * style' is an ORed combination of UFont::FontStyle constants such as BOLD|ITALIC
+     * style' is an ORed combination of Font::FontStyle constants such as BOLD|ITALIC
      * or -BOLD|-ITALIC (negative values deactivate these styles)
      * @see also shortcut ufont().
      */
     
-    UFont(const UFontFamily&, int style, float point_size);
-    /**< create a new UFont.
-     * style' is an ORed combination of UFont::FontStyle constants such as BOLD|ITALIC
+    Font(const FontFamily&, int style, float point_size);
+    /**< create a new Font.
+     * style' is an ORed combination of Font::FontStyle constants such as BOLD|ITALIC
      * or -BOLD|-ITALIC (negative values deactivate these styles)
      * @see also shortcut ufont().
      */
     
-    virtual UFont& operator=(const UFont& f) {set(f); return *this;}
+    virtual Font& operator=(const Font& f) {set(f); return *this;}
     ///< copies font.
     
-    virtual void set(const UFont&);
+    virtual void set(const Font&);
     ///< copies font.
     
-    virtual bool operator==(const UFont& f) const {return equals(f);}
-    virtual bool operator!=(const UFont& f) const {return !equals(f);}
-    virtual bool equals(const UFont&) const;
+    virtual bool operator==(const Font& f) const {return equals(f);}
+    virtual bool operator!=(const Font& f) const {return !equals(f);}
+    virtual bool equals(const Font&) const;
     ///< compares fonts.
     
-    const UFontFamily& getFamily() const {return *family;}
+    const FontFamily& getFamily() const {return *family;}
     ///< returns the font family.
     
     float getPixelSize() const {return fsize;}
@@ -108,27 +108,27 @@ namespace ubit {
     int getStyles() const {return on_styles;}
     ///< returns the font styles.
     
-    UFont& setFamily(const UFontFamily&);
+    Font& setFamily(const FontFamily&);
     ///< changes the font family.
     
-    UFont& setFamily(const String& font_families);
+    Font& setFamily(const String& font_families);
     ///< changes the font family (takes the closest one in a comma separated list).
     
-    UFont& setSize(const String& size);
+    Font& setSize(const String& size);
     ///< changes the font size.
     
-    UFont& setPixelSize(float pixel_size);
+    Font& setPixelSize(float pixel_size);
     ///< changes the font size (in pixels).
     
-    UFont& setPointSize(float point_size);
+    Font& setPointSize(float point_size);
     ///< changes the font size (in points).
     
-    UFont& setStyles(int styles);
+    Font& setStyles(int styles);
     ///< changes the font styles.
     
-    UFont& changeStyles(int styles, bool add);
+    Font& changeStyles(int styles, bool add);
     /**< changes the font style.
-     * 'styles' is an ORed bitmask of UFont::Style values
+     * 'styles' is an ORed bitmask of Font::Style values
      * 'styles' can be negative, which means 'disable these styles'
      */
     
@@ -140,14 +140,14 @@ namespace ubit {
     bool isOverlined() const;
     bool isStrikethrough() const;
     
-    UFont& setBold(bool = true);
-    UFont& setItalic(bool = true);
-    UFont& setFilled(bool = true);
-    UFont& setUnderlined(bool = true);
-    UFont& setOverlined(bool = true);
-    UFont& setStrikethrough(bool = true);
+    Font& setBold(bool = true);
+    Font& setItalic(bool = true);
+    Font& setFilled(bool = true);
+    Font& setUnderlined(bool = true);
+    Font& setOverlined(bool = true);
+    Font& setStrikethrough(bool = true);
     
-    void merge(const UFont&);
+    void merge(const Font&);
     /**< merge font characteristics.
      * sets NON default values and combines styles
      */
@@ -169,35 +169,35 @@ namespace ubit {
     
   private:
     friend class Display;
-    friend class UFontDesc;
-    const UFontFamily* family;
+    friend class FontDescription;
+    const FontFamily* family;
     //short size;
     float fsize;
     short on_styles, off_styles;  // activated and disactivated styles
-    UFont(const UFontFamily*, int styles, float pixel_size, UConst);
+    Font(const FontFamily*, int styles, float pixel_size, UConst);
   };
   
-  inline UFont& ufont(const UFont& f) {return *new UFont(f);}
-  ///< shortcut for *new UFont(font).
+  inline Font& ufont(const Font& f) {return *new Font(f);}
+  ///< shortcut for *new Font(font).
   
   
   /** A Font Family represents a collection of fonts for all possible sizes and styles.
    * Note that actual fonts are only loaded when necessary
    */
-  class UFontFamily : public UObject {
+  class FontFamily : public UObject {
   public:
-    static UFontFamily sans_serif, serif, monospace;
-    ///< predefined font families that can be used in UFont(s).
+    static FontFamily sans_serif, serif, monospace;
+    ///< predefined font families that can be used in Font(s).
     
-    static UFontFamily defaults;
+    static FontFamily defaults;
     /**< specifies default characteristics used when FontFamilies can't be found
      * should be changed before creating the Application
      */
     
-    UFontFamily(const String& logical_name);
+    FontFamily(const String& logical_name);
     ///< create a new font family.
     
-    UFontFamily& operator=(const UFontFamily&);  
+    FontFamily& operator=(const FontFamily&);  
     
     const String& getName() const {return name;}
     
@@ -227,12 +227,12 @@ namespace ubit {
     
     // - impl. - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   protected:
-    friend class UFontDesc;  
+    friend class FontDescription;  
     friend class UHardFont;  
     friend class Display;  
     
-    UFontFamily(const char* logical_name, UConst);  // private constr
-    UFontFamily(const UFontFamily&); // forbidden
+    FontFamily(const char* logical_name, UConst);  // private constr
+    FontFamily(const FontFamily&); // forbidden
     
     void initSizes() const;
     int sizeToIndex(float fsize) const;

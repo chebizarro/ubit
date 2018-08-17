@@ -148,12 +148,12 @@ namespace ubit {
     UChoice& choice();
     ///< returns the UChoice object that controls the selection of cards and tabs.
     
-    UListbox& tablist() {return *ptabs;}
+    Listbox& tablist() {return *ptabs;}
     ///< returns the tab list.
     
 #ifndef NO_DOC
   protected:
-    uptr<UListbox> ptabs;
+    uptr<Listbox> ptabs;
     virtual void setSelectedImpl();
 #endif
   };

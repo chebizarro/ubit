@@ -1,5 +1,5 @@
 /*
- *  uupixmaps.cpp
+ *  upixmaps.cpp
  *  a wrapping for using some of the great FVWM pixmaps in the Ubit toolkit
  *
  * ==================================================== ======== ======= *

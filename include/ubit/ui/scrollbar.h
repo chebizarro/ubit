@@ -164,8 +164,8 @@ namespace ubit {
   class UScrollbarView : public View {
     friend class UScrollbar;
   public:
-    static  UViewStyle style;  // renderer
-    virtual UViewStyle* getViewStyle() {return &style;}
+    static  ViewStyle style;  // renderer
+    virtual ViewStyle* getViewStyle() {return &style;}
     
     UScrollbarView(Box*, View* parview, UHardwinImpl*);
     static View* createView(Box*, View* parview, UHardwinImpl*);

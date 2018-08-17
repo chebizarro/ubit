@@ -325,7 +325,7 @@ void UScrollbar::constructs() {
   }
 
   // NB: bug car les scrollbars sont dans border ce qui fait echouer 
-  // UEventFlow::mustCloseMenus => disableMenuClosing() compense ca
+  // EventFlow::mustCloseMenus => disableMenuClosing() compense ca
   prail->disableMenuClosing();
 
   prail->add
@@ -508,7 +508,7 @@ void UScrollbar::pressScrollButton(UMouseEvent& e, int dir) {
 // ==================================================== [Elc] ===============
 // UScrollbarView
 
-UViewStyle UScrollbarView::style(&UScrollbarView::createView, UCONST);
+ViewStyle UScrollbarView::style(&UScrollbarView::createView, UCONST);
 
 UScrollbarView::UScrollbarView(Box* box, View* parview, UHardwinImpl* w)
 : View(box, parview, w) {

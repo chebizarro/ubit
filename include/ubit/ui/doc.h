@@ -231,7 +231,7 @@ namespace ubit {
     FlatDocument(const String& _pathname);
     virtual bool isEditable() const;
     virtual void setEditable(bool state = true);
-    uptr<class UEdit> edit;
+    uptr<class TextEdit> edit;
   };
   
   

@@ -40,25 +40,25 @@ namespace ubit {
 
 
 
-UViewStyle::UViewStyle(View*(*make_view)(Box*, View*, UHardwinImpl*), UConst c) 
+ViewStyle::ViewStyle(View*(*make_view)(Box*, View*, UHardwinImpl*), UConst c) 
 : Attribute(c), createView(make_view) {}
 
-void UViewStyle::addingTo(Child& c, Element& parent) {
+void ViewStyle::addingTo(Child& c, Element& parent) {
   Node::addingTo(c, parent);
   if (parent.emodes.HAS_LAYOUT) {
-    Application::warning("UViewStyle::addingTo","This UViewStyle object (%p) has a parent (%s %p) that contains another UViewStyle object", this, &parent.getClassName(), &parent);
+    Application::warning("ViewStyle::addingTo","This ViewStyle object (%p) has a parent (%s %p) that contains another ViewStyle object", this, &parent.getClassName(), &parent);
   }
   parent.emodes.HAS_LAYOUT = true;
 }
 
-void UViewStyle::removingFrom(Child& c, Element& parent) {
+void ViewStyle::removingFrom(Child& c, Element& parent) {
   parent.emodes.HAS_LAYOUT = false;
   Node::removingFrom(c, parent);
 }
 
 // ==================================================== [ELC] ==================
 
-UViewStyle View::style(&View::createView, UViewStyle::UCONST);
+ViewStyle View::style(&View::createView, ViewStyle::UCONST);
 
 View* View::createView(Box* box, View* parview, UHardwinImpl* w) {
   return new View(box, parview, w);
@@ -257,7 +257,7 @@ void View::updatePaintData(const Rectangle* winrect) {     // window coordinates
   if (!winview) return;
   if (!winrect) winrect = this;
   
-  UWinUpdateContext winctx(winview, null);
+  WindowUpdateContext winctx(winview, null);
   UViewUpdate vup(UViewUpdate::UPDATE_DATA);
   addVModes(View::DAMAGED);
   winview->doUpdate(winctx, *winview, *winrect, vup);
@@ -286,7 +286,7 @@ void View::updatePaint(const Rectangle* winrect) {     // window coordinates
   else {
     Graph g(winview);
     UViewUpdate vup(UViewUpdate::PAINT_ALL);
-    UWinUpdateContext winctx(winview, &g);
+    WindowUpdateContext winctx(winview, &g);
     
     // ctlmeneu laisse des bords for some reason
     //winview->doUpdate(winctx, *winview, *winrect, vup);    
@@ -304,7 +304,7 @@ void View::updateLayout(const Dimension* size, bool upd_paint_data) {
   if (!winview) return;
   
   UViewLayout vl;
-  UWinUpdateContext winctx1(winview, null);
+  WindowUpdateContext winctx1(winview, null);
   winctx1.xyscale = parview ? parview->scale : 1.;
   //cerr << this << " " << getClassName() << " " << parview->scale << endl; 
   
@@ -325,7 +325,7 @@ AGAIN:
     updatePaintData();
     if (size) this->setSize(*size);
     
-    UWinUpdateContext winctx2(winview, null);     // nb: not the same WinContext!
+    WindowUpdateContext winctx2(winview, null);     // nb: not the same WinContext!
     winctx2.xyscale = parview ? parview->scale : 1.;
     this->doLayout(winctx2, vl);
     
@@ -337,7 +337,7 @@ AGAIN:
 // ==================================================== [ELC] ==================
 
 View* View::findInChildren(Element* grp, const Point& winpos,
-                             const UpdateContext& ctx, UViewFind& vf) 
+                             const UpdateContext& ctx, ViewFind& vf) 
 {
   if (!grp->isShowable() || grp->isIgnoringEvents()) return null;
   bool in_softwin_list = grp->getDisplayType() == Element::WINLIST;
@@ -378,7 +378,7 @@ View* View::findInChildren(Element* grp, const Point& winpos,
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 View* View::findInGroup(Element* grp, const Point& winpos, 
-                          const UpdateContext& par_ctx, UViewFind& vf)
+                          const UpdateContext& par_ctx, ViewFind& vf)
 {
   UpdateContext ctx(par_ctx, grp, this, null);
   UMultiList mlist(ctx, *grp);   // necessaire pour parser ctx
@@ -394,7 +394,7 @@ bool View::containsWC(const Point& pos_in_win) {     // CF SHAPE & HIDE   !!!@@@
 }
 
 View* View::findInBox(Box* box, const Point& wpos, 
-                        const UpdateContext& par_ctx, UViewFind& vf) 
+                        const UpdateContext& par_ctx, ViewFind& vf) 
 {
   if (!box->isShowable() || box->isIgnoringEvents() || !containsWC(wpos))
     return null;
@@ -456,7 +456,7 @@ FOUND:
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-View* View::findSource(UViewFind& vf, Point& source_pos) {
+View* View::findSource(ViewFind& vf, Point& source_pos) {
   // vf.ref_pos = pos in refview
   View* source_view = findInBox(getBox(), vf.ref_pos, vf.win_ctx, vf);
   if (source_view) {
@@ -468,7 +468,7 @@ View* View::findSource(UViewFind& vf, Point& source_pos) {
   return source_view;
 }
 
-View* View::findSourceNext(UViewFind& vf, Point& source_pos) {
+View* View::findSourceNext(ViewFind& vf, Point& source_pos) {
   Box* box = getBox();
   vf.catched = null;
   vf.uncatchable = box;  // this box cannot be catched by findInBox()
@@ -483,7 +483,7 @@ View* View::findSourceNext(UViewFind& vf, Point& source_pos) {
   
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     
-UViewFind::UViewFind(View* win_view, const Point win_pos, 
+ViewFind::ViewFind(View* win_view, const Point win_pos, 
                      UBehavior::InputType intype, unsigned char catch_mask) :
   ref_view(win_view),   // window or 3Dwidget view (may be changed later)
   ref_pos(win_pos),     // pos in refview
@@ -496,7 +496,7 @@ UViewFind::UViewFind(View* win_view, const Point win_pos,
   bp(intype) {
 }
 
-void UViewFind::updateProps(View* v, Element* grp, const UpdateContext& ctx) {  
+void ViewFind::updateProps(View* v, Element* grp, const UpdateContext& ctx) {  
   // cursor herite mais ecrase si defini au niveau local
   if (ctx.cursor) bp.cursor = ctx.cursor;
   
@@ -587,7 +587,7 @@ static bool findView(UViewLink* l, UViewContext& vc) {
     return findView(&parl, vc);
   }
   else {
-    UWinUpdateContext winctx(l->view, null);
+    WindowUpdateContext winctx(l->view, null);
     vc.clip = *(l->view);
     return setCtx(l, winctx, vc.clip, vc);
   }
@@ -640,7 +640,7 @@ static void saveDataProps(UpdateContext& ctx, ChildIter it, ChildIter end,
   Data* data = (*it)->toData();
   String* str;
   if (data && (str = data->toStr())) {   // search the strpos
-    strpos = UFontMetrics(ctx).
+    strpos = FontMetrics(ctx).
     getCharPos(str->c_str(), str->length(), vup.datactx->win_eventpos.x - r.x);
   }
   vup.datactx->set(ctx, data, it, end, r, strpos, exact_match);

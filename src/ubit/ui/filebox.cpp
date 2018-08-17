@@ -47,11 +47,11 @@ UFilebox::UFilebox(const Args& args) :
 
   this->disableMenuClosing();
 
-  show_list = &ubutton(btn_border + uvcenter() + UFont::bold + " = " 
+  show_list = &ubutton(btn_border + uvcenter() + Font::bold + " = " 
                        + ucall(this, &UFilebox::rescan));
   show_list->setSelectable(true);
   
-  show_hidden_files = &ubutton(btn_border + uvcenter() + UFont::bold + " . " 
+  show_hidden_files = &ubutton(btn_border + uvcenter() + Font::bold + " . " 
                                + ucall(this, &UFilebox::rescan));
   show_hidden_files->setSelectable(true);
 
@@ -80,14 +80,14 @@ UFilebox::UFilebox(const Args& args) :
   // soit par appel de la fct. setFilter(), on rescanne la liste
   ffilter->onChange( ucall(this, &UFilebox::rescan) );
 
-  UButton& ok = ubutton(btn_border + UFont::bold + "OK" 
+  UButton& ok = ubutton(btn_border + Font::bold + "OK" 
                         + ucall(this, &UFilebox::okBehavior));
   UButton& cancel = ubutton(btn_border + "Cancel" 
                             + ucall(this, &UFilebox::cancelBehavior));
   Box& controls = 
   uhbox(upadding(0, 5)
         + uleft()
-        + uvbox(Valign::center + UFont::bold
+        + uvbox(Valign::center + Font::bold
                 + ulabel("File Name") + ulabel("Filters"))
         + " " 
         + uhflex()
@@ -97,7 +97,7 @@ UFilebox::UFilebox(const Args& args) :
                 + utextfield(*ffilter))
         + uright()
         + " " 
-        + uvbox(UFont::bold + ok + cancel)
+        + uvbox(Font::bold + ok + cancel)
         );
   
   mainbox = new Box();
@@ -247,8 +247,8 @@ void UFilebox::rescan() {
         e.getInfoString(*infos);
         listing.add(uitem(new_sel + call + pad
                           + e.getMiniIconImage() 
-                          + uelem(UFont::monospace + infos)
-                          + uelem(UFont::bold + e.pname)
+                          + uelem(Font::monospace + infos)
+                          + uelem(Font::bold + e.pname)
                           ));
         n++;
       }
@@ -265,8 +265,8 @@ void UFilebox::rescan() {
         e.getInfoString(*infos);
         listing.add(uitem(new_sel + call + pad
                           + e.getMiniIconImage() 
-                          + uelem(UFont::monospace + infos)
-                          + uelem(UFont::bold + e.pname)
+                          + uelem(Font::monospace + infos)
+                          + uelem(Font::bold + e.pname)
                           ));
         n++; 
       }

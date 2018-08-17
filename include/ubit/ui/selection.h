@@ -33,7 +33,7 @@ namespace ubit {
 */
 class Selection {
 public:
-  Selection(const Color* color, const Color* bgcolor, const UFont*);
+  Selection(const Color* color, const Color* bgcolor, const Font*);
   ~Selection();
   
   void copyText(String&);
@@ -43,7 +43,7 @@ public:
 
   Color& color()   {return *pcolor;}
   Color& bgcolor() {return *pbgcolor;}
-  UFont&  font()    {return *pfont;}
+  Font&  font()    {return *pfont;}
 
   const Element* getObj() {return in_obj;}
 
@@ -57,9 +57,9 @@ protected:
   void perform(String* copy, bool del);
 
 private:
-  friend class UEdit;
+  friend class TextEdit;
   friend class String;
-  friend class UEventFlow;
+  friend class EventFlow;
   
   bool being_selected;  
   bool rec_sel;  //< recursive selection (the default).
@@ -71,7 +71,7 @@ private:
   long  fromPos, toPos, pressPos, oldPos;
   uptr <Color> pcolor;
   uptr <Color> pbgcolor;
-  uptr <UFont>  pfont;
+  uptr <Font>  pfont;
 
   void update(UDataContext*);
   void paint(long refreshFromPos, long refreshToPos);

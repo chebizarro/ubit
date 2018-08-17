@@ -1,5 +1,5 @@
 /*
- *  ufontmetrics.hpp
+ *  fontmetrics.hpp
  *  Ubit GUI Toolkit - Version 8
  *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
@@ -26,21 +26,21 @@
 #define	_ufontmetrics_hpp_ 1
 namespace ubit {
 
-class UFontMetrics {
+class FontMetrics {
 public:
-  UFontMetrics();
+  FontMetrics();
 
-  UFontMetrics(const UFont&, Display*);
+  FontMetrics(const Font&, Display*);
 
-  UFontMetrics(const UFontDesc&, Display*);
-  ///< Note: the UFontDesc argument must NOT be destroyed while this UFontMetrics is used.
+  FontMetrics(const FontDescription&, Display*);
+  ///< Note: the FontDescription argument must NOT be destroyed while this FontMetrics is used.
 
-  UFontMetrics(UpdateContext&);
+  FontMetrics(UpdateContext&);
 
-  ~UFontMetrics();
+  ~FontMetrics();
     
-  void set(const UFont&, Display* = null);
-  void set(const UFontDesc&, Display* = null);
+  void set(const Font&, Display* = null);
+  void set(const FontDescription&, Display* = null);
 
   float getAscent() const;  
   float getDescent() const;
@@ -81,7 +81,7 @@ public:
 
 protected:
   Display* disp;
-  const UFontDesc* fd;
+  const FontDescription* fd;
   bool own_fd;
 };
 

@@ -132,7 +132,7 @@ Background& Background::setColor(const Color& c) {
   return *this;
 }
 
-Background& Background::setRgba(const URgba& comps) {
+Background& Background::setRgba(const Rgba& comps) {
   if (checkConst() || (pcolor && *pcolor == comps)) return *this;
   if (!pcolor) pcolor = new Color(comps); else pcolor->setRgba(comps);
   changed();
@@ -140,17 +140,17 @@ Background& Background::setRgba(const URgba& comps) {
 }
 
 Background& Background::setRbgaF(float r, float g, float b, float a) {
-  return setRgba(URgba(r,g,b,a));
+  return setRgba(Rgba(r,g,b,a));
 }
 
 Background& Background::setRbgaI(unsigned int r, unsigned int g, 
                                    unsigned int b, unsigned int a) {
-  return setRgba(URgba(r,g,b,a));
+  return setRgba(Rgba(r,g,b,a));
 }
                      
 Background& Background::setNamedColor(const String& colname, float a) {
   if (checkConst()) return *this;
-  URgba comps;
+  Rgba comps;
   bool found = Color::parseColor(colname.c_str(), comps);
   comps.comps[3] = (unsigned char)a*255; 
   if (found) return setRgba(comps);

@@ -34,7 +34,7 @@ namespace ubit {
   class UDataContext;
   
   /** Ubit Event class.
-   * note that this class inherits from class UModifier that defines modifier masks
+   * note that this class inherits from class Modifier that defines modifier masks
    * such as LeftButton, RightButton, etc. 
    */
   class Event {
@@ -60,7 +60,7 @@ namespace ubit {
     virtual UKeyEvent*     toKeyEvent()    {return null;}
     virtual UWheelEvent*   toWheelEvent()  {return null;}
     virtual UViewEvent*    toViewEvent()   {return null;}
-    virtual UPaintEvent*   toPaintEvent()  {return null;}
+    virtual PaintEvent*   toPaintEvent()  {return null;}
     virtual UResizeEvent*  toResizeEvent() {return null;}  
     virtual TimerEvent*   toTimerEvent()  {return null;}
     virtual UWinEvent*     toWinEvent()    {return null;}
@@ -78,12 +78,12 @@ namespace ubit {
   
 
   /** Base class for UMouseEvent and UKeyEvent
-   * Note that this class inherits from class UModifier that defines modifier masks 
+   * Note that this class inherits from class Modifier that defines modifier masks 
    * such as LeftButton, RightButton... 
    */
-  class UInputEvent : public Event, public UModifier {     
+  class UInputEvent : public Event, public Modifier {     
   public:
-    UInputEvent(const Condition&, View* source_view, UEventFlow*, 
+    UInputEvent(const Condition&, View* source_view, EventFlow*, 
                 unsigned long when, int state);
 
      virtual UInputEvent* toInputEvent() {return this;}
@@ -107,7 +107,7 @@ namespace ubit {
     
     virtual int getModifiers() const;
     /**< returns an ORed mask of mouse buttons and modifiers that are pressed.
-     * Modifier masks are defined in class UModifier. They are inherited by Event,
+     * Modifier masks are defined in class Modifier. They are inherited by Event,
      * and thus, UInputEvent. Exemple:
      * <pre>
      * void callbackFunc(Event& e) {
@@ -115,7 +115,7 @@ namespace ubit {
      *        // done when the left mouse button AND the control key are pressed
      * }
      * </pre>
-     * alternatively, Event::LeftButton or UModifier::LeftButton can be used 
+     * alternatively, Event::LeftButton or Modifier::LeftButton can be used 
      * instead of e.LeftButton
      */
     
@@ -131,7 +131,7 @@ namespace ubit {
     View* getWinView() const;
     ///< returns the view of the hard window that received this event.
     
-    UEventFlow* getFlow() const {return eflow;}
+    EventFlow* getFlow() const {return eflow;}
     /**< returns the Event Flow that received this event (for two-handed interaction or groupware).
      * a Ubit application can manage 1 or several Event Flows. This is useful 
      * for two-handed interaction or groupware (each user controlling his own 
@@ -152,10 +152,10 @@ namespace ubit {
 #ifndef NO_DOC
   protected:
     friend class Element;
-    friend class UEventFlow;
+    friend class EventFlow;
     friend class View;
-    friend class UFlowView;
-    friend class UViewFind;
+    friend class FlowView;
+    friend class ViewFind;
     
     struct Modes {
       unsigned PROPAGATE:1;
@@ -169,7 +169,7 @@ namespace ubit {
     int state;
     unsigned long when;
     View* source_view;    // the view that contains the mouse
-    UEventFlow* eflow;     // the event flow that produced this event
+    EventFlow* eflow;     // the event flow that produced this event
     Element* event_observer;
 #endif
   };
@@ -179,7 +179,7 @@ namespace ubit {
    */
   class UMouseEvent : public UInputEvent {
   public:
-    UMouseEvent(const Condition&, View* source, UEventFlow*, unsigned long time, int state,
+    UMouseEvent(const Condition&, View* source, EventFlow*, unsigned long time, int state,
                 const Point& pos, const Point& abs_pos, int btn);
     
     virtual UMouseEvent* toMouseEvent() {return this;}
@@ -242,7 +242,7 @@ namespace ubit {
     int getButtons() const;
     /**< returns an ORed mask of mouse buttons *after* the event occured.
      * button mask are Event::LeftButton, MidButton, RightButton. They are defined
-     * in class UModifier and inherited by Event.
+     * in class Modifier and inherited by Event.
      * see UInputEvent::getModifiers() for examples.
      */
     
@@ -277,10 +277,10 @@ namespace ubit {
     // - - - Impl. - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #ifndef NO_DOC
   protected:
-    friend class UEventFlow;
+    friend class EventFlow;
     friend class Element;
     friend class View;
-    friend class UFlowView;
+    friend class FlowView;
     int button, click_count;
     Point pos, abs_pos;
 #endif
@@ -293,7 +293,7 @@ namespace ubit {
   public:
     enum {WHEEL_DELTA = 120};
     
-    UWheelEvent(const Condition&, View* source, UEventFlow*,
+    UWheelEvent(const Condition&, View* source, EventFlow*,
                 unsigned long time, int state, 
                 const Point& pos, const Point& abs_pos,
                 int wheel_btn, int wheel_delta);
@@ -320,7 +320,7 @@ namespace ubit {
    */
   class UKeyEvent : public UInputEvent {
   public:
-    UKeyEvent(const Condition&, View* source, UEventFlow*, 
+    UKeyEvent(const Condition&, View* source, EventFlow*, 
               unsigned long time, int state, 
               int keycode, short keychar);
     
@@ -330,7 +330,7 @@ namespace ubit {
     ///< returns the typed character (in ISO Latin).
     
     int getKeyCode() const {return keycode;}
-    ///< returns the key code (@see UKey constants).
+    ///< returns the key code (@see Key constants).
     
     virtual void setKeyChar(short keychar);
     /**< changes the typed character (in ISO Latin).
@@ -338,7 +338,7 @@ namespace ubit {
      */
     
     virtual void setKeyCode(int keycode);
-    ///< changes the key code (@see UKey constants).
+    ///< changes the key code (@see Key constants).
     
   private:
     friend class Element;
@@ -346,7 +346,7 @@ namespace ubit {
     short keychar;
   };
   
-  /** view event: base class for UPaintEvent and UResizeEvent.
+  /** view event: base class for PaintEvent and UResizeEvent.
    */
   class UViewEvent : public Event {
   public:
@@ -373,15 +373,15 @@ namespace ubit {
   /** Paint event.
    * @see:
    * - condition UOn::paint that triggers callback functions when the view is
-   *   repainted. These functions can have an optional UPaintEvent argument
+   *   repainted. These functions can have an optional PaintEvent argument
    * - Graph for drawing Ubit graphics in these callback functions
-   * - Graph::Glpaint drawing OpenGL graphics in these callback functions
+   * - Graph::GLPaint drawing OpenGL graphics in these callback functions
    */
-  class UPaintEvent : public UViewEvent {
+  class PaintEvent : public UViewEvent {
   public:
-    UPaintEvent(const Condition&, View* source_view, const Rectangle* win_clip = null);
+    PaintEvent(const Condition&, View* source_view, const Rectangle* win_clip = null);
     
-    virtual UPaintEvent* toPaintEvent() {return this;}  
+    virtual PaintEvent* toPaintEvent() {return this;}  
 
     bool isClipSet() {return is_clip_set;}
     ///< true if the clipping zone is vaild.
@@ -478,20 +478,20 @@ namespace ubit {
   };
   
   /** timer event.
-   * @see UTimer;
+   * @see Timer;
    */
   class TimerEvent : public Event {
   public:
-    TimerEvent(const Condition&, UTimer* timer, unsigned long when);
+    TimerEvent(const Condition&, Timer* timer, unsigned long when);
     
     virtual TimerEvent* toTimerEvent() {return this;}
     
     //virtual UObject* getSource() const {return (UObject*)timer;}
-    UTimer* getTimer() const {return (UTimer*)source;}
+    Timer* getTimer() const {return (Timer*)source;}
     unsigned long getWhen() const {return when;}
     
   protected:
-    //UTimer* timer;
+    //Timer* timer;
     unsigned long when;
   };
   
@@ -529,8 +529,8 @@ namespace ubit {
   //private:
     friend class Box;
     friend class View;
-    friend class UFlowView;
-    friend class UEdit;
+    friend class FlowView;
+    friend class TextEdit;
     friend class Selection;
      
     Rectangle win_clip;

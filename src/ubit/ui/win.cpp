@@ -265,7 +265,7 @@ View* Window::initViewImpl(View* parview, Display* disp) {
     return null;
   }
 
-  const UViewStyle* render = null;
+  const ViewStyle* render = null;
   if (emodes.HAS_LAYOUT) {
     // si renderer defini dynamiquement dans la childlist
     attributes().findClass(render);

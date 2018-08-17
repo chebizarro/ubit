@@ -936,9 +936,9 @@ UBehavior::UBehavior(InputType it) {
   event_observer = null;
 }
 
-static UEventFlow& getEventFlow(Event& e) {
+static EventFlow& getEventFlow(Event& e) {
   UInputEvent* ie = e.toInputEvent();
-  UEventFlow* f = ie ? ie->getFlow() : null;
+  EventFlow* f = ie ? ie->getFlow() : null;
   return f ? *f : *Application::getFlow(0);
 };
 
@@ -947,7 +947,7 @@ static UEventFlow& getEventFlow(Event& e) {
 // que si l'on rentre dans l'objet avec la souris non enfoncee
 
 void Element::enterBehavior(UInputEvent& e, bool is_browsing) {
-  UEventFlow& f = *e.getFlow();
+  EventFlow& f = *e.getFlow();
     
   //if (bp.intype == UBehavior::MOUSE) {
   if (!is_browsing) {
@@ -987,7 +987,7 @@ void Element::enterBehavior(UInputEvent& e, bool is_browsing) {
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void Element::leaveBehavior(UInputEvent& e, bool is_browsing) {
-  UEventFlow& f = *e.getFlow();
+  EventFlow& f = *e.getFlow();
   
   // jamais execute SAUF CALLBACK si disabled
   if (ostate != UOn::DISABLED) {
@@ -1030,7 +1030,7 @@ void Element::leaveBehavior(UInputEvent& e, bool is_browsing) {
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void Element::armBehavior(UInputEvent& e, bool is_browsing) {
-  UEventFlow& f = getEventFlow(e);
+  EventFlow& f = getEventFlow(e);
 
   UMouseEvent* me = e.toMouseEvent();
   int btns = me ? me->getButtons() : 0;
@@ -1133,7 +1133,7 @@ void Element::armBehavior(UInputEvent& e, bool is_browsing) {
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void Element::disarmBehavior(UInputEvent& e, bool is_browsing) {
-  UEventFlow& f = getEventFlow(e);
+  EventFlow& f = getEventFlow(e);
 
   // jamais execute si disabled
   if (ostate == UOn::DISABLED) return;
@@ -1288,7 +1288,7 @@ void Element::keyPressBehavior(UKeyEvent& e) {
     fire(e);
     
     if (emodes.IS_TEXT_EDITABLE) {
-      if (e.keycode == UKey::Enter) actionBehavior(e);
+      if (e.keycode == Key::Enter) actionBehavior(e);
     }
     else {
       if (e.keychar == ' ') armBehavior(e, false);

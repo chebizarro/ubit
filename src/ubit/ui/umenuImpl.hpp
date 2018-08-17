@@ -1,5 +1,5 @@
 /*
- *  umenuImpl.hpp
+ *  menuImpl.hpp
  *  Ubit GUI Toolkit - Version 8
  *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
@@ -33,7 +33,7 @@ namespace ubit {
 */
 class UMenuManager {
 public:
-  UMenuManager(UEventFlow*);
+  UMenuManager(EventFlow*);
   ~UMenuManager();
 
   UMenu* getDeepestMenu() const {return active_menu;}
@@ -60,14 +60,14 @@ public:
 protected:
   friend class UMenu;
   friend class UMenubar;
-  friend class UEventFlow;
+  friend class EventFlow;
   std::vector<UMenu*> menustack;  // stack of menus that are currently being grabbed
   int menu_count;
   Display* disp;
-  UEventFlow& eflow; 
+  EventFlow& eflow; 
   View *active_opener, *possible_opener, *possible_closer;
   UMenu *active_menu, *possible_opener_menu, *possible_closer_menu;
-  uptr<UTimer> kk_open_timer, kk_close_timer;  // uptr: dont destroy Timers  $$$
+  uptr<Timer> kk_open_timer, kk_close_timer;  // uptr: dont destroy Timers  $$$
   Box* top_menu;
 };
 

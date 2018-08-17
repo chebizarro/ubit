@@ -51,7 +51,7 @@ namespace ubit {
     void setFar(float f)    {far = f;}
     
   private:
-    friend class U3DcanvasView;
+    friend class 3DCanvasView;
     float fovy, aspect, near, far;
   };
   
@@ -157,7 +157,7 @@ namespace ubit {
     
   private:
     friend class View;
-    friend class U3DcanvasView;
+    friend class 3DCanvasView;
     float z, x_rot, y_rot, z_rot;
   };
   
@@ -166,23 +166,23 @@ namespace ubit {
   
   /* [Impl] U3Dcanvas' view.
    *
-   * Mouse and paint coordinates are transformed by U3DcanvasView when passed 
+   * Mouse and paint coordinates are transformed by 3DCanvasView when passed 
    * to its children to make geometrical transformations transparent for them.
    */
-  class U3DcanvasView: public View {
+  class 3DCanvasView: public View {
   public:
-    static  UViewStyle style;  // renderer
-    virtual UViewStyle* getViewStyle() {return &style;}
+    static  ViewStyle style;  // renderer
+    virtual ViewStyle* getViewStyle() {return &style;}
     
-    U3DcanvasView(Box* _box, View* _parview, UHardwinImpl* hw) : View(_box, _parview, hw) {}
+    3DCanvasView(Box* _box, View* _parview, UHardwinImpl* hw) : View(_box, _parview, hw) {}
     
     static View* createView(Box* box, View* parv, UHardwinImpl* hw) {
-      return new U3DcanvasView(box, parv, hw);
+      return new 3DCanvasView(box, parv, hw);
     }
     
     virtual void doUpdate(UpdateContext&, Rectangle r, Rectangle clip, class UViewUpdate&);
     virtual View* findInChildren(Element*, const Point& winpos, 
-                                  const UpdateContext&, UViewFind&);
+                                  const UpdateContext&, ViewFind&);
     
     bool unproject(const U3Dpos* pos3d, const Point& winpos, Point& convpos);
   };

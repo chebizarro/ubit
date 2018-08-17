@@ -115,8 +115,8 @@ namespace ubit {
   
   class UTableView: public View {
   public:
-    static UViewStyle style;  // renderer
-    virtual UViewStyle* getViewStyle() {return &style;}
+    static ViewStyle style;  // renderer
+    virtual ViewStyle* getViewStyle() {return &style;}
     
     UTableView(Box*, View* parview, UHardwinImpl*);
     virtual ~UTableView();

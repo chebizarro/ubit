@@ -20,9 +20,9 @@ using namespace std;
 namespace ubit {
 
 
-UTreebox& utreebox(const Args& a) {return *new UTreebox(a);}
+Treebox& utreebox(const Args& a) {return *new Treebox(a);}
 
-UTreebox::~UTreebox() {}
+Treebox::~Treebox() {}
 
 // ATT: TYPES LIES !
 static struct IsSelectableByTree : public UChoice::IsSelectable {
@@ -31,48 +31,48 @@ static struct IsSelectableByTree : public UChoice::IsSelectable {
   }
 } is_selectable_by_tree;
 
-UTreebox::UTreebox(const Args& a) : UListbox(a) {
+Treebox::Treebox(const Args& a) : Listbox(a) {
   choice().setSelectionRule(is_selectable_by_tree);
   addAttr(Border::none);
 }
 
-UTreenode* UTreebox::getSelectedNode() const {
+Treenode* Treebox::getSelectedNode() const {
   Element* title = choice().getSelectedItem();
   Element* node = title ? title->getParent(0) : null; // c'est title qui est selected !
-  return node ? dynamic_cast<UTreenode*>(node) : null;
+  return node ? dynamic_cast<Treenode*>(node) : null;
 }
 
-void UTreebox::setSelectedNode(UTreenode& n) {
+void Treebox::setSelectedNode(Treenode& n) {
   choice().setSelectedItem(*n.plabel);  // c'est title qui est selected !
 }
 
-int UTreebox::getSelectedIndex() const {
+int Treebox::getSelectedIndex() const {
   return choice().getSelectedIndex();
 }
 
-UTreebox& UTreebox::setSelectedIndex(int i) {
+Treebox& Treebox::setSelectedIndex(int i) {
   choice().setSelectedIndex(i);
   return *this;
 }
 
 
-UTreenode& utreenode(const Args& title) {
-  return *new UTreenode(title);
+Treenode& utreenode(const Args& title) {
+  return *new Treenode(title);
 }
 
-UTreenode& utreenode(const Args& title, const Args& children) {
-  return *new UTreenode(title, children);
+Treenode& utreenode(const Args& title, const Args& children) {
+  return *new Treenode(title, children);
 }
 
-UTreenode::UTreenode(const Args& title) {
+Treenode::Treenode(const Args& title) {
   constructs(title, Args::none);
 }
 
-UTreenode::UTreenode(const Args& title, const Args& children) {
+Treenode::Treenode(const Args& title, const Args& children) {
   constructs(title, children);
 }
 
-void UTreenode::constructs(const Args& _title, const Args& children) {
+void Treenode::constructs(const Args& _title, const Args& children) {
   static UPadding& offset = upadding(0, UIGNORE).setLeft(40);
   psubnodes = &uvbox(children);
   psubnodes->addAttr(offset);
@@ -92,12 +92,12 @@ void UTreenode::constructs(const Args& _title, const Args& children) {
   Box::add(*plabel + *psubnodes);
 }
 
-void UTreenode::expand(bool s) {
+void Treenode::expand(bool s) {
   pexpander->setSelected(s);
 }
 
 /*
-void UTreenode::setOffset(UHmargin& margin) {
+void Treenode::setOffset(UHmargin& margin) {
   UHmargin* m = null;
   ChildIter i = psubnodes->attributes().findClass(m);
   if (m) remove(i);
@@ -105,11 +105,11 @@ void UTreenode::setOffset(UHmargin& margin) {
 }
 */
 
-void UTreenode::addNode(UTreenode& n) {
+void Treenode::addNode(Treenode& n) {
   psubnodes->add(n);
 }
  
-void UTreenode::removeNode(UTreenode& n) {
+void Treenode::removeNode(Treenode& n) {
   psubnodes->remove(n);
 }
  

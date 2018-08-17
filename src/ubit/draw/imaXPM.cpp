@@ -1,5 +1,5 @@
 /*
- *  uimaXPM.cpp : glue with the XPM library.
+ *  imaXPM.cpp : glue with the XPM library.
  *  Ubit GUI Toolkit - Version 8
  *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
@@ -167,7 +167,7 @@ int UImaXPM::readFromData(UHardIma& natima, const char** xpmdata, int maxw, int 
         if (UCstr::compare(value, "none",true) == 0)
           transpcolor = icode;
         else {
-          URgba c;
+          Rgba c;
           Color::parseColor(value, c);
           coltab[icode].r = c.getRedI(); 
           coltab[icode].g = c.getGreenI();

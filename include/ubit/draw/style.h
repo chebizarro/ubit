@@ -60,7 +60,7 @@ namespace ubit {
     //void setBackground(const Background*);
     void setBorder(const Border* b) {local.border = b;}
     void setCursor(const UCursor* c) {cursor = c;}
-    void setFont(const UFont* f) {font = f;}
+    void setFont(const Font* f) {font = f;}
     void setSize(Length width, Length height);
     void setPadding(Length horiz, Length vert);
     void setHorizPadding(Length left, Length right);
@@ -82,9 +82,9 @@ namespace ubit {
     char orient;
     char  valign, halign;      
     short vspacing, hspacing;
-    const UViewStyle* viewStyle;
-    //UEdit* edit;
-    const UFont* font;
+    const ViewStyle* viewStyle;
+    //TextEdit* edit;
+    const Font* font;
     const UCursor* cursor;
     const String* textSeparator;  // text separator between children when printing
     Color* colors[2 * UOn::ACTION_COUNT];

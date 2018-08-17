@@ -229,7 +229,7 @@ void UHardwinGLUT::setClassProperty(const String& instance_name, const String& c
 
 UHardwinGLUT::UHardwinGLUT(UDispGLUT* d, Window* w)
 : UHardwinImpl(d, w), sys_win(0) {
-  glcontext = new UGlcontext(d, this);
+  glcontext = new GLContext(d, this);
 }
 
 UHardwinGLUT::~UHardwinGLUT() {

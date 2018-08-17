@@ -117,7 +117,7 @@ void String::addingTo(Child& c, Element& parent) {
   
   // il y a un caret et il ne pointe sur rien -> le faire pointer sur cette String
   if (parent.emodes.IS_TEXT_EDITABLE) {
-    UEdit* ed = null;
+    TextEdit* ed = null;
     parent.attributes().findClass(ed);
     if (!ed) parent.children().findClass(ed);
     if (ed && !ed->getCaretStr()) ed->setCaretStr(this, 0);
@@ -127,7 +127,7 @@ void String::addingTo(Child& c, Element& parent) {
 void String::removingFrom(Child& c, Element& parent) {
   // la Str est enlevee et un caret pointait dessus -> le faire pointer sur null
   if (parent.emodes.IS_TEXT_EDITABLE) {
-    UEdit* ed = null;
+    TextEdit* ed = null;
     parent.attributes().findClass(ed);
     if (!ed) parent.children().findClass(ed);
     if (ed && ed->getCaretStr() == this) ed->setCaretStr(null, 0);
@@ -893,7 +893,7 @@ int String::rfind(char c) const {
 void String::getSize(UpdateContext& ctx, Dimension& dim) const {
   // NB: conserver une hauteur stable etfaire en sorte que la surface ne soit 
   // jamais de taille nulle (sinon on ne pourra plus la selecionner en cliquant)  
-  UFontMetrics fm(ctx);
+  FontMetrics fm(ctx);
   dim.width = (s && *s) ? fm.getWidth(s, len) : 1;   // 1 pour afficher le caret
   dim.height = fm.getHeight();
 }
@@ -901,7 +901,7 @@ void String::getSize(UpdateContext& ctx, Dimension& dim) const {
 // prototype for warped text (UFlowview)
 void String::getSize(UpdateContext& ctx, Dimension& dim, float available_width,
                    int offset, int& str_sublen, int& change_line) const {
-  UFontMetrics fm(ctx);
+  FontMetrics fm(ctx);
   if (s && *s) {
     fm.getSubTextSize(s + offset, len - offset, dim, available_width, 
                       str_sublen, change_line);
@@ -950,7 +950,7 @@ void String::paint(Graph& g, UpdateContext& ctx, const Rectangle& r,
 
   // -> sinon affichage avec selection
   else {
-    UFontMetrics fm(ctx);
+    FontMetrics fm(ctx);
 
     int deb = 0, fin = cellen;
     float ww = 0;    // ex int
@@ -981,12 +981,12 @@ void String::paint(Graph& g, UpdateContext& ctx, const Rectangle& r,
       if (ts->pcolor) g.setColor(*ts->pcolor);
       if (ts->pbgcolor) g.setBackground(*ts->pbgcolor);
       if (ts->pfont) {
-        UFontDesc fd = ctx.fontdesc;
+        FontDescription fd = ctx.fontdesc;
         fd.merge(*ts->pfont);
         fd.setScale(ctx.xyscale);
         g.setFont(fd);
         g.drawString(s+deb+offset, fin-deb, r.x + ww, r.y);
-        ww += UFontMetrics(fd,ctx.getDisp()).getWidth(s+deb+offset, fin-deb);
+        ww += FontMetrics(fd,ctx.getDisp()).getWidth(s+deb+offset, fin-deb);
       }
       else {
         g.drawString(s+deb+offset, fin-deb, r.x + ww, r.y);

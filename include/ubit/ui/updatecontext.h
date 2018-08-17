@@ -1,5 +1,5 @@
 /*
- *  updatecontext.h: [implementation] stack context
+ *  pdatecontext.h: [implementation] stack context
  *  Ubit GUI Toolkit - Version 8
  *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
@@ -36,7 +36,7 @@ namespace ubit {
   // NOTE: this header is part of the Ubit intrinsics and subject to change
   
   /* [impl] UpdateContext = a subcontext (not the first layer of the context cstack)
-   * and a base for UWinUpdateContext (the first layer of the cstack)
+   * and a base for WindowUpdateContext (the first layer of the cstack)
    */
   class UpdateContext {
   public:  
@@ -74,7 +74,7 @@ namespace ubit {
 #ifndef NO_DOC
     // cette implementation est dangereuse car dans certains cas win_ctx est undef
     const UpdateContext* parent_ctx;
-    UWinUpdateContext* win_ctx;  // not const because of the flags vector
+    WindowUpdateContext* win_ctx;  // not const because of the flags vector
     unsigned short flag_count;   // number of valid flagdefs for this stack level
     
     Element* obj;
@@ -83,28 +83,28 @@ namespace ubit {
     const UStyle* obj_style;
     ULocalProps local;
     UPos* pos;                // UPos ou U3dpos, UPos peut etre proportionnelle
-    UFontDesc fontdesc;
+    FontDescription fontdesc;
     bool boxIsHFlex, boxIsVFlex; // true if the object is Horiz or Vert Flexible
     char valign, halign; 
     float xyscale;            // current scale
     float vspacing, hspacing;
-    UEdit* edit;
+    TextEdit* edit;
     const Color *color, *bgcolor;
     const UCursor *cursor;
     Graph* graph;
 
   protected:
-    friend class UViewFind;
-    UpdateContext() {}  // pour UViewFind
-    UpdateContext(View* win_view); // for UWinUpdateContext
+    friend class ViewFind;
+    UpdateContext() {}  // pour ViewFind
+    UpdateContext(View* win_view); // for WindowUpdateContext
 #endif
   };
   
-    /* [impl] UWinUpdateContext = the first layer of the context cstack
+    /* [impl] WindowUpdateContext = the first layer of the context cstack
    */
-  class UWinUpdateContext : public UpdateContext {
+  class WindowUpdateContext : public UpdateContext {
   public:
-    UWinUpdateContext(View* winview, Graph*);
+    WindowUpdateContext(View* winview, Graph*);
     /**< creates the first layer of the context stack
      * !Warning: 'win_view' must be a valid (NOT null) window view!
      */

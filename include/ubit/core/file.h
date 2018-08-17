@@ -158,7 +158,6 @@ namespace ubit {
     static void expandDirPath(String& dirpath);
     ///< expands the directory path (if there are path symbols in the dirpath).
     
-    // - - - Impl - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   private:
     friend class UIconbox;
     UFileInfo dir_info;

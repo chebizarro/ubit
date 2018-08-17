@@ -45,9 +45,9 @@ using namespace std;
 namespace ubit {
 
 
-int UEventFlow::TIP_X_SHIFT = 20;
+int EventFlow::TIP_X_SHIFT = 20;
 
-void UEventFlow::LastPressed::reset() {
+void EventFlow::LastPressed::reset() {
   view = null;
   box = null;
   canvas_view = null;
@@ -55,9 +55,9 @@ void UEventFlow::LastPressed::reset() {
   behavior = UBehavior::MOUSE;
 }
 
-void UEventFlow::LastPressed::set(View* source_view, 
+void EventFlow::LastPressed::set(View* source_view, 
                                   const Point& win_pos, const Point& screen_pos, 
-                                  const UViewFind& vf) {
+                                  const ViewFind& vf) {
   view = source_view;
   box = view ? view->getBox() : null;
   // pos of the window in the screen (for drag and release events)
@@ -68,15 +68,15 @@ void UEventFlow::LastPressed::set(View* source_view,
   behavior = vf.bp;
 }
   
-UEventFlow::UEventFlow(Display& _d, int _channel) :
+EventFlow::EventFlow(Display& _d, int _channel) :
 id(-1),     // not init!
 channel(_channel),
 disp(_d),
 lastEntered(null),
 currentFocus(null),
 beingClicked(null),
-auto_repeat_timer(new UTimer(Application::conf.auto_repeat_delay, -1, false)),
-tip_timer(new UTimer(false)),
+auto_repeat_timer(new Timer(Application::conf.auto_repeat_delay, -1, false)),
+tip_timer(new Timer(false)),
 tip_win(*new UMenu()),
 menu_man(*new UMenuManager(this)),
 selection(*new Selection(disp.getConf().selection_color,
@@ -89,8 +89,8 @@ user_data(null) {
   click_time    = 0;
   click_count   = 0;
   click_pos.x = click_pos.y = -5;
-  auto_repeat_timer->onAction(ucall(this, &UEventFlow::autoRepeatCB));
-  tip_timer->onAction(ucall(this, &UEventFlow::openTipCB));
+  auto_repeat_timer->onAction(ucall(this, &EventFlow::autoRepeatCB));
+  tip_timer->onAction(ucall(this, &EventFlow::openTipCB));
   tip_win.addAttr(Background::wheat);
   tip_win.addAttr(ualpha(0.8));
   tip_win.addAttr(upadding(2,2));
@@ -99,7 +99,7 @@ user_data(null) {
   Application::impl.flowlist.push_back(this);
 }
 
-UEventFlow::~UEventFlow() {
+EventFlow::~EventFlow() {
    // ici il faudrait notifier le Display !!!
   delete auto_repeat_timer;
   delete tip_timer;
@@ -112,14 +112,14 @@ UEventFlow::~UEventFlow() {
 }
 
 
-void UEventFlow::deleteNotify(View* del_view) {
+void EventFlow::deleteNotify(View* del_view) {
   //cerr << "DEL_VIEW " << del_view << endl;
   if (del_view == lastEntered) lastEntered = null;
   if (del_view == lastPressed.view) lastPressed.reset();
   if (del_view == currentFocus) currentFocus = null;
 }
 
-void UEventFlow::deleteNotify(Element* del_box) {
+void EventFlow::deleteNotify(Element* del_box) {
   //cerr << "DEL_BOX " << del_box << endl;
   if (del_box == lastArmed)    lastArmed  = null;
   if (del_box == beingClicked) beingClicked  = null;
@@ -128,16 +128,16 @@ void UEventFlow::deleteNotify(Element* del_box) {
   if (del_box == selection.getObj()) selection.setObj(null);
 }
 
-void UEventFlow::closeAllMenus() {
+void EventFlow::closeAllMenus() {
   getMenuManager().closeAllMenus(true);
 }  
   
 
-void UEventFlow::setFocus(View* v) {
+void EventFlow::setFocus(View* v) {
   currentFocus = v;
 }
 
-void UEventFlow::setCursor(Event& e, const UCursor* c) {
+void EventFlow::setCursor(Event& e, const UCursor* c) {
   if (channel != 0) return;            // Cursor pas gere pour flowID > 0
   
   if (c != lastCursor) {
@@ -152,16 +152,16 @@ void UEventFlow::setCursor(Event& e, const UCursor* c) {
   }
 }
     
-void UEventFlow::startAutoRepeat(Event& e) {
+void EventFlow::startAutoRepeat(Event& e) {
   // !!! ici il faudrait faire en sorte que e.source_view soit correct !!!
   auto_repeat_timer->start();
 }
   
-void UEventFlow::stopAutoRepeat(Event& e) {
+void EventFlow::stopAutoRepeat(Event& e) {
   auto_repeat_timer->stop();
 }
   
-void UEventFlow::autoRepeatCB(TimerEvent& e) {
+void EventFlow::autoRepeatCB(TimerEvent& e) {
   // !!! ici il faudrait faire en sorte que e.source_view soit correct !!!
   if (lastArmed) {
     e.setCond(UOn::arm);
@@ -172,7 +172,7 @@ void UEventFlow::autoRepeatCB(TimerEvent& e) {
 
 // ==================================================== ===== =======
   
-bool UEventFlow::mustCloseMenus(View* source_view) {
+bool EventFlow::mustCloseMenus(View* source_view) {
   // NB: bug avec scrollpanes car les scrollbars sont dans border ce qui fait
   // echouer isChildOf => isMenuClosingDisabled() compense ca
   return 
@@ -183,7 +183,7 @@ bool UEventFlow::mustCloseMenus(View* source_view) {
        ));
 }
   
-void UEventFlow::redirectMousePress(UMouseEvent& e, View* winview) {
+void EventFlow::redirectMousePress(UMouseEvent& e, View* winview) {
   //e.setBrowsingGroup(getBrowsingGroup());
   //cerr << "redirect " << winview << " " << winview->getBox()->getClassName() << endl;
   mousePress(winview,  // should be the view of the menu
@@ -195,7 +195,7 @@ void UEventFlow::redirectMousePress(UMouseEvent& e, View* winview) {
   
 // ==================================================== ===== =======
   
-void UEventFlow::mousePress(View* winview, unsigned long time, int state, 
+void EventFlow::mousePress(View* winview, unsigned long time, int state, 
                             const Point& win_pos, const Point& screen_pos, int btn) 
 {
   Window* modalwin = static_cast<Window*>(Application::impl.modalwins->getChild(0)); //@@@??? why 0 ??
@@ -204,7 +204,7 @@ void UEventFlow::mousePress(View* winview, unsigned long time, int state,
     return;
   }
   Point source_pos;
-  UViewFind vf(winview, win_pos, UBehavior::MOUSE, Element::Modes::CATCH_MOUSE_MASK);
+  ViewFind vf(winview, win_pos, UBehavior::MOUSE, Element::Modes::CATCH_MOUSE_MASK);
   View* source_view = winview->findSource(vf, source_pos);
     
   if (mustCloseMenus(source_view)) {
@@ -248,7 +248,7 @@ AGAIN:
   if (vf.catched && e.modes.PROPAGATE) {
     source_view = source_view->findSourceNext(vf, source_pos);
     if (!source_view) { // cas anormal!
-      Application::internalError("UEventFlow::mousePress","Null source view");
+      Application::internalError("EventFlow::mousePress","Null source view");
       return;
     }
     
@@ -271,7 +271,7 @@ AGAIN:
 
 // ==================================================== ===== =======
 
-void UEventFlow::mouseRelease(View* winview, unsigned long time, int state, 
+void EventFlow::mouseRelease(View* winview, unsigned long time, int state, 
                               const Point& win_pos, const Point& screen_pos, int btn) 
 {  
   //if (Application::hasTelePointers()) showTelePointers(e, -1);
@@ -331,7 +331,7 @@ void UEventFlow::mouseRelease(View* winview, unsigned long time, int state,
 
 // ==================================================== ===== =======
 
-void UEventFlow::mouseMotion(View* winview, unsigned long time, int state,
+void EventFlow::mouseMotion(View* winview, unsigned long time, int state,
                              const Point& win_pos, const Point& screen_pos) {
   // MOUSE_DRAG CASE
   if (lastPressed.view) {
@@ -372,7 +372,7 @@ void UEventFlow::mouseMotion(View* winview, unsigned long time, int state,
   
   // MOUSE_MOVE CASE
   else {
-    UViewFind vf(winview, win_pos, UBehavior::MOUSE, Element::Modes::CATCH_MOUSE_MOVE_MASK);
+    ViewFind vf(winview, win_pos, UBehavior::MOUSE, Element::Modes::CATCH_MOUSE_MOVE_MASK);
     Point source_pos;
     View* source_view = winview->findSource(vf, source_pos);
     if (!source_view) return;
@@ -398,7 +398,7 @@ AGAIN:
     if (vf.catched && e.modes.PROPAGATE) {
       source_view = source_view->findSourceNext(vf, source_pos);
       if (!source_view) { // cas anormal!
-        Application::internalError("UEventFlow::mouseMotion","Null source view");
+        Application::internalError("EventFlow::mouseMotion","Null source view");
         return;
       }
       e.source_view = source_view;
@@ -414,7 +414,7 @@ AGAIN:
 
 // ==================================================== ===== =======
 
-void UEventFlow::wheelMotion(View* winview, unsigned long time, int state, 
+void EventFlow::wheelMotion(View* winview, unsigned long time, int state, 
                              const Point& win_pos, const Point& screen_pos,
                              int type, int delta) {
   Window* modalwin = static_cast<Window*>(Application::impl.modalwins->getChild(0));
@@ -422,7 +422,7 @@ void UEventFlow::wheelMotion(View* winview, unsigned long time, int state,
     modalwin->highlight(true);
     return;
   }
-  UViewFind vf(winview, win_pos, UBehavior::MOUSE/* !!! */, Element::Modes::CATCH_WHEEL_MASK);
+  ViewFind vf(winview, win_pos, UBehavior::MOUSE/* !!! */, Element::Modes::CATCH_WHEEL_MASK);
   Point source_pos;
   View* source_view = winview->findSource(vf, source_pos);
   if (!source_view) return;
@@ -444,7 +444,7 @@ AGAIN:
   if (vf.catched && e.modes.PROPAGATE) {
     source_view = source_view->findSourceNext(vf, source_pos);
     if (!source_view) { // cas anormal!
-      Application::internalError("UEventFlow::wheelMotion","Null source view");
+      Application::internalError("EventFlow::wheelMotion","Null source view");
       return;
     }
     e.source_view = source_view;
@@ -459,7 +459,7 @@ AGAIN:
 
 // ==================================================== ===== =======
 
-void UEventFlow::keyPress(View* winview, unsigned long time, int state,
+void EventFlow::keyPress(View* winview, unsigned long time, int state,
                           int keycode, short keychar) {
   if (currentFocus == null) {
     //cerr <<  "winKeyPress: NO CURRENT FOCUS"<<endl;
@@ -486,7 +486,7 @@ void UEventFlow::keyPress(View* winview, unsigned long time, int state,
   
 // ==================================================== ===== =======
 
-void UEventFlow::keyRelease(View* winview, unsigned long time, int state,
+void EventFlow::keyRelease(View* winview, unsigned long time, int state,
                             int keycode, short keychar) {
   if (currentFocus == null) {
     //cerr <<  "winKeyRelease: NO CURRENT FOCUS"<<endl;
@@ -509,14 +509,14 @@ void UEventFlow::keyRelease(View* winview, unsigned long time, int state,
   
 // ==================================================== ===== =======
 /*
- void UEventFlow::winDestroy(Window *win, Event& e) {
+ void EventFlow::winDestroy(Window *win, Event& e) {
    win->emodes.IS_SHOWABLE = false;
    if (menu_man.contains(win->toMenu()))  menu_man.closeAllMenus(true);
    delete win;
  }
 */
   
-void UEventFlow::winEnter(View* winview, unsigned long time) {                         
+void EventFlow::winEnter(View* winview, unsigned long time) {                         
                             // !!! A COMPLETER....
   //UBehavior bp(UBehavior::MOUSE);
   //boxCross(winview, time, 0, bp); 
@@ -524,7 +524,7 @@ void UEventFlow::winEnter(View* winview, unsigned long time) {
   boxCross(winview, time, 0, null, false); 
 }
   
-void UEventFlow::winLeave(View* winview, unsigned long time) {
+void EventFlow::winLeave(View* winview, unsigned long time) {
   // ATTENTION: le XGrab genere des LeaveWindow qd on ouvre le menu associe a un 
   // bouton et qd on bouge la souris sur ce bouton une fois que le menu est ouvert.
   // Ne pas en tenir compte sinon le bouton ouvrant oscille entre Enter et Leave 
@@ -541,7 +541,7 @@ void UEventFlow::winLeave(View* winview, unsigned long time) {
   boxCross(winview, time, 0, null, false); 
 }
   
-void UEventFlow::boxCross(View* new_view, unsigned long time, int state, 
+void EventFlow::boxCross(View* new_view, unsigned long time, int state, 
                            const UCursor* cursor, bool is_browing) {   
   if (lastEntered == new_view) return;
 
@@ -564,7 +564,7 @@ void UEventFlow::boxCross(View* new_view, unsigned long time, int state,
 
 // ==================================================== ===== =======
  
-void UEventFlow::openTipRequest(Event& e) {
+void EventFlow::openTipRequest(Event& e) {
 #ifndef UBIT_WITH_GLUT
                                                // !!! bug avec GLUT a corriger !!!
   if (lastEntered) {
@@ -573,7 +573,7 @@ void UEventFlow::openTipRequest(Event& e) {
 #endif
 }
 
-void UEventFlow::closeTipRequest(Event& e) {
+void EventFlow::closeTipRequest(Event& e) {
 #ifndef UBIT_WITH_GLUT
                                                  // !!! bug avec GLUT a corriger !!!
   tip_timer->stop();
@@ -583,7 +583,7 @@ void UEventFlow::closeTipRequest(Event& e) {
 #endif
 }
 
-void UEventFlow::openTipCB(TimerEvent& e) {
+void EventFlow::openTipCB(TimerEvent& e) {
   if (lastEntered) {
     Box* box = lastEntered->getBox();
     UTip* tip = null;
@@ -618,7 +618,7 @@ static const char* telepointer_xpm[] = {
 static UPix telepointer_pix(telepointer_xpm, UPix::UCONST);
 
 
-Window* UEventFlow::retrieveTelePointer(Display* rem_disp) {
+Window* EventFlow::retrieveTelePointer(Display* rem_disp) {
   unsigned int disp_id = rem_disp->getID();
     
   if (disp_id < tele_pointers.size() && tele_pointers[disp_id]) {
@@ -649,7 +649,7 @@ Window* UEventFlow::retrieveTelePointer(Display* rem_disp) {
   // telepointeurs car ces vues conditionnelles n'ont pas de sens
   // (et ne sont d'ailleurs pas affichees)
   
-void UEventFlow::showTelePointers(UMouseEvent& e, int mode)  {
+void EventFlow::showTelePointers(UMouseEvent& e, int mode)  {
   Box* source = e.getSource() ? e.getSource()->toBox() : null;
   if (!source) return;
   

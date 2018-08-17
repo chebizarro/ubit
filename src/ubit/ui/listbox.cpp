@@ -50,12 +50,12 @@ URadiobox& URadiobox::setSelectedIndex(int i) {
   return *this;
 }
 
-UListbox& UListbox::setSelectedItem(Box& i) {
+Listbox& Listbox::setSelectedItem(Box& i) {
   choice().setSelectedItem(i);  // c'est title qui est selected !
   return *this;
 }
 
-UListbox& UListbox::setSelectedIndex(int i) {
+Listbox& Listbox::setSelectedIndex(int i) {
   choice().setSelectedIndex(i);
   return *this;
 }
@@ -66,9 +66,9 @@ struct UListStyle : public UStyle {
   UListStyle();
   
   virtual const UStyle& getStyle(UpdateContext* ctx) const {
-    UListbox* l = null; 
+    Listbox* l = null; 
     if (ctx && ctx->obj 
-        && (l = dynamic_cast<UListbox*>(ctx->obj)) && l->isTransparent())
+        && (l = dynamic_cast<Listbox*>(ctx->obj)) && l->isTransparent())
       return transp_style; 
     else return *this;
   }
@@ -95,37 +95,37 @@ UListStyle::UListStyle() {
 }
 
 
-UStyle* UListbox::createStyle() {
+UStyle* Listbox::createStyle() {
   return new UListStyle;
 }
 
-UListbox::UListbox(const Args& a) : transp_style(false) {
+Listbox::Listbox(const Args& a) : transp_style(false) {
   add(a);
 }
 
-UListbox& UListbox::addItem(const String& s) {
+Listbox& Listbox::addItem(const String& s) {
   add(uitem(ustr(s)));
   return *this;
 }
 
-UListbox& UListbox::addItem(String& s, bool dup) {
+Listbox& Listbox::addItem(String& s, bool dup) {
   if (dup) add(uitem(ustr(s))); else add(uitem(s));
   return *this;
 }
 
-UListbox& UListbox::addItems(const char* tab[]) {
+Listbox& Listbox::addItems(const char* tab[]) {
   for (unsigned int k = 0; tab[k] != null ; k++)
     addItem(tab[k]);
   return *this;
 }
 
-UListbox& UListbox::addItems(const std::vector<String*>& tab, bool dup) {
+Listbox& Listbox::addItems(const std::vector<String*>& tab, bool dup) {
   for (unsigned int k = 0; k < tab.size(); k++)
     if (tab[k]) addItem(*tab[k], dup);
   return *this;
 }
 
-UListbox& UListbox::addItems(const String& item_list, const String& sep) { 
+Listbox& Listbox::addItems(const String& item_list, const String& sep) { 
   vector<String*> tab;
   unsigned int count = item_list.tokenize(tab, sep);
   for (unsigned int k = 0; k < count; k++)
@@ -133,13 +133,13 @@ UListbox& UListbox::addItems(const String& item_list, const String& sep) {
   return *this;
 }
 
-UListbox& UListbox::addItems(const Args& prefix, const char* tab[]) {
+Listbox& Listbox::addItems(const Args& prefix, const char* tab[]) {
   for (unsigned int k = 0; tab[k] != null ; k++)
     add(uitem(prefix + ustr(tab[k])));
   return *this;
 }
 
-UListbox& UListbox::addItems(const Args& prefix,
+Listbox& Listbox::addItems(const Args& prefix,
                              const std::vector<String*>& tab, bool dup) {
   for (unsigned int k = 0; k < tab.size(); k++)
     if (tab[k]) {
@@ -149,7 +149,7 @@ UListbox& UListbox::addItems(const Args& prefix,
   return *this;
 }
 
-UListbox& UListbox::addItems(const Args& prefix, const String& item_list, 
+Listbox& Listbox::addItems(const Args& prefix, const String& item_list, 
                              const String& sep) { 
   vector<String*> tab;
   unsigned int count = item_list. tokenize(tab, sep);
@@ -170,7 +170,7 @@ UTextfield(), plist(null), text_only(false) {
   constructs(Args::none);
 }
 
-UCombobox::UCombobox(UListbox& l, const Args& a) :
+UCombobox::UCombobox(Listbox& l, const Args& a) :
 UTextfield(a), plist(l), text_only(false) {
   constructs(a);
 }
@@ -204,7 +204,7 @@ UStyle* UCombobox::createStyle() {
 
 void UCombobox::actionCB(Event& e) {  //UElemEvent
   //cerr << "UCombobox::actionCB"<< typeid(e).name()  << endl;
-  //UEventFlow* flow = source_event.getFlow();
+  //EventFlow* flow = source_event.getFlow();
   // View* hardwv = ce n'est pas la meme!
   syncText();
   //Event e2(UOn::action, null, flow);
@@ -217,7 +217,7 @@ void UCombobox::actionCB(Event& e) {  //UElemEvent
 
 void UCombobox::changedCB(Event& e) {  //UElemEvent
   //cerr << "UCombobox::changedCB" << typeid(e).name() <<endl;
-  //UEventFlow* flow = source_event.getFlow();
+  //EventFlow* flow = source_event.getFlow();
   //Event e2(UOn::change, null, flow);
   //e2.setSource(this);
   //e2.setTarget(source_event.getTarget());

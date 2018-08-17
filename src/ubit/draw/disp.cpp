@@ -111,7 +111,7 @@ Display::~Display() {
  */
 // ==================================================== [Ubit Toolkit] =========
 
-URenderContext* Display::getDefaultContext() {
+RenderContext* Display::getDefaultContext() {
   if (default_context) return default_context;
   
   // if default_context is not initialized, search (by order of preference):
@@ -140,7 +140,7 @@ void Display::makeDefaultContextCurrentIfNeeded() {
   if (!Application::isUsingGL()) return;
   
   // note that getDefaulContext() inits 'default_context' if not already done
-  URenderContext* dc = getDefaultContext();
+  RenderContext* dc = getDefaultContext();
   if (!current_glcontext || !current_glcontext->isSharedWith(dc)) dc->makeCurrent(); 
 }
 
@@ -246,12 +246,12 @@ void Display::pasteSelection(UMouseEvent& e, String* _paste_str, int _paste_pos)
 
 
 Selection* Display::getChannelSelection(int _channel) {
-  UEventFlow* fl = getChannelFlow(_channel);
+  EventFlow* fl = getChannelFlow(_channel);
   if (!fl) return null;
   else return fl->getSelection();
 }
 
-UEventFlow* Display::getChannelFlow(int _channel) const {
+EventFlow* Display::getChannelFlow(int _channel) const {
   UFlowList& flist = Application::impl.flowlist; 
   for (unsigned int k = 0; k < flist.size(); ++k) {
     if (&flist[k]->getDisp() == this && flist[k]->getChannel() == _channel)
@@ -260,9 +260,9 @@ UEventFlow* Display::getChannelFlow(int _channel) const {
   return null;
 }
 
-UEventFlow* Display::obtainChannelFlow(int _channel) {
-  UEventFlow* fl = getChannelFlow(_channel);
-  if (!fl) fl = new UEventFlow(*this, _channel);
+EventFlow* Display::obtainChannelFlow(int _channel) {
+  EventFlow* fl = getChannelFlow(_channel);
+  if (!fl) fl = new EventFlow(*this, _channel);
   return fl;
 }
 
@@ -284,18 +284,18 @@ void Display::countBits(unsigned long mask, int& bits, int& shift) {
 // ==================================================== [Ubit Toolkit] =========
 // Fonts
 
-UHardFont* Display::getFont(const UFontDesc* f) { // !NOTE: may change the glcontext!
+UHardFont* Display::getFont(const FontDescription* f) { // !NOTE: may change the glcontext!
   if (!f) return null;
   makeDefaultContextCurrentIfNeeded();
    
-  const UFontFamily& ff = *(f->family);
+  const FontFamily& ff = *(f->family);
   if (!ff.ready || ff.ffindex >= (signed)font_map.size() || !font_map[ff.ffindex] 
       || f->findex < 0 || !font_map[ff.ffindex][f->findex])
     return realizeFont(*f);
   else return font_map[ff.ffindex][f->findex];
 }
 
-void Display::realizeFontFamily(const UFontFamily& fam) {
+void Display::realizeFontFamily(const FontFamily& fam) {
   if (fam.ffindex < 0) {      // new FontFamily
     fam.ffindex = fam.family_count++;
   }
@@ -336,16 +336,16 @@ void Display::realizeFontFamily(const UFontFamily& fam) {
 }
 
 
-UHardFont* Display::realizeFont(const UFont& font) {
-  UFontDesc f(font);
+UHardFont* Display::realizeFont(const Font& font) {
+  FontDescription f(font);
   return realizeFont(f);
 }
 
-UHardFont* Display::realizeFont(const UFontDesc& _f) {
-  const UFontFamily* fam = _f.family;
+UHardFont* Display::realizeFont(const FontDescription& _f) {
+  const FontFamily* fam = _f.family;
   // on ne peut pas modifier _f directement car _f.family doit
-  // rester null dans les cas des modifiers UFont::small etc
-  UFontDesc f = _f;
+  // rester null dans les cas des modifiers Font::small etc
+  FontDescription f = _f;
   
   // sets and initializes the font family if needed
   if (!fam) f.family = fam = Application::conf.default_font->family;
@@ -370,14 +370,14 @@ UHardFont* Display::realizeFont(const UFontDesc& _f) {
   
   // otherwise...
   String s = "Can't load font '"; s &= fam->name;
-  if (f.styles & UFont::BOLD) s &= " bold";
-  if (f.styles & UFont::ITALIC) s &= " italic";
+  if (f.styles & Font::BOLD) s &= " bold";
+  if (f.styles & Font::ITALIC) s &= " italic";
   s &= "' (using alternate font)";
   Application::warning("Display::realizeFont", s.c_str());
   
   // try the same font without stylistic options
   if (f.styles != 0)  {
-    UFontDesc fd2 = f;
+    FontDescription fd2 = f;
     fd2.styles = 0;
     fd2.setScale(1.);    // sinon fd2.index serait incorrect
     UHardFont* nf2 = getFont(&fd2);
@@ -388,9 +388,9 @@ UHardFont* Display::realizeFont(const UFontDesc& _f) {
   }
   
   // try the default font 
-  if (f.family->name != UFontFamily::defaults.name)  {
-    UFontDesc fd2 = f;
-    fd2.family = &UFontFamily::defaults;
+  if (f.family->name != FontFamily::defaults.name)  {
+    FontDescription fd2 = f;
+    fd2.family = &FontFamily::defaults;
     //fd2.styles = 0;
     fd2.setScale(1.);    // sinon fd2.index serait incorrect
     UHardFont* nf2 = getFont(&fd2);
@@ -404,7 +404,7 @@ UHardFont* Display::realizeFont(const UFontDesc& _f) {
   const int LAST_RESORT_FONT_SIZE = 12;
   
   if (f.actual_size != LAST_RESORT_FONT_SIZE)  {
-    UFontDesc fd2 = f;
+    FontDescription fd2 = f;
     fd2.styles = 0;
     fd2.def_size = LAST_RESORT_FONT_SIZE;
     fd2.setScale(1.);    // sinon fd2.index serait incorrect
@@ -422,7 +422,7 @@ UHardFont* Display::realizeFont(const UFontDesc& _f) {
 
 // ==================================================== [Ubit Toolkit] =========
 
-UEventFlow* Display::obtainFlow(unsigned int estate, int channel) {
+EventFlow* Display::obtainFlow(unsigned int estate, int channel) {
   if (estate & UMS_EVENT_MASK) {                         // ???? !!! PBM si pas X11 ???
     // create a new flow or returns an existing flow if ID already used.
     return obtainChannelFlow(channel);

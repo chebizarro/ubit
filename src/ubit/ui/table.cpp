@@ -71,7 +71,7 @@ UStyle* UTrow::createStyle() {
 
 UStyle* UTcell::createStyle() {
   UStyle* style = new UStyle();
-  style->viewStyle = &UFlowView::style;
+  style->viewStyle = &FlowView::style;
   style->orient = UOrient::HORIZONTAL;
   style->halign = Halign::FLEX;
   style->valign = Valign::FLEX;
@@ -120,7 +120,7 @@ void UTcell::setRowspan(short _rowspan) {
 }
 
 
-UViewStyle UTableView::style(&UTableView::createView, UCONST);
+ViewStyle UTableView::style(&UTableView::createView, UCONST);
 
 View* UTableView::createView(Box* box, View* parview, UHardwinImpl* w) {
   return new UTableView(box, parview, w);

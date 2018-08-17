@@ -46,11 +46,11 @@ USubwin(a), is_init(false), share_glresources(false)
 
 UGlcanvas::~UGlcanvas() {}
 
-UGlcontext* UGlcanvas::getGlcontext() const {
+GLContext* UGlcanvas::getGlcontext() const {
   return hardImpl()->getGlcontext();
 }
 
-//void UGlcanvas::shareContextResources(UGlcontext* gc) {shared_res_ctx = gc;}
+//void UGlcanvas::shareContextResources(GLContext* gc) {shared_res_ctx = gc;}
 //void UGlcanvas::setAutoBufferSwap(bool state) {is_autoswap = state;}
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -79,12 +79,12 @@ bool UGlcanvas::realize() {
   if (! USubwin::realize()) return false;
   UHardwinImpl* hw = hardImpl();
   
-  UGlcontext* sharelists = null;
+  GLContext* sharelists = null;
   if (share_glresources) sharelists = hw->getDisp()->default_context->toGlcontext();
 
 #ifndef UBIT_WITH_GLUT
   // when GLUT is used, each hardwin has its own glcontext, it must be created otherwise
-  hw->glcontext = new UGlcontext(hw->getDisp(), sharelists);
+  hw->glcontext = new GLContext(hw->getDisp(), sharelists);
 #endif
   
   if (! hw->glcontext) {
@@ -130,7 +130,7 @@ void UGlcanvas::resizeImpl(UResizeEvent& e)
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UGlcanvas::paintImpl(UPaintEvent& e) 
+void UGlcanvas::paintImpl(PaintEvent& e) 
 {
   if (is_init) {
     UHardwinImpl* hw = hardImpl();
@@ -146,7 +146,7 @@ void UGlcanvas::paintImpl(UPaintEvent& e)
     glFlush();
     
     // pour afficher correctement les enfants
-    UGlcontext* default_gc = hw->getDisp()->getDefaultContext()->toGlcontext();
+    GLContext* default_gc = hw->getDisp()->getDefaultContext()->toGlcontext();
     if (default_gc) default_gc->makeCurrent();
   }
 }

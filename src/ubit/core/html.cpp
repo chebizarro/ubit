@@ -173,7 +173,7 @@ void UHtml_style::initNode(Document* doc) {
   if (xmldoc) {
     ChildIter i = cbegin();
     if (i != cend()) {
-      UCssParser css;
+      CssParser css;
       String* text = dynamic_cast<String*>(*i);    // UXmlText
       const String* val = text ? &text->getData() : null;
       if (val) css.parse(*val, xmldoc);
@@ -230,7 +230,7 @@ void UHtml_img::initNode(Document* doc) {
 void HtmlStyle::initNode(Document* doc, Element*) {
   XmlDocument* xmldoc = dynamic_cast<XmlDocument*>(doc);
   if (xmldoc && pvalue && !pvalue->empty()) {
-    UCssParser css;
+    CssParser css;
     css.parseAttr(*pvalue, xmldoc, this);
   }
 }

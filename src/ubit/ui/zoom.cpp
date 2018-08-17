@@ -35,16 +35,16 @@ bool UInscale::verifies(const UpdateContext& ctx, const Element&) const {
 UZoommenu::UZoommenu(Box& zoomed_box, Box& panned_box) :
 pzoom_action(new UZoomAction(zoomed_box)),  // for centred zooming
 ppan_action(new UPanAction(panned_box)),    // for panning
-event_mask(UModifier::RightButton | UModifier::ControlDown)
+event_mask(Modifier::RightButton | Modifier::ControlDown)
 {
   itemRadius() = 0;
 
   // items 0 and 4 zoom the zoomed_box
   item(0).setAttr(*pzoom_action);
-  item(0).add(UFont::xx_large + UFont::bold + Color::red + "  Z+ ");
+  item(0).add(Font::xx_large + Font::bold + Color::red + "  Z+ ");
   
   item(4).setAttr(*pzoom_action);
-  item(4).add(UFont::xx_large + UFont::bold + Color::red + "  Z-  ");
+  item(4).add(Font::xx_large + Font::bold + Color::red + "  Z-  ");
   
   // items 2 and 6 pan the zoomed_box
   item(2).setAttr(*ppan_action);

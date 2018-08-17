@@ -1,5 +1,5 @@
 /*
- *  uhardfont.cpp
+ *  hardfont.cpp
  *  Ubit GUI Toolkit - Version 8
  *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
@@ -42,7 +42,7 @@
 
 namespace ubit {
 
-UHardFont::UHardFont(Display* nd, const UFontDesc& fd)  // glcontext dependent!!!
+UHardFont::UHardFont(Display* nd, const FontDescription& fd)  // glcontext dependent!!!
 : status(NO_FONT), count(1)
 #if WITH_2D_GRAPHICS
   ,sysf(0)
@@ -212,20 +212,20 @@ static bool getNext(String& item, String& list) {
 
 #if WITH_2D_GRAPHICS
 
-XFontStruct* UHardFont::loadSysFont(Display* nd, const UFontDesc& fd) {
+XFontStruct* UHardFont::loadSysFont(Display* nd, const FontDescription& fd) {
   if (!fd.family) return null;
-  const UFontFamily* ff = fd.family;
+  const FontFamily* ff = fd.family;
   String family, families = ff->defs.families;
   
   while ((getNext(family, families))) {
     
     String weight, weights = 
-    (fd.styles & UFont::BOLD) ? ff->defs.bold_weight : ff->defs.normal_weight;
+    (fd.styles & Font::BOLD) ? ff->defs.bold_weight : ff->defs.normal_weight;
 
     while ((getNext(weight, weights))) {
 
       String style, styles =
-      (fd.styles & UFont::ITALIC) ? ff->defs.italic_style : ff->defs.normal_style;
+      (fd.styles & Font::ITALIC) ? ff->defs.italic_style : ff->defs.normal_style;
       
       while ((getNext(style, styles))) {
         char font_name[500];
@@ -257,7 +257,7 @@ XFontStruct* UHardFont::loadSysFont(Display* nd, const UFontDesc& fd) {
 
 // !!!!!!!!!!!!!!!!!  GESTION COUTEUSE ??? A REVOIR !!!! @@@@  !!!!!!!!!!!!!!!!!!!!!!!!
 
-FTFont* UHardFont::loadFTGLFont(Display* nd, const UFontDesc& fd) {
+FTFont* UHardFont::loadFTGLFont(Display* nd, const FontDescription& fd) {
 #if !defined(UBIT_WITH_FREETYPE)
   Application::fatalError("UHardFont::loadFTGLFont",
                      "FreeType font requested but Ubit was compiled without FreeType");
@@ -265,19 +265,19 @@ FTFont* UHardFont::loadFTGLFont(Display* nd, const UFontDesc& fd) {
   
 #else
   if (!fd.family) return null;
-  const UFontFamily* ff = fd.family;
+  const FontFamily* ff = fd.family;
   String fnames;
   //int card = 0;
   //char ** list = XGetFontPath(nd->getSysDisp(), &card);
   //for (int k = 0; k < card; k++) cerr << list[k] << endl;
   //if (list) XFreeFontPath(list);
   
-  if (fd.styles & UFont::ITALIC) {
-    if (fd.styles & UFont::BOLD) fnames = ff->defs.fty_bold_italic;
+  if (fd.styles & Font::ITALIC) {
+    if (fd.styles & Font::BOLD) fnames = ff->defs.fty_bold_italic;
     else  fnames = ff->defs.fty_italic;
   }
   else {
-    if (fd.styles & UFont::BOLD) fnames = ff->defs.fty_bold;
+    if (fd.styles & Font::BOLD) fnames = ff->defs.fty_bold;
     else  fnames = ff->defs.fty_regular;
   }
   

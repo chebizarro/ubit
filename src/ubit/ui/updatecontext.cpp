@@ -1,5 +1,5 @@
 /*
- *  updatecontext.cpp: [implementation] stack context
+ *  pdatecontext.cpp: [implementation] stack context
  *  Ubit GUI Toolkit - Version 6.0
  *  (C) 2008 | Eric Lecolinet | ENST Paris | www.enst.fr/~elc/ubit
  *
@@ -89,7 +89,7 @@ graph(parctx.graph)
 // creates the first layer of the context stack
 // !Warning: 'win_view' must be a valid (not null) window view!
 
-UWinUpdateContext::UWinUpdateContext(View* win_view, Graph* g) :
+WindowUpdateContext::WindowUpdateContext(View* win_view, Graph* g) :
 UpdateContext(win_view) {
   win_ctx = this;
   graph = g;
@@ -98,7 +98,7 @@ UpdateContext(win_view) {
 
 UpdateContext::UpdateContext(View* win_view) :
 parent_ctx(null),
-win_ctx(null),   // init in UWinUpdateContext
+win_ctx(null),   // init in WindowUpdateContext
 flag_count(0),
 obj(win_view->getBox()),
 view(win_view),

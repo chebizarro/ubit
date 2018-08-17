@@ -245,7 +245,7 @@ void UScrollpane::setScrollImpl(float _xscroll, float _yscroll) {
       View* viewport_view = getScrolledView(pane_view);
       
       if (viewport_view) {
-        UPaintEvent e(UOn::paint, winview);
+        PaintEvent e(UOn::paint, winview);
         e.setSourceAndProps(viewport_view);
         float xoffset = 0, yoffset = 0;
         //float deltax = 0, deltay = 0;
@@ -342,7 +342,7 @@ void UScrollpane::resizeCB(UResizeEvent& e) {
 }
 
 
-UViewStyle UPaneView::style(&UPaneView::createView, UCONST);
+ViewStyle UPaneView::style(&UPaneView::createView, UCONST);
 
 UPaneView::UPaneView(Box* box, View* parview, UHardwinImpl* w) : 
   View(box, parview, w), 
@@ -351,7 +351,7 @@ UPaneView::UPaneView(Box* box, View* parview, UHardwinImpl* w) :
   yscroll(0) {
 }
 
-// "static" constructor used by UViewStyle to make a new view
+// "static" constructor used by ViewStyle to make a new view
 View* UPaneView::createView(Box* box, View* parview, UHardwinImpl* w) {
   return new UPaneView(box, parview, w);
 }

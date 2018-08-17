@@ -163,7 +163,7 @@ public:
   virtual void hideCB(Event&);
   ///< [impl] called when the menu is hidden.
 
-  virtual void paintCB(UPaintEvent&);
+  virtual void paintCB(PaintEvent&);
   ///< [impl] called when the menu is repainted.
     
   virtual void resizeCB(UResizeEvent&);
@@ -219,7 +219,7 @@ protected:
   unsigned long show_delay;
   Point armpos, mousepos;
   USize pie_size;
-  uptr<UTimer> ptimer;
+  uptr<Timer> ptimer;
   //uptr<Box> parmed; plantage: parmed n'appartient pas au menu!
   Box* parmed;
   UPiemenu *from_menu, *to_menu;

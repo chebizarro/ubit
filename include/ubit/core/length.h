@@ -104,7 +104,7 @@ namespace ubit {
         
     String toString() const;
     
-    float toPixels(Display*, const UFontDesc&, float view_len, float parview_len) const;
+    float toPixels(Display*, const FontDescription&, float view_len, float parview_len) const;
     
     friend std::ostream& operator<<(std::ostream& s, const Length& l);
     friend Length operator|(float len, Unit u);

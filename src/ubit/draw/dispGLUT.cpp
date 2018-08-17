@@ -82,8 +82,8 @@ UDispGLUT::UDispGLUT(const String& _dname) : Display(_dname)
   //  return;
   //}
   
-  UModifier::mapKeys(this);
-  UKey::mapKeys(this);
+  Modifier::mapKeys(this);
+  Key::mapKeys(this);
   
   //default_rc->setDest(mainframe, 0, 0);  n'exsite pas sous GLUT!
   is_opened = true;
@@ -96,7 +96,7 @@ UDispGLUT::~UDispGLUT() {
 
 // ==================================================== [Ubit Toolkit] =========
   
-unsigned long UDispGLUT::createColorPixel(const URgba& rgba) {
+unsigned long UDispGLUT::createColorPixel(const Rgba& rgba) {
   return 0;
 }
 
@@ -195,7 +195,7 @@ namespace glut {
   static void winMotionCB(int x, int y) {
     Window* win = _disp->retrieveWin(glutGetWindow());
     if (!win) return;
-    UEventFlow* f = Application::impl.flowlist[0];
+    EventFlow* f = Application::impl.flowlist[0];
     unsigned long time = Application::getTime();  
 
     f->mouseMotion(win->getWinView(_disp), time, _state, Point(x,y), 
@@ -212,7 +212,7 @@ namespace glut {
     Window* win = _disp->retrieveWin(cur_win);
     if (!win) return;
 
-    UEventFlow* f = Application::impl.flowlist[0];
+    EventFlow* f = Application::impl.flowlist[0];
     View* winview = win->getWinView(_disp);
     unsigned long time = Application::getTime();
     
@@ -276,7 +276,7 @@ namespace glut {
   static void winSpecialCB(int keycode, int x, int y) {  // modifiers, etc.
     Window* win = _disp->retrieveWin(glutGetWindow());
     if (!win) return;
-    UEventFlow* f = Application::impl.flowlist[0];
+    EventFlow* f = Application::impl.flowlist[0];
     View* winview = win->getWinView(_disp);
     unsigned long time = Application::getTime();
 
@@ -297,7 +297,7 @@ namespace glut {
   static void winKeyboardCB(unsigned char keychar, int x, int y) {
     Window* win = _disp->retrieveWin(glutGetWindow());
     if (!win) return;
-    UEventFlow* f = Application::impl.flowlist[0];
+    EventFlow* f = Application::impl.flowlist[0];
     View* winview = win->getWinView(_disp);
     unsigned long time = Application::getTime();
 
@@ -324,7 +324,7 @@ namespace glut {
   static void winEntryCB(int in_out) {
     Window* win = _disp->retrieveWin(glutGetWindow());
     if (!win) return;
-    UEventFlow* f = Application::impl.flowlist[0];    
+    EventFlow* f = Application::impl.flowlist[0];    
     View* winview = win->getWinView(_disp);
     unsigned long time = Application::getTime();
 

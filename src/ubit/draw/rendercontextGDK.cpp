@@ -31,7 +31,7 @@
 #define NAMESPACE_UBIT namespace ubit {
 NAMESPACE_UBIT
 
-URenderContextGDK::URenderContextGDK(Display* d, URenderContext* notused) : URenderContext(d)
+URenderContextGDK::URenderContextGDK(Display* d, RenderContext* notused) : RenderContext(d)
 {
   sys_disp = ((UDispGDK*)d)->getSysDisp();
   sys_gc = ....;
@@ -69,7 +69,7 @@ void URenderContextGDK::setClip(double x, double y, double width, double height)
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   
-void URenderContextGDK::setFont(const UFontDesc& fd) {
+void URenderContextGDK::setFont(const FontDescription& fd) {
   GdkGCValues gcval;
   gcval.font = graph->font->sysf;
   gdk_gc_set_values(sys_gc, &gcval, GDK_GC_FONT);  //(GdkGCValuesMask)GDK_GC_FONT

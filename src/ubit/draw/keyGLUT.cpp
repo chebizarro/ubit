@@ -22,86 +22,86 @@
 namespace ubit {
 
 const int 
-  UModifier::LeftButton  = 1<<8, 
-  UModifier::MidButton   = 1<<9, 
-  UModifier::RightButton = 1<<10,
-  UModifier::ShiftDown   = GLUT_ACTIVE_SHIFT, // 1<<0
-  UModifier::ControlDown = GLUT_ACTIVE_CTRL,  // 1<<1
-  &UModifier::MetaDown   = 1<<3,              // NOT defined by GLUT
-  &UModifier::AltDown    = GLUT_ACTIVE_ALT,   // 1<<2
-  UModifier::AltGraphDown= 0x2000;            // ????
+  Modifier::LeftButton  = 1<<8, 
+  Modifier::MidButton   = 1<<9, 
+  Modifier::RightButton = 1<<10,
+  Modifier::ShiftDown   = GLUT_ACTIVE_SHIFT, // 1<<0
+  Modifier::ControlDown = GLUT_ACTIVE_CTRL,  // 1<<1
+  &Modifier::MetaDown   = 1<<3,              // NOT defined by GLUT
+  &Modifier::AltDown    = GLUT_ACTIVE_ALT,   // 1<<2
+  Modifier::AltGraphDown= 0x2000;            // ????
 
   /*
 const int
-  UModifier::MButton1 = UModifier::LeftButton, 
-  UModifier::MButton2 = UModifier::MidButton, 
-  UModifier::MButton3 = UModifier::RightButton ,
-  UModifier::ShiftButton =   UModifier::ShiftDown,
-  UModifier::ControlButton = UModifier::ControlDown;
+  Modifier::MButton1 = Modifier::LeftButton, 
+  Modifier::MButton2 = Modifier::MidButton, 
+  Modifier::MButton3 = Modifier::RightButton ,
+  Modifier::ShiftButton =   Modifier::ShiftDown,
+  Modifier::ControlButton = Modifier::ControlDown;
 */
   
 const int 
-  UKey::BackSpace = 127,
-  UKey::Tab    = 9,
-  UKey::Clear  = 0,
-  UKey::Enter  = 13,  // comme F13 ?
-  UKey::Pause  = 0,
-  UKey::ScrollLock = 0,
-  UKey::Escape = 27,
-  UKey::Delete = 8,
-  UKey::Print  = 0,
-  UKey::Insert = GLUT_KEY_INSERT,
-  UKey::Undo   = 0,
-  UKey::Again  = 0,
-  UKey::Menu   = 0,
-  UKey::Find   = 0,
-  UKey::Cancel = 0,
-  UKey::Help   = 0,
+  Key::BackSpace = 127,
+  Key::Tab    = 9,
+  Key::Clear  = 0,
+  Key::Enter  = 13,  // comme F13 ?
+  Key::Pause  = 0,
+  Key::ScrollLock = 0,
+  Key::Escape = 27,
+  Key::Delete = 8,
+  Key::Print  = 0,
+  Key::Insert = GLUT_KEY_INSERT,
+  Key::Undo   = 0,
+  Key::Again  = 0,
+  Key::Menu   = 0,
+  Key::Find   = 0,
+  Key::Cancel = 0,
+  Key::Help   = 0,
   
-  UKey::NumLock  = 0,
-  UKey::CapsLock = 0,
-  UKey::Shift    = 0,
-  UKey::Control  = 0,
-  UKey::Meta     = 0,
-  UKey::Alt      = 0,
+  Key::NumLock  = 0,
+  Key::CapsLock = 0,
+  Key::Shift    = 0,
+  Key::Control  = 0,
+  Key::Meta     = 0,
+  Key::Alt      = 0,
 
-  UKey::Home = GLUT_KEY_HOME,
-  UKey::End  = GLUT_KEY_END,
-  UKey::Left = GLUT_KEY_LEFT,
-  UKey::Up   = GLUT_KEY_UP,
-  UKey::Right= GLUT_KEY_RIGHT,
-  UKey::Down = GLUT_KEY_DOWN,
-  UKey::PageUp   = GLUT_KEY_PAGE_UP,
-  UKey::PageDown = GLUT_KEY_PAGE_DOWN,
+  Key::Home = GLUT_KEY_HOME,
+  Key::End  = GLUT_KEY_END,
+  Key::Left = GLUT_KEY_LEFT,
+  Key::Up   = GLUT_KEY_UP,
+  Key::Right= GLUT_KEY_RIGHT,
+  Key::Down = GLUT_KEY_DOWN,
+  Key::PageUp   = GLUT_KEY_PAGE_UP,
+  Key::PageDown = GLUT_KEY_PAGE_DOWN,
    
   // function keys
-  UKey::F1 = GLUT_KEY_F1,
-  UKey::F2 = GLUT_KEY_F2,
-  UKey::F3 = GLUT_KEY_F3,
-  UKey::F4 = GLUT_KEY_F4,
-  UKey::F5 = GLUT_KEY_F5,
-  UKey::F6 = GLUT_KEY_F6,
-  UKey::F7 = GLUT_KEY_F7,
-  UKey::F8 = GLUT_KEY_F8,
-  UKey::F9 = GLUT_KEY_F9,
-  UKey::F10 = GLUT_KEY_F10,
-  UKey::F11 = GLUT_KEY_F11,
-  UKey::F12 = GLUT_KEY_F12,
-  UKey::F13 = 13,  // comme Enter ?
-  UKey::F14 = 14,
-  UKey::F15 = 15,
-  UKey::F16 = 16,
-  UKey::F17 = 17,
-  UKey::F18 = 18,
-  UKey::F19 = 19,
-  UKey::F20 = 20,
-  UKey::F21 = 21,
-  UKey::F22 = 22,
-  UKey::F23 = 23,
-  UKey::F24 = 24;
+  Key::F1 = GLUT_KEY_F1,
+  Key::F2 = GLUT_KEY_F2,
+  Key::F3 = GLUT_KEY_F3,
+  Key::F4 = GLUT_KEY_F4,
+  Key::F5 = GLUT_KEY_F5,
+  Key::F6 = GLUT_KEY_F6,
+  Key::F7 = GLUT_KEY_F7,
+  Key::F8 = GLUT_KEY_F8,
+  Key::F9 = GLUT_KEY_F9,
+  Key::F10 = GLUT_KEY_F10,
+  Key::F11 = GLUT_KEY_F11,
+  Key::F12 = GLUT_KEY_F12,
+  Key::F13 = 13,  // comme Enter ?
+  Key::F14 = 14,
+  Key::F15 = 15,
+  Key::F16 = 16,
+  Key::F17 = 17,
+  Key::F18 = 18,
+  Key::F19 = 19,
+  Key::F20 = 20,
+  Key::F21 = 21,
+  Key::F22 = 22,
+  Key::F23 = 23,
+  Key::F24 = 24;
 
-void UModifier::mapKeys(Display* nd) { }
-void UKey::mapKeys(Display* nd) { }
+void Modifier::mapKeys(Display* nd) { }
+void Key::mapKeys(Display* nd) { }
 
 }
 #endif

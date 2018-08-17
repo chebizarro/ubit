@@ -1,5 +1,5 @@
 /*
- *  ugraph.h: Graphics Layer
+ *  graph.h: Graphics Layer
  *  Ubit GUI Toolkit - Version 8
  *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
@@ -119,12 +119,12 @@ Graph::Graph(View* v) {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-Graph::Graph(UPaintEvent& e) {
+Graph::Graph(PaintEvent& e) {
   rc = null; // securite pour ~Graph
   UpdateContext* c = e.current_context;
   Graph* g = c ? c->getGraph() : null;
   if (g == null || g->rc == null) {
-    Application::fatalError("Graph::Graph(UPaintEvent&)","null graphics context: cannot create Graph");
+    Application::fatalError("Graph::Graph(PaintEvent&)","null graphics context: cannot create Graph");
     return;
   }
   View* v = e.getView();  
@@ -132,7 +132,7 @@ Graph::Graph(UPaintEvent& e) {
   disp = g->disp;
   hardwin = g->hardwin;
   font = g->font;
-  UGraphAttributes::operator=(*g);  
+  GraphAttributes::operator=(*g);  
   is_client = true;
 
 #if UBIT_WITH_GLUT
@@ -146,7 +146,7 @@ Graph::Graph(UPaintEvent& e) {
   glPushAttrib(GL_ALL_ATTRIB_BITS);    // a faire par le client ?????
   //glPushAttrib(GL_LINE_BIT); suffirait   
       
-  UPaintEvent e2(UOn::paint, v->getWinView(), null/*flow*/);
+  PaintEvent e2(UOn::paint, v->getWinView(), null/*flow*/);
   e2.setSourceAndProps(v);
   //rc->setOffset(v->x, v->y); //remplacé avantageusement par glTranslatef()
   
@@ -184,23 +184,23 @@ Graph::~Graph() {
 
 // ==================================================== [Ubit Toolkit] =========
 
-int Graph::Glpaint::count = 0;
+int Graph::GLPaint::count = 0;
 
-Graph::Glpaint::Glpaint(UPaintEvent& e, bool _push_attrib) {
+Graph::GLPaint::GLPaint(PaintEvent& e, bool _push_attrib) {
   begin(e.getView(), _push_attrib);
 }
 
-Graph::Glpaint::Glpaint(View* v, bool _push_attrib) {
+Graph::GLPaint::GLPaint(View* v, bool _push_attrib) {
   begin(v, _push_attrib);
 }
 
-Graph::Glpaint:: ~ Glpaint() {   
+Graph::GLPaint:: ~ GLPaint() {   
   end();
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void Graph::Glpaint::begin(View* v, bool _push_attrib) {
+void Graph::GLPaint::begin(View* v, bool _push_attrib) {
   no = ++count;
   push_attrib = _push_attrib;
   hardwin = null;
@@ -233,7 +233,7 @@ void Graph::Glpaint::begin(View* v, bool _push_attrib) {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void Graph::Glpaint::end() {   
+void Graph::GLPaint::end() {   
   if (!hardwin) return;  
   //cerr << "< GLSection " << no << " : " <<hardwin <<endl;
   
@@ -253,7 +253,7 @@ void Graph::Glpaint::end() {
 
 // ==================================================== [Ubit Toolkit] =========
 /*
-void UPaintEvent::beginGL() {
+void PaintEvent::beginGL() {
 #if UBIT_WITH_GL
   View* winview = null;
   UHardwinImpl* hardwin = null;
@@ -262,7 +262,7 @@ void UPaintEvent::beginGL() {
       || !(winview = source_view->getWinView())
       || !(hardwin = source_view->getHardwin())
       ) {
-    Application::internalError("UPaintEvent::beginGL","Null window view, function failed");
+    Application::internalError("PaintEvent::beginGL","Null window view, function failed");
     return;
   }
   
@@ -283,7 +283,7 @@ void UPaintEvent::beginGL() {
 #endif
 }
 
-void UPaintEvent::endGL() {
+void PaintEvent::endGL() {
 #if UBIT_WITH_GL
   View* winview = null;
   UHardwinImpl* hardwin = null;
@@ -291,7 +291,7 @@ void UPaintEvent::endGL() {
   if (!source_view || !(winview = source_view->getWinView())
       || !(hardwin = source_view->getHardwin())
       ) {
-    Application::internalError("UPaintEvent::endGL","Null window view, function failed");
+    Application::internalError("PaintEvent::endGL","Null window view, function failed");
     return;
   }
   
@@ -460,16 +460,16 @@ void Graph::setWidth(float w) {
   if (rc) rc->setWidth(*this, w);
 }
 
-void Graph::getFontMetrics(const UFont& f, UFontMetrics& fm) const {
+void Graph::getFontMetrics(const Font& f, FontMetrics& fm) const {
   fm.set(f, disp);
 }
 
-void Graph::setFont(const UFont& f) {
-  UFontDesc fd(f);
+void Graph::setFont(const Font& f) {
+  FontDescription fd(f);
   setFont(fd);
 }
 
-void Graph::setFont(const UFontDesc& fd) {
+void Graph::setFont(const FontDescription& fd) {
   UHardFont* f = disp->getFont(&fd);
   if (!f) {
     Application::error("Graph::setFont","null font");
@@ -593,27 +593,27 @@ void Graph::drawString(const char* str, int str_len, double x, double y) const {
   float textWidth = nf->getWidth(str, str_len);
   
   // draw underline, overline, strike-through
-  if (font_styles > UFont::BOLD+UFont::ITALIC) {
+  if (font_styles > Font::BOLD+Font::ITALIC) {
     
-    if (font_styles & UFont::FILL) {
+    if (font_styles & Font::FILL) {
       ((Graph*)this)->setColor(Color::lightblue);    // !!!!!!!!!!!&&& TEST @@@@
       float h = fontAscent + fontDescent;
       rc->drawRect(x, y, textWidth, h, true); // filled
       ((Graph*)this)->setColor(Color::navy);     // !!!!!!!!!!!!!&&&!!!!!!!!
     }
     
-    if (font_styles & UFont::UNDERLINE) {
+    if (font_styles & Font::UNDERLINE) {
       float ypos = y + fontAscent + fontDescent/2;
       rc->drawLine(x, ypos, x+textWidth, ypos);
     }
     
-    if (font_styles & UFont::OVERLINE) {
+    if (font_styles & Font::OVERLINE) {
       //float ypos = rc->ywin + y;
       //drawLine(x, ypos, x2, ypos);
       rc->drawLine(x, y, x+textWidth, y);
     }
     
-    if (font_styles & UFont::STRIKETHROUGH) {
+    if (font_styles & Font::STRIKETHROUGH) {
       float ypos = y + 3 * fontAscent / 4;
       rc->drawLine(x, ypos, x+textWidth, ypos);
     }

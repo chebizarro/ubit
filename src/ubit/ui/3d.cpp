@@ -248,9 +248,9 @@ Box& U3Dwin::createTitleBar(const String& title) {
   uhbox(*new U3DposHandle(*ppos, U3DposHandle::XYPOS) 
         + uleft()
         + ualpha(0.5) + Background::navy + upadding(UIGNORE,2) + Color::white 
-        + UFont::bold + " " + uelem(ustr(title)) + "         "
+        + Font::bold + " " + uelem(ustr(title)) + "         "
         + ubox(*new U3DposHandle(*ppos, U3DposHandle::ZPOS)
-               + Background::white + Color::navy + UFont::x_large + " zZ ")
+               + Background::white + Color::navy + Font::x_large + " zZ ")
         + uelem(uscale(0.6) //+ Background::white
                    + ustr(" ")  // ustr needed by CC for some reason 
                    + ubox(*new U3DposHandle(*ppos, U3DposHandle::YROT) + U3Dicon::y_rot)
@@ -271,7 +271,7 @@ Box& U3Dwin::createTitleBar(const String& title) {
 
 UStyle* U3Dcanvas::createStyle() {
   UStyle* style = Box::createStyle();
-  style->viewStyle = &U3DcanvasView::style;
+  style->viewStyle = &3DCanvasView::style;
   style->halign = Halign::LEFT;
   style->valign = Valign::TOP;
   return style;
@@ -291,9 +291,9 @@ U3Dcanvas::~U3Dcanvas() {}
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-UViewStyle U3DcanvasView::style(&U3DcanvasView::createView, UCONST);
+ViewStyle 3DCanvasView::style(&3DCanvasView::createView, UCONST);
 
-void U3DcanvasView::doUpdate(UpdateContext& ctx, Rectangle r, Rectangle clip, UViewUpdate& vu) {
+void 3DCanvasView::doUpdate(UpdateContext& ctx, Rectangle r, Rectangle clip, UViewUpdate& vu) {
 #ifndef UBIT_WITH_GL
   View::doUpdate(ctx, r, clip, vu);
 #else
@@ -304,7 +304,7 @@ void U3DcanvasView::doUpdate(UpdateContext& ctx, Rectangle r, Rectangle clip, UV
   if (g) {
     g->set3Dmode(true);
     // set the viewport for drawing in the 3Dcanvas
-    //cerr << "<<U3DcanvasView glViewport: "<< int(x)<<" "<<int(frame_height - height - y)<<" "<< int(width)<<" "<< int(height)<< endl;
+    //cerr << "<<3DCanvasView glViewport: "<< int(x)<<" "<<int(frame_height - height - y)<<" "<< int(width)<<" "<< int(height)<< endl;
     
     glViewport(int(x), int(frame_height - height - y), int(width), int(height));
      
@@ -346,7 +346,7 @@ void U3DcanvasView::doUpdate(UpdateContext& ctx, Rectangle r, Rectangle clip, UV
     glDisable(GL_POLYGON_SMOOTH);
     
     // set the viewport for drawing in the whole hard window
-    //cerr << ">>U3DcanvasView glViewport: 0 0 " << frame_width<< " " << frame_height << endl << endl;
+    //cerr << ">>3DCanvasView glViewport: 0 0 " << frame_width<< " " << frame_height << endl << endl;
     glViewport(0, 0, frame_width, frame_height);
 
     g->set3Dmode(false);
@@ -373,8 +373,8 @@ public:
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-View* U3DcanvasView::findInChildren(Element* grp, const Point& winpos,
-                                     const UpdateContext& ctx, UViewFind& vf) 
+View* 3DCanvasView::findInChildren(Element* grp, const Point& winpos,
+                                     const UpdateContext& ctx, ViewFind& vf) 
 {
   if (!grp->isShowable() || grp->isIgnoringEvents()) return null;
   
@@ -546,7 +546,7 @@ View* U3DcanvasView::findInChildren(Element* grp, const Point& winpos,
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-bool U3DcanvasView::unproject(const U3Dpos* pos3d,
+bool 3DCanvasView::unproject(const U3Dpos* pos3d,
                               const Point& winpos, Point& convpos) {
   glMatrixMode(GL_MODELVIEW);
   

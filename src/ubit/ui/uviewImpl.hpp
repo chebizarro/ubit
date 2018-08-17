@@ -30,7 +30,7 @@
 
 namespace ubit {
   
-  class U3DcanvasView;
+  class 3DCanvasView;
   class U3Dpos;
   
   // ==================================================== ===== =======
@@ -96,20 +96,20 @@ namespace ubit {
   };
   
   // ==================================================== ===== =======
-  // [Impl] UViewFind: struct used to find event sources.
+  // [Impl] ViewFind: struct used to find event sources.
   
-  class UViewFind {
+  class ViewFind {
   public:
-    UViewFind(View* win_view, const Point pos_in_win,
+    ViewFind(View* win_view, const Point pos_in_win,
               UBehavior::InputType intype, unsigned char catch_mask);
     void updateProps(View*, Element*, const UpdateContext& cur_ctx);
     
     View* ref_view;             // window or 3Dwidget view (if canvas_view != null)
     Point ref_pos;              // pos in ref_view (whatever it is)
-    U3DcanvasView* canvas_view;  // != null if the source is in a 3Dwidget
+    3DCanvasView* canvas_view;  // != null if the source is in a 3Dwidget
     U3Dpos* refpos_in_canvas;    // 3Dpos of the 3Dwidget in canvas_view (if it is != null)
     
-    UWinUpdateContext win_ctx;
+    WindowUpdateContext win_ctx;
     UpdateContext found_ctx;
     unsigned char CATCH_MASK;
     Box* catched;
@@ -204,7 +204,7 @@ namespace ubit {
     unsigned char orient;
     UViewUpdate& upmode;
     class UTableView* tabview;
-    class UEdit* edit;  
+    class TextEdit* edit;  
   };
   
   // ==================================================== ===== =======

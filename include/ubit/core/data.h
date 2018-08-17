@@ -1,5 +1,5 @@
 /*
- *  udata.h: all viewable objects that can be inserted in an element
+ *  data.h: all viewable objects that can be inserted in an element
  *  Ubit GUI Toolkit - Version 8
  *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit

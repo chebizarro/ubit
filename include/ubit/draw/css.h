@@ -1,5 +1,5 @@
 /*
- *  ucss.hpp
+ *  css.hpp
  *  Ubit GUI Toolkit - Version 8
  *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
@@ -21,8 +21,8 @@
  * 
  */
 
-#ifndef _ucss_hpp_
-#define _ucss_hpp_ 1
+#ifndef UBIT_DRAW_CSS_H_
+#define UBIT_DRAW_CSS_H_
 
 #include <map>
 #include <ubit/udefs.hpp>
@@ -35,7 +35,7 @@ namespace ubit {
   /** [impl] CSS parser for XML/HTML documents.
    * this stylesheet parser is used implicitely when reading XmlDocument objects.
    */
-  class UCssParser : public StyleParser {
+  class CssParser : public StyleParser {
   public:
     int parse(const String& buffer, class XmlDocument*);
     int parseAttr(const String& buffer, class XmlDocument*, AttributeList*);
@@ -43,12 +43,12 @@ namespace ubit {
   
   
   /** [impl] precompiled style properties.
-   * base for UCssProps.
+   * base for CssProperties.
    */
-  class UStyleProps {
+  class StyleProperties {
   public:
     typedef void (*AddPropFunc)(XmlDocument*, AttributeList*, const String&);
-    ~UStyleProps();
+    ~StyleProperties();
     
     AddPropFunc findAddPropFunc(const String& prop_name);
     void defProp(const char* prop_name, AddPropFunc);
@@ -70,9 +70,9 @@ namespace ubit {
     /** [impl] precompiled CSS properties.
    * to be completed...
    */
-  class UCssProps : public UStyleProps {
+  class CssProperties : public StyleProperties {
   public:
-    UCssProps();
+    CssProperties();
     
     static void create_font_family(XmlDocument*, AttributeList*, const String& v);
     static void create_font_size(XmlDocument*, AttributeList*, const String& v);
@@ -88,12 +88,7 @@ namespace ubit {
     static void create_height(XmlDocument*, AttributeList*, const String& v);
     static void create_text_align(XmlDocument*, AttributeList*, const String& v);
     static void create_vertical_align(XmlDocument*, AttributeList*, const String& v);
-    /*
-    static void create_margin_top(XmlDocument*, AttributeList*, const String& v);
-    static void create_margin_bottom(XmlDocument*, AttributeList*, const String& v);
-    static void create_margin_left(XmlDocument*, AttributeList*, const String& v);
-    static void create_margin_right(XmlDocument*, AttributeList*, const String& v);
-    */
+
     static void create_padding_top(XmlDocument*, AttributeList*, const String& v);
     static void create_padding_bottom(XmlDocument*, AttributeList*, const String& v);
     static void create_padding_left(XmlDocument*, AttributeList*, const String& v);
@@ -102,7 +97,8 @@ namespace ubit {
     static void create_border(XmlDocument*, AttributeList*, const String& v);
   };
   
-    /** [impl] precompiled HTML Elements Styles.
+  /**
+   * [impl] precompiled HTML Elements Styles.
    * to be completed...
    */
   class UCssStyles {
@@ -144,7 +140,7 @@ namespace ubit {
   };
   
 }
-#endif
+#endif // UBIT_DRAW_CSS_H_
 
 
 

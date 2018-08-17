@@ -1,5 +1,5 @@
 /*
- *  uhardfont.hpp
+ *  hardfont.hpp
  *  Ubit GUI Toolkit - Version 8
  *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
@@ -41,7 +41,7 @@ class UHardFont {
 public:
   enum {NO_FONT=0, SYS_FONT, GLX_FONT, FTGL_FONT};
 
-  UHardFont(Display*, const UFontDesc&);
+  UHardFont(Display*, const FontDescription&);
   ~UHardFont();
 
   void  drawString(const char* str, int str_len, float x, float y) const;
@@ -64,14 +64,14 @@ private:
     unsigned int glf;  //GLuint  glf;
     FTFont* ftf;
   };
-  FTFont* loadFTGLFont(Display*, const UFontDesc&);
+  FTFont* loadFTGLFont(Display*, const FontDescription&);
   ///< loads a FTGL font; requires OpenGL and TrueType.
 #endif
 
 #if UBIT_WITH_X11
   friend class UX11context;
   XFontStruct* sysf;
-  XFontStruct* loadSysFont(Display*, const UFontDesc&);
+  XFontStruct* loadSysFont(Display*, const FontDescription&);
 #endif
 };
 

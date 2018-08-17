@@ -33,7 +33,7 @@ namespace ubit {
    * This object makes the CHILDREN of a widget selectable. It must be added to
    * the chilsd or attribute list of this widget. Selection is exclusive. 
    * No child is initially selected. 
-   * UListbox, UTreebox, UCombobox use an internal UChoice
+   * Listbox, Treebox, UCombobox use an internal UChoice
    * @see also: URadioSelect.
    */
   class UChoice : public Attribute {

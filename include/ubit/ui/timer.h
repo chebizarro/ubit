@@ -33,14 +33,14 @@ extern "C" {
 
 namespace ubit {
   
-  /** a UTimer object fires callbacks after a given delay. Callbacks can be
+  /** a Timer object fires callbacks after a given delay. Callbacks can be
    * fired repeatedly (each time after the delay) or only one time.
    * Timers can also be used to postpone operations that take a long amount
    * of time to execute by using a delay of 0 msec.
    *
    * Exemple:
    * <pre>
-   *    uptr<UTimer> t = new UTimer();
+   *    uptr<Timer> t = new Timer();
    *    t->onAction( ucall(x, y, printArgs) );
    *    t->onAction( ucall(obj, val, &Demo::doIt) );
    *    t->start(1000);
@@ -51,17 +51,17 @@ namespace ubit {
    * - by default these callbacks are fired until stop() is called. start() can 
    *   have an optional arg that specifies how many times they must be called.
    */
-  class UTimer : public Node {
+  class Timer : public Node {
   public:
-    UCLASS(UTimer)
+    UCLASS(Timer)
     
-    UTimer(bool auto_delete = true);
+    Timer(bool auto_delete = true);
     /**< creates a new timer.
-     * @see UTimer(unsigned long delay, int ntimes, bool auto_delete);
+     * @see Timer(unsigned long delay, int ntimes, bool auto_delete);
      * 'delay' and 'ntimes' are set to 0 by default.
      */
     
-    UTimer(unsigned long delay, int ntimes, bool auto_delete = true);
+    Timer(unsigned long delay, int ntimes, bool auto_delete = true);
     /**< creates a new timer.
      * - 'delay' is in milliseconds. if 'delay' = 0, the timer is immediately fired
      *    when the main loop becomes idle.
@@ -74,7 +74,7 @@ namespace ubit {
      *   is only used once
      */
     
-    virtual ~UTimer();
+    virtual ~Timer();
     
     virtual void onAction(UCall& callback);
     /**< adds a callback that is fired when the time is up.
@@ -91,12 +91,12 @@ namespace ubit {
     
     virtual void start(unsigned long delay, int ntimes);
     /**< starts the timer.
-     * @see UTimer(unsigned long delay, int ntimes);
+     * @see Timer(unsigned long delay, int ntimes);
      */
     
     virtual void stop();
     /**< stops the timer.
-     * the UTimer is destroyed if it was started in auto_delete mode (see start())
+     * the Timer is destroyed if it was started in auto_delete mode (see start())
      * and if it is not referenced elsewhere (see Node).
      */
     
@@ -144,7 +144,7 @@ namespace ubit {
     bool resetTimers(struct timeval& delay);
     void fireTimers();
     
-    typedef std::vector<UTimer*> Timers;
+    typedef std::vector<Timer*> Timers;
     Timers timers;
   };
   

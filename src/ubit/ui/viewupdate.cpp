@@ -174,7 +174,7 @@ void UViewUpdateImpl::callPaintCallbacks(Element& grp, UpdateContext& cur_ctx) {
   if (view->hasVMode(View::DESTRUCTED)) return;
   
   if (grp.hasCallback(UOn::VIEW_PAINT_CB)) {
-    UPaintEvent e(UOn::paint, view, &chclip);
+    PaintEvent e(UOn::paint, view, &chclip);
     e.setContext(cur_ctx);
     grp.fire(e);
   }

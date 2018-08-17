@@ -45,7 +45,7 @@ ptitle_bar(new Box),
 presize_btn(new Box)
 {
   /*
-  pminmaxbtn->addAttr(Color::navy + UFont::bold 
+  pminmaxbtn->addAttr(Color::navy + Font::bold 
                      + ucall(this, &UPalette::minmaxCB));
   pminmaxbtn->add(UOn::select / ustr(" - ") + UOn::deselect / ustr(" + "));
   + UOn::doubleClick / ucall(this, &UPalette::minmaxCB));
@@ -59,7 +59,7 @@ presize_btn(new Box)
   presize_btn->add(USymbol::circle); //square
   presize_btn->show(false);
   
-  //pcontrols->add(UFont::small + ubutton("x"));
+  //pcontrols->add(Font::small + ubutton("x"));
   
   ptitle_bar->addAttr(UOrient::horizontal + *ppos_ctrl);
   ptitle_bar->add(uleft() + *ptitle 

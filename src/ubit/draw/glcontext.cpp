@@ -1,5 +1,5 @@
 /*
- *  UGlcontext.cpp: OpenGL rendering context
+ *  GLContext.cpp: OpenGL rendering context
  *  Ubit GUI Toolkit - Version 8
  *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
@@ -55,19 +55,19 @@ namespace ubit {
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if UBIT_WITH_X11
 
-UGlcontext::UGlcontext(Display* d, UGlcontext* sharelists) :
-URenderContext(d), win_height(0), cx(0), cy(0) 
+GLContext::GLContext(Display* d, GLContext* sharelists) :
+RenderContext(d), win_height(0), cx(0), cy(0) 
 {
   glxcontext = ((UDispX11*)d)->createGlcontext(sharelists);
 }
 
-UGlcontext::~UGlcontext() {
+GLContext::~GLContext() {
   ((UDispX11*)disp)->destroyGlcontext(glxcontext);
 }
 
-void UGlcontext::makeCurrent() const {
+void GLContext::makeCurrent() const {
   if (!dest) {
-    Application::error("UGlcontext::makeCurrent","null drawable");
+    Application::error("GLContext::makeCurrent","null drawable");
     return;
   }
   
@@ -83,14 +83,14 @@ void UGlcontext::makeCurrent() const {
                  glxcontext);
 }
 
-void UGlcontext::swapBuffers() {
+void GLContext::swapBuffers() {
   MAKE_CURRENT;
   glXSwapBuffers(((UHardwinX11*)dest)->getSysDisp(), ((UHardwinX11*)dest)->getSysWin());
 }
 
 // used by Display::getFont() to create fonts in the default context
-bool UGlcontext::isSharedWith(const URenderContext* c) const {
-  const UGlcontext* glc = c->toGlcontext();
+bool GLContext::isSharedWith(const RenderContext* c) const {
+  const GLContext* glc = c->toGlcontext();
   return glc && glc->glxcontext == glxcontext; // !!! A COMPLETER : FAUT VERIFIER SHAREDLISTS !!!
 }
 
@@ -98,17 +98,17 @@ bool UGlcontext::isSharedWith(const URenderContext* c) const {
 
 #elif UBIT_WITH_GLUT
 
-UGlcontext::UGlcontext(Display* d, UHardwinGLUT* hw) :
-URenderContext(d), win_height(0), cx(0), cy(0) 
+GLContext::GLContext(Display* d, UHardwinGLUT* hw) :
+RenderContext(d), win_height(0), cx(0), cy(0) 
 {
   hardwin = hw;
 }
 
-UGlcontext::~UGlcontext() {}
+GLContext::~GLContext() {}
 
-void UGlcontext::makeCurrent() const {
+void GLContext::makeCurrent() const {
   if (!dest) {
-    Application::error("UGlcontext::makeCurrent","null destination drawable");
+    Application::error("GLContext::makeCurrent","null destination drawable");
     return;
   }
 
@@ -119,23 +119,23 @@ void UGlcontext::makeCurrent() const {
   // always called because destination may have changed
   if (hardwin->sys_win)
     glutSetWindow(hardwin->sys_win);
-  else Application::error("UGlcontext::makeCurrent","destination drawable is not initialized");
+  else Application::error("GLContext::makeCurrent","destination drawable is not initialized");
 }
 
-void UGlcontext::swapBuffers() {
+void GLContext::swapBuffers() {
   MAKE_CURRENT;
   glutSwapBuffers();
 }
 
 // used by Display::getFont() to create fonts in the default context
-bool UGlcontext::isSharedWith(const URenderContext* c) const {
+bool GLContext::isSharedWith(const RenderContext* c) const {
   return false;                // !!! A COMPLETER : FAUT VERIFIER SHAREDLISTS !!!
 }
 
 #endif
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UGlcontext::setDest(UHardwinImpl* d, double x, double y) {
+void GLContext::setDest(UHardwinImpl* d, double x, double y) {
   dest = d;
   xwin = x;
   ywin = y;
@@ -144,13 +144,13 @@ void UGlcontext::setDest(UHardwinImpl* d, double x, double y) {
   cy = win_height - y;
 }
 
-void UGlcontext::setOffset(double x, double y) {
+void GLContext::setOffset(double x, double y) {
   xwin = cx = x;
   ywin = y;
   cy = win_height - ywin;
 }
 
-void UGlcontext::set3Dmode(bool state) {
+void GLContext::set3Dmode(bool state) {
   if (state) {
     win_height = 0;
     cy = -ywin;
@@ -161,18 +161,18 @@ void UGlcontext::set3Dmode(bool state) {
   }
 }
 
-void UGlcontext::flush() {
+void GLContext::flush() {
   MAKE_CURRENT;
   glFlush();
 }
 
-void UGlcontext::setPaintMode(Graph& g) {
+void GLContext::setPaintMode(Graph& g) {
   MAKE_CURRENT;
   glLogicOp(GL_COPY);
   glColor4ubv(g.color_rgba.comps);
 }
 
-void UGlcontext::setXORMode(Graph& g, const Color& bg) {
+void GLContext::setXORMode(Graph& g, const Color& bg) {
   MAKE_CURRENT;
   glLogicOp(GL_XOR);
   //setGLColor(color ^ bgcolor); // color_rgba !!!
@@ -183,7 +183,7 @@ void UGlcontext::setXORMode(Graph& g, const Color& bg) {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UGlcontext::setColor(Graph& g, const Color& c) {
+void GLContext::setColor(Graph& g, const Color& c) {
   MAKE_CURRENT;
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -198,20 +198,20 @@ void UGlcontext::setColor(Graph& g, const Color& c) {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UGlcontext::setBackground(Graph& g, const Color& c) {
+void GLContext::setBackground(Graph& g, const Color& c) {
   //MAKE_CURRENT;
   g.bgcolor_rgba = c.getRgba();
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UGlcontext::setFont(Graph& g, const UFontDesc& fd) {
+void GLContext::setFont(Graph& g, const FontDescription& fd) {
   //MAKE_CURRENT;
 } 
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UGlcontext::setWidth(Graph& g, double w) { 
+void GLContext::setWidth(Graph& g, double w) { 
   MAKE_CURRENT;
   //get supported line width range and step size
   //glGetFloatv(GL_LINE_WIDTH_RANGE,sizes);
@@ -221,7 +221,7 @@ void UGlcontext::setWidth(Graph& g, double w) {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UGlcontext::copyArea(double x, double y, double w, double h, double delta_x, double delta_y,
+void GLContext::copyArea(double x, double y, double w, double h, double delta_x, double delta_y,
                            bool generate_refresh_events_when_obscured) const 
 {
   MAKE_CURRENT;
@@ -230,7 +230,7 @@ void UGlcontext::copyArea(double x, double y, double w, double h, double delta_x
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UGlcontext::setClip(double x, double y, double width, double height) {
+void GLContext::setClip(double x, double y, double width, double height) {
   MAKE_CURRENT;
   clip.setRect(x, y, width, height);  
   /* !!!WARNING!!!
@@ -262,7 +262,7 @@ void UGlcontext::setClip(double x, double y, double width, double height) {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UGlcontext::drawArc(double x, double y, double w, double h, 
+void GLContext::drawArc(double x, double y, double w, double h, 
                          double start, double ext, bool filled) const {
   MAKE_CURRENT;
   double rw = w / 2.;  // width radius
@@ -307,7 +307,7 @@ void UGlcontext::drawArc(double x, double y, double w, double h,
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UGlcontext::drawLine(double x1, double y1, double x2, double y2) const {
+void GLContext::drawLine(double x1, double y1, double x2, double y2) const {
   MAKE_CURRENT;
   glBegin(GL_LINE_STRIP);
   glVertex2d(cx+x1, cy-y1);
@@ -317,7 +317,7 @@ void UGlcontext::drawLine(double x1, double y1, double x2, double y2) const {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UGlcontext::drawRect(double x, double y, double w, double h, bool filled) const {
+void GLContext::drawRect(double x, double y, double w, double h, bool filled) const {
   MAKE_CURRENT;
   if (filled) {
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -343,7 +343,7 @@ void UGlcontext::drawRect(double x, double y, double w, double h, bool filled) c
     glVertex2d(center_x + (aww)*::cos(a), center_y + (ahh)*::sin(a));  \
 }
 
-void UGlcontext::drawRoundRect(double x, double y, double w, double h, 
+void GLContext::drawRoundRect(double x, double y, double w, double h, 
                                double arc_w, double arc_h, bool filled) const {
   MAKE_CURRENT;
   double x2 = x+w, y2 = y+h;
@@ -407,13 +407,13 @@ void UGlcontext::drawRoundRect(double x, double y, double w, double h,
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UGlcontext::drawString(const UHardFont* nf, const char* str, int str_len, 
+void GLContext::drawString(const UHardFont* nf, const char* str, int str_len, 
                              double x, double y) const {
   MAKE_CURRENT;
   int charpos_begin, charpos_end;
   float xpos_begin, xpos_end;
   
-  if (!UFontMetrics::getClippedText(nf, clip.x, clip.width, str, str_len, cx+x, cy-y,
+  if (!FontMetrics::getClippedText(nf, clip.x, clip.width, str, str_len, cx+x, cy-y,
                                     charpos_begin, charpos_end, xpos_begin, xpos_end))
     return;
   
@@ -426,7 +426,7 @@ void UGlcontext::drawString(const UHardFont* nf, const char* str, int str_len,
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // type is one of LINE_STRIP (polyline), LINE_LOOP (polygon), FILLED (filled polygon).
 
-void UGlcontext::drawPolygon(const float* coords2d, int card, int polytype) const {
+void GLContext::drawPolygon(const float* coords2d, int card, int polytype) const {
   if (card <= 0 || coords2d == null) return;
   MAKE_CURRENT;
   glPushMatrix();
@@ -443,7 +443,7 @@ void UGlcontext::drawPolygon(const float* coords2d, int card, int polytype) cons
 }
 
 
-void UGlcontext::drawPolygon(const std::vector<Point>& points, int polytype) const {
+void GLContext::drawPolygon(const std::vector<Point>& points, int polytype) const {
   int card = points.size();
   if (card <= 0) return;
   MAKE_CURRENT;
@@ -454,7 +454,7 @@ void UGlcontext::drawPolygon(const std::vector<Point>& points, int polytype) con
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UGlcontext::drawIma(const Graph& g, const Image& ima, double x, double y, double scale) const {
+void GLContext::drawIma(const Graph& g, const Image& ima, double x, double y, double scale) const {
   // une seule natima dans ce cas: la premiere
   if (!ima.getNatImas().empty()) {
     UHardIma* ni = *(ima.getNatImas().begin());
@@ -463,7 +463,7 @@ void UGlcontext::drawIma(const Graph& g, const Image& ima, double x, double y, d
   }
 }
 
-void UGlcontext::drawTex(const Graph& g, const UHardImaGL* ni,
+void GLContext::drawTex(const Graph& g, const UHardImaGL* ni,
                           double x, double y, double width, double height) const
 {
   MAKE_CURRENT;
@@ -498,7 +498,7 @@ void UGlcontext::drawTex(const Graph& g, const UHardImaGL* ni,
 }
 
 /* without textures
- void UGlcontext::drawTex(URenderContext* ge, const UHardIma& ima,
+ void GLContext::drawTex(RenderContext* ge, const UHardIma& ima,
  float x, float y, float width, float height) {
  #ifndef UBIT_WITH_GL
  Application::internalError("Graph::drawTex","invalid function in GL mode");

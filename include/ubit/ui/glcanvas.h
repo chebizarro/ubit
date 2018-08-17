@@ -51,7 +51,7 @@ namespace ubit {
     UGlcanvas(Args = Args::none);
     virtual ~UGlcanvas();
     
-    //void shareContextResources(UGlcontext* = DEFAULT_GC);
+    //void shareContextResources(GLContext* = DEFAULT_GC);
     /**< specifies that the resources of the GL context are shared with this argument.
      * This function must be called immediately after the UGlcanvas is created:
      * - the resources of the GL context of this canvas will be shared with those
@@ -62,7 +62,7 @@ namespace ubit {
      */
     
     virtual void makeCurrent();
-    /**< makes this widget the current widget for OpenGL (GL will use its UGlcontext).
+    /**< makes this widget the current widget for OpenGL (GL will use its GLContext).
      * there is generally no need to call makeCurrent() explictely because this is
      * done automatically before initGL(), resizeGL() and paintGL()
      */
@@ -77,7 +77,7 @@ namespace ubit {
     bool isInit() const {return is_init;}
     ///< returns true if the widgets has been initialized (and the GL context created).
     
-    UGlcontext* getGlcontext() const;
+    GLContext* getGlcontext() const;
     ///< returns the GC that is associated this window for drawing in the canvas area.
     
   protected:
@@ -86,7 +86,7 @@ namespace ubit {
      * Note: makeCurrent() is automatically called before initGL()
      */
     
-    virtual void paintGL(UPaintEvent&) {}
+    virtual void paintGL(PaintEvent&) {}
     /**< called when the widget is repainted.
      * Notes:
      * - makeCurrent() is automatically called before paintGL()
@@ -105,7 +105,7 @@ namespace ubit {
     virtual void initImpl();
     ///< Impl: init the widget and calls initGL().
     
-    virtual void paintImpl(UPaintEvent&);
+    virtual void paintImpl(PaintEvent&);
     ///< Impl: calls makeCurrent() then paintGL() and swapBuffers() (when applicable).
     
     virtual void resizeImpl(UResizeEvent&);    
@@ -115,7 +115,7 @@ namespace ubit {
     
   private:
     bool is_init, share_glresources;
-    //UGlcontext *glcontext, *shared_res_ctx;
+    //GLContext *glcontext, *shared_res_ctx;
   };
   
   inline UGlcanvas& uglcanvas(Args a = Args::none) {return *new UGlcanvas(a);}

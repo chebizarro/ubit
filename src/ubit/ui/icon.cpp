@@ -36,22 +36,22 @@ UIconbox::UIconbox(Args args) : UDocbox(), show_parent_dir(true) {
   icon_vspacing = new UVspacing(5);
   ppathname = new String;
   ptitle = new String;
-  titlebar().addAttr(upadding(3,2) + uhspacing(3) + UFont::italic);
+  titlebar().addAttr(upadding(3,2) + uhspacing(3) + Font::italic);
   titlebar().add(*ptitle);
 
 /* beaucoup trop long ! bloque l'interaction              A REVOIR!!!
   UButton& alt_btn = uflatbutton(" # ");
-  alt_btn.addAttr(UFont::small);
+  alt_btn.addAttr(Font::small);
   alt_btn.addAttr(UOn::select / ucall(this,true, &UIconbox::showSmallIcons));
   alt_btn.addAttr(UOn::deselect / ucall(this,false, &UIconbox::showSmallIcons));
   //titlebar().insert(0, alt_btn);
   titlebar().add(alt_btn, titlebar().cbegin());
  */
   
-  picons = new UListbox;
+  picons = new Listbox;
   // NB: icons ne doit contenir que des UIcon sinon getIcon ne marchera pas
-  picons->addAttr(UFlowView::style + upadding(0,0) 
-                  + *icon_hspacing + *icon_vspacing + UFont::small);                     
+  picons->addAttr(FlowView::style + upadding(0,0) 
+                  + *icon_hspacing + *icon_vspacing + Font::small);                     
                      //+ show_dirs + show_docs + show_icon_names + show_icon_contents);
   picons->add(args);
   content().add(*picons);

@@ -108,7 +108,7 @@ namespace ubit {
    *
    * Example* ex = new Example;
    *
-   * UListbox& list = ulistbox
+   * Listbox& list = ulistbox
    *    (UOn::change / ucall(ex, &GUI::changeCB)
    *    + ulabel("Modes")     // this object won't be selected as it is a Label
    *    + uitem(select_image + "Select") 
@@ -123,39 +123,39 @@ namespace ubit {
    * }
    * </pre>
    */
-  class UListbox: public URadiobox {
+  class Listbox: public URadiobox {
   public:
-    UCLASS(UListbox)
+    UCLASS(Listbox)
     
-    UListbox(const Args& args = Args::none);
+    Listbox(const Args& args = Args::none);
     ///< creates a new List widget (see also shortcut function ulistbox()).
     
     static UStyle* createStyle();
     
     bool isTransparent() const {return transp_style;}
-    UListbox& setTransparent(bool s = true) {transp_style = s; return *this;}
+    Listbox& setTransparent(bool s = true) {transp_style = s; return *this;}
     
     
-    UListbox& setSelectedItem(Box& item);
+    Listbox& setSelectedItem(Box& item);
     ///< selects this item.
     
-    UListbox& setSelectedIndex(int n);
+    Listbox& setSelectedIndex(int n);
     ///< selects the Nth item; selects the last selectable item if n = -1.
          
-    UListbox& select(Box& item) {return setSelectedItem(item);}
+    Listbox& select(Box& item) {return setSelectedItem(item);}
     ///< selects this item (synonym for setSelectedItem()).
     
-    UListbox& select(int n) {return setSelectedIndex(n);}
+    Listbox& select(int n) {return setSelectedIndex(n);}
     ///< selects the Nth item (synonym for setSelectedIndex()).
 
         
-    virtual UListbox& addItem(const String& string);
-    virtual UListbox& addItem(String& string, bool duplicate);
+    virtual Listbox& addItem(const String& string);
+    virtual Listbox& addItem(String& string, bool duplicate);
     /**< adds an item to the listbox.
      * the string argument is duplicated except if 'duplicate' if false
      * (in which case it is shared and directly added to the scene graph)
      *
-     * Objects can also be be added/removed to the UListbox by using
+     * Objects can also be be added/removed to the Listbox by using
      * the add()/remove() methods that are inherited from Element
      *
      * addItem() is equivalent to: 
@@ -163,8 +163,8 @@ namespace ubit {
      * - add(uitem(s))         if duplicate is false
      */
     
-    virtual UListbox& addItems(const String& strings, const String& separ = ",");
-    virtual UListbox& addItems(const Args& prefix, const String& strings, const String& separ = ",");
+    virtual Listbox& addItems(const String& strings, const String& separ = ",");
+    virtual Listbox& addItems(const Args& prefix, const String& strings, const String& separ = ",");
     /**< adds a list of items to the listbox.
      * - parses a string containing the item names separated by a character
      *   in 'separ' (the , char by default) and adds each item to the list
@@ -174,10 +174,10 @@ namespace ubit {
      * - see addItem() for more details.
      */
     
-    virtual UListbox& addItems(const char* items[]);
-    virtual UListbox& addItems(const std::vector<String*>& items, bool duplicate = true);
-    virtual UListbox& addItems(const Args& prefix, const char* items[]);
-    virtual UListbox& addItems(const Args& prefix, const std::vector<String*>& items, 
+    virtual Listbox& addItems(const char* items[]);
+    virtual Listbox& addItems(const std::vector<String*>& items, bool duplicate = true);
+    virtual Listbox& addItems(const Args& prefix, const char* items[]);
+    virtual Listbox& addItems(const Args& prefix, const std::vector<String*>& items, 
                                bool duplicate = true);
     /**< adds a list of items to the listbox.
      * - performs addItem() for each string in the 'items' vector
@@ -189,8 +189,8 @@ namespace ubit {
     bool transp_style;
   };
   
-  inline UListbox& ulistbox(Args args = Args::none) {return *new UListbox(args);}
-  ///< shortcut function that returns *new UListbox(args).
+  inline Listbox& ulistbox(Args args = Args::none) {return *new Listbox(args);}
+  ///< shortcut function that returns *new Listbox(args).
   
   
   /** Combo box gadget.
@@ -200,7 +200,7 @@ namespace ubit {
    *    to make the first item of the list entirely visible in the textfield.
    *
    *  List and Selection:
-   * - list() returns the UListbox that was passed as an argument to the constructor
+   * - list() returns the Listbox that was passed as an argument to the constructor
    * - choice() returns the UChoice object that manages the selection in list()
    *
    *  Callbacks
@@ -212,7 +212,7 @@ namespace ubit {
    * Exemple
    * <pre>
    *    XXX* obj = new XXX();
-   *    UListbox& list = ulistbox( ... );   // see UList
+   *    Listbox& list = ulistbox( ... );   // see UList
    *    UCombobox& combo = ucombobox(list, 
    *                                 UOn::action / ucall(obj, &XXX::actionCB)
    *                                 + UOn::change / ucall(obj, &XXX::changeCB));
@@ -224,10 +224,10 @@ namespace ubit {
     
     UCombobox();
     
-    UCombobox(UListbox&, const Args& = Args::none);
+    UCombobox(Listbox&, const Args& = Args::none);
     /* creates a new Combo Box widget (see also shortcut function ucombobox()).
      * arguments:
-     * - 1st arg: the UListbox that is displayed in the menu
+     * - 1st arg: the Listbox that is displayed in the menu
      * - 2nd arg: a standard arglist (callback specs should be added here)
      */
 
@@ -235,7 +235,7 @@ namespace ubit {
     UCombobox& setTextMode(bool = true);
     ///< the textfield only contains the textual part of the selected item in text mode.
     
-    UListbox& list() {return *plist;}
+    Listbox& list() {return *plist;}
     class UChoice& choice();
     Element& entry() {return *pentry;}
     UMenu&  menu()  {return *pmenu;}
@@ -250,7 +250,7 @@ namespace ubit {
     virtual void syncText();
     
   private:
-    uptr<UListbox> plist;
+    uptr<Listbox> plist;
     uptr<Element> pentry;
     uptr<class UMenu> pmenu;
     bool text_only;
@@ -260,7 +260,7 @@ namespace ubit {
   };
   
   
-  inline UCombobox& ucombobox(UListbox& l, Args a = Args::none) {return *new UCombobox(l,a);}
+  inline UCombobox& ucombobox(Listbox& l, Args a = Args::none) {return *new UCombobox(l,a);}
   ///< shortcut function that returns *new UCombobox(l,a).
   
 } 

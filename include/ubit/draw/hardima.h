@@ -1,5 +1,5 @@
 /*
- *  uhardima.hpp
+ *  hardima.hpp
  *  Ubit GUI Toolkit - Version 8
  *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
@@ -163,7 +163,7 @@ namespace ubit {
     GLuint getTexID() const {return texid;}
     
   protected:
-    friend class UGlcontext;
+    friend class GLContext;
     // inherited int width, height; ATTENTION: taille LOGIQUE de l'image, pas de 
     // la texture, qui est toujours une puissance de 2!
     unsigned char* pixels;   // image data for OpenGL

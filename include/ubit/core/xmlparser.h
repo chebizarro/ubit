@@ -1,5 +1,5 @@
 /*
- *  uxmlparser.hpp
+ *  xmlparser.hpp
  *  Ubit GUI Toolkit - Version 6
  *  (C) 2009 / Eric Lecolinet / Telecom ParisTech / http://www.enst.fr/~elc/ubit
  *

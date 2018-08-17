@@ -106,7 +106,7 @@ UCall& ucloseWin(int stat) {return ucall(stat, &Element::closeWin);}
  
  UCompactEvents::UCompactEvents(UCall& c) :
  postponed_event(*new Event(Event::timer, null, null, null)),
- timer(*new UTimer()),
+ timer(*new Timer()),
  pcall(c),
  delay(0) {
  timer.onAction(ucall(this, &UCompactEvents::timeout));

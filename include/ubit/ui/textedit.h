@@ -36,26 +36,26 @@ namespace ubit {
    * </pre>
    * makes'str' editable inside container 'box'
    */
-  class UEdit : public Attribute {
+  class TextEdit : public Attribute {
   public:
-    UCLASS(UEdit)
+    UCLASS(TextEdit)
     
-    UEdit();
-    ///< creates a new UEdit property; @see also shortcut uedit().
+    TextEdit();
+    ///< creates a new TextEdit property; @see also shortcut uedit().
     
-    virtual ~UEdit(); // NOTE: removingFrom() requires a destructor.
+    virtual ~TextEdit(); // NOTE: removingFrom() requires a destructor.
     
     
     bool isEditable() const;
-    UEdit& setEditable(bool = true);
+    TextEdit& setEditable(bool = true);
     ///< get/set text editing mode
     
     bool isCaretVisible() const;
-    UEdit& setCaretVisible(bool = true);
+    TextEdit& setCaretVisible(bool = true);
     ///< get/set caret visibility.
     
     Color* getCaretColor() const;
-    UEdit& setCaretColor(Color*);
+    TextEdit& setCaretColor(Color*);
     /**< get/set the color used to render the caret.
      * a value of null means that the caret has the same color as the text 
      */
@@ -65,15 +65,15 @@ namespace ubit {
      * NOTE that \n chars are not visible but count for 1 char!
      */
     
-    UEdit& setCaretPos(long pos);
+    TextEdit& setCaretPos(long pos);
     /**< changes the caret position.
      * NOTE that \n chars are not visible but count for 1 char!
      */
     
     long getCaretPos(Element& container) const;
-    UEdit& setCaretPos(long pos, Element& container);
-    /**< get/sets the caret position of a shared UEdit.
-     * when the UEdit is shared by several containers (a strange idea
+    TextEdit& setCaretPos(long pos, Element& container);
+    /**< get/sets the caret position of a shared TextEdit.
+     * when the TextEdit is shared by several containers (a strange idea
      * actually) it is necessary to specify which container we are
      * talking about
      */
@@ -86,19 +86,19 @@ namespace ubit {
      * - returns null if the caret is not set
      * - 'pos_in_str' is relative to the string that contains the caret
      * - Note that a container (Box or subclass) can contain several String
-     *   and that a UEdit may (rarely) be included in several containers.
+     *   and that a TextEdit may (rarely) be included in several containers.
      */
     
-    UEdit& setCaretStr(String* str);
-    UEdit& setCaretStr(String* str, int pos_in_str);
+    TextEdit& setCaretStr(String* str);
+    TextEdit& setCaretStr(String* str, int pos_in_str);
     /**< sets the String that contains the caret and the position of the caret in this string.
      * details:
      * - 'pos_in_str' is relative to 'str', the string that will contain 
      *   the caret. 'pos_in_str' = 0 corresponds to the beginning of the 
      *   string; 'pos_in_str' = -1 to the end of the string.
-     * - the 'str' must (obvioulsy) be in the same container as the UEdit
+     * - the 'str' must (obvioulsy) be in the same container as the TextEdit
      * - Note that a container (Box or subclass) can contain several String.
-     *   and that a UEdit may be included in several containers.
+     *   and that a TextEdit may be included in several containers.
      */
     
     static String* getPreviousStr(String* from, Element& container);
@@ -134,7 +134,6 @@ namespace ubit {
     
     virtual void update();
     
-#ifndef NO_DOC
     virtual void putProp(UpdateContext*, Element&);
     virtual void addingTo(Child&, Element& parent);
     virtual void removingFrom(Child&, Element& parent);
@@ -163,11 +162,10 @@ namespace ubit {
     virtual void mpressed(UMouseEvent&);
     virtual void mreleased(UMouseEvent&);
     virtual void callbacks2(UMouseEvent&);
-#endif
   };
   
-  inline UEdit& uedit() {return *new UEdit();}
-  ///< creator shortcut that returns *new UEdit().
+  inline TextEdit& uedit() {return *new TextEdit();}
+  ///< creator shortcut that returns *new TextEdit().
   
 }
 #endif

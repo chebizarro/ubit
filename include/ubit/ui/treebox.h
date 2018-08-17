@@ -22,55 +22,55 @@
 namespace ubit {
 
 /** Tree widget.
-  * @see also: UTreenode.
+  * @see also: Treenode.
 */
-class UTreebox : public UListbox {
+class Treebox : public Listbox {
 public:
-  UCLASS(UTreebox)
+  UCLASS(Treebox)
   
-  UTreebox(const Args& = Args::none);
+  Treebox(const Args& = Args::none);
   ///< creates a new tree widget (@see also shortcut utreebox()).
 
-  virtual ~UTreebox();
+  virtual ~Treebox();
   
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  virtual UTreenode* getSelectedNode() const;
+  virtual Treenode* getSelectedNode() const;
   ///< returns the selected node; null if there is no selected node.
   
-  virtual void setSelectedNode(UTreenode&);
+  virtual void setSelectedNode(Treenode&);
   ///< selects this node.
   
   virtual int getSelectedIndex() const;
   ///< returns the index of the selected node; -1 if there is no selected node.
   
-  virtual UTreebox& setSelectedIndex(int n);
+  virtual Treebox& setSelectedIndex(int n);
   ///< selects the Nth node; selects the last node if n = -1.
   
 private:
-    friend class UTreenode;
+    friend class Treenode;
 };
 
-UTreebox& utreebox(const Args& = Args::none);
-///< shortcut that returns *new UTreebox().
+Treebox& utreebox(const Args& = Args::none);
+///< shortcut that returns *new Treebox().
 
 /** Node in a Tree widget.
-* @see also: UTreebox.
+* @see also: Treebox.
 */
-class UTreenode : public Box {
+class Treenode : public Box {
 public:
-  UCLASS(UTreenode)
+  UCLASS(Treenode)
 
-  UTreenode(const Args& label = Args::none);
-  ///< creates a new node in a UTreebox (@see also shortcut utreenode()).
+  Treenode(const Args& label = Args::none);
+  ///< creates a new node in a Treebox (@see also shortcut utreenode()).
 
-  UTreenode(const Args& label, const Args& subnode_list);
-  ///< creates a new node in a UTreebox (@see also shortcut utreenode()).
+  Treenode(const Args& label, const Args& subnode_list);
+  ///< creates a new node in a Treebox (@see also shortcut utreenode()).
  
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     
-  virtual void addNode(UTreenode&);
-  virtual void removeNode(UTreenode&);
+  virtual void addNode(Treenode&);
+  virtual void removeNode(Treenode&);
 
   virtual void expand(bool = true);
   virtual void collapse() {expand(false);}
@@ -87,17 +87,17 @@ public:
   ///< the box that contains the subnodes of the treenode.
   
 private:
-  friend class UTreebox;
+  friend class Treebox;
   uptr<Box> plabel, psubnodes;
   uptr<Box> pexpander;
   void constructs(const Args& label, const Args& subnode_list);
 };
 
-UTreenode& utreenode(const Args& label = Args::none);
-///< shortcut that returns *new UTreenode().
+Treenode& utreenode(const Args& label = Args::none);
+///< shortcut that returns *new Treenode().
 
-UTreenode& utreenode(const Args& label, const Args& subnode_list);
-///< shortcut that returns *new UTreenode().
+Treenode& utreenode(const Args& label, const Args& subnode_list);
+///< shortcut that returns *new Treenode().
 
 } 
 #endif

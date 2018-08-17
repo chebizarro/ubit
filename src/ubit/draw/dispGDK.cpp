@@ -208,8 +208,8 @@ main_gimpl(None), client_gimpl(None)
     return;
   }
   natgraph = new UNatGraph(this);
-  UModifier::mapKeys(this);
-  UKey::mapKeys(this);
+  Modifier::mapKeys(this);
+  Key::mapKeys(this);
   
   default_gc->makeCurrent(mainframe);
   is_opened = true;
@@ -373,7 +373,7 @@ static void getKey(GdkEvent* sev, unsigned int& keycode, unsigned short& keychar
 /*
 static void onSelection(Display* nd, Window* win, View* winview, GdkEvent* sev) {
   // NB: no time, no state!
-  UEventFlow* f = nd->obtainFlow(0,0);   // ????  
+  EventFlow* f = nd->obtainFlow(0,0);   // ????  
   switch (sev->type) {
     case GDK_SELECTION_CLEAR: { 
       ...;
@@ -404,21 +404,21 @@ void UDispGDK::dispatchEvent(GdkEvent* sev) {
   switch(sev->type) {
     
     case GDK_MOTION_NOTIFY: {
-      UEventFlow* f = FLOW(sev, motion);
+      EventFlow* f = FLOW(sev, motion);
       f->winMouseMove(win, sev->motion.time, sev->motion.state, sev->motion.x, sev->motion.y);
     } break;
       
     case GDK_BUTTON_PRESS:
     case GDK_2BUTTON_PRESS:    // ????????
     case GDK_3BUTTON_PRESS: {   // ????????
-      UEventFlow* f = FLOW(sev, button);
+      EventFlow* f = FLOW(sev, button);
       cerr << "GDK_BUTTON_PRESS "<< endl;
       f->winMousePress(win, sev->button.time, sev->button.state, 
                        sev->button.x, sev->button.y, getButton(sev));
     } break;
       
     case GDK_BUTTON_RELEASE: {
-      UEventFlow* f = FLOW(sev, button);
+      EventFlow* f = FLOW(sev, button);
       f->winMouseRelease(win, sev->button.time, sev->button.state, 
                          sev->button.x, sev->button.y, getButton(sev));
     } break;
@@ -432,7 +432,7 @@ void UDispGDK::dispatchEvent(GdkEvent* sev) {
       unsigned short keychar;
       unsigned int keycode;
       cerr << "GDK: onKeyPress not implemented " << keycode << " " << keychar << endl;
-      UEventFlow* f = FLOW(sev, key);
+      EventFlow* f = FLOW(sev, key);
       getKey(sev, keycode, keychar);
       f->winKeyPress(win, sev->key.time, sev->key.state, 0/*x*/,0/*y*/, keycode, keychar);
     } break;
@@ -441,18 +441,18 @@ void UDispGDK::dispatchEvent(GdkEvent* sev) {
       unsigned short keychar;
       unsigned int keycode;
       cerr << "GDK: onKeyRelease not implemented " << keycode << " " << keychar << endl;
-      UEventFlow* f = FLOW(sev, key);
+      EventFlow* f = FLOW(sev, key);
       getKey(sev, keycode, keychar);
       f->winKeyRelease(win, sev->key.time, sev->key.state, 0/*x*/,0/*y*/, keycode, keychar);
     } break;
       
     case GDK_ENTER_NOTIFY: {
-    UEventFlow* f = FLOW(sev, crossing);
+    EventFlow* f = FLOW(sev, crossing);
       f->winEnter(win, sev->crossing.time, sev->crossing.x, sev->crossing.y);
     } break;
     
   case GDK_LEAVE_NOTIFY: {
-    UEventFlow* f = FLOW(sev, crossing);
+    EventFlow* f = FLOW(sev, crossing);
     f->winLeave(win, sev->crossing.time, sev->crossing.x, sev->crossing.y);
   } break;
     
@@ -525,7 +525,7 @@ void UDispGDK::dispatchEvent(GdkEvent* sev) {
   */
     
   case GDK_CLIENT_EVENT:{
-    UEventFlow* f = obtainFlow(0,0);
+    EventFlow* f = obtainFlow(0,0);
     MessagePortMap* messmap = Application::getMessagePortMap();
     
     if (messmap && sev->client.message_type == atoms.UMS_MESSAGE) {
@@ -539,7 +539,7 @@ void UDispGDK::dispatchEvent(GdkEvent* sev) {
   } break;
     
   case GDK_PROPERTY_NOTIFY:{
-    UEventFlow* f = obtainFlow(0,0);
+    EventFlow* f = obtainFlow(0,0);
     MessagePortMap* messmap = Application::getMessagePortMap();
     
     if (messmap && sev->property.atom == atoms.UMS_MESSAGE) {
@@ -562,7 +562,7 @@ void UDispGDK::dispatchEvent(GdkEvent* sev) {
     
   default:
     if (win->hasCallback(UMode::SYSWM_CB)) {
-      UEventFlow* f = obtainFlow(0,0);
+      EventFlow* f = obtainFlow(0,0);
       USysWMEvent e(v, f, sev);
       win->fire(e, UOn::sysWM);
     }

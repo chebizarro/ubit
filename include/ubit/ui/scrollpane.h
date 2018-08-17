@@ -134,8 +134,8 @@ namespace ubit {
    */
   class UPaneView: public View {
   public:
-    static  UViewStyle style;  // renderer
-    virtual UViewStyle* getViewStyle() {return &style;}
+    static  ViewStyle style;  // renderer
+    virtual ViewStyle* getViewStyle() {return &style;}
     
     UPaneView(Box*, View* parview, UHardwinImpl*);
     virtual ~UPaneView() {}

@@ -1,5 +1,5 @@
 /*
- *  URenderContext.h: generic rendering context
+ *  RenderContext.h: generic rendering context
  *  Ubit GUI Toolkit - Version 8
  *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
@@ -29,13 +29,13 @@
 
 namespace ubit {
 
-class URenderContext {
+class RenderContext {
 public: 
   virtual bool isGlcontext() const = 0;
-  virtual UGlcontext* toGlcontext() = 0;
-  virtual const UGlcontext* toGlcontext() const = 0;
+  virtual GLContext* toGlcontext() = 0;
+  virtual const GLContext* toGlcontext() const = 0;
   
-  virtual bool isSharedWith(const URenderContext*) const = 0;
+  virtual bool isSharedWith(const RenderContext*) const = 0;
   ///< true if the same internal OpenGL reendering context is shared.
   
   Display* getDisp() const {return disp;}
@@ -85,17 +85,17 @@ public:
   
   virtual void setColor(Graph&, const Color&) = 0;
   virtual void setBackground(Graph&, const Color&) = 0;
-  virtual void setFont(Graph&, const UFontDesc&) = 0;
+  virtual void setFont(Graph&, const FontDescription&) = 0;
   virtual void setWidth(Graph&, double) = 0;
 
   virtual void makeCurrent() const = 0;
   /* makes this context the current rendering context.
-   * calls glMakeCurrent() if this context is a UGlcontext
+   * calls glMakeCurrent() if this context is a GLContext
    */
   
   virtual void swapBuffers() = 0;
   /* swaps the front and back buffers of the current destination drawable.
-   * calls glSwapBuffers() if this context is a UGlcontext
+   * calls glSwapBuffers() if this context is a GLContext
    */
   
   virtual void flush() = 0;
@@ -125,8 +125,8 @@ public:
                         bool generate_refresh_events_when_obscured) const = 0;
 
 protected:
-  URenderContext(Display* d) : disp(d), dest(null), xwin(0), ywin(0), own_dest(false) {}  
-  virtual ~URenderContext() {if (own_dest) delete dest;}
+  RenderContext(Display* d) : disp(d), dest(null), xwin(0), ywin(0), own_dest(false) {}  
+  virtual ~RenderContext() {if (own_dest) delete dest;}
 
   friend class Graph;
   friend class Display;

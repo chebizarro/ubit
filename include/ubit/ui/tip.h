@@ -44,7 +44,7 @@ namespace ubit {
      * it is destroyed.
      * Example:
      *    ubutton( "Build"
-     *            + utip(UFont::bold + "Build" 
+     *            + utip(Font::bold + "Build" 
      *                   + Element(Color::red + "active")
      *                   + "target") )
      */

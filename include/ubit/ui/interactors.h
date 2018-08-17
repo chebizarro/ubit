@@ -52,7 +52,7 @@ namespace ubit {
    *
    * Default look and feel (can be changed by adding appropriate Attribute(s)):
    * - horizontal layout (see attribute UOrient)
-   * - font and foreground color inherited from parents (see UFont and Color)
+   * - font and foreground color inherited from parents (see Font and Color)
    * - transparent backgound (see UBackgound and UAlpha)
    * - automatically resized when children (text, images, and other widgets) are 
    *   changed or resized. Add a USize attribute to change this behavior or to 
@@ -101,7 +101,7 @@ namespace ubit {
    *
    * Default look and feel (can be changed by adding appropriate Attribute()):
    *  - horizontal layout (can't be changed)
-   *  - UFont and foreground Color inherited from parents
+   *  - Font and foreground Color inherited from parents
    *  - white Background
    *  - NOT resized when children (text, images, other widgets) are changed or resized:
    *    a textfield keeps its initial size (calculated to fit its initial chidren).
@@ -183,8 +183,8 @@ namespace ubit {
     
     virtual UTextfield& setEditable(bool state = true);
     
-    UEdit& edit();
-    ///< returns the UEdit attribute that controls the edition of the textfield.
+    TextEdit& edit();
+    ///< returns the TextEdit attribute that controls the edition of the textfield.
     
   };
   
@@ -199,7 +199,7 @@ namespace ubit {
   
   /** Textarea widget: multiple line editor.
    * This widget does the same as UTextfield except that is can contains as many
-   * lines as needed. Children are layed out as a continuous flow: see UFlowView.
+   * lines as needed. Children are layed out as a continuous flow: see FlowView.
    */
   class UTextarea: public UTextfield {
   public:
@@ -294,10 +294,10 @@ namespace ubit {
   ///< creates a "tab" button (for tabbed panes, @see UCardbox).
 
      
-  /** Item Button widget (a kind of button that is used in UListbox(es)).
+  /** Item Button widget (a kind of button that is used in Listbox(es)).
    *
    *  Same behavior as UButton but with a different decoration (no visible
-   *  border). UItems are typically used as UListbox or UTrow children.
+   *  border). UItems are typically used as Listbox or UTrow children.
    *
    *  Properties and callbacks: 
    *  - same default properties, layout and resize behavior as ULabel.

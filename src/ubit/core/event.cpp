@@ -36,7 +36,7 @@ namespace ubit {
 
 
 static const int _BUTTONS = 
-  UModifier::LeftButton | UModifier::MidButton | UModifier::RightButton;
+  Modifier::LeftButton | Modifier::MidButton | Modifier::RightButton;
 
 /*
 class UNodeEvent : public UAnyEvent {
@@ -73,7 +73,7 @@ protected:
   Node* target;
 };
 
- class Event : public UAnyEvent, public UModifier {
+ class Event : public UAnyEvent, public Modifier {
 protected:
   Event(const Condition& c) : UAnyEvent(c) {} 
   
@@ -175,7 +175,7 @@ sys_event(sev) {
   
 // ==================================================== ======== ===============
 
-UInputEvent::UInputEvent(const Condition& c, View* v, UEventFlow* f, 
+UInputEvent::UInputEvent(const Condition& c, View* v, EventFlow* f, 
                          unsigned long time, int st) : 
 Event(c, (v? v->getBox(): null)), 
 state(st), 
@@ -215,23 +215,23 @@ Display* UInputEvent::getDisp() const {
 int UInputEvent::getModifiers() const {return state;}
 
 bool UInputEvent::isShiftDown() const 
-{return (getModifiers() & UModifier::ShiftDown) != 0;}
+{return (getModifiers() & Modifier::ShiftDown) != 0;}
 
 bool UInputEvent::isControlDown() const 
-{return (getModifiers() & UModifier::ControlDown) != 0;}
+{return (getModifiers() & Modifier::ControlDown) != 0;}
 
 bool UInputEvent::isAltDown() const 
-{return (getModifiers() & UModifier::AltDown) != 0;}
+{return (getModifiers() & Modifier::AltDown) != 0;}
 
 bool UInputEvent::isMetaDown() const
-{return (getModifiers() & UModifier::MetaDown) != 0;}
+{return (getModifiers() & Modifier::MetaDown) != 0;}
 
 bool UInputEvent::isAltGraphDown() const 
-{return (getModifiers() & UModifier::AltGraphDown) != 0;}
+{return (getModifiers() & Modifier::AltGraphDown) != 0;}
 
 // ==================================================== ======== ===============
   
-UMouseEvent::UMouseEvent(const Condition& c, View* source, UEventFlow* f, 
+UMouseEvent::UMouseEvent(const Condition& c, View* source, EventFlow* f, 
                          unsigned long time, int state,
                          const Point& pos, const Point& abs_pos, int btn) :
 UInputEvent(c, source, f, time, state), 
@@ -296,7 +296,7 @@ String* UMouseEvent::getStr(UDataContext& dc) {
 
 // ==================================================== ======== ===============
 
-UWheelEvent::UWheelEvent(const Condition& c, View* source, UEventFlow* f, 
+UWheelEvent::UWheelEvent(const Condition& c, View* source, EventFlow* f, 
                          unsigned long time, int state,
                          const Point& pos, const Point& abs_pos, 
                          int wheel_btn, int wheel_delta) :
@@ -306,7 +306,7 @@ delta(wheel_delta) {
     
 // ==================================================== ======== ===============
 
-UKeyEvent::UKeyEvent(const Condition& c, View* source, UEventFlow* f, unsigned long when, 
+UKeyEvent::UKeyEvent(const Condition& c, View* source, EventFlow* f, unsigned long when, 
                      int mods, int kcode, short kchar)
 : UInputEvent(c, source, f, when, mods), keycode(kcode), keychar(kchar) {}
 
@@ -332,7 +332,7 @@ Display* UViewEvent::getDisp() const {
 
 // ==================================================== ======== ===============
 
-TimerEvent::TimerEvent(const Condition& c, UTimer* t, unsigned long w) 
+TimerEvent::TimerEvent(const Condition& c, Timer* t, unsigned long w) 
 : Event(c, t), /*timer(t),*/ when(w) {}
 
 UserEvent::UserEvent(const Condition& c, UObject* s, int t, void* d) 
@@ -353,7 +353,7 @@ UResizeEvent::UResizeEvent(const Condition& c, View* v) : UViewEvent(c, v) {}
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-UPaintEvent::UPaintEvent(const Condition& c, View* v, const Rectangle* winclip) : 
+PaintEvent::PaintEvent(const Condition& c, View* v, const Rectangle* winclip) : 
 UViewEvent(c, v),
 current_context(null),
 layout_view(null)
@@ -368,7 +368,7 @@ layout_view(null)
   }
 } 
  
-bool UPaintEvent::setSourceAndProps(View* v) {
+bool PaintEvent::setSourceAndProps(View* v) {
   UViewContext vc;
   bool stat = v->findContext(vc, View::FIND_CLIP);
   source_view = v;
@@ -376,13 +376,13 @@ bool UPaintEvent::setSourceAndProps(View* v) {
   return stat;
 }
 
-void UPaintEvent::setProps(const UViewContext& vc) {
+void PaintEvent::setProps(const UViewContext& vc) {
   is_clip_set = vc.is_clip_set;
   redraw_clip = vc.clip;
   layout_view = vc.layout_view;
 }
   
-void UPaintEvent::getClip(Rectangle& r) const {
+void PaintEvent::getClip(Rectangle& r) const {
   if (source_view && is_clip_set) {
     r.x = redraw_clip.x - source_view->x;
     r.y = redraw_clip.x - source_view->y;
@@ -401,7 +401,7 @@ void UPaintEvent::getClip(Rectangle& r) const {
 }
     
 /*
-Rectangle UPaintEvent::getGLClip() const {
+Rectangle PaintEvent::getGLClip() const {
   Rectangle r;
   getHardwinClip(r);       // pas tres clair: on veut le clip, ou la vue entiere
   Dimension s; hardwin->getSize(s);   // pour faire glviewport ?

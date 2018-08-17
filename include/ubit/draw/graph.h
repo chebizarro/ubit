@@ -34,12 +34,12 @@
 namespace ubit {
   
   
-struct UGraphAttributes {
-  UGraphAttributes() : color_rgba(0u,0u,0u,255u), bgcolor_rgba(255u,255u,255u,255u) {}
+struct GraphAttributes {
+  GraphAttributes() : color_rgba(0u,0u,0u,255u), bgcolor_rgba(255u,255u,255u,255u) {}
   short font_styles;
   float width;
   unsigned long color, bgcolor;      // for 2D_GRAPHICS
-  URgba color_rgba, bgcolor_rgba;    // for GL
+  Rgba color_rgba, bgcolor_rgba;    // for GL
   enum {OPAQUE, UNIFORM_BLEND, PSEUDO_BLEND, TRUE_BLEND} blend_mode;
   bool in_xor_mode;
   bool in_3d_mode;      // true when displaying inside a 3Dcanvas
@@ -52,15 +52,15 @@ struct UGraphAttributes {
   *
   * @see also: Box, View.
  */
-class Graph : public UGraphAttributes {
+class Graph : public GraphAttributes {
 public:
   /** for client GL Graphics.
    */
-  class Glpaint {
+  class GLPaint {
   public:
-    Glpaint(UPaintEvent&, bool _push_attrib);
-    Glpaint(View*, bool _push_attrib);
-    virtual ~Glpaint();
+    GLPaint(PaintEvent&, bool _push_attrib);
+    GLPaint(View*, bool _push_attrib);
+    virtual ~GLPaint();
     virtual void begin(View*, bool _push_attrib);
     virtual void end();
   protected:
@@ -71,11 +71,11 @@ public:
   };
   
   
-  Graph(UPaintEvent&);
+  Graph(PaintEvent&);
   /**< constructor for drawing in a UOn::paint callback method.
    * Example:
    * <pre>
-   *   void MyObj::paintCB(UPaintEvent& e) {
+   *   void MyObj::paintCB(PaintEvent& e) {
     *       Graph g(e);
     *       g.setColor(Color::red);  // predefined red
     *       g.drawRect(10, 10, 50, 50);
@@ -95,7 +95,7 @@ public:
    * is repainted. paintCB() could also have arguments or be a static function:
    * @see UCall for more details.
    *
-   * The paintCB() method has a UPaintEvent& parameter that can be passed to 
+   * The paintCB() method has a PaintEvent& parameter that can be passed to 
    * the Graph constructor. This will initialize the Graph object with appropriate
    * attributes and the redraw clip corresponding to this paint event.
    *
@@ -108,7 +108,7 @@ public:
    * (such as Graph::setFont(), setColor(), etc.
    *
    * Ubit objects that derive from Box can have multiple View(s). The callback
-   * function is then fired once for each view (and the UPaintEvent parameter
+   * function is then fired once for each view (and the PaintEvent parameter
    * is set accordingly for each view)
    *
    * Note that this constr. raises an exception if the corresponding View is null
@@ -169,7 +169,7 @@ public:
   /**< changes the paint color (which can have an alpha component).
     * The paint color is used by all drawing primitives. Example:
     * <pre>
-    *   void paintCB(UPaintEvent& e) {
+    *   void paintCB(PaintEvent& e) {
     *       Graph g(e);
     *       g.setColor(Color::red);  // predefined red
     *       g.drawRect(10, 10, 50, 50);
@@ -194,15 +194,15 @@ public:
   /**< changes the background color.
    */
   
-  void setFont(const UFont&);
+  void setFont(const Font&);
   /**< changes the current Font. 
     */
   
-  void setFont(const UFontDesc&);
+  void setFont(const FontDescription&);
   /**< changes the current Font. 
     */
   
-  void getFontMetrics(const UFont&, UFontMetrics&) const;
+  void getFontMetrics(const Font&, FontMetrics&) const;
   /**< return the corresponding Font Metrics. 
     */
     
@@ -312,7 +312,7 @@ public:
 
   Graph(View*);
   /**< constructor for drawing in a view.
-   * see Graph(UPaintEvent&) for details.
+   * see Graph(PaintEvent&) for details.
    * This constr. raises an exception if the View is null
    */
   
@@ -341,17 +341,17 @@ private:
   Graph& operator=(const Graph&);
 protected:
   friend class View;
-  friend class U3DcanvasView;
-  friend class UPaintEvent;
-  friend class UFontMetrics;
-  friend class URenderContext;
-  friend class UGlcontext;
+  friend class 3DCanvasView;
+  friend class PaintEvent;
+  friend class FontMetrics;
+  friend class RenderContext;
+  friend class GLContext;
   friend class UX11context;
   Display* disp;         // display 
   View* boxview;      // view where the graphics are drawn
   UHardwinImpl* hardwin;   // corresponding hard window 
   UHardFont* font;     // native font that is currently used
-  URenderContext* rc;  // corresponding rendering context
+  RenderContext* rc;  // corresponding rendering context
   bool is_client;
 #endif // NO_DOC
 };

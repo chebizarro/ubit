@@ -178,7 +178,7 @@ namespace ubit {
      *
      * Objects added to the CHILD list should derive from Element (typically, widgets
      * deriving from Box, Window), Data (viewable objects such as String, Image) or UCall
-     * (callback objects). Certain attributes such as Color, UFont, Halign, Valign
+     * (callback objects). Certain attributes such as Color, Font, Halign, Valign
      * can also be added to the child list.
      *
      * Character strings (e.g. "abcd") are implicitely converted to String objects, so 
@@ -503,7 +503,7 @@ namespace ubit {
       unsigned IS_SELECTABLE:1;    ///< can be selected (as for a checkbox)
       unsigned IS_SELECTED:1;      ///< this object is currently selected.
       unsigned IS_TEXT_SELECTABLE:1;///< can select included text
-      unsigned IS_TEXT_EDITABLE:1; ///< can edit included text (ie. the group contains a UEdit brick)
+      unsigned IS_TEXT_EDITABLE:1; ///< can edit included text (ie. the group contains a TextEdit brick)
       unsigned IS_WIDTH_UNRESIZABLE:1;
       unsigned IS_HEIGHT_UNRESIZABLE:1;
       unsigned IS_FLOATING:1;       ///< has a UPos attr in floating mode.

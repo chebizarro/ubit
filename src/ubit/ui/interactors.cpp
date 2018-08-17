@@ -99,13 +99,13 @@ UStyle* UTextfield::createStyle() {
   s.setBorder(border);
   //s.local.border = &Border::shadowIn;
   
-  //style->cursor = &UCursor::text;  // done by UEdit
+  //style->cursor = &UCursor::text;  // done by TextEdit
   s.setSize(USize::INITIAL, USize::INITIAL);
   return &s;
 }
 
 UTextfield::UTextfield(Args a) : Box(a) {
-  obtainAttr<UEdit>();
+  obtainAttr<TextEdit>();
   emodes.IS_TEXT_SELECTABLE = true;     // also added by uedit
   emodes.HAS_CURSOR = true;
   disableMenuClosing();
@@ -113,14 +113,14 @@ UTextfield::UTextfield(Args a) : Box(a) {
 
 UTextfield::UTextfield(int nbchars, Args a) : Box(a) {
   obtainAttr<USize>().setWidth(nbchars|UEX);
-  obtainAttr<UEdit>();
+  obtainAttr<TextEdit>();
   emodes.IS_TEXT_SELECTABLE = true;     // also added by uedit
   emodes.HAS_CURSOR = true;
   disableMenuClosing();
 }
 
-UEdit& UTextfield::edit() {
-  return *getAttr<UEdit>();
+TextEdit& UTextfield::edit() {
+  return *getAttr<TextEdit>();
 }
 
 UTextfield& UTextfield::setEditable(bool state) {
@@ -128,14 +128,14 @@ UTextfield& UTextfield::setEditable(bool state) {
 }
 
 bool UTextfield::isEditable() const {
-  return getAttr<UEdit>()->isEditable();
+  return getAttr<TextEdit>()->isEditable();
 }
 
 /* ==================================================== [Elc] ======= */
 
 UStyle* UTextarea::createStyle() {
   UStyle& s = *new UStyle();
-  s.viewStyle = &UFlowView::style;
+  s.viewStyle = &FlowView::style;
   s.textSeparator = new String("\n");
   s.orient = UOrient::HORIZONTAL;
   s.halign = Halign::FLEX;
@@ -149,7 +149,7 @@ UStyle* UTextarea::createStyle() {
   s.vspacing = 3;
   s.local.padding.set(3,2);
   s.local.border = &Border::shadowIn;
-  //style->cursor = &UCursor::text;  // fait par UEdit
+  //style->cursor = &UCursor::text;  // fait par TextEdit
   
   // width does not depend on content, but height does! otherwise the box
   // could not grow vertically when children are added or resized (for instance
@@ -337,7 +337,7 @@ UStyle* ULinkbutton::createStyle() {
   s.local.padding.set(1, 1);
   s.local.border = null;
   s.cursor = &UCursor::hand;
-  s.font = &UFont::underline;
+  s.font = &Font::underline;
   s.setColors(Color::navy, Color::red);
   s.setBgcolors(Color::none, Color::none);  
   s.setColor(UOn::DISABLED, Color::disabled);

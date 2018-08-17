@@ -1,5 +1,5 @@
 /*
- *  ucolor.h: Color Attribute
+ *  color.h: Color Attribute
  *  Ubit GUI Toolkit - Version 8
  *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
@@ -32,21 +32,21 @@ namespace ubit {
   
   /** Specifies a RGBA value for defining Color(s).
    */
-  class URgba {
+  class Rgba {
   public:
-    URgba() {comps[0] = comps[1] = comps[2] = 0; comps[3] = 255u;}
+    Rgba() {comps[0] = comps[1] = comps[2] = 0; comps[3] = 255u;}
         
-    URgba(unsigned int r, unsigned int g, unsigned int b, unsigned int a = 255u) 
+    Rgba(unsigned int r, unsigned int g, unsigned int b, unsigned int a = 255u) 
     {comps[0] = r; comps[1] = g; comps[2] = b; comps[3] = a;}
     
-    URgba(float r, float g, float b, float a = 1.0f) {setRgbaF(r,g,b,a);}
+    Rgba(float r, float g, float b, float a = 1.0f) {setRgbaF(r,g,b,a);}
 
     void setRgbaI(unsigned int r, unsigned int g, unsigned int b, unsigned int a = 255u) 
     {comps[0] = r; comps[1] = g; comps[2] = b; comps[3] = a;}
     
     void setRgbaF(float r, float g, float b, float a = 1.0f);
 
-    bool operator==(const URgba& c) const {
+    bool operator==(const Rgba& c) const {
       return (comps[0]==c.comps[0] && comps[1]==c.comps[1] 
               && comps[2]==c.comps[2] && comps[3]==c.comps[3]);
     }    
@@ -104,8 +104,8 @@ namespace ubit {
     Color(const Color& color, unsigned int a);
     ///< creates a new color object that is a copy of 'color' but with a different alpha.
 
-    Color(const URgba&);
-    ///<creates a new color object from a URgba value.
+    Color(const Rgba&);
+    ///<creates a new color object from a Rgba value.
     
     Color(float r, float g, float b, float a = 1.0f);
     /**< creates a new color object with a RGBA value; see also shortcut ucolor(r,g,b,a).
@@ -127,8 +127,8 @@ namespace ubit {
     Color& operator=(const Color& c);
     ///< changes color from another color.
 
-    Color& setRgba(const URgba&);
-    ///< changes color, arguments is a URgba struct.
+    Color& setRgba(const Rgba&);
+    ///< changes color, arguments is a Rgba struct.
          
     Color& setRgbaF(float r, float g, float b, float a = 1.0f);
     ///< changes color, arguments are floats in range [0 - 1].
@@ -145,13 +145,13 @@ namespace ubit {
      * the alpha value is ignored if OpenGL is not used for rendition: see Application::isUsingGL()
      */
     
-    const URgba& getRgba() const {return rgba;}
+    const Rgba& getRgba() const {return rgba;}
      
     bool operator==(const Color& c) const {return equals(c);}
     bool operator!=(const Color& c) const {return !equals(c);}
     
     virtual bool equals(const Color&) const;
-    virtual bool equals(const URgba&) const;
+    virtual bool equals(const Rgba&) const;
     virtual bool equals(float r, float g, float b, float a) const;
     virtual bool equals(unsigned int r, unsigned int g, unsigned int b, unsigned int a) const;
     
@@ -159,17 +159,15 @@ namespace ubit {
 
     virtual void putProp(UpdateContext*, Element&);   // redefinition
     
-    static void addNamedColor(const char* name, const URgba&);
+    static void addNamedColor(const char* name, const Rgba&);
     ///< adds a color to the database of named colors.
     
-    static bool parseColor(const char* name, URgba&);
-    ///< returns the URgba corresponding to this color name, if found.
+    static bool parseColor(const char* name, Rgba&);
+    ///< returns the Rgba corresponding to this color name, if found.
     
-    // - - - impl - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#ifndef NO_DOC
   protected:
     friend class Graph;
-    URgba rgba;
+    Rgba rgba;
 #if WITH_2D_GRAPHICS
     mutable std::vector<unsigned long> pixels;
     void unsetPixels();
@@ -180,8 +178,6 @@ namespace ubit {
     
     Color(unsigned char special, UConst);
     //[Impl] creates a new CONSTANT color with a special value; @see UObject::UCONST.
-    
-#endif
   };
   
   

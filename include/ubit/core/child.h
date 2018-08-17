@@ -1,5 +1,5 @@
 /*
- *  uchild.hpp [internal implementation]
+ *  child.hpp [internal implementation]
  *  Ubit GUI Toolkit - Version 6
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
  *

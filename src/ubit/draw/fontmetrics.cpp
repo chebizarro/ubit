@@ -35,96 +35,96 @@ namespace ubit {
 
 #define NULL_FONT_ERROR(msg) Application::error(msg,"can't retreive font")
 
-UFontMetrics::UFontMetrics() 
+FontMetrics::FontMetrics() 
 : disp(null), fd(null), own_fd(false) {}
 
-UFontMetrics::UFontMetrics(const UFont& _f, Display* _d) {
+FontMetrics::FontMetrics(const Font& _f, Display* _d) {
   set(_f, _d);
 }
 
-UFontMetrics::UFontMetrics(const UFontDesc& _fd, Display* _d) {
+FontMetrics::FontMetrics(const FontDescription& _fd, Display* _d) {
   set(_fd, _d);
 }
 
-UFontMetrics::UFontMetrics(UpdateContext& _ctx) : 
+FontMetrics::FontMetrics(UpdateContext& _ctx) : 
 disp(_ctx.getDisp()), 
 fd(&_ctx.fontdesc), 
 own_fd(false) {
   UHardFont* f = disp->getFont(fd);  // see note about getFont above
   if (!f) {
-    Application::error("UFontMetrics","can't retreive font");
+    Application::error("FontMetrics","can't retreive font");
   }
 }
 
-UFontMetrics::~UFontMetrics() {
+FontMetrics::~FontMetrics() {
   if (own_fd) delete &fd;
 }
 
 
-void UFontMetrics::set(const UFont& _f, Display* _d) {
+void FontMetrics::set(const Font& _f, Display* _d) {
   disp = (_d ? _d : Application::getDisp());
-  fd = new UFontDesc(_f);
+  fd = new FontDescription(_f);
   own_fd = true;
   UHardFont* f = disp->getFont(fd);
-  if (!f) Application::error("UFontMetrics","can't retreive font");
+  if (!f) Application::error("FontMetrics","can't retreive font");
 }
 
-void UFontMetrics::set(const UFontDesc& _fd, Display* _d) {
+void FontMetrics::set(const FontDescription& _fd, Display* _d) {
   disp = (_d ? _d : Application::getDisp());
   fd = &_fd; 
   own_fd = false;
   UHardFont* f = disp->getFont(fd);
-  if (!f) Application::error("UFontMetrics","can't retreive font");
+  if (!f) Application::error("FontMetrics","can't retreive font");
 }
 
 
-float UFontMetrics::getWidth(char c) const {
+float FontMetrics::getWidth(char c) const {
   UHardFont* f = disp->getFont(fd);
   if (!f) return 0;
   return f->getWidth(c);
 }
 
-float UFontMetrics::getWidth(const char* s, int len) const {
+float FontMetrics::getWidth(const char* s, int len) const {
   UHardFont* f = disp->getFont(fd);
-  if (!f) return NULL_FONT_ERROR("UFontMetrics::getWidth"), 0;
+  if (!f) return NULL_FONT_ERROR("FontMetrics::getWidth"), 0;
   return f->getWidth(s, len);
 }
 
-float UFontMetrics::getWidth(const String& s) const {
+float FontMetrics::getWidth(const String& s) const {
   return getWidth(s.c_str(), -1);
 }
 
-float UFontMetrics::getWidth(const String& s, int pos, int len) const {
+float FontMetrics::getWidth(const String& s, int pos, int len) const {
   return getWidth(s.c_str() + pos, len);
 }
 
 
-float UFontMetrics::getAscent() const {
+float FontMetrics::getAscent() const {
   UHardFont* f = disp->getFont(fd);
-  if (!f) return NULL_FONT_ERROR("UFontMetrics::getAscent"), 0;
+  if (!f) return NULL_FONT_ERROR("FontMetrics::getAscent"), 0;
   return f->getAscent();
 }
 
-float UFontMetrics::getDescent() const {
+float FontMetrics::getDescent() const {
   UHardFont* f = disp->getFont(fd);
-  if (!f) return NULL_FONT_ERROR("UFontMetrics::getDescent"), 0;
+  if (!f) return NULL_FONT_ERROR("FontMetrics::getDescent"), 0;
   return f->getDescent();
 } 
 
-float UFontMetrics::getHeight() const {
+float FontMetrics::getHeight() const {
   UHardFont* f = disp->getFont(fd);
-  if (!f) return NULL_FONT_ERROR("UFontMetrics::getHeight"), 0;
+  if (!f) return NULL_FONT_ERROR("FontMetrics::getHeight"), 0;
   return f->getHeight();
 }
 
 // - - - - - - - - - - - - - - -
 /*
- bool UFontMetrics::getCharDefaultSize(const UFont& font, int& w, int& h) const{
- UFontDesc fd(font);
+ bool FontMetrics::getCharDefaultSize(const Font& font, int& w, int& h) const{
+ FontDescription fd(font);
  return getCharDefaultSize(fd, w, h);
  }
  
- bool Graph::getCharDefaultSize(const UFontDesc& font, int& w, int& h) const {
+ bool Graph::getCharDefaultSize(const FontDescription& font, int& w, int& h) const {
  if (!wg) return false;
  USysFont f = wg->disp->natdisp->getFont(font);
  if (!f) {
@@ -138,7 +138,7 @@ float UFontMetrics::getHeight() const {
  */
 /* ==================================================== [Elc] ======= */
 
-int UFontMetrics::getCharPos(const char* s, int len, float x) const {
+int FontMetrics::getCharPos(const char* s, int len, float x) const {
   UHardFont* f = disp->getFont(fd);
   if (!f) return 0;
   
@@ -163,7 +163,7 @@ int UFontMetrics::getCharPos(const char* s, int len, float x) const {
 
 // - - - - - - - - - - - - - - -
 
-float UFontMetrics::getXPos(const char *s, int len, int charpos) const {
+float FontMetrics::getXPos(const char *s, int len, int charpos) const {
   UHardFont* f = disp->getFont(fd);
   if (!f) return 0;
   
@@ -178,7 +178,7 @@ float UFontMetrics::getXPos(const char *s, int len, int charpos) const {
 }
 
 
-bool UFontMetrics::
+bool FontMetrics::
 getSubTextSize(const char* s, int len, Dimension& dim, float available_width,
                int& s_sublen, int& change_line) const {
   dim.width = dim.height = 0;
@@ -187,7 +187,7 @@ getSubTextSize(const char* s, int len, Dimension& dim, float available_width,
   
   UHardFont* f = disp->getFont(fd);
   if (!f) {
-    Application::error("UFontMetrics::getSubTextSize","can't retreive font");
+    Application::error("FontMetrics::getSubTextSize","can't retreive font");
     return false;
   }
   
@@ -234,7 +234,7 @@ getSubTextSize(const char* s, int len, Dimension& dim, float available_width,
 // utilise par drawString en mode OpenGL pour eviter de dessiner
 // ce qui sort de la zone de clipping
 
-bool UFontMetrics::getClippedText(const UHardFont* f, float clip_x, float clip_width,
+bool FontMetrics::getClippedText(const UHardFont* f, float clip_x, float clip_width,
                                   const char* s, int len, float x0, float y0,
                                   int& charpos_begin, int& charpos_end,
                                   float& xpos_begin, float& xpos_end) {

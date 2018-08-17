@@ -32,9 +32,9 @@ namespace ubit {
   /** Modifier masks.
    * modifier masks are returned by UInputEvent::getModifiers(), UMouseEvent::getButton(),
    * UMouseEvent::getButtons().
-   * @see also class UKey for key codes.
+   * @see also class Key for key codes.
    */
-  class UModifier {
+  class Modifier {
   public:
     static const int
     LeftButton, RightButton, MidButton,
@@ -46,10 +46,10 @@ namespace ubit {
   
   /** Key codes.
    * key codes are returned by UKeyEvent::getKeyCode()
-   * Note: do not confuse UKey::Shift (key code) with UMod::ShiftMod (modifier mask)
+   * Note: do not confuse Key::Shift (key code) with UMod::ShiftMod (modifier mask)
    * @see also class UMod for modifier mask.
    */      
-  class UKey {
+  class Key {
   public:    
     static const int
     BackSpace, Tab, Clear, Enter, Pause, ScrollLock, Escape, Delete,

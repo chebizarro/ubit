@@ -71,7 +71,7 @@ namespace ubit {
      * valid if this argument is destroyed.
      */
     
-    virtual Background& setRgba(const URgba&);
+    virtual Background& setRgba(const Rgba&);
     ///< changes the background color.
      
     virtual Background& setRbgaF(float r, float g, float b, float a = 1.);

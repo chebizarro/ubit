@@ -47,10 +47,10 @@ namespace ubit {
 #define OFT_DIR "/usr/share/fonts/truetype/msttcorefonts/"
   
 // these definitions MUST be HERE and in THIS order to avoid init incoherencies
-UFontFamily UFontFamily::defaults("defaults", UCONST);    // private constr!
-UFontFamily UFontFamily::sans_serif("sans_serif",UCONST);
-UFontFamily UFontFamily::serif("serif",UCONST);
-UFontFamily UFontFamily::monospace("monospace",UCONST);
+FontFamily FontFamily::defaults("defaults", UCONST);    // private constr!
+FontFamily FontFamily::sans_serif("sans_serif",UCONST);
+FontFamily FontFamily::serif("serif",UCONST);
+FontFamily FontFamily::monospace("monospace",UCONST);
   
 UConf Application::conf;   // configuration of the Application
 
@@ -104,13 +104,13 @@ default_background(*new Background(Color::lightgrey))
   // - - - fonts - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   
   // specifies default font characteristics used when FontFamilies can't be found
-  UFontFamily::defaults.setFamily("helvetica,arial,fixed"); // coma separated list of family names
-  UFontFamily::defaults.setStyles("r", "o,i");        // normal_style, italic_style
-  UFontFamily::defaults.setWeights("medium", "bold"); // normal_weight, bold_weight
-  UFontFamily::defaults.setCompression("normal");
-  UFontFamily::defaults.setEncoding("1");
-  UFontFamily::defaults.setPreferredSizes("2,6,7,8,9,10,11,12,14,16,18,20,24,34,48,72");
-  UFontFamily::defaults.setFreeType
+  FontFamily::defaults.setFamily("helvetica,arial,fixed"); // coma separated list of family names
+  FontFamily::defaults.setStyles("r", "o,i");        // normal_style, italic_style
+  FontFamily::defaults.setWeights("medium", "bold"); // normal_weight, bold_weight
+  FontFamily::defaults.setCompression("normal");
+  FontFamily::defaults.setEncoding("1");
+  FontFamily::defaults.setPreferredSizes("2,6,7,8,9,10,11,12,14,16,18,20,24,34,48,72");
+  FontFamily::defaults.setFreeType
 #if LINUX
   //regular
   (XFT_DIR "UTRG____.pfa," LFT_DIR "UTRG____.pfa",   //-adobe-utopia-medium-r-normal--0-0-0-0-p-0-iso8859-1
@@ -131,9 +131,9 @@ default_background(*new Background(Color::lightgrey))
    XFT_DIR "l048036t.pfa," LFT_DIR "l048036t.pfa");  //b&h-luxi sans-bold-o-**-iso8859-1
 #endif
   
-  UFontFamily::sans_serif = UFontFamily::defaults;
-  UFontFamily::sans_serif.setFamily("helvetica,arial");
-  UFontFamily::sans_serif.setFreeType
+  FontFamily::sans_serif = FontFamily::defaults;
+  FontFamily::sans_serif.setFamily("helvetica,arial");
+  FontFamily::sans_serif.setFreeType
 #if LINUX
     //regular
     (XFT_DIR "UTRG____.pfa," LFT_DIR "UTRG____.pfa," OFT_DIR "Arial.ttf",  //-adobe-utopia-medium-r-normal--0-0-0-0-p-0-iso8859-1
@@ -154,10 +154,10 @@ default_background(*new Background(Color::lightgrey))
      XFT_DIR "l048036t.pfa," LFT_DIR "l048036t.pfa," OFT_DIR "Arial_BoldItalic.ttf"); //b&h-luxi sans-bold-o-**-iso8859-1
 #endif
   
-  UFontFamily::serif = UFontFamily::defaults;
-  UFontFamily::serif.setFamily("times");
-  UFontFamily::serif.setStyles("r", "i,o");
-  UFontFamily::serif.setFreeType
+  FontFamily::serif = FontFamily::defaults;
+  FontFamily::serif.setFamily("times");
+  FontFamily::serif.setStyles("r", "i,o");
+  FontFamily::serif.setFreeType
     //regular
     (XFT_DIR "l049013t.pfa," LFT_DIR "l049013t.pfa," XFT_DIR "UTRG____.pfa", //b&h-luxi serif-medium-r-**-iso8859-1
      //bold
@@ -167,9 +167,9 @@ default_background(*new Background(Color::lightgrey))
      //bolditalic
      XFT_DIR "l049036t.pfa," LFT_DIR "l049036t.pfa," XFT_DIR "UTBI____.pfa"); //b&h-luxi serif-bold-o-**-iso8859-1
   
-  UFontFamily::monospace = UFontFamily::defaults;
-  UFontFamily::monospace.setFamily("courier");
-  UFontFamily::monospace.setFreeType
+  FontFamily::monospace = FontFamily::defaults;
+  FontFamily::monospace.setFamily("courier");
+  FontFamily::monospace.setFreeType
     //regular
     (XFT_DIR "l047013t.pfa," LFT_DIR "l047013t.pfa," XFT_DIR "cour.pfa", //b&h-luxi mono-medium-r-**-iso8859-1
      //bold
@@ -181,12 +181,12 @@ default_background(*new Background(Color::lightgrey))
   
    // - - - defaults - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   
-  default_font = &UFont::sans_serif;     // CANT be null!
+  default_font = &Font::sans_serif;     // CANT be null!
   setDefaultBackground(Color::lightgrey);     // UPix::velin, Color::lightgrey
   unknow_image = &UPix::question;  
   selection_color  = null;               // none if pointer is null
   selection_bgcolor= &Color::lightblue; // idem
-  selection_font = &UFont::fill;         // idem
+  selection_font = &Font::fill;         // idem
   
   // - - - modes - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

@@ -1,5 +1,5 @@
 /*
- *  uappliImpl.hpp
+ *  appliImpl.hpp
  *  Ubit GUI Toolkit - Version 8
  *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
@@ -80,8 +80,8 @@ namespace ubit {
     friend class Application;
     friend class Display;
     friend class View;
-    friend class UEventFlow;
-    friend class UTimer;
+    friend class EventFlow;
+    friend class Timer;
     friend class USource;
     friend class MessageService;
     

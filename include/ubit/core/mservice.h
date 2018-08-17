@@ -1,5 +1,5 @@
 /*
- *  umservice.h: acess to the UMS (Ubit Mouse/Message Server) services 
+ *  mservice.h: acess to the UMS (Ubit Mouse/Message Server) services 
  *  Ubit GUI Toolkit - Version 8
  *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit

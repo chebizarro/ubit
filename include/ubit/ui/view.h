@@ -31,10 +31,10 @@
 
 namespace ubit {
   
-  class UFlowView;
+  class FlowView;
   class UTableView;
   class UPaneView;
-  class UViewFind;
+  class ViewFind;
   class UViewLayout;
   class UViewUpdate;
   class UViewLayoutImpl;
@@ -47,12 +47,12 @@ namespace ubit {
   
   /** Specifies the View Style of an Box.
    */
-  class UViewStyle : public Attribute {
+  class ViewStyle : public Attribute {
   public:
-    UCLASSDEF("UViewStyle", UViewStyle, null)
+    UCLASSDEF("ViewStyle", ViewStyle, null)
 
-    UViewStyle(View* (*)(Box*, View*, UHardwinImpl*), UConst);
-    virtual ~UViewStyle() {destructs();}
+    ViewStyle(View* (*)(Box*, View*, UHardwinImpl*), UConst);
+    virtual ~ViewStyle() {destructs();}
     
     View* (*createView)(Box*, View* parview, UHardwinImpl*);
     ///< pointer to the corresponding View::createView static constructor.
@@ -73,12 +73,12 @@ namespace ubit {
   public:
     UCLASSDEF("View", View, null)
     
-    static UViewStyle style;
+    static ViewStyle style;
     
     View(Box*, View* parview, UHardwinImpl*);
     virtual ~View();
     
-    virtual UFlowView*  toFlowView()  {return null;}
+    virtual FlowView*  toFlowView()  {return null;}
     virtual UTableView* toTableView() {return null;}
     virtual UPaneView*  toPaneView()  {return null;}
     
@@ -194,10 +194,10 @@ namespace ubit {
      * note that 'region', must be in window coordinates if provided.
      */         
 
-    virtual View* findSource(UViewFind&, Point& pos_in_src);
+    virtual View* findSource(ViewFind&, Point& pos_in_src);
     ///< [Impl].
     
-    virtual View* findSourceNext(UViewFind&, Point& pos_in_src);
+    virtual View* findSourceNext(ViewFind&, Point& pos_in_src);
     ///< [Impl].
     
     enum FindMode {FIND_CLIP, FIND_VIEW_CONTEXT, FIND_PARENT_CONTEXT};
@@ -231,7 +231,7 @@ namespace ubit {
     typedef std::list<UViewProp*> UViewProps;
     
     static View* createView(Box*, View* parview, UHardwinImpl*);
-    // createView() is a static constructor used by UViewStyle to make a new view.
+    // createView() is a static constructor used by ViewStyle to make a new view.
     
     void operator delete(void*);
     // requests view deletion.
@@ -248,7 +248,7 @@ namespace ubit {
     void removeVModes(long modes) {vmodes &= ~modes;}
     // remove these modes from the V-Modes bitmask.
     
-    virtual UViewStyle* getViewStyle() {return &style;}
+    virtual ViewStyle* getViewStyle() {return &style;}
     // returns the default view style.
     
     View* getNext() {return next;}
@@ -278,7 +278,7 @@ namespace ubit {
     int vmodes;              // modes of this view
     float scale;
     float chwidth, chheight; // size occupied by children
-    float edit_shift;        // for UEdit
+    float edit_shift;        // for TextEdit
     unsigned short hflex_count, vflex_count; // number of horiz and vert flexible children
     View* parview;          // parent view
     Box* box;               // corresponding Box
@@ -300,9 +300,9 @@ namespace ubit {
     virtual void beginUpdate3d(UViewUpdateImpl&, Element&, UpdateContext& curctx);
     virtual void endUpdate3d(UViewUpdateImpl&, Element&, UpdateContext& curctx);
     
-    virtual View* findInBox(Box*, const Point& winpos, const UpdateContext&, UViewFind&);
-    virtual View* findInGroup(Element*, const Point& winpos, const UpdateContext&, UViewFind&);
-    virtual View* findInChildren(Element*, const Point& winpos, const UpdateContext&, UViewFind&);
+    virtual View* findInBox(Box*, const Point& winpos, const UpdateContext&, ViewFind&);
+    virtual View* findInGroup(Element*, const Point& winpos, const UpdateContext&, ViewFind&);
+    virtual View* findInChildren(Element*, const Point& winpos, const UpdateContext&, ViewFind&);
     
     virtual bool findDataV(UpdateContext&, ChildIter data_iter, ChildIter end_iter, 
                            const Rectangle&, UViewUpdate&);
@@ -331,28 +331,28 @@ namespace ubit {
     friend class UViewUpdateImpl;
     friend class UAppliImpl;
     friend class UInputEvent;
-    friend class UEventFlow;
-    friend class U3DcanvasView;
+    friend class EventFlow;
+    friend class 3DCanvasView;
     View(const View&);
     View& operator=(const View&);  // assigment is forbidden
   };
   
   // ==================================================== ===== ======= //
   
-  class UFlowView: public View {
+  class FlowView: public View {
   public:
-    UCLASSDEF("UFlowView", UFlowView, null)
+    UCLASSDEF("FlowView", FlowView, null)
 
-    static UViewStyle style;  // renderer
-    virtual UViewStyle* getViewStyle() {return &style;}
+    static ViewStyle style;  // renderer
+    virtual ViewStyle* getViewStyle() {return &style;}
     
-    UFlowView(Box*, View* parview, UHardwinImpl*);
-    virtual ~UFlowView();
+    FlowView(Box*, View* parview, UHardwinImpl*);
+    virtual ~FlowView();
     
     static View* createView(Box*, View* parview, UHardwinImpl*);
     
-    virtual UFlowView* toFlowView() {return this;}
-    ///< pseudo dynamic cast: returns this object if it a a UFlowView.
+    virtual FlowView* toFlowView() {return this;}
+    ///< pseudo dynamic cast: returns this object if it a a FlowView.
     
     virtual bool caretPosToXY(long caret_pos, int& xcol, int& yline) const; // ex int
     virtual bool xyToCaretPos(int xcol, int yline, long& caret_pos) const;

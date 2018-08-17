@@ -61,12 +61,12 @@ struct UCssMaker: public StyleParser::StyleMaker {
   }
    
   virtual void addProp(const String& name, const String& val) {
-    static UCssProps css_props;   // !!!
+    static CssProperties css_props;   // !!!
     
     if (!attributes) 
       Application::error("UCssMaker","this UCssMaker object (%p) has no prop list", this);
 
-    UCssProps::AddPropFunc func = css_props.findAddPropFunc(name);
+    CssProperties::AddPropFunc func = css_props.findAddPropFunc(name);
     if (func) func(doc, attributes, val);
     /*
     UAttribute* p = c ? c(doc, val) : null;
@@ -80,14 +80,14 @@ struct UCssMaker: public StyleParser::StyleMaker {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-int UCssParser::parse(const String& buf, XmlDocument* doc) {
+int CssParser::parse(const String& buf, XmlDocument* doc) {
   UCssMaker* smaker = new UCssMaker(doc, null);
   parseImpl(*smaker, buf);
   delete smaker;
   return stat;
 }
 
-int UCssParser::parseAttr(const String& buf, XmlDocument* doc, AttributeList* props) {
+int CssParser::parseAttr(const String& buf, XmlDocument* doc, AttributeList* props) {
   p = text_buffer = buf.c_str();
   if (!p || !*p) {
     p = text_buffer = null;
@@ -103,21 +103,21 @@ int UCssParser::parseAttr(const String& buf, XmlDocument* doc, AttributeList* pr
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UStyleProps::defProp(const char* propname, UStyleProps::AddPropFunc func) {
+void StyleProperties::defProp(const char* propname, StyleProperties::AddPropFunc func) {
   prop_map[new String(propname)] = func;
 }
 
-void UStyleProps::defProp(const String& propname, UStyleProps::AddPropFunc func) {
+void StyleProperties::defProp(const String& propname, StyleProperties::AddPropFunc func) {
   prop_map[new String(propname)] = func;
 }
 
-UStyleProps::AddPropFunc UStyleProps::findAddPropFunc(const String& propname)  {
+StyleProperties::AddPropFunc StyleProperties::findAddPropFunc(const String& propname)  {
    PropMap::const_iterator k = prop_map.find(&propname);
    if (k == prop_map.end()) return 0;
    else return (k->second);
  }
 
-UStyleProps::~UStyleProps() {
+StyleProperties::~StyleProperties() {
   for (PropMap::iterator k = prop_map.begin(); k != prop_map.end(); k++)
     delete k->first;
 }
@@ -126,23 +126,23 @@ UStyleProps::~UStyleProps() {
  //static bool isEq(const String& s1, const char* s2);
  //static bool isEq(const String* s1, const char* s2);
  
-bool UStyleProps::isEq(const String& s1, const char* s2) {
+bool StyleProperties::isEq(const String& s1, const char* s2) {
   return s1.equals(s2, true);      
 }
 
-bool UStyleProps::isEq(const String* s1, const char* s2) {
+bool StyleProperties::isEq(const String* s1, const char* s2) {
   return s1 ? s1->equals(s2, true) : false;
 }
 
 // QUE POSITIF !!!
-bool UStyleProps::parseNum(const String& s, float& val, String& unit) {
+bool StyleProperties::parseNum(const String& s, float& val, String& unit) {
 
-bool UStyleProps::parseNum(const String* s, float& val, String& unit) {
+bool StyleProperties::parseNum(const String* s, float& val, String& unit) {
   return s ? parseNum(*s, val, unit) : false;
 }
 */
 
-bool UStyleProps::parseUrl(const String& s, String& url, String& remain) {
+bool StyleProperties::parseUrl(const String& s, String& url, String& remain) {
   url.clear(); remain.clear();
   int begin = s.find("url(");
 
@@ -165,7 +165,7 @@ bool UStyleProps::parseUrl(const String& s, String& url, String& remain) {
 }
 
 
-UCssProps::UCssProps() {  
+CssProperties::CssProperties() {  
   defProp("font-family",     create_font_family);
   defProp("font-size",       create_font_size);
   defProp("font-weight",     create_font_weight);
@@ -208,36 +208,36 @@ UCssProps::UCssProps() {
 }
 
 
-void UCssProps::create_font_family(XmlDocument*, AttributeList* props, const String& v) {
-  //UFont* p = new UFont;
+void CssProperties::create_font_family(XmlDocument*, AttributeList* props, const String& v) {
+  //Font* p = new Font;
   // NB: obtainAttr() add attribute to props
-  if (!v.empty()) props->obtainAttr<UFont>().setFamily(v);  //  trim ??
+  if (!v.empty()) props->obtainAttr<Font>().setFamily(v);  //  trim ??
 }
 
-void UCssProps::create_font_size(XmlDocument*, AttributeList* props, const String& v) {
-  //UFont* p = new UFont;
-  if (!v.empty()) props->obtainAttr<UFont>().setSize(v);  //  trim ??
+void CssProperties::create_font_size(XmlDocument*, AttributeList* props, const String& v) {
+  //Font* p = new Font;
+  if (!v.empty()) props->obtainAttr<Font>().setSize(v);  //  trim ??
 }
 
-void UCssProps::create_font_weight(XmlDocument*, AttributeList* props, const String& v) {
-  //UFont* p = new UFont;
+void CssProperties::create_font_weight(XmlDocument*, AttributeList* props, const String& v) {
+  //Font* p = new Font;
   if (v.empty()) return;
-  UFont& f = props->obtainAttr<UFont>();
+  Font& f = props->obtainAttr<Font>();
 
   if (v.equals("bold",true)) f.setBold(true);
   else /* if (isEq(v,"medium")) */ f.setBold(false);
 }
 
-void UCssProps::create_font_style(XmlDocument*, AttributeList* props, const String& v) {
-  //UFont* p = new UFont();
+void CssProperties::create_font_style(XmlDocument*, AttributeList* props, const String& v) {
+  //Font* p = new Font();
   if (v.empty()) return;
-  UFont& f = props->obtainAttr<UFont>();
+  Font& f = props->obtainAttr<Font>();
 
   if (v.equals("italic",true)) f.setItalic(true);
   else /* if (isEq(v,"normal")) */ f.setItalic(false);
 }
 
-//UAttribute* UCssProps::create_font(const String& v) {
+//UAttribute* CssProperties::create_font(const String& v) {
 //return p;
 //}
 
@@ -245,7 +245,7 @@ void UCssProps::create_font_style(XmlDocument*, AttributeList* props, const Stri
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UCssProps::create_color(XmlDocument*, AttributeList* props, const String& v) {
+void CssProperties::create_color(XmlDocument*, AttributeList* props, const String& v) {
   Color* p = new Color();
   //trim ??
   //p->set(v);
@@ -253,7 +253,7 @@ void UCssProps::create_color(XmlDocument*, AttributeList* props, const String& v
   props->addAttr(*p);
 }
 
-void UCssProps::create_background_color(XmlDocument*, AttributeList* props, 
+void CssProperties::create_background_color(XmlDocument*, AttributeList* props, 
                                         const String& v) {
   Background* p = new Background();
   //trim ??
@@ -262,7 +262,7 @@ void UCssProps::create_background_color(XmlDocument*, AttributeList* props,
   props->addAttr(*p);
 }
 
-void UCssProps::create_background_image(XmlDocument* doc, AttributeList* props, 
+void CssProperties::create_background_image(XmlDocument* doc, AttributeList* props, 
                                         const String& v) {
   Background* p = new Background();
   String url, remain;
@@ -285,7 +285,7 @@ void UCssProps::create_background_image(XmlDocument* doc, AttributeList* props,
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void UCssProps::create_background(XmlDocument* doc, AttributeList* al, const String& v) {
+void CssProperties::create_background(XmlDocument* doc, AttributeList* al, const String& v) {
   Background* p = new Background();
   //trim
   String url, remain;
@@ -306,13 +306,13 @@ void UCssProps::create_background(XmlDocument* doc, AttributeList* al, const Str
 }
 
 
-void UCssProps::create_width(XmlDocument*, AttributeList* al, const String& v) {
+void CssProperties::create_width(XmlDocument*, AttributeList* al, const String& v) {
   // EX: UWidth* p = new UWidth(-1);
   // NB: obtainAttr() add attribute to props
   if (!v.empty()) al->obtainAttr<USize>().setWidth(v);
 }
 
-void UCssProps::create_height(XmlDocument*, AttributeList* al, const String& v) {
+void CssProperties::create_height(XmlDocument*, AttributeList* al, const String& v) {
   // EX: UHeight* p = new UHeight(-1);
   // NB: obtainAttr() add attribute to props
   if (!v.empty()) al->obtainAttr<USize>().setHeight(v);
@@ -321,24 +321,24 @@ void UCssProps::create_height(XmlDocument*, AttributeList* al, const String& v) 
 // egalement: 'line-height'
 
 
-void UCssProps::create_padding_top(XmlDocument*, AttributeList* al, const String& v) {
+void CssProperties::create_padding_top(XmlDocument*, AttributeList* al, const String& v) {
   // NB: obtainAttr() add attribute to props
   if (!v.empty()) al->obtainAttr<UPadding>().setTop(v);
 }
 
-void UCssProps::create_padding_bottom(XmlDocument*, AttributeList* al, const String& v) {
+void CssProperties::create_padding_bottom(XmlDocument*, AttributeList* al, const String& v) {
   if (!v.empty()) al->obtainAttr<UPadding>().setBottom(v);
  }
 
-void UCssProps::create_padding_left(XmlDocument*, AttributeList* al, const String& v) {
+void CssProperties::create_padding_left(XmlDocument*, AttributeList* al, const String& v) {
   if (!v.empty()) al->obtainAttr<UPadding>().setLeft(v);
 }
 
-void UCssProps::create_padding_right(XmlDocument*, AttributeList* al, const String& v) {
+void CssProperties::create_padding_right(XmlDocument*, AttributeList* al, const String& v) {
   if (!v.empty()) al->obtainAttr<UPadding>().setRight(v);
 }
 
-//UCssProps::create_padding
+//CssProperties::create_padding
 
 /*  align n'existe pas, text-align joue son role ?
  void create_align(XmlDocument*, const String& v) {
@@ -350,7 +350,7 @@ void UCssProps::create_padding_right(XmlDocument*, AttributeList* al, const Stri
  }
  */
 
-void UCssProps::create_text_align(XmlDocument*, AttributeList* al, const String& v) {
+void CssProperties::create_text_align(XmlDocument*, AttributeList* al, const String& v) {
   Halign* p = new Halign();
   //trim ??
   if (v.equals("left",true)) *p = Halign::left;
@@ -362,7 +362,7 @@ void UCssProps::create_text_align(XmlDocument*, AttributeList* al, const String&
 
 // valign existe pas: vertical_align joue son role ?
 //
-void UCssProps::create_vertical_align(XmlDocument*, AttributeList* al, const String& v) {
+void CssProperties::create_vertical_align(XmlDocument*, AttributeList* al, const String& v) {
   Valign* p = new Valign();
   //trim ??
   if (v.equals("top",true)) *p = Valign::top;
@@ -381,7 +381,7 @@ void UCssProps::create_vertical_align(XmlDocument*, AttributeList* al, const Str
  */
 
 
-void UCssProps::create_border(XmlDocument*, AttributeList* al, const String& v) {
+void CssProperties::create_border(XmlDocument*, AttributeList* al, const String& v) {
   Border* p = new Border();
   String unit;
   float n = 0;
@@ -406,7 +406,7 @@ UStyle* UCssStyles::create_body_style() {
   //UStyle* style = UVbox::createStyle();
   UStyle* style = Box::createStyle();
   style->setVertPadding(8,8);
-  UFont* f = new UFont(); f->setPointSize(12); style->setFont(f);
+  Font* f = new Font(); f->setPointSize(12); style->setFont(f);
   return style;
 }
 
@@ -450,7 +450,7 @@ UStyle* UCssStyles::create_pre_style() {
   UStyle* style = UFlowbox::createStyle();
   style->setHorizPadding(80,0);
   style->setVertPadding(5,5);
-  style->setFont(&UFont::monospace);
+  style->setFont(&Font::monospace);
   return style;
 }
 
@@ -472,42 +472,42 @@ UStyle* UCssStyles::create_center_style() {
 UStyle* UCssStyles::create_h1_style() {
   UStyle* style = UFlowbox::createStyle();
   style->setVertPadding(14,14);
-  UFont* f = new UFont(UFont::bold); f->setPointSize(32); style->setFont(f);
+  Font* f = new Font(Font::bold); f->setPointSize(32); style->setFont(f);
   return style;
 }
 
 UStyle* UCssStyles::create_h2_style() {
   UStyle* style = UFlowbox::createStyle();
   style->setVertPadding(12,12);
-  UFont* f = new UFont(UFont::bold); f->setPointSize(18); style->setFont(f);
+  Font* f = new Font(Font::bold); f->setPointSize(18); style->setFont(f);
   return style;
 }
 
 UStyle* UCssStyles::create_h3_style() {
   UStyle* style = UFlowbox::createStyle();
   style->setVertPadding(10,10);
-  UFont* f = new UFont(UFont::bold); f->setPointSize(14); style->setFont(f);
+  Font* f = new Font(Font::bold); f->setPointSize(14); style->setFont(f);
   return style;
 }
 
 UStyle* UCssStyles::create_h4_style() {
   UStyle* style = UFlowbox::createStyle();
   style->setVertPadding(8,8);
-  UFont* f = new UFont(UFont::bold); f->setPointSize(12); style->setFont(f);
+  Font* f = new Font(Font::bold); f->setPointSize(12); style->setFont(f);
   return style;
 }
 
 UStyle* UCssStyles::create_h5_style() {
   UStyle* style = UFlowbox::createStyle();
   style->setVertPadding(7,7);
-  UFont* f = new UFont(UFont::bold); f->setPointSize(10); style->setFont(f);
+  Font* f = new Font(Font::bold); f->setPointSize(10); style->setFont(f);
   return style;
 }
 
 UStyle* UCssStyles::create_h6_style() {
   UStyle* style = UFlowbox::createStyle();
   style->setVertPadding(6,6);
-  UFont* f = new UFont(UFont::bold); f->setPointSize(8); style->setFont(f);
+  Font* f = new Font(Font::bold); f->setPointSize(8); style->setFont(f);
   return style;
 }
 
@@ -547,26 +547,26 @@ UStyle* UCssStyles::create_span_style() {
 
 UStyle* UCssStyles::create_b_style() {
   UStyle* style = Element::createStyle();
-  style->setFont(&UFont::bold);
+  style->setFont(&Font::bold);
   return style;
 }
 
 UStyle* UCssStyles::create_i_style() {
   UStyle* style = Element::createStyle();
-  style->setFont(&UFont::italic);
+  style->setFont(&Font::italic);
   return style;
 }
 
 UStyle* UCssStyles::create_em_style() {
   UStyle* style = Element::createStyle();
-  //style->font = &UFont::fill;
+  //style->font = &Font::fill;
   style->setColors(Color::orange, Color::white);
   return style;
 }
 
 UStyle* UCssStyles::create_u_style() {
   UStyle* style = Element::createStyle();
-  style->setFont(&UFont::underline);
+  style->setFont(&Font::underline);
   return style;
 }
 

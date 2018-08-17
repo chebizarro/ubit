@@ -526,7 +526,7 @@ const UFlowList& Application::getFlowList() {
 }
 
 // NB: un acces direct par [] serait possible
-UEventFlow* Application::getFlow(int _id)  {
+EventFlow* Application::getFlow(int _id)  {
   for (unsigned int k = 0; k < impl.flowlist.size(); ++k) {
     if (impl.flowlist[k]->getID() == _id) return impl.flowlist[k];
   }
@@ -534,7 +534,7 @@ UEventFlow* Application::getFlow(int _id)  {
 }
 
 Selection* Application::getSelection(int _id) {
-  UEventFlow* fl = getFlow(_id);
+  EventFlow* fl = getFlow(_id);
   if (!fl) return null;
   else return fl->getSelection();
 }
@@ -542,7 +542,7 @@ Selection* Application::getSelection(int _id) {
 //==============================================================================
 
 UMenu* Application::getOpenedMenu() {
-  UEventFlow* fl = impl.disp->obtainChannelFlow(0);  // DEFAULT IFLOW : A REVOIR
+  EventFlow* fl = impl.disp->obtainChannelFlow(0);  // DEFAULT IFLOW : A REVOIR
   return fl ? fl->menu_man.getDeepestMenu() : null; 
 }
 
@@ -581,7 +581,7 @@ void Application::postpone(UCall& c) {  // pas tout a fait correct si mthreads!
 }
 
 void Application::addTimeout(unsigned long _delay, int _ntimes, UCall& c) {
-  UTimer* t = new UTimer(_delay, _ntimes, true); // true => auto_delete
+  Timer* t = new Timer(_delay, _ntimes, true); // true => auto_delete
   t->onTimeout(c);
   t->start();
 }

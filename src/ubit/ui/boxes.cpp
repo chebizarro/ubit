@@ -124,7 +124,7 @@ UStyle* UStatusbar::createStyle() {
 
 UStyle* UFlowbox::createStyle() {
   UStyle& s = *new UStyle();
-  s.viewStyle = &UFlowView::style;
+  s.viewStyle = &FlowView::style;
   s.textSeparator = new String("\n");
   s.orient = UOrient::HORIZONTAL;
   s.halign = Halign::FLEX;
@@ -162,7 +162,7 @@ UStyle* UCardbox::createStyle() {
   return &s; 
 }
 
-UCardbox::UCardbox(Args args) : Box(args), ptabs(new UListbox()) 
+UCardbox::UCardbox(Args args) : Box(args), ptabs(new Listbox()) 
 {
   ptabs->addAttr(ucall(this, &UCardbox::setSelectedImpl)
                  + UOrient::horizontal + uhflex() + uvflex()
@@ -325,22 +325,22 @@ void UDocbox::iconify(bool state) {
 UAlertbox::UAlertbox(Args args) {
   add(UOrient::vertical + Background::white + ualpha(0.8)
       + uhcenter() + uvcenter()
-      + UFont::bold + UFont::large
+      + Font::bold + Font::large
       + args
       + UOn::action / ushow(*this, false)
       
-      + uhbox(uscale(1.5) + UFont::xx_large
+      + uhbox(uscale(1.5) + Font::xx_large
               + UPix::ray + Color::red + " Alert! ")
       + " "
       + " "
       + " "
       + uhflex()  // necessaire sinon affiche un mot par ligne!
-      + uflowbox(UFont::x_large + Color::navy + uhcenter() + message)
+      + uflowbox(Font::x_large + Color::navy + uhcenter() + message)
       + " "
       + " "
       + " "
       + uhcenter()
-      + ubutton(uscale(1.25) + UFont::x_large + ualpha(0.6) 
+      + ubutton(uscale(1.25) + Font::x_large + ualpha(0.6) 
                 + "   OK   " + ushow(*this, false))
       );
 }

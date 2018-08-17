@@ -51,9 +51,9 @@ public:
 
 /* ==================================================== [Elc] ======= */
 
-UViewStyle UFlowView::style(&UFlowView::createView, UObject::UCONST);
+ViewStyle FlowView::style(&FlowView::createView, UObject::UCONST);
 
-UFlowView::UFlowView(Box* box, View* par_view, UHardwinImpl* wgraph) 
+FlowView::FlowView(Box* box, View* par_view, UHardwinImpl* wgraph) 
 : View(box, par_view, wgraph) {
   lines = null;
   cells = null;
@@ -61,12 +61,12 @@ UFlowView::UFlowView(Box* box, View* par_view, UHardwinImpl* wgraph)
   alloc_line_count = alloc_cell_count = 0;
 }
 
-// "static" constructor used by UViewStyle to make a new view
-View* UFlowView::createView(Box* box, View* parview, UHardwinImpl* wgraph){
-  return new UFlowView(box, parview, wgraph);
+// "static" constructor used by ViewStyle to make a new view
+View* FlowView::createView(Box* box, View* parview, UHardwinImpl* wgraph){
+  return new FlowView(box, parview, wgraph);
 }
 
-UFlowView::~UFlowView() {
+FlowView::~FlowView() {
   if (lines) {free(lines); lines = null;}
   if (cells) {free(cells); cells = null;}
   alloc_line_count = 0;
@@ -75,14 +75,14 @@ UFlowView::~UFlowView() {
   cell_count = 0;
 }
 
-float UFlowView::getMaxWidth() const {
+float FlowView::getMaxWidth() const {
   float ww = 0; 
   for (int k = 0; k < line_count; ++k)
     ww += lines[k].w;
   return ww;
 }
 
-bool UFlowView::caretPosToXY(long _pos, int& _x, int& _y) const {
+bool FlowView::caretPosToXY(long _pos, int& _x, int& _y) const {
   long p = 0;
   long begline_p = 0;
   _x = _y = 0;
@@ -106,7 +106,7 @@ bool UFlowView::caretPosToXY(long _pos, int& _x, int& _y) const {
   return false;
 }
 
-bool UFlowView::xyToCaretPos(int _x, int _y, long& _pos) const {
+bool FlowView::xyToCaretPos(int _x, int _y, long& _pos) const {
   _pos = 0;
   long cell_x = 0;
   
@@ -140,15 +140,15 @@ public:
   UFlowLine *line;
   int l, c;
   float wlimit, line_maxw;   // ex int
-  UFlowView* flowview;
+  FlowView* flowview;
 
-  UFlowLayoutImpl(UFlowView *v);
+  UFlowLayoutImpl(FlowView *v);
   void addLine(UpdateContext* ctx);
   void addCell(UpdateContext* ctx, Child*, float w, float h, int offset, int len);
 };
 
 
-UFlowLayoutImpl::UFlowLayoutImpl(UFlowView *v) : UViewLayoutImpl(v) {
+UFlowLayoutImpl::UFlowLayoutImpl(FlowView *v) : UViewLayoutImpl(v) {
   flowview = v;
   flowview->lastline_strcell = -1; 
   wlimit = line_maxw = 0;
@@ -235,10 +235,10 @@ void UFlowLayoutImpl::addCell(UpdateContext*ctx, Child* _link,
 /* ==================================================== [Elc] ======= */
 // att: arg = parctx = PARENT context !
 
-bool UFlowView::doLayout(UpdateContext& parctx, UViewLayout& vl) {
+bool FlowView::doLayout(UpdateContext& parctx, UViewLayout& vl) {
   UFlowLayoutImpl vd(this);
   Box* box = getBox();
-  if (!box) {Application::internalError("UFlowView::doLayout","null box!");return false;}
+  if (!box) {Application::internalError("FlowView::doLayout","null box!");return false;}
   
   UpdateContext ctx(parctx, box, this, null);
   UMultiList mlist(ctx, *box);
@@ -276,7 +276,7 @@ bool UFlowView::doLayout(UpdateContext& parctx, UViewLayout& vl) {
   vd.line_maxw = 0;
 
   // IMPORTANT:
-  // Height depend de Width pour les UFlowView
+  // Height depend de Width pour les FlowView
   // ceci impose de refaire une seconde fois le layout du parent
   // (sauf dans le cas ou Width est fixe a priori auquel cas Height
   // (peut directement etre determine des la premier passe)
@@ -333,7 +333,7 @@ bool UFlowView::doLayout(UpdateContext& parctx, UViewLayout& vl) {
 
 //!! ctx pas parctx!
 
-void UFlowView::flowDoLayout(UFlowLayoutImpl&vd, Element& grp, 
+void FlowView::flowDoLayout(UFlowLayoutImpl&vd, Element& grp, 
                              UpdateContext& ctx, UMultiList& mlist) {
   // if this group is not null (which generally is the case) the object
   // it contains are added to children for normal display
@@ -439,11 +439,11 @@ void UFlowView::flowDoLayout(UFlowLayoutImpl&vd, Element& grp,
             dim.width = chview->getWidth();
             dim.height = chview->getHeight();
 
-            // pour les UFlowView, ils doivent prendre toute la place disponible 
+            // pour les FlowView, ils doivent prendre toute la place disponible 
             // pour le parent, donc passage a la ligne avant si lines_maxw 
             // et taille = maxwidth !
 	    
-            if (chview->getViewStyle() == &UFlowView::style) {
+            if (chview->getViewStyle() == &FlowView::style) {
               // fait passer a la ligne *AVANT* un UFlow imbrique
               if (vd.line[vd.l].w >0) vd.addLine(&ctx);
               
@@ -455,7 +455,7 @@ void UFlowView::flowDoLayout(UFlowLayoutImpl&vd, Element& grp,
             // recommencer
             chview->doLayout(ctx, chvl);
             
-            if (chview->getViewStyle() == &UFlowView::style) {
+            if (chview->getViewStyle() == &FlowView::style) {
               dim.width = chview->getWidth();
             }
             dim.height = chview->getHeight();  // a include dans accolade?
@@ -474,7 +474,7 @@ void UFlowView::flowDoLayout(UFlowLayoutImpl&vd, Element& grp,
           vd.addCell(&ctx, &ch.child(), dim.width, dim.height, 0, 0);
 	  
           // fait passer a la ligne *APRES* un UFlow imbrique
-          if (chview && chview->getViewStyle() == &UFlowView::style) vd.addLine(&ctx);
+          if (chview && chview->getViewStyle() == &FlowView::style) vd.addLine(&ctx);
         }
       }
     } // endfor ( ; ch...)
@@ -489,9 +489,9 @@ public:
   int l, c;
   float line_y;  // ex int
   bool newline;
-  UFlowView* flowview;
+  FlowView* flowview;
 
-  UFlowUpdateImpl(UFlowView* v, const Rectangle& r, UViewUpdate& vup, 
+  UFlowUpdateImpl(FlowView* v, const Rectangle& r, UViewUpdate& vup, 
                   UFlowLine* _lines, UFlowCell* _cells)
     : UViewUpdateImpl(v, r, vup) {
     flowview = v;
@@ -508,8 +508,8 @@ public:
 //NB: clip est passe en valeur, pas r
 // parctx = parent context
 
-void UFlowView::doUpdate(UpdateContext& parctx, Rectangle r, Rectangle clip, UViewUpdate& vup) {
-  if (!getBox()) {Application::internalError("UFlowView::doUpdate","null box!"); return;}
+void FlowView::doUpdate(UpdateContext& parctx, Rectangle r, Rectangle clip, UViewUpdate& vup) {
+  if (!getBox()) {Application::internalError("FlowView::doUpdate","null box!"); return;}
   Box& box = *getBox();
 
   // test pas valable pour les FLOATING car leurs coords dependent de ctx
@@ -607,7 +607,7 @@ void UFlowView::doUpdate(UpdateContext& parctx, Rectangle r, Rectangle clip, UVi
 
 /* ==================================================== [Elc] ======= */
 
-void UFlowView::flowDoUpdate(UFlowUpdateImpl& vd, UpdateContext& ctx, 
+void FlowView::flowDoUpdate(UFlowUpdateImpl& vd, UpdateContext& ctx, 
                              Element& grp, UMultiList& mlist, 
                              const Rectangle& r, Rectangle& clip, UViewUpdate&vup) {
   Graph& g = *ctx.getGraph();
@@ -847,11 +847,11 @@ void UFlowView::flowDoUpdate(UFlowUpdateImpl& vd, UpdateContext& ctx,
 //                pas trouve' mais on peut encore trouver 
 //
 
-bool UFlowView::flowFindDataPos(UpdateContext& ctx, ChildIter data_iter, ChildIter end_iter, 
+bool FlowView::flowFindDataPos(UpdateContext& ctx, ChildIter data_iter, ChildIter end_iter, 
 				UFlowCell* cell, const Rectangle& r, UViewUpdate& vup) 
 {
   if (!vup.datactx) {
-    Application::internalError("UFlowView::flowFindDataPos","null event or wrong type");
+    Application::internalError("FlowView::flowFindDataPos","null event or wrong type");
     return false;
   }
   const Point& evpos = vup.datactx->win_eventpos;
@@ -872,7 +872,7 @@ bool UFlowView::flowFindDataPos(UpdateContext& ctx, ChildIter data_iter, ChildIt
           && str->c_str()) {
         // search the strpos
         strpos = cell->offset 
-        + UFontMetrics(ctx).getCharPos(str->c_str() + cell->offset, cell->len,
+        + FontMetrics(ctx).getCharPos(str->c_str() + cell->offset, cell->len,
                                        evpos.x - r.x);
       }
       
@@ -890,7 +890,7 @@ bool UFlowView::flowFindDataPos(UpdateContext& ctx, ChildIter data_iter, ChildIt
 }
 
 
-bool UFlowView::flowFindDataPtr(UpdateContext& ctx, 
+bool FlowView::flowFindDataPtr(UpdateContext& ctx, 
                                 ChildIter data_iter, ChildIter end_iter, 
                                 UFlowCell*cell, const Rectangle&r, UViewUpdate&vup) {  
   Data *data;

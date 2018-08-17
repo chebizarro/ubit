@@ -128,7 +128,7 @@ ERROR:
 }
 
 
-float Length::toPixels(Display* disp, const UFontDesc& fd, 
+float Length::toPixels(Display* disp, const FontDescription& fd, 
                         float view_len, float parview_len) const {
   float pixlen = 0;
   switch (unit.type) {
@@ -149,7 +149,7 @@ float Length::toPixels(Display* disp, const UFontDesc& fd,
       pixlen = val * fd.actual_size * 0.5 * disp->PT_TO_PX;
       break;      
     case Unit::EM:      
-      //pixlen = val * UFontMetrics(fd, disp).getHeight();
+      //pixlen = val * FontMetrics(fd, disp).getHeight();
       pixlen = val * fd.actual_size * disp->PT_TO_PX;
       break;
     case Unit::IN:

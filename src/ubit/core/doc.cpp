@@ -132,7 +132,7 @@ Document* TextDocCreator::create(DocumentSource& so) {
   }
   
   Box& fbox = uflowbox(upadding(4,6) + *str);
-  UEdit& ed = uedit();
+  TextEdit& ed = uedit();
   fbox.addAttr(ed);      // editable
 
   FlatDocument* doc = new FlatDocument(*so.path);
@@ -213,13 +213,13 @@ Document* UPluginDocCreator::create(DocumentSource& so) {
   String* fname = new String(so.path->basename());
   Document* doc = new PluginDocument(*so.path);
 
-  doc->addAttr(utop() + upadding(13,13) + uvspacing(8) + UFont::large);
-  doc->add(uhbox(uelem(UFont::bold + "File: ") + fname));
+  doc->addAttr(utop() + upadding(13,13) + uvspacing(8) + Font::large);
+  doc->add(uhbox(uelem(Font::bold + "File: ") + fname));
 
   UFileMode fm(*so.path);
   if (fm.isExec()) {
     doc->add(uhbox(uleft() + USymbol::right + " "
-                   + ulinkbutton(UFont::bold + "Execute"
+                   + ulinkbutton(Font::bold + "Execute"
                                  + ucall(this, doc, &UPluginDocCreator::exec))));
   }
 
@@ -228,22 +228,22 @@ Document* UPluginDocCreator::create(DocumentSource& so) {
     if (command !="open") help_s = " (using " & command & " )";
     
     doc->add(uhbox(uleft() + USymbol::right + " "
-                   + ulinkbutton(UFont::bold + "Open"
+                   + ulinkbutton(Font::bold + "Open"
                                  + ucall(this, doc, &UPluginDocCreator::open))
                    + help_s));
   }
 
   UCall& call = ucall(this, doc, &UPluginDocCreator::openWith);
   doc->add(uhbox(uleft() + USymbol::right + " "
-                 + ulinkbutton(UFont::bold + "Open With" + call)
+                 + ulinkbutton(Font::bold + "Open With" + call)
                  + "  "
                  + utextfield(usize(200) + alt_command + call)));
 
   doc->add(uhbox(uleft() + USymbol::right + " "
-                 + ulinkbutton(UFont::bold + "Open As Text"
+                 + ulinkbutton(Font::bold + "Open As Text"
                                + ucall(this, doc, &UPluginDocCreator::openAsText))));
   status = "";
-  doc->add(" " + uhbox(Color::red + UFont::bold + status));
+  doc->add(" " + uhbox(Color::red + Font::bold + status));
   return doc;
 }
 

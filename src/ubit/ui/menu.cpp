@@ -65,7 +65,7 @@ UStyle* UMenubar::createStyle() {
   style->valign = Valign::FLEX;
   style->hspacing = 4;
   style->vspacing = 5;
-  style->font = &UFont::bold;
+  style->font = &Font::bold;
   style->local.border = &Border::shadowOut;
   return style;
 }
@@ -130,7 +130,7 @@ placement(null)
 // dans les desctructeurs!)
 UMenu::~UMenu() {
   // att: reset du MenuCtrl si on detruit le menu
-  UEventFlow* fl = Application::getFlow(0);   // DEFAULT IFLOW : A REVOIR
+  EventFlow* fl = Application::getFlow(0);   // DEFAULT IFLOW : A REVOIR
   if (fl) fl->getMenuManager().closeAllMenus(true);
   if (placement) delete(placement); placement = null;
   destructs();
@@ -286,13 +286,13 @@ void UMenu::show(bool state, Display* disp) {
   
   if (state) {
     if (!disp) disp = Application::getDisp();
-    UEventFlow* ef = const_cast<Display*>(disp)->obtainChannelFlow(0);
+    EventFlow* ef = const_cast<Display*>(disp)->obtainChannelFlow(0);
     if (ef) openImpl(ef->getMenuManager(), null, /*null,*/ false, disp);
     else Application::internalError("UMenu::show","null event flow; menu: %p",this);
   }
   
   else {  // !state
-    UEventFlow* f = null;
+    EventFlow* f = null;
     if (disp) f = disp->getChannelFlow(0);  // DEFAULT IFLOW : A REVOIR
     else f = Application::getFlow(0);
     
@@ -411,7 +411,7 @@ void UMenu::openImpl(UMenuManager& mc, View* opener,
 
 UMenuManager::~UMenuManager() {}
 
-UMenuManager::UMenuManager(UEventFlow* _eflow) : eflow(*_eflow) {
+UMenuManager::UMenuManager(EventFlow* _eflow) : eflow(*_eflow) {
   disp = null;
   // grabbed menus
   menu_count = 0;
@@ -421,9 +421,9 @@ UMenuManager::UMenuManager(UEventFlow* _eflow) : eflow(*_eflow) {
   possible_opener_menu = null;
   possible_closer = null;
   possible_closer_menu = null;
-  //open_timer = new UTimer();
+  //open_timer = new Timer();
   //open_timer->onAction(ucall(this, &UMenuManager::openMenuAfterDelay));
-  //close_timer = new UTimer();
+  //close_timer = new Timer();
   //close_timer->onAction(ucall(this, &UMenuManager::closeMenuAfterDelay));
   top_menu = null;
 }

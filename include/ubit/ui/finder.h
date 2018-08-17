@@ -209,7 +209,7 @@ private:
   UIcon* last_preview_request;
   UIcon* last_preview;
   ChildIter previews_current, previews_end;
-  uptr<UTimer> preview_timer;
+  uptr<Timer> preview_timer;
  };
 
 }

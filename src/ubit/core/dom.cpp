@@ -53,7 +53,7 @@ int CssAttachment::load(Document*) {
   stat = style.read(path);
   //cerr << "link stylesheet: " << stat << " pathname " << " " << path << endl;
   if (stat > 0) {
-    UCssParser css;
+    CssParser css;
     css.parse(style, doc);
   }
   return stat;

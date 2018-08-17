@@ -1,5 +1,5 @@
 /*
- *  uhardima.cpp : native images and pixmaps
+ *  hardima.cpp : native images and pixmaps
  *  Ubit GUI Toolkit - Version 6.0
  *  (C) 2008 Eric Lecolinet | ENST Paris | www.enst.fr/~elc/ubit
  *

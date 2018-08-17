@@ -93,7 +93,7 @@ namespace ubit {
     Display* getDisp() const {return disp;}
     Window*  getWin()  const {return win;}
     WinType getWinType() const {return WinType(wintype);}  
-    UGlcontext* getGlcontext() const {return glcontext;}
+    GLContext* getGlcontext() const {return glcontext;}
     
     bool isPixmap()   const {return wintype == PIXMAP;}  
     bool isSubwin()   const {return wintype == SUBWIN;}
@@ -174,7 +174,7 @@ namespace ubit {
     friend class Window;
     friend class View;
     friend class Graph;
-    friend class UPaintEvent;
+    friend class PaintEvent;
     friend class UInputEvent;
     friend class UAppliImpl;
     friend class UGlcanvas;
@@ -183,8 +183,8 @@ namespace ubit {
     Display* disp;
     Window* win;
     Children* softwin_list;
-    // glcanvas windows and GLUT window have their own UGlcontext
-    UGlcontext* glcontext;
+    // glcanvas windows and GLUT window have their own GLContext
+    GLContext* glcontext;
 #endif
   };  
    

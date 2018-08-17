@@ -33,10 +33,10 @@ const ChildIter Selection::null_link;
 
 
 Selection::Selection(const Color* fg, const Color* bg,
-                               const UFont* f) {
+                               const Font* f) {
   pcolor   = fg ? new Color(*fg) : null;
   pbgcolor = bg ? new Color(*bg) : null;
-  pfont    = f ? new UFont(*f) : null;
+  pfont    = f ? new Font(*f) : null;
   rec_sel  = true;
   in_obj   = null;
   clear();

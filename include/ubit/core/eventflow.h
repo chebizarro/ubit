@@ -40,14 +40,14 @@ namespace ubit {
    *
    * Note: the ID of the native Event Flow is 0 on all Displays.
    */
-  class UEventFlow {
+  class EventFlow {
   public:
-    UEventFlow(Display&, int channel);
+    EventFlow(Display&, int channel);
     /**< creates a new Event Flow on this Display.
      * the ID of the native Event Flow is 0 on all Displays.
      */
     
-    virtual ~UEventFlow();
+    virtual ~EventFlow();
     
     int getID() const {return id;}
     /**< returns the global ID of this Event Flow.
@@ -135,11 +135,11 @@ namespace ubit {
     struct LastPressed {
       LastPressed() {reset();}
       void reset();
-      void set(View* source_view, const Point& win_pos, const Point& screen_pos, const UViewFind&);
+      void set(View* source_view, const Point& win_pos, const Point& screen_pos, const ViewFind&);
       View* view;
       Box* box;
       Point win_in_screen;        // pos of win in the screen (for drag and release events)
-      U3DcanvasView* canvas_view;  // != null if the source is in a 3Dwidget
+      3DCanvasView* canvas_view;  // != null if the source is in a 3Dwidget
       U3Dpos* refpos_in_canvas;    // 3Dpos of the 3Dwidget in canvas_view (if it is != null)
       UBehavior behavior;
     } lastPressed;
@@ -150,8 +150,8 @@ namespace ubit {
     int    click_count;
     unsigned long click_time;
     const class UCursor* lastCursor;    // cursor being currently shown
-    uptr<UTimer> auto_repeat_timer;     // timer fo auto_repeat actions
-    uptr<UTimer> tip_timer;             // timer for tool tips
+    uptr<Timer> auto_repeat_timer;     // timer fo auto_repeat actions
+    uptr<Timer> tip_timer;             // timer for tool tips
     Window& tip_win;                      // window for tool tips
     UMenuManager& menu_man;             // menubars & pulldown menus manager
     Selection& selection;              // text selection management

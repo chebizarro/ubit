@@ -271,7 +271,7 @@ void UChoice::changed(bool update_now) {
 }
 
 void UChoice::changeCB(UInputEvent* source_event) {
-  //UEventFlow* flow = source_event ? source_event->getFlow() : null;
+  //EventFlow* flow = source_event ? source_event->getFlow() : null;
   //View* hardwv = source_event ? source_event->getWinView() : null;
   // manque la bonne view et les coords
   
@@ -291,7 +291,7 @@ void UChoice::changeCB(UInputEvent* source_event) {
 // que l'on clique un item, meme s'il etait deja selectionne
 
 void UChoice::actionCB(UInputEvent* source_event) {
-  //UEventFlow* flow = source_event ? source_event->getFlow() : null;
+  //EventFlow* flow = source_event ? source_event->getFlow() : null;
   //View* hardwv = source_event ? source_event->getWinView() : null;
   Box* selected_item = getSelectedItemImpl();
   

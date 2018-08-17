@@ -74,7 +74,7 @@ namespace ubit {
     
     virtual String& pathname()  {return *ppathname;}
     virtual String& title()     {return *ptitle;}
-    virtual UListbox& icons() {return *picons;}
+    virtual Listbox& icons() {return *picons;}
     virtual UChoice& choice();
     virtual const UChoice& choice() const;
     
@@ -96,7 +96,7 @@ namespace ubit {
   protected:
     friend class UFinder;
     uptr<String> ppathname, ptitle;
-    uptr<UListbox> picons;
+    uptr<Listbox> picons;
     uptr<UHspacing> icon_hspacing;
     uptr<UVspacing> icon_vspacing;
     unsigned long filetime;

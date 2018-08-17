@@ -1,5 +1,5 @@
 /*
- *  UGlcontext.h: OpenGL rendering context
+ *  GLContext.h: OpenGL rendering context
  *  Ubit GUI Toolkit - Version 8
  *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
@@ -34,19 +34,19 @@ namespace ubit {
 
 class UHardImaGL;
 
-class UGlcontext : public URenderContext {
+class GLContext : public RenderContext {
 public:
 #if UBIT_WITH_GLUT
-  UGlcontext(Display*, class UHardwinGLUT*);
+  GLContext(Display*, class UHardwinGLUT*);
 #else
-  UGlcontext(Display*, UGlcontext* sharelists);
+  GLContext(Display*, GLContext* sharelists);
 #endif
-  virtual ~UGlcontext();
+  virtual ~GLContext();
   
   virtual bool isGlcontext() const {return true;}
-  virtual UGlcontext* toGlcontext() {return this;}
-  virtual const UGlcontext* toGlcontext() const {return this;}
-  virtual bool isSharedWith(const URenderContext*) const;
+  virtual GLContext* toGlcontext() {return this;}
+  virtual const GLContext* toGlcontext() const {return this;}
+  virtual bool isSharedWith(const RenderContext*) const;
 
   virtual void setDest(UHardwinImpl* destination, double xoffset, double yoffset);
   virtual void setOffset(double x, double y);
@@ -57,7 +57,7 @@ public:
   
   virtual void setColor(Graph& g, const Color&);
   virtual void setBackground(Graph& g, const Color&);
-  virtual void setFont(Graph& g, const UFontDesc&);
+  virtual void setFont(Graph& g, const FontDescription&);
   virtual void setWidth(Graph& g, double);
 
   virtual void makeCurrent() const;

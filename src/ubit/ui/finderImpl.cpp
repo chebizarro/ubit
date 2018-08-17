@@ -59,7 +59,7 @@ UFinderDir::UFinderDir(UFinder* fd, const String& _fpath, int _path_type) {
   
   popmenu.add
     (ualpha(0.5) + Background::black
-     + Color::white + UFont::bold + Border::none
+     + Color::white + Font::bold + Border::none
      + ubutton("     ReOpen " + Color::yellow + fpath // read again if already opened
                + ucall(fd, this, &UFinder::openDir))
      + ubutton("     Close Folder"
@@ -100,8 +100,8 @@ void UFinderDir::setIconbox(class UIconbox* _ibox) {
 }
 
 void UFinderDir::emph(bool state) {
-  //if (state) font.set(UFont::bold);
-  //else font.set(UFont::plain);
+  //if (state) font.set(Font::bold);
+  //else font.set(Font::plain);
 }
 
 /* ==================================================== [Elc] ======= */
@@ -457,7 +457,7 @@ void UFinder::showPreviewRequest(UIcon* icon) {
   // afficher preview sauf si deja selectionne 
   if (icon != last_preview_request) {
     last_preview_request = icon;
-    UTimer* t = new UTimer(10, 1, true);  // true => auto_delete
+    Timer* t = new Timer(10, 1, true);  // true => auto_delete
     t->onAction(ucall(this, icon, &UFinder::showPreview));
     t->start();
   }
@@ -803,7 +803,7 @@ UFinderHost::UFinderHost(class UFinder* _fd, const String& _hostname)
   }
   
   UItem& name_box = uitem
-    (Color::black + UOn::select / UFont::bold
+    (Color::black + UOn::select / Font::bold
      + UOn::select / Background::none
      + UOn::select / UPix::minus
      + UOn::deselect / UPix::plus

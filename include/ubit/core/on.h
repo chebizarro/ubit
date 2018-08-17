@@ -76,7 +76,7 @@ namespace ubit {
     
     &select, &deselect,
     /**< detects that a widget was "selected" or "deselected".
-     * Certain widgets, such as UCheckbox or UListbox items can be selected. Besides,   
+     * Certain widgets, such as UCheckbox or Listbox items can be selected. Besides,   
      * any widget deriving from Box can be made "selectable" by Element::setSelectable().
      *
      * Callback functions triggered by UOn::select and UOn::deselect can have an optional
@@ -180,9 +180,9 @@ namespace ubit {
     /**< detect that a widget was repainted.
      * This condition is applicable to any widget that derives from Box.
      * 
-     * Callback functions triggered by UOn::paint can have an optional UPaintEvent
+     * Callback functions triggered by UOn::paint can have an optional PaintEvent
      * parameter which have several useful methods such as getSource(), getView(),
-     * getClip(), etc. @see UPaintEvent for details.
+     * getClip(), etc. @see PaintEvent for details.
      *
      * A Box can have multiple views. Callback functions are then fired for each view
      * that has been repainted.   
@@ -225,12 +225,12 @@ namespace ubit {
     /**< fires callbacks when the value of an object is changed.
      * this condition detects when:
      * - the value of UScrollbar, USlider objects is changed
-     * - the selection is changed in UChoice, UListbox, UCombobox objects
+     * - the selection is changed in UChoice, Listbox, UCombobox objects
      *   (= when a item, that was previously unselected, becomes selected)
      *
-     * Notes for UChoice, UListbox, UCombobox:
+     * Notes for UChoice, Listbox, UCombobox:
      *  - Event::getTarget() returns the item that was selected (while
-     *    Event::getSource() returns the UChoice, UListbox... container)
+     *    Event::getSource() returns the UChoice, Listbox... container)
      *  - UOn::change is not triggered if the user selects an item that was
      *    already selected (in contrast with UOn::action which would be
      *    fired in this case)

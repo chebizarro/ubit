@@ -43,37 +43,37 @@ using namespace std;
 NAMESPACE_UBIT
 
 
-UEdit::UEdit() :
-  calls(ucall(this, &UEdit::inputCB)),
-  calls2(ucall(this, &UEdit::callbacks2)),
+TextEdit::TextEdit() :
+  calls(ucall(this, &TextEdit::inputCB)),
+  calls2(ucall(this, &TextEdit::callbacks2)),
   caret_color(Color::red),
   caret_str(null), caret_pos(0),
   is_editable(true), is_visible(true), repainted(false) {
 }
 
-UEdit::~UEdit() {
+TextEdit::~TextEdit() {
   caret_str = null;
   destructs();
 }
 
 
-bool UEdit::isEditable() const {return is_editable;}
-bool UEdit::isCaretVisible() const {return is_visible;}
-Color* UEdit::getCaretColor() const {return caret_color;}
+bool TextEdit::isEditable() const {return is_editable;}
+bool TextEdit::isCaretVisible() const {return is_visible;}
+Color* TextEdit::getCaretColor() const {return caret_color;}
 
-UEdit& UEdit::setEditable(bool b) {is_editable = b; return *this;}
-UEdit& UEdit::setCaretVisible(bool b)  {is_visible = b; return *this;}
-UEdit& UEdit::setCaretColor(Color* c) {caret_color = c; return *this;}
+TextEdit& TextEdit::setEditable(bool b) {is_editable = b; return *this;}
+TextEdit& TextEdit::setCaretVisible(bool b)  {is_visible = b; return *this;}
+TextEdit& TextEdit::setCaretColor(Color* c) {caret_color = c; return *this;}
 
 
-void UEdit::addingTo(Child& selflink, Element& parent) {
+void TextEdit::addingTo(Child& selflink, Element& parent) {
   Attribute::addingTo(selflink, parent);
   //if (getParentCount() > 1) {pourquoi pas ?
-  //  Application::warning("UEdit::addingTo","UEdit objects can not have several parents; last parent: ",parent->cname());
+  //  Application::warning("TextEdit::addingTo","TextEdit objects can not have several parents; last parent: ",parent->cname());
    //}
   if (parent.emodes.IS_TEXT_EDITABLE) {
     const String* classname = &parent.getClassName();
-    warning("UEdit::addingTo","This UEdit attribute has a parent (%s %p) that contains another UEdit attribute (an widget should not contain multiple UEdit objects", classname, &parent);
+    warning("TextEdit::addingTo","This TextEdit attribute has a parent (%s %p) that contains another TextEdit attribute (an widget should not contain multiple TextEdit objects", classname, &parent);
   }
 
   parent.emodes.IS_TEXT_EDITABLE = true;
@@ -91,7 +91,7 @@ void UEdit::addingTo(Child& selflink, Element& parent) {
 
 //NB: removingFrom() requires a destructor to be defined
 //
-void UEdit::removingFrom(Child& c, Element& parent) {
+void TextEdit::removingFrom(Child& c, Element& parent) {
   parent.emodes.IS_TEXT_EDITABLE = false;
   parent.emodes.IS_TEXT_SELECTABLE = false;
   //parent.emodes.CLOSE_MENU_MODE = 0;
@@ -107,7 +107,7 @@ void UEdit::removingFrom(Child& c, Element& parent) {
 }
 
 
-void UEdit::putProp(UpdateContext* ctx, Element& state) {
+void TextEdit::putProp(UpdateContext* ctx, Element& state) {
   ctx->edit = this;
 }
 
@@ -117,7 +117,7 @@ void UEdit::putProp(UpdateContext* ctx, Element& state) {
 // par contre les moveCaret sont locaux a chaque uedit (le caret peut avoir
 // une position differente dans chaque parent)
 
-void UEdit::update() {
+void TextEdit::update() {
   // NB: _parents.updateAutoParents() ne suffit pas car la string peut apparaitre
   // dans d'autres widgets, non editables
   if (caret_str) caret_str->updateAutoParents(Update::layoutAndPaint);
@@ -151,12 +151,12 @@ static int trueLength(const String *s) {
 }
 */
 
-long UEdit::getCaretPos() const {
+long TextEdit::getCaretPos() const {
   Element* par = getParent(0);
   return par ? getCaretPos(*par) : 0;
 }
 
-long UEdit::getCaretPos(Element& par) const {
+long TextEdit::getCaretPos(Element& par) const {
   //if (!par) return 0;
   String* s = null;
   long k = 0;
@@ -171,12 +171,12 @@ long UEdit::getCaretPos(Element& par) const {
   return (found ? k : 0);
 }
 
-UEdit& UEdit::setCaretPos(long pos) {
+TextEdit& TextEdit::setCaretPos(long pos) {
   Element* par = getParent(0);
   return par ? setCaretPos(pos, *par) : *this;
 }
 
-UEdit& UEdit::setCaretPos(long pos, Element& par) {
+TextEdit& TextEdit::setCaretPos(long pos, Element& par) {
   //if (!par) return *this;
   String* s = null;
   long k = 0, found_pos = 0;
@@ -197,21 +197,21 @@ UEdit& UEdit::setCaretPos(long pos, Element& par) {
 
 /* ==================================================== [Elc:] ======= */
 
-String* UEdit::getCaretStr(int& pos) const {
+String* TextEdit::getCaretStr(int& pos) const {
   pos = caret_pos;
   return caret_str;
 }
 
-String* UEdit::getCaretStr() const {
+String* TextEdit::getCaretStr() const {
   return caret_str;
 }
 
-UEdit& UEdit::setCaretStr(String* _str) {
+TextEdit& TextEdit::setCaretStr(String* _str) {
   setCaretStr(_str, 0, true, null);
   return *this;
 }
 
-UEdit& UEdit::setCaretStr(String* _str, int _pos) {
+TextEdit& TextEdit::setCaretStr(String* _str, int _pos) {
   setCaretStr(_str, _pos, true, null);
   return *this;
 }
@@ -219,7 +219,7 @@ UEdit& UEdit::setCaretStr(String* _str, int _pos) {
 // NB1: la Str peut etre partagee a la fois par des Box editables et non editables
 // NB2: strpos = pos in newstr / -1 means end of string
 
-void UEdit::setCaretStr(String* newstr, int newpos, bool _update, View* view) {
+void TextEdit::setCaretStr(String* newstr, int newpos, bool _update, View* view) {
   caret_str = newstr;
   if (!caret_str) caret_pos = 0;
   else {
@@ -298,13 +298,13 @@ static String* _getNextStr(String* from, bool& from_found, Element& box) {
 }
 
 
-String* UEdit::getPreviousStr(String* from, Element& par) {
+String* TextEdit::getPreviousStr(String* from, Element& par) {
   String* last_str = null;
   return _getPreviousStr(from, last_str, par);
 }
 
 
-String* UEdit::getNextStr(String* from, Element& par) {
+String* TextEdit::getNextStr(String* from, Element& par) {
   bool from_found = false;
   return _getNextStr(from, from_found, par);
 }
@@ -312,7 +312,7 @@ String* UEdit::getNextStr(String* from, Element& par) {
 /* ==================================================== [Elc:] ======= */
 // devrait etre ailleurs car fct generique
 
-String* UEdit::getParagraphFirstStr(String* from, int& pos, Element& par) {
+String* TextEdit::getParagraphFirstStr(String* from, int& pos, Element& par) {
   if (/*!par ||*/ !from) return null;
   if (pos == -1) pos = from->length(); // caret on end-of-str
 
@@ -357,7 +357,7 @@ String* UEdit::getParagraphFirstStr(String* from, int& pos, Element& par) {
 }
 
 
-String* UEdit::getParagraphLastStr(String* from, int& pos, Element& par) {
+String* TextEdit::getParagraphLastStr(String* from, int& pos, Element& par) {
   if (/*!par ||*/ !from) return null;
   if (pos == -1) pos = from->length(); // caret on end-of-str
 
@@ -384,7 +384,7 @@ String* UEdit::getParagraphLastStr(String* from, int& pos, Element& par) {
 
 /* ==================================================== [Elc:] ======= */
 
-void UEdit::deletePreviousChar(Element& par, View* view) {
+void TextEdit::deletePreviousChar(Element& par, View* view) {
   if (!caret_str) return;
   //if (!par) par = getParent(0);
   //if (!par) return;
@@ -398,7 +398,7 @@ void UEdit::deletePreviousChar(Element& par, View* view) {
   }
 }
 
-void UEdit::deleteChar(Element& par, View* view) {   // !! INCOMPLET !! ne passe pas a str suivante
+void TextEdit::deleteChar(Element& par, View* view) {   // !! INCOMPLET !! ne passe pas a str suivante
   if (!caret_str) return;
   //if (!par) par = getParent(0);
   //if (!par) return;
@@ -411,12 +411,12 @@ void UEdit::deleteChar(Element& par, View* view) {   // !! INCOMPLET !! ne passe
 }
 
 
-bool UEdit::previousChar(Element& par, View* view) {
+bool TextEdit::previousChar(Element& par, View* view) {
   if (!caret_str) return false;
   //if (!par) par = getParent(0);
   //if (!par) return false;
 
-  //UFlowView* fview = view->toFlowView();
+  //FlowView* fview = view->toFlowView();
   //bool repainted = false;  // !!!ATT: repainted est une var d'instance
   // false if no parent or could not be moved (first str)
   bool stat = false;
@@ -441,12 +441,12 @@ bool UEdit::previousChar(Element& par, View* view) {
 }
 
 
-bool UEdit::nextChar(Element& par, View* view) {
+bool TextEdit::nextChar(Element& par, View* view) {
   if (!caret_str) return false;
   //if (!par) par = getParent(0);
   //if (!par) return false;
 
-  UFlowView* fview = view->toFlowView();
+  FlowView* fview = view->toFlowView();
   //bool repainted = true;     // !!!ATT: repainted est AUSSI une var d'instance
   bool stat = false;
 
@@ -492,8 +492,8 @@ bool UEdit::nextChar(Element& par, View* view) {
 
 /* ==================================================== [Elc:] ======= */
 
-void UEdit::previousLine(Element& par, View* view) {
-  UFlowView* fview = view->toFlowView();
+void TextEdit::previousLine(Element& par, View* view) {
+  FlowView* fview = view->toFlowView();
   if (fview) {
     int cpos = getCaretPos(par);
     int x, y;
@@ -508,8 +508,8 @@ void UEdit::previousLine(Element& par, View* view) {
   }
 }
 
-void UEdit::nextLine(Element& par, View* view) {
-  UFlowView* fview = view->toFlowView();
+void TextEdit::nextLine(Element& par, View* view) {
+  FlowView* fview = view->toFlowView();
   if (fview) {
     int cpos = getCaretPos(par);
     int x, y;
@@ -524,8 +524,8 @@ void UEdit::nextLine(Element& par, View* view) {
   }
 }
 
-void UEdit::beginningOfLine(Element& par, View* view) {
-  UFlowView* fview = view->toFlowView();
+void TextEdit::beginningOfLine(Element& par, View* view) {
+  FlowView* fview = view->toFlowView();
   if (fview) {
     int pos1 = getCaretPos(par);
     int x, y;
@@ -541,8 +541,8 @@ void UEdit::beginningOfLine(Element& par, View* view) {
   }
 }
 
-void UEdit::endOfLine(Element& par, View* view) {
-  UFlowView* fview = view->toFlowView();
+void TextEdit::endOfLine(Element& par, View* view) {
+  FlowView* fview = view->toFlowView();
   if (fview) {
     int pos1 = getCaretPos(par);
     int x, y;
@@ -559,13 +559,13 @@ void UEdit::endOfLine(Element& par, View* view) {
 }
 
 /*
-void UEdit::beginningOfParagraph(Element* par) {
+void TextEdit::beginningOfParagraph(Element* par) {
   int pos = caret_pos;
   String* s = getParagraphFirstStr(caret_str, pos, par);
   if (s) setCaretStr(s, pos, true, view);
 }
 
-void UEdit::endOfParagraph(Element* par) {
+void TextEdit::endOfParagraph(Element* par) {
   int pos = caret_pos;
   String* s = getParagraphLastStr(caret_str, pos, par);
   if (s) setCaretStr(s, pos, true, view);
@@ -573,14 +573,14 @@ void UEdit::endOfParagraph(Element* par) {
 */
 /* ==================================================== [Elc:] ======= */
 
-float UEdit::getXpos(UpdateContext& ctx, const Rectangle& r, int offset, int cellen) const {
+float TextEdit::getXpos(UpdateContext& ctx, const Rectangle& r, int offset, int cellen) const {
   float xpos = r.x;
   if (!caret_str) return xpos;
 
   //!att: meme si !(str->s) penser a afficher le Caret
   const char* s = caret_str->c_str();
   if (s) {
-    xpos += UFontMetrics(ctx).getXPos(s + offset, cellen, caret_pos - offset);
+    xpos += FontMetrics(ctx).getXPos(s + offset, cellen, caret_pos - offset);
   }
   
   // xpos-1 pour eviter que la barre s'affiche sur le char suivant 
@@ -589,16 +589,16 @@ float UEdit::getXpos(UpdateContext& ctx, const Rectangle& r, int offset, int cel
   return xpos;
 }
 
-float UEdit::getXpos(UpdateContext& ctx, const Rectangle& r) const {
+float TextEdit::getXpos(UpdateContext& ctx, const Rectangle& r) const {
   return getXpos(ctx, r, 0,  (caret_str ? caret_str->length() : 0));
 }
 
-void UEdit::paint(Graph& g, UpdateContext& ctx, const Rectangle& r, int offset, int cellen) const {
+void TextEdit::paint(Graph& g, UpdateContext& ctx, const Rectangle& r, int offset, int cellen) const {
   if (!is_visible) return;
   float xpos = getXpos(ctx, r, offset, cellen);  // ex int
 
   // -1 sinon ca deborde de la zone de background!
-  float y2 = r.y + UFontMetrics(ctx).getHeight() -1;  // ex int
+  float y2 = r.y + FontMetrics(ctx).getHeight() -1;  // ex int
 
   if (caret_color) g.setColor(*caret_color);
   else if (ctx.color) g.setColor(*ctx.color);
@@ -611,14 +611,14 @@ void UEdit::paint(Graph& g, UpdateContext& ctx, const Rectangle& r, int offset, 
   repainted = (r.y > c.y) && (y2 < c.y+c.height);
 }
 
-void UEdit::paint(Graph& g, UpdateContext& ctx, const Rectangle& r) const {
+void TextEdit::paint(Graph& g, UpdateContext& ctx, const Rectangle& r) const {
   paint(g, ctx, r, 0, (caret_str ? caret_str->length() : 0));
 }
 
 // NB: press et non arm car arm provoque un reaffichage 
 //     (on reafficherait donc 2 fois)
 
-void UEdit::inputCB(UInputEvent& e) {
+void TextEdit::inputCB(UInputEvent& e) {
   if (e.getCond() == UOn::mpress)
     mpressed((UMouseEvent&)e);
   else if (e.getCond() == UOn::mrelease)
@@ -628,7 +628,7 @@ void UEdit::inputCB(UInputEvent& e) {
 }
 
 
-void UEdit::mpressed(UMouseEvent& e) {
+void TextEdit::mpressed(UMouseEvent& e) {
   UDataContext dc;
   String* s = null;
   int btn = e.getButton();
@@ -651,7 +651,7 @@ void UEdit::mpressed(UMouseEvent& e) {
 }
 
 
-void UEdit::mreleased(UMouseEvent& e) {
+void TextEdit::mreleased(UMouseEvent& e) {
   UDataContext dc;
   String* newstr = null;
   // mrelease1 necessaire pour que le Drag selection fonctionne
@@ -661,7 +661,7 @@ void UEdit::mreleased(UMouseEvent& e) {
 }
 
 
-void UEdit::callbacks2(UMouseEvent& e) {  // multiple clicks
+void TextEdit::callbacks2(UMouseEvent& e) {  // multiple clicks
   int btn = e.getButton();
 
   if (btn == Application::conf.mouse_select_button) {
@@ -679,7 +679,7 @@ void UEdit::callbacks2(UMouseEvent& e) {  // multiple clicks
 }
 
 
-Selection* UEdit::getSelection(UInputEvent& e, String& sel_text) {
+Selection* TextEdit::getSelection(UInputEvent& e, String& sel_text) {
   sel_text.clear();
   Display* d = e.getDisp(); 
   Selection* sel = d ? d->getChannelSelection(0) : null;  // on devrait tenir compte du flow !!!
@@ -687,7 +687,7 @@ Selection* UEdit::getSelection(UInputEvent& e, String& sel_text) {
   return sel;
 }
 
-void UEdit::deleteSelection(Selection* sel, String& sel_text, Element& container) {
+void TextEdit::deleteSelection(Selection* sel, String& sel_text, Element& container) {
   int pos_in_s = 0;
   String* s = getCaretStr(pos_in_s);
   
@@ -702,7 +702,7 @@ void UEdit::deleteSelection(Selection* sel, String& sel_text, Element& container
   sel->deleteText();
 }
 
-void UEdit::kpressed(UKeyEvent& e) {
+void TextEdit::kpressed(UKeyEvent& e) {
   if (!caret_str) return;
 
   // en fait ca retourne pas un Element mais toujours le Box qui le
@@ -724,43 +724,43 @@ void UEdit::kpressed(UKeyEvent& e) {
   // si la selection n'est pas sur l'objet ou on interagit on l'efface
   if (sel && sel->getObj() != &box) sel->clear();
   
-  if (keycode == UKey::BackSpace) {
+  if (keycode == Key::BackSpace) {
     if (is_editable) {
       if (sel_txt.empty()) deletePreviousChar(box, view);
       else deleteSelection(sel, sel_txt, box);
     }
   }
-  else if (keycode == UKey::Delete) {     // cf aussi XK_KP_Delete a convertir !!!!
+  else if (keycode == Key::Delete) {     // cf aussi XK_KP_Delete a convertir !!!!
     if (is_editable) {
       if (sel_txt.empty()) deleteChar(box, view);
       else deleteSelection(sel, sel_txt, box);
     }
   }
-  else if (keycode == UKey::Left) {     // cf aussi XK_KP_Left a convertir !!!!
+  else if (keycode == Key::Left) {     // cf aussi XK_KP_Left a convertir !!!!
     if (sel) sel->clear();
     previousChar(box, view);
   }
-  else if (keycode == UKey::Right) {     // cf aussi XK_KP_Right a convertir !!!!
+  else if (keycode == Key::Right) {     // cf aussi XK_KP_Right a convertir !!!!
     if (sel) sel->clear();
     nextChar(box, view);
   }
-  else if (keycode == UKey::Up) {     // cf aussi XK_KP_Up
+  else if (keycode == Key::Up) {     // cf aussi XK_KP_Up
     if (sel) sel->clear();
     previousLine(box, view);
   }
-  else if (keycode == UKey::Down) {     // cf aussi XK_KP_Down
+  else if (keycode == Key::Down) {     // cf aussi XK_KP_Down
     if (sel) sel->clear();
     nextLine(box, view);
   }
-  else if (keycode == UKey::Home) {     // cf aussi XK_KP_Home, XK_Begin, XK_KP_Begin
+  else if (keycode == Key::Home) {     // cf aussi XK_KP_Home, XK_Begin, XK_KP_Begin
     if (sel) sel->clear();
     beginningOfLine(box, view);
   }
-  else if (keycode == UKey::End) {     // cf aussi XK_KP_End
+  else if (keycode == Key::End) {     // cf aussi XK_KP_End
     if (sel) sel->clear();
     endOfLine(box, view);
   }
-  else if (keycode == UKey::Enter) {
+  else if (keycode == Key::Enter) {
     // the "Enter" key can break the line if the boxent is a FlowView
     if (is_editable && view->toFlowView()) {
       if (!sel_txt.empty()) deleteSelection(sel, sel_txt, box);

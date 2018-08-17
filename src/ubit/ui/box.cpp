@@ -206,7 +206,7 @@ View* Box::getSubView(View& view, const Point& pos_in_view) const {
   Point pos_in_win = View::convertPosTo(*winview, view, pos_in_view);
 
   for (View* v = views; v != null; v = v->next) {
-    UViewFind vf(winview, pos_in_win, UBehavior::MOUSE, 0);
+    ViewFind vf(winview, pos_in_win, UBehavior::MOUSE, 0);
     Point source_pos;
     View* found_view = v->findSource(vf, source_pos);
     if (found_view) return found_view;
@@ -283,7 +283,7 @@ void Box::initView(View* parview) {
     return;
   }
   
-  const UViewStyle* render = null;
+  const ViewStyle* render = null;
   if (emodes.HAS_LAYOUT) {
     // si renderer defini dynamiquement dans la childlist
     attributes().findClass(render);
@@ -445,7 +445,7 @@ void Box::doUpdate(const Update& upd, Display*) {
         && (hardwin->isShowable() || upd.isHiddenObjectsMode())
         ) {
       
-      UPaintEvent e(UOn::paint, hardwin_view, null/*flow*/);
+      PaintEvent e(UOn::paint, hardwin_view, null/*flow*/);
     
       // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       // MOVE

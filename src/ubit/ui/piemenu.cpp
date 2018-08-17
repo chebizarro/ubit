@@ -93,7 +93,7 @@ item_radius(7)
   gitems.ignoreEvents();  // events are redirected by the menu
   
   // this timer starts the novice mode after novice_mode_delay
-  ptimer = new UTimer();
+  ptimer = new Timer();
   ptimer->onAction(ucall(this, &UPiemenu::startNoviceMode));
 }
 
@@ -346,7 +346,7 @@ void UPiemenu::resizeCB(UResizeEvent& e) {
 }
 
 
-void UPiemenu::paintCB(UPaintEvent& e) {
+void UPiemenu::paintCB(PaintEvent& e) {
   View* v = e.getView();
   if (!v || !novice_mode) return;
   Graph g(e);
