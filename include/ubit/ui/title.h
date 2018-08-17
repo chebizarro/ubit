@@ -1,9 +1,8 @@
 /*
- *  object.h: Base Class for all Ubit Objects
+ *  title.h: Class for Window Titles
  *  Ubit GUI Toolkit - Version 8
  *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
- *
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,32 +21,41 @@
  * 
  */
 
-#ifndef UBIT_CORE_OBJECT_H_
-#define	UBIT_CORE_OBJECT_H_
+#ifndef UBIT_UI_TITLE_H_
+#define	UBIT_UI_TITLE_H_
 
 namespace ubit {
-  
   /**
-   * Base class of most Ubit objects.
-   *
-   * Object is the base class for (almost) all Ubit objects. Its main subclasses are
-   * ubit::Node, ubit::Attribute, ubit::Element that play the same role as Node,
-   * Attribute and Element in a XML/DOM model and ubit::Box and ubit::Window that are
-   * the base classes for widgets and windows.
-   *
+   * Window Title.
    */
-  class Object {
+  class Title: public Attribute {
   public:
-    virtual ~Object();
     
-    Object(Object const &) = delete;
-    Object& operator=(Object const &) = delete;
-
-  protected:
-    Object();
- 
+    Title(const char* = "");
+    /**< create a new Window Title (the argument is duplicated internally).
+     * example:  udialog( utitle("Debug Window") + ... )
+     */
+    
+    Title(const String&);
+    /**< create a new Window Title (the argument is duplicated internally).
+    * example:  udialog( utitle("Debug Window") + ... )
+    */
+    
+    String& value() {return *pstring;}
+    /** returns the value.
+    * - example: Title t; t.value() = "Main Win"; String s = t.value();
+    * - value() can be shared (but can't be deleted!)
+    */
+    
+    virtual void update();
+    
+  private:
+    unique_ptr<String> pstring;
   };
   
-}
+  
+  inline Title& utitle(const char*_s) {return *new Title(_s);}
+  inline Title& utitle(const String&_s) {return *new Title(_s);}
 
-#endif // UBIT_CORE_OBJECT_H_
+}
+#endif // UBIT_UI_TITLE_H_
