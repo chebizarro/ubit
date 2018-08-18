@@ -88,7 +88,6 @@ public:
   static Style* createStyle() {return new USliderbuttonStyle();}
 };
 
-/* ==================================================== [Elc] ======= */
 // UScrollbutton for scrollbars.
 
 struct UScrollbuttonStyle : public Style {
@@ -123,7 +122,6 @@ public:
   static Style* createStyle() {return new UScrollbuttonStyle();}
 };
 
-/* ==================================================== [Elc] ======= */
 
 Box* UScrollbar::createLessButton(bool vertical) {
   Box* scroller;
@@ -159,7 +157,6 @@ Box* UScrollbar::createKnob(bool vertical) {
   return slider;
 }
 
-/* ==================================================== [Elc] ======= */
 
 struct USbStyle : public Style {
   float rail_thickness;
@@ -245,7 +242,6 @@ UScrollbarStyle::UScrollbarStyle() {
   setTransparent(thstyle);
 }
 
-/* ==================================================== [Elc] ======= */
 
 UScrollbar::UScrollbar(const Args& a) : pvalue(new Float) {
   // !! HACK: on specifie VERTICAL par defaut puis on ecrase par arglist !!
@@ -275,7 +271,6 @@ Style* UScrollbar::createStyle() {
   return new UScrollbarStyle();
 }
 
-/* ==================================================== [Elc] ======= */
 
 void UScrollbar::constructs() {
   unit_increment  = 15;
@@ -341,7 +336,6 @@ void UScrollbar::constructs() {
   if (pmore_btn) add(*pmore_btn);
 }
 
-/* ==================================================== [Elc] ======= */
 
 //bool UScrollbar::isVertical() const {return hasBMode(UMode::IS_VERTICAL);}
 //bool UScrollbar::isHorizontal() const {return !hasBMode(UMode::IS_VERTICAL);}
@@ -399,7 +393,6 @@ void UScrollbar::setValueImpl(float _val, bool upd_pane) {
   fire(e);
 }
 
-/* ==================================================== [Elc] ======= */
 
 float UScrollbar::getPercent(MouseEvent& e, View *slider_view, View *rail_view,
                              float delta_mouse) {

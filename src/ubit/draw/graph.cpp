@@ -116,7 +116,6 @@ Graph::Graph(View* v) {
   //rc->clipbegin.setRect(clip.x /*+ xwin*/, clip.y /*+ ywin*/, clip.width, clip.height);
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 Graph::Graph(PaintEvent& e) {
   rc = null; // securite pour ~Graph
@@ -161,7 +160,6 @@ Graph::Graph(PaintEvent& e) {
   //cerr << "v " << v->x << " " << v->y << endl;
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 Graph::~Graph() {
   if (rc == null) return;
@@ -196,7 +194,6 @@ Graph::GLPaint:: ~ GLPaint() {
   end();
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void Graph::GLPaint::begin(View* v, bool _push_attrib) {
   no = ++count;
@@ -229,7 +226,6 @@ void Graph::GLPaint::begin(View* v, bool _push_attrib) {
   glDisable(GL_CLIP_PLANE3);
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void Graph::GLPaint::end() {   
   if (!hardwin) return;  
@@ -338,7 +334,6 @@ void Graph::set3Dmode(bool state) {
   rc->set3Dmode(state);
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void Graph::setViewportOrtho(UHardwinImpl* hw) {
 # if UBIT_WITH_GL
@@ -361,7 +356,6 @@ void Graph::setViewportOrtho(UHardwinImpl* hw) {
 # endif
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // Graph: noter que le Clip est relatif a la View attachee
 // - NB: verifier que le Clip est bien inclus dans la View et prendre le min
 // - !ATT: on ne tient pas compte dy cas ou r.x ou r.y  < 0  !!!
@@ -388,7 +382,6 @@ void Graph::setHardwinClip(const Rectangle& r) {
   rc->setClip(r.x + rc->xwin, r.y + rc->ywin, r.width, r.height);
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void Graph::getClip(Rectangle& r) const {
   r.x = rc->clip.x - rc->xwin - boxview->x;
@@ -413,7 +406,6 @@ void Graph::setWinOffset(float x, float y) const {
   rc->setOffset(x, y);
 }
 
-// ============================================================ [Ubit] =========
 
 Box* Graph::getBox() const {return boxview ? boxview->getBox() : null;}
 
@@ -476,13 +468,11 @@ void Graph::setFont(const FontDescription& fd) {
   rc->setFont(*this, fd);
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void Graph::flush() const {
   rc->flush();
 }
 
-// ============================================================ [Ubit] =========
 // drawing
 
 void Graph::draw(const Shape& s) const {
@@ -493,7 +483,6 @@ void Graph::fill(const Shape& s) const {
   s.fill(*this);
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void Graph::drawArc(double x, double y, double w, double h, double start, double ext) const {
   rc->drawArc(x, y, w, h, start, ext, false); // not filled
@@ -558,7 +547,6 @@ void Graph::copyArea(double x, double y, double w, double h,
   rc->copyArea(x, y, w, h, delta_x, delta_y, generate_refresh_events_when_obscured);
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // strings
 
 void Graph::drawString(const String& s, double x, double y) const {

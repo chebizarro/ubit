@@ -31,7 +31,7 @@ Style* IconBox::createStyle() {
   return style;
 }
 
-IconBox::IconBox(Args args) : UDocbox(), show_parent_dir(true) {
+IconBox::IconBox(Args args) : DocumentBox(), show_parent_dir(true) {
   filetime = 0;
   icon_hspacing = new HSpacing(5);
   icon_vspacing = new VSpacing(5);
@@ -63,7 +63,6 @@ IconBox::~IconBox() {}
 Choice& IconBox::choice() {return picons->choice();}
 const Choice& IconBox::choice() const {return picons->choice();}
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void IconBox::addIcon(Icon& icon) {
   picons->add(icon);
@@ -130,7 +129,6 @@ Icon* IconBox::getIcon(int index) const {
   return item ? dynamic_cast<Icon*>(item) : null;
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 int IconBox::readDir(const String& _pathname, bool remote_dir) {
   String prefix, filter;
@@ -155,7 +153,7 @@ int IconBox::readDir(const String& _pathname, bool remote_dir) {
   const UFileInfos& entries = dir.getFileInfos(); 
 
   for (UFileInfos::const_iterator pe = entries.begin(); pe != entries.end(); ++pe) {
-    const UFileInfo& e = *(*pe);
+    const FileInfo& e = *(*pe);
 
     Icon& icon = *new Icon(*e.getFileName(), e.getIconImage());
     if (e.isDir()) icon.setDir(true);

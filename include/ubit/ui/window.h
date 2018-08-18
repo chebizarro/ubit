@@ -33,7 +33,7 @@ namespace ubit {
   class UWinImpl;
   
   /** Base class for windows and menus.
-   * Window is the base class for all windows (UFrame, Dialog...) and menus
+   * Window is the base class for all windows (Frame, Dialog...) and menus
    * (Menu, PopupMenu, ControlMenu...)
    *
    * A Window can be added as a child of any widget. If this widget is "armable", such as
@@ -43,7 +43,7 @@ namespace ubit {
    *
    * CLOSING BEHAVIOR:
    * - by default, windows are hidden when they are closed (@see close()), except for
-   *   the "Main Frame" (@see UFrame) that quits the application.
+   *   the "Main Frame" (@see Frame) that quits the application.
    * - this behavior can be changed by adding a UOn::close callback (@see: UOn)
    *   to the window (e.g. to save useful data before quitting)
    *
@@ -178,7 +178,7 @@ namespace ubit {
      *
      * Behavior of close():
      * - by default, close() hides the window, except if it is  the "Main Frame"
-     *   (@see UFrame) in which case close() quits the application
+     *   (@see Frame) in which case close() quits the application
      * - if the window has at least one UOn::close callback (@see: UOn), these callbacks
      *   are fired (the default behaviors are not performed in this case)
      *
@@ -223,7 +223,7 @@ namespace ubit {
     bool isSoftwin() const {return !wmodes.IS_HARDWIN;}
     /**< returns true if this is a "soft" window.
      * a soft window simulates an window that is displayed inside a "hard" window
-     * (which is a UFrame or a Dialog)
+     * (which is a Frame or a Dialog)
      * @see also: isHardwin(). 
      */
     
@@ -300,8 +300,7 @@ namespace ubit {
   };
   
 
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  /** Constraints for Window Placement.
+    /** Constraints for Window Placement.
    * Examples (R = reference object, T = this object)
    * - RR TT   hplace = uright(),  hoppositeBorder = true,  hdist = 9
    *   RR      vplace = utop(),    hoppositeBorder = false, vdist = 0

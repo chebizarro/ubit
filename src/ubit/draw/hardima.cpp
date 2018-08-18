@@ -92,7 +92,6 @@ int UHardIma::readFromData(const char** xpm_data, int wmax, int hmax) {
   return UImaXPM::readFromData(*this, xpm_data, wmax, hmax);
 }
 
-/* ==================================================== [Elc] ======= */
 #ifdef UBIT_WITH_GL
 
 UHardImaGL::UHardImaGL(Display* d, int w, int h, int transparency_hint) {
@@ -300,7 +299,6 @@ void UHardImaGL::createTexFromPixels() const {
 
 #endif  // UBIT_WITH_GL
 
-/* ==================================================== [Elc] ======= */
 #if WITH_2D_GRAPHICS
 
 UHardIma2D::UHardIma2D(Display* d, int w, int h, int transparency_hint) {
@@ -471,7 +469,6 @@ void UHardPix::setRasterFrom(USysIma _ima, USysIma _imashape) {
   }
 }
 
-/* ==================================================== [Elc] ======= */
 // NOTE: this part was adapted from gifrsize.c from the Gif-Lib 
 // written by Gershon Elber (Ver 0.1, Jul. 1989)
 

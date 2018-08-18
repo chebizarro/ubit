@@ -136,7 +136,6 @@ void String::removingFrom(Child& c, Element& parent) {
   Data::removingFrom(c, parent);
 }
 
-/* ==================================================== [Elc] ======= */
 // NB: duplicates the char string (!ATT: length MUST be the EXACT length)
 
 void String::initImpl(const char *_s, int _len) {
@@ -305,7 +304,6 @@ istream& operator>>(istream& is, String& s) {
   return is;
 }
 
-/* ==================================================== [Elc] ======= */
 
 bool String::equals(const char* _s, bool ignore_case) const {
   if (s == _s) return true;
@@ -356,7 +354,6 @@ int String::compareN(const string& _s, unsigned int n, bool ignore_case) const {
   return compareN(_s.c_str(), n, ignore_case);
 }
 
-/* ==================================================== [Elc] ======= */
 
 int String::toInt() const {
   return s ? atoi(s) : 0;
@@ -407,7 +404,6 @@ void String::capitalize() {
   for (char* p = s+1; *p; p++) *p = tolower(*p);
 }
 
-/* ==================================================== [Elc] ======= */
 
 bool String::checkFormat(int pos, int _c) {
   if (_c == '\0') return false;      //don't insert the NUL char!
@@ -480,7 +476,6 @@ char String::setCharAt(int pos, char newchar, bool upd) {
   return true; 
 }
 
-/* ==================================================== [Elc] ======= */
 
 String operator&(const String& s1, const String& s2) {
   String str = s1; str.append(s2); return str;
@@ -532,7 +527,6 @@ String operator&(const Double& _v, const String& _s) {
   String str; str = _v; str.append(_s); return str;
 }
 */
-/* ==================================================== [Elc] ======= */
 
 void String::append(const char c) {
   insertImpl(-1, c, true);
@@ -583,7 +577,6 @@ void String::append(const Double& v2) {
   append(v2.doubleValue());
 }
 */
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 bool String::insert(int to_pos, char c) {
   return insertImpl(to_pos, c, true);
@@ -669,7 +662,6 @@ bool String::insertImpl(int pos, char c, bool upd) {
   return true;
 }
 
-/* ==================================================== [Elc] ======= */
 
 void String::remove(int pos, unsigned int nbchars) {
   replaceImpl(pos, nbchars, (char*)null, true);
@@ -742,7 +734,6 @@ bool String::replaceImpl(int pos, unsigned int nbchars, const char *str, bool up
   return true;
 }
 
-/* ==================================================== [Elc] ======= */
 
 bool String::toString(string& str, int from_pos, unsigned int nbchars) const {
   if (!s || from_pos >= len) // hors bornes
@@ -861,7 +852,6 @@ String String::split(int pos, bool delete_char_at_pos) {
   return res;
 }
 
-/* ==================================================== [Elc] ======= */
 
 int String::find(char c, int pos) const {
   if (empty() || pos >= len) return -1;
@@ -889,7 +879,6 @@ int String::rfind(char c) const {
   return (p ? p-s : -1);
 }
 
-/* ==================================================== [Elc] ======= */
 
 void String::getSize(UpdateContext& ctx, Dimension& dim) const {
   // NB: conserver une hauteur stable etfaire en sorte que la surface ne soit 
@@ -916,7 +905,6 @@ void String::getSize(UpdateContext& ctx, Dimension& dim, float available_width,
   }
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void String::paint(Graph& g, UpdateContext& ctx, const Rectangle& r) const {
   paint(g, ctx, r, 0, len);
@@ -1003,7 +991,6 @@ void String::paint(Graph& g, UpdateContext& ctx, const Rectangle& r,
   }
 } 
 
-/* ==================================================== [Elc] ======= */
 
 String String::basename(bool with_suffix) const {
   String res;
@@ -1059,7 +1046,6 @@ String String::expand() const {
   return res;
 }
 
-/* ==================================================== [Elc] ======= */
 
 int String::read(const String& filename) {
   if (checkConst()) return 0;
@@ -1145,7 +1131,6 @@ int String::write(const String& filename) {
   return res;
 }
 
-/* ==================================================== [Elc] ======= */
 // useful functions 
 
 char *UCstr::dup(const char *s1) {

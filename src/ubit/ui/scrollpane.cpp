@@ -217,7 +217,6 @@ void Scrollpane::makeVisible(Box& child) {
   }
 }
 
-/* ==================================================== [Elc] ======= */
 // synchronizes the scrollbars (att aux loops!)
 
 Scrollpane& Scrollpane::setScroll(float _xscroll, float _yscroll) {

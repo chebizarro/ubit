@@ -67,7 +67,6 @@ Style* Box::createStyle() {
   return style;
 }
 
-/* ==================================================== [Elc] ======= */
 /*
  virtual Box* getChildAt(const Point&, View* box_view = null) const;
  * return the direct child at this location in this box view.
@@ -126,7 +125,6 @@ Dimension Box::getViewSize(View* view) const {
   else return Dimension(0,0);
 }
  */
-/* ==================================================== [Elc] ======= */
 
 // IL FAUDRAIT ORDONNER LES VIEWS!
 void Box::addViewImpl(View* v) {
@@ -357,7 +355,6 @@ void Box::deleteViewsInside(const vector<View*>& parent_views) {
   }
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // NOTE: a la difference des Box, les Views des Window sont partagees sauf
 // dans le cas ou elles appartiennent a des Display diffrents
 // La regle de destruction est donc differente: on ne detruit les vues
@@ -413,7 +410,6 @@ void Box::update(const Update& upd, Display*) {
  */
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // performs the actual update now
 
 void Box::doUpdate(const Update& upd, Display*) {
@@ -445,7 +441,6 @@ void Box::doUpdate(const Update& upd, Display*) {
       
       PaintEvent e(UOn::paint, hardwin_view, null/*flow*/);
     
-      // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       // MOVE
       
       if (upd.modes & Update::MOVE) {
@@ -455,7 +450,6 @@ void Box::doUpdate(const Update& upd, Display*) {
         view->updatePaintData(&e.redraw_clip);
       }
       
-      // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       // PAINT_ONLY (NO LAYOUT)
       
       else if ((upd.modes & Update::PAINT) && !(upd.modes & Update::LAYOUT)) {
@@ -497,7 +491,6 @@ void Box::doUpdate(const Update& upd, Display*) {
         }
       }
 
-      // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       // SHOW/HIDE
       
       else if (upd.modes & (Update::SHOW | Update::HIDE)) {
@@ -523,7 +516,6 @@ void Box::doUpdate(const Update& upd, Display*) {
         }
       }
 
-      // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       // LAYOUT_ONLY or LAYOUT_AND_PAINT (et SCROLL mais passe jamais par la)
 
       else {

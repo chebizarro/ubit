@@ -34,7 +34,7 @@ namespace ubit {
    * the chilsd or attribute list of this widget. Selection is exclusive. 
    * No child is initially selected. 
    * ListBox, Treebox, ComboBox use an internal Choice
-   * @see also: URadioSelect.
+   * @see also: RadioSelect.
    */
   class Choice : public Attribute {
   public:
@@ -146,30 +146,29 @@ namespace ubit {
   inline Choice& uchoice() {return *new Choice;}
   ///< shortcut function that returns *new Choice().
   
-  /* ==================================================== [Elc] ======= */
-  /** Makes widgets (exclusively) selectable.
+    /** Makes widgets (exclusively) selectable.
    *
    * This object makes widgets (such as: Checkbox, RadioButton, Button) selectable.
-   * The same URadioSelect must be added to the child or attribute list of all widgets 
+   * The same RadioSelect must be added to the child or attribute list of all widgets 
    * that must become exclusively selectable. No widget is initially selected.
    *  <pre>
-   *    URadioSelect& sel = *new URadioSelect();
+   *    RadioSelect& sel = *new RadioSelect();
    *    ubox( ucheckbox(sel+"One") + ucheckbox(sel+"Two") + ubutton(sel+"Three") ) 
    *    sel.setSelectedItem(0);
    *  </pre>
    * @see also: Choice.
    */
-  class URadioSelect : public Attribute {
+  class RadioSelect : public Attribute {
   public:
-    UCLASS(URadioSelect)
+    UCLASS(RadioSelect)
     
-    URadioSelect();
-    ///< create a new URadioSelect object; @see also shortcut uradioselect().
+    RadioSelect();
+    ///< create a new RadioSelect object; @see also shortcut uradioselect().
     
-    URadioSelect(Int& index);
-    ///< create a new URadioSelect object; @see also shortcut uradioselect().
+    RadioSelect(Int& index);
+    ///< create a new RadioSelect object; @see also shortcut uradioselect().
     
-    virtual ~URadioSelect();
+    virtual ~RadioSelect();
     
     virtual void setCanUnselectMode(bool);
     virtual bool isCanUnselectMode() const;
@@ -220,8 +219,8 @@ namespace ubit {
 #endif
   };
   
-  inline URadioSelect& uradioSelect() {return *new URadioSelect();}
-  ///< shortcut function that return *new URadioSelect();
+  inline RadioSelect& uradioSelect() {return *new RadioSelect();}
+  ///< shortcut function that return *new RadioSelect();
   
 }
 #endif

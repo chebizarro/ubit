@@ -63,7 +63,6 @@ Separator::Separator() : Box() {
   //setCloseMenuMode(ElementModes::CANNOT_CLOSE_MENU);
 }
 
-/* ==================================================== [Elc] ======= */
 
 Style* Label::createStyle() {
   Style* style = new Style();
@@ -80,7 +79,6 @@ Label::Label(int nbchars, Args a) : Box(a) {
   obtainAttr<USize>().setWidth(nbchars|UEX);
 }
 
-/* ==================================================== [Elc] ======= */
 
 Style* TextField::createStyle() {
   Style& s = *new Style();
@@ -96,7 +94,7 @@ Style* TextField::createStyle() {
   s.vspacing = 3;
   s.setPadding(3,2); 
   static Border* border = 
-  new URoundBorder(Border::LINE, Color::darkgrey, Color::white,1,1,15,15);
+  new RoundBorder(Border::LINE, Color::darkgrey, Color::white,1,1,15,15);
   s.setBorder(border);
   //s.local.border = &Border::shadowIn;
   
@@ -132,7 +130,6 @@ bool TextField::isEditable() const {
   return getAttr<TextEdit>()->isEditable();
 }
 
-/* ==================================================== [Elc] ======= */
 
 Style* TextArea::createStyle() {
   Style& s = *new Style();
@@ -240,7 +237,6 @@ const Style& ButtonStyle::getStyle(UpdateContext* ctx) const {
   return *this;   // tous les autres cas
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 Style* Button::createStyle() {return new ButtonStyle;}
 
@@ -293,7 +289,6 @@ public:
 };
 */
 
-/* ==================================================== [Elc] ======= */
 
 Style* Item::createStyle() {
   Style& s = *new Style();
@@ -359,7 +354,6 @@ String LinkButton::getHRef() const {        // pas tres efficace!
   return val;
 }
 
-/* ==================================================== [Elc] ======= */
 
 Style* Checkbox::createStyle() {
   ButtonStyle& s = *new ButtonStyle;
@@ -399,7 +393,6 @@ RadioButton::RadioButton(Args a) : Button(a) {
   emodes.IS_CROSSABLE = false;
 }
 
-/* ==================================================== [Elc] ======= */
 
 SpinBox::SpinBox(Args a) : 
 pvalue(*new Int(0)),

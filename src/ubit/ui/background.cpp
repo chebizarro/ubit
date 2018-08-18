@@ -52,7 +52,6 @@ void UAlpha::putProp(UpdateContext *props, Element&) {
   props->local.alpha = val;
 }
 
-/* ==================================================== [Elc] ======= */
 
 //inline Background& ubgcolor(int r, int g, int b);
 //obsolete.

@@ -49,7 +49,6 @@ public:
   bool empty;
 };
 
-/* ==================================================== [Elc] ======= */
 
 ViewStyle FlowView::style(&FlowView::createView, UObject::UCONST);
 
@@ -232,7 +231,6 @@ void UFlowLayoutImpl::addCell(UpdateContext*ctx, Child* _link,
   else line[l].w += ctx->hspacing;
 }
 
-/* ==================================================== [Elc] ======= */
 // att: arg = parctx = PARENT context !
 
 bool FlowView::doLayout(UpdateContext& parctx, ViewLayout& vl) {
@@ -480,7 +478,6 @@ void FlowView::flowDoLayout(UFlowLayoutImpl&vd, Element& grp,
     } // endfor ( ; ch...)
 }
 
-/* ==================================================== [Elc] ======= */
 
 class UFlowUpdateImpl : public UViewUpdateImpl {
 public:
@@ -605,7 +602,6 @@ void FlowView::doUpdate(UpdateContext& parctx, Rectangle r, Rectangle clip, UVie
   } //NB: finalisation par destructeur de UFlowUpdateImpl
 }
 
-/* ==================================================== [Elc] ======= */
 
 void FlowView::flowDoUpdate(UFlowUpdateImpl& vd, UpdateContext& ctx, 
                              Element& grp, UMultiList& mlist, 
@@ -837,7 +833,6 @@ void FlowView::flowDoUpdate(UFlowUpdateImpl& vd, UpdateContext& ctx,
       // vd.callbacks(grp, ctx);
 }
 
-/* ==================================================== [Elc] ======= */
 // retrieves data and info from x,y position
 //!!ATT: 
 // - suppose que datactx!= null !

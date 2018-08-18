@@ -74,7 +74,6 @@ Style::~Style() {
   //delete bgcolors;
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void Style::setSize(Length w, Length h) {
   if (w != UIGNORE) local.size.width = w;
@@ -96,7 +95,6 @@ void Style::setVertPadding(Length top, Length bottom) {
   if (bottom != UIGNORE) local.padding.bottom = bottom;
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 const Color* Style::getColor(const Element& e) const {
   return colors[e.isSelected() * UOn::ACTION_COUNT + (int)e.getInterState()];

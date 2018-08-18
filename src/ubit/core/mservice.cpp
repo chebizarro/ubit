@@ -58,7 +58,7 @@ MessageService::~MessageService() {
 
 
 void MessageService::inputCallback() {
-  UInbuf ib;
+  InBuffer ib;
   if (receiveBlock(ib) && Application::impl.messmap) {
     //ib.data()[ib.size()-1] = 0; // faux
     Application::impl.messmap->fireMessagePort(ib.data());

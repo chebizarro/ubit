@@ -75,7 +75,6 @@ void Selection::setObj(Element* obj) {
   in_obj = obj;
 }
 
-/* ==================================================== [Elc] ======= */
 
 void Selection::update(UDataContext* p) {
   if (!in_obj) return;
@@ -160,7 +159,6 @@ void Selection::update(UDataContext* p) {
   paint(refreshFromPos, refreshToPos);
 }
 
-/* ==================================================== [Elc] ======= */
 // NB: cette fonction change egalement le mode IN_TEXTSEL des elems
 
 void Selection::paint(long refreshFromPos, long refreshToPos) {
@@ -221,7 +219,6 @@ void Selection::paintImpl(Element* obj, bool state,
   }
 }
 
-/* ==================================================== [Elc] ======= */
 
 static void xxx(String* copy, bool del, String* str, long frompos, long len) {
   if (copy) copy->insert(-1, *str, frompos, len);
@@ -276,7 +273,6 @@ void Selection::perform(String* copy, bool del) {
   }
 }
 
-/* ==================================================== [Elc] ======= */
 
 void Selection::start(MouseEvent& e) {
   if (e.getSource() && e.getButton() == Application::conf.getMouseSelectButton()) {

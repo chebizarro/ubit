@@ -56,7 +56,7 @@ namespace ubit {
 
     /** Icon box
    */
-  class IconBox : public UDocbox {
+  class IconBox : public DocumentBox {
   public:
     UCLASS(IconBox)
     

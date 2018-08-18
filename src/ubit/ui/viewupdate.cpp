@@ -50,7 +50,6 @@ inline void drawWallPaperLine(Graph& g, UpdateContext& ctx, float y,
   }
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 static void drawWallPaper(Graph& g, UpdateContext& ctx, 
                           const Image* wallp, const Dimension& ima_dim,
@@ -71,7 +70,6 @@ static void drawWallPaper(Graph& g, UpdateContext& ctx,
   }
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void UViewUpdateImpl::updateBackground(Graph& g, UpdateContext& ctx, 
                                        const Rectangle& r, const Rectangle& clip) 
@@ -125,8 +123,8 @@ void UViewUpdateImpl::updateBackground(Graph& g, UpdateContext& ctx,
         if (ctx.local.alpha == 1.) g.setColor(*ctx.bgcolor);
         else g.setColor(*ctx.bgcolor, ctx.local.alpha);
         
-        const URoundBorder* rb = null;
-        if (ctx.local.border && (rb = dynamic_cast<const URoundBorder*>(ctx.local.border)))
+        const RoundBorder* rb = null;
+        if (ctx.local.border && (rb = dynamic_cast<const RoundBorder*>(ctx.local.border)))
           g.fillRoundRect(clip.x, clip.y, clip.width, clip.height, 
                           rb->getArcWidth(), rb->getArcHeight());
         else
@@ -177,7 +175,6 @@ void UViewUpdateImpl::callPaintCallbacks(Element& grp, UpdateContext& cur_ctx) {
   }
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void UViewUpdateImpl::callMoveResizeCallbacks(Element& grp, UpdateContext& cur_ctx) {
   if (view->hasVMode(View::DESTRUCTED)) return;   // see above
@@ -283,7 +280,6 @@ upmode(_upmode)
   }
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 UViewUpdateImpl::~UViewUpdateImpl() {
   switch (upmode.mode) {
@@ -324,7 +320,6 @@ static void layoutBorder(UViewUpdateImpl& vd, const UpdateContext&, ChildIter,
                          const Dimension&, View* view);
 static void nextBorder(UViewUpdateImpl&, const UpdateContext&);
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void View::doUpdate(UpdateContext& parctx, Rectangle r, Rectangle clip, UViewUpdate& vup) {
   Box* box = getBox();
@@ -350,7 +345,6 @@ void View::doUpdate(UpdateContext& parctx, Rectangle r, Rectangle clip, UViewUpd
   // NB: finalisation par destructeur de UViewUpdateImpl
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  
 bool View::updatePos(UViewUpdateImpl& vd, Element& grp, UpdateContext& ctx,
                       Rectangle& r, Rectangle& clip, UViewUpdate& vup) 
@@ -433,7 +427,6 @@ bool View::updatePos(UViewUpdateImpl& vd, Element& grp, UpdateContext& ctx,
   return true;
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // - mode SearchData: juste recuperer l'data et sa position sans redessiner
 //   !ATT il faut IMPERATIVEMENT data_props != null dans le mode SearchData !
 // - clip est passe en valeur, pas r
@@ -823,7 +816,6 @@ void View::initLayoutH(UViewUpdateImpl& vd, const UpdateContext& ctx, const Rect
   }
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void View::initLayoutV(UViewUpdateImpl& vd, const UpdateContext& ctx, const Rectangle& r) 
 {
@@ -862,7 +854,6 @@ void View::initLayoutV(UViewUpdateImpl& vd, const UpdateContext& ctx, const Rect
   }
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void View::initLayoutViewport(UViewUpdateImpl& vd, const UpdateContext& ctx, const Rectangle& r) {
   UPaneView* paneview = dynamic_cast<UPaneView*>(vd.view);
@@ -916,7 +907,6 @@ void View::layoutH(UViewUpdateImpl& vd, const UpdateContext& ctx, ChildIter link
   else vd.chr.width = dim.width;
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void View::layoutV(UViewUpdateImpl& vd, const UpdateContext& ctx, ChildIter link,
                     const Dimension& dim, Element* chgrp, View* chview) {
@@ -960,7 +950,6 @@ void View::layoutV(UViewUpdateImpl& vd, const UpdateContext& ctx, ChildIter link
   else vd.chr.height = dim.height;
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void View::layoutViewport(UViewUpdateImpl& vd, const UpdateContext& ctx,
                            ChildIter link, const Dimension& dim, View* chview) {
@@ -1008,7 +997,6 @@ void View::layoutViewport(UViewUpdateImpl& vd, const UpdateContext& ctx,
   }
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 static void layoutBorder(UViewUpdateImpl& vd, const UpdateContext& ctx,
                          ChildIter link, const Dimension& dim, View*) {

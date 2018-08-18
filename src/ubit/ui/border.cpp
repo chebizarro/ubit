@@ -41,7 +41,6 @@ Border Border::shadowIn(-SHADOW, DARK, LIGHT, 1,1,UCONST);
 Border Border::etchedOut(+ETCHED, DARK, LIGHT, 2,2,UCONST);
 Border Border::etchedIn(-ETCHED, DARK, LIGHT, 2,2,UCONST);
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 Border::Border(int d) : padding(1,1) {
   constructs(d, Color::white, Color::black);
@@ -79,19 +78,17 @@ Border& Border::operator=(const Border& b) {
   return *this;
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-URoundBorder::URoundBorder(int d) : Border(d), arc_w(5), arc_h(5) {
+RoundBorder::RoundBorder(int d) : Border(d), arc_w(5), arc_h(5) {
   is_rounded = true;
 }
 
-URoundBorder::URoundBorder(int d, const Color& c, const Color& bgc,
+RoundBorder::RoundBorder(int d, const Color& c, const Color& bgc,
              float w, float h, float aw, float ah)
 : Border(d, c, bgc, w, h), arc_w(aw), arc_h(ah) {
   is_rounded = true;
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 class UBorderContent : public Element {
 public:
@@ -123,7 +120,6 @@ UCompositeBorder& UCompositeBorder::addChildren(bool superimposed, const Args& a
   return *this;
 }
 */
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 Border& Border::setDecoration(int decor) {
   if (checkConst()) return *this;
@@ -182,7 +178,6 @@ void UCompositeBorder::putProp(UpdateContext* props, Element&) {
   props->local.border = this;  // ecrase si existe
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void Border::getSize(const UpdateContext&, PaddingSpec& _m) const {
   _m = padding;
@@ -225,7 +220,6 @@ void Border::paint(Graph& g, const UpdateContext& parp, const Rectangle& r) cons
   paintDecoration(g, r, *parp.obj, *fg, *bg);
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void Border::paintDecoration(Graph& g, const Rectangle& r, Element& obj, 
                               const Color& fg, const Color& bg) const {
@@ -271,9 +265,8 @@ void Border::paintDecoration(Graph& g, const Rectangle& r, Element& obj,
   }
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void URoundBorder::paintDecoration(Graph& g, const Rectangle& r, Element& obj, 
+void RoundBorder::paintDecoration(Graph& g, const Rectangle& r, Element& obj, 
                                    const Color& fg, const Color& bg) const {
   float x1 = r.x;
   float y1 = r.y;

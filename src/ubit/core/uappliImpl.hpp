@@ -82,7 +82,7 @@ namespace ubit {
     friend class View;
     friend class EventFlow;
     friend class Timer;
-    friend class USource;
+    friend class Source;
     friend class MessageService;
     
     typedef std::vector<UpdateRequest> UpdateRequests;
@@ -94,7 +94,7 @@ namespace ubit {
     String *app_name;
     bool is_terminated;   // true if the Application has been terminated
     unique_ptr<UErrorHandler> error_handler;
-    UFrame* main_frame;   // the main frame of the Application
+    Frame* main_frame;   // the main frame of the Application
     // Note: the display list must be static to avoid seg faults if the Application
     // is distroyed before the widgets by the client program 
     UDispList displist;

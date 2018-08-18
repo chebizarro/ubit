@@ -66,7 +66,7 @@ struct UHtml_##CL : public SUPER { \
 
 #define ELEMENT_CLASS(CL, SUPER, MODES) \
 struct UHtml_##CL : public SUPER { \
-  UBIT_CLASS_DEF(#CL, UHtml_##CL, new UHtml_##CL, UCssStyles::create_##CL##_style(), MODES) \
+  UBIT_CLASS_DEF(#CL, UHtml_##CL, new UHtml_##CL, CssStyles::create_##CL##_style(), MODES) \
 };
 
 //NB: UHtml_html::createStyle, pas null sinon le layout sera incorrect
@@ -74,7 +74,7 @@ struct UHtml_html : public Element {
   UCLASSDEF("html", UHtml_html, new UHtml_html)
 };
 
-//NB: styles desfinis dans UCssStyles
+//NB: styles desfinis dans CssStyles
 HEAD_ELEMENT_CLASS(head, Element, 0)
 HEAD_ELEMENT_CLASS(title, Element, 0)
 HEAD_ELEMENT_CLASS(meta, Element, Class::EMPTY_ELEMENT)
@@ -111,7 +111,7 @@ ELEMENT_CLASS(u, Element, 0)
 
 #define ELEMENT_INIT_CLASS(CL, SUPER, MODES) \
 struct UHtml_##CL : public SUPER { \
-UBIT_CLASS_DEF(#CL, UHtml_##CL, new UHtml_##CL, UCssStyles::create_##CL##_style(), MODES) \
+UBIT_CLASS_DEF(#CL, UHtml_##CL, new UHtml_##CL, CssStyles::create_##CL##_style(), MODES) \
 virtual void initNode(Document*); \
 };
   
@@ -119,12 +119,11 @@ ELEMENT_INIT_CLASS(img, Box, Class::EMPTY_ELEMENT)
 ELEMENT_INIT_CLASS(br, Element, Class::EMPTY_ELEMENT)
 
 struct UHtml_a : public LinkButton {
-  UBIT_CLASS_DEF("a", UHtml_a, new UHtml_a, UCssStyles::create_a_style(), 0) 
+  UBIT_CLASS_DEF("a", UHtml_a, new UHtml_a, CssStyles::create_a_style(), 0) 
   virtual void initNode(Document*);
   //virtual const String* getHRef() const; ihnerited from LinkButton.
 };
     
-/* ==================================================== [Elc] ======= */
 
 void UHtml_head::initNode(Document* doc) {
   Element::initNode(doc);

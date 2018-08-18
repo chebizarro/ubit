@@ -37,36 +37,35 @@ namespace ubit {
 
 
 
-Style* UFrame::createStyle() {
+Style* Frame::createStyle() {
   return Window::createStyle();
 }
 
-UFrame::UFrame(Args a) : Dialog(a) {
+Frame::Frame(Args a) : Dialog(a) {
   wmodes.IS_HARDWIN = true;   // a frame is always a HARDWIN!
   wmodes.IS_FRAME  = true;
   wmodes.IS_DIALOG = false;
 }
 
 // Dialogs are centered but not Frames
-void UFrame::show(bool state, Display* disp) {
+void Frame::show(bool state, Display* disp) {
   if (isShown(disp) == state) return;
   Window::show(state, disp);
 }
 
-bool UFrame::realize() {
+bool Frame::realize() {
   if (! wmodes.IS_HARDWIN) {
-    error("UFrame::realize","can't realize UFrame object %p",this);
+    error("Frame::realize","can't realize Frame object %p",this);
     return false;
   }
   if (wmodes.IS_MAINFRAME) return realizeHardwin(UWinImpl::MAINFRAME);
   else return realizeHardwin(UWinImpl::FRAME);
 }
 
-// ------------------------------------------------------------ [ELC] ----------
 
 Style* Dialog::createStyle() {
   Style* s = Window::createStyle();
-  static Border* b = new URoundBorder(Border::LINE,Color::black,Color::white,2,2,15,15);
+  static Border* b = new RoundBorder(Border::LINE,Color::black,Color::white,2,2,15,15);
   s->setBorder(b);
   s->setPadding(4, 6);
   return s;
@@ -117,7 +116,6 @@ void Dialog::show(bool state, Display* disp) {
   if (state && !already_shown) centerOnScreen(disp);
 }
 
-// ------------------------------------------------------------ [ELC] ----------
 /* creates a new OptionDialog; see also creator shortcut uoptiondialog().
  * All parameters are optional:
  * - 'title' is the dialog title
@@ -132,25 +130,25 @@ void Dialog::show(bool state, Display* disp) {
  * @see Element::add(Args arguments) for more info on argument lists.
  */
 /*
- int UOptionDialog::showDialog(const String& title, Args message, Args icon, Args ok) {
+ int OptionDialog::showDialog(const String& title, Args message, Args icon, Args ok) {
  setDialog(title, message, icon, ok);
  show(true);
  showModal( );  !!!!!&&&&
  }
  */
 
-UOptionDialog::UOptionDialog(Args message) {
+OptionDialog::OptionDialog(Args message) {
   constructs(message);
 }
 
-UOptionDialog::UOptionDialog(const String& title, Args message, Args icon, Args buttons) {
+OptionDialog::OptionDialog(const String& title, Args message, Args icon, Args buttons) {
   setTitle(title);
   constructs(message);
   setIcon(icon);
   setButtons(buttons);
 }
 
-void UOptionDialog::constructs(Args message) {
+void OptionDialog::constructs(Args message) {
   pmessage = uhbox(message);
   pmessage->addAttr(uhflex());
 
@@ -170,23 +168,23 @@ void UOptionDialog::constructs(Args message) {
       );
 }
 
-UOptionDialog& UOptionDialog::setTitle(const String& title) {
+OptionDialog& OptionDialog::setTitle(const String& title) {
   Window::setTitle(title);
   return *this;
 }
 
-UOptionDialog& UOptionDialog::setMessage(Args nodelist) {
+OptionDialog& OptionDialog::setMessage(Args nodelist) {
   pmessage->removeAll();
   pmessage->add(nodelist);
   adjustSize();
   return *this;
 }
 
-UOptionDialog& UOptionDialog::setMessage(const String& msg) {
+OptionDialog& OptionDialog::setMessage(const String& msg) {
   return setMessage(Args(ustr(msg)));
 }
 
-UOptionDialog& UOptionDialog::setIcon(Args icon) {
+OptionDialog& OptionDialog::setIcon(Args icon) {
   picon->removeAll();
   if (!icon) picon->show(false);
   else {
@@ -197,7 +195,7 @@ UOptionDialog& UOptionDialog::setIcon(Args icon) {
   return *this;
 }
 
-UOptionDialog& UOptionDialog::setButtons(Args buttons) {
+OptionDialog& OptionDialog::setButtons(Args buttons) {
   pbuttons->removeAll();
   if (!buttons) pbuttons->add(ubutton(" OK " + ucloseWin()));
   else {
@@ -210,7 +208,6 @@ UOptionDialog& UOptionDialog::setButtons(Args buttons) {
   adjustSize();
   return *this;
 }
-// ------------------------------------------------------------ [ELC] ----------
 /*
  ERROR_MESSAGE
  INFORMATION_MESSAGE
@@ -219,10 +216,10 @@ UOptionDialog& UOptionDialog::setButtons(Args buttons) {
  PLAIN_MESSAGE
  */
 
-UOptionDialog* Dialog::messdialog = null;
+OptionDialog* Dialog::messdialog = null;
 
 void Dialog::showMessageDialog(const String& title, Args message_nodes, Args icon) {
-  if (!messdialog) messdialog = new UOptionDialog();
+  if (!messdialog) messdialog = new OptionDialog();
   messdialog->setMessage(message_nodes);
   messdialog->setIcon(icon);
   messdialog->show(true);

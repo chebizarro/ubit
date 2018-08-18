@@ -58,11 +58,11 @@ namespace ubit {
   
   /* [Impl] A host in the Finder.
    */ 
-  class UFinderHost : public Box {   // UVbox
+  class FinderHost : public Box {   // UVbox
   public:
-    typedef void (UFinderHost::*HostMethod)();
+    typedef void (FinderHost::*HostMethod)();
     
-    UFinderHost(class Finder*, const String& hostname);
+    FinderHost(class Finder*, const String& hostname);
     void resolve(HostMethod);
     void createClone();
     void deleteClone();

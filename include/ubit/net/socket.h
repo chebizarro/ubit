@@ -25,8 +25,8 @@ extern "C" {
 }
 
 namespace ubit {
-  class UOutbuf;
-  class UInbuf;
+  class OutBuffer;
+  class InBuffer;
 
 /** Ubit Simple Sockets.
  * Example:
@@ -39,7 +39,7 @@ namespace ubit {
   s->onInput(ucall(s, socketInputCB));
 
   void socketInputCB(Socket* s) {
-    UInbuf ibuf;
+    InBuffer ibuf;
   
     // receiveBlock() retreives the data sent by sendBlock()
     if (s->receiveBlock(ibuf)) {
@@ -59,7 +59,7 @@ namespace ubit {
  }
 </tt></pre>
  *
- * See also: UServerSocket.
+ * See also: ServerSocket.
  */
 class Socket {
 public:
@@ -83,22 +83,22 @@ public:
   bool sendBlock(const char* buffer, unsigned short size);
   ///< see receiveBlock().
 
-  bool sendBlock(UOutbuf&);
+  bool sendBlock(OutBuffer&);
   ///< see receiveBlock().
 
-  bool receiveBlock(UInbuf&);
+  bool receiveBlock(InBuffer&);
   /**< simplified block oriented I/O.
    * this function makes it possible to send/receive blocks of data of
    * an arbitrary size. ONE call of receiveBlock() always gets ALL 
    * the data sent by ONE call of sendBlock().
    *
-   * Memory is managed automatically by classes UOutbuf and UInbuf.
-   * UInbuf.data() returns the data received by receiveBlock() and
-   * UInbuf.size() the number of bytes. UInbuf.data() is allocated
+   * Memory is managed automatically by classes OutBuffer and InBuffer.
+   * InBuffer.data() returns the data received by receiveBlock() and
+   * InBuffer.size() the number of bytes. InBuffer.data() is allocated
    * and deallocated automatically in memory and should NOT be freed.
    *
    * NOTES: 
-   * - the same UInbuf can be used in multiple calls of receiveBlock()
+   * - the same InBuffer can be used in multiple calls of receiveBlock()
    *   (this may minimize the number of reallocations)
    *
    * - sendBlock() adds a two byte integer before the actual data
@@ -123,27 +123,26 @@ public:
     */
   
 protected:
-  friend class UServerSocket;
+  friend class ServerSocket;
   int remport, sock;
   struct sockaddr_in* sin;
-  USource* input;
+  Source* input;
 };
 
-/* ==================================================== [Elc] ======= */
-/** UServerSocket.
+/** ServerSocket.
  * example:
  <pre><tt>
  // creates a ServerSocket on this port
- UServerSocket* servs = new UServerSocket(666);
+ ServerSocket* servs = new ServerSocket(666);
 
  // newConnection() will be called each time 'servs' receives a connection request
  // NB: in this example, 'servs' is given as an argument to the non-member fonction
  // newConnection() via ucall(). Aternatively, newConnection() could be an instance 
- // method of an object having a UServerSocket instance, see UCall for more info.
+ // method of an object having a ServerSocket instance, see UCall for more info.
  
  servs->onInput(ucall(servs, newConnection));
 
- void newConnection(UServerSocket* servs) {
+ void newConnection(ServerSocket* servs) {
      // accepts the connection and returns the corresponding socket
      Socket* s = servs->accept();
      s->onInput(ucall(s, socketInputCB));  // see Socket
@@ -153,15 +152,15 @@ protected:
  *
  * See also: Socket.
  */
-class UServerSocket {
+class ServerSocket {
 public:
-  UServerSocket();
+  ServerSocket();
   ///< creates an unbound server socket (bind(port) MUST then be called).
   
-  UServerSocket(int port);
+  ServerSocket(int port);
   ///< creates and binds a server socket (by calling bind(port, 0, true)).
 
-  virtual ~UServerSocket();
+  virtual ~ServerSocket();
   ///< destructor; closes this socket.
 
   virtual void onInput(UCall&);
@@ -172,18 +171,18 @@ public:
   virtual Socket* accept();
   /**< listens for a connection to be made and accepts it.
     * This method blocks until a connection is made. It is typically called
-    * in a callback function: see onInput() and class UServerSocket
+    * in a callback function: see onInput() and class ServerSocket
     *
     * Note: accept() calls createSocket() to create the new socket.
     * By default this functions returns {new Socket}. It can be redefined
-    * by UServerSocket subclasses to create appropriate socket objets.
+    * by ServerSocket subclasses to create appropriate socket objets.
     */
 
   bool bind(int port, int backlog = 0, bool reuse_address = true);
   /* binds this socket.
     * there is no need to call this function if the constructor
-    * UServerSocket(int port) was used. bind() must only be called to bind
-    * an unbound socket created by UServerSocket() [without an arg].
+    * ServerSocket(int port) was used. bind() must only be called to bind
+    * an unbound socket created by ServerSocket() [without an arg].
     *
     * Args:
     * - 'backlog' specifies how many pending connections the queue will hold
@@ -209,22 +208,21 @@ public:
 protected:
   int listen_port, listen_sock;
   struct sockaddr_in* sin;
-  USource* input;
+  Source* input;
 };
 
-/* ==================================================== [Elc] ======= */
-/** UIObuf (@see Socket).
+/** IOBuffer (@see Socket).
 */
-class UIObuf {
+class IOBuffer {
 public:
-  UIObuf();
-  virtual ~UIObuf();
+  IOBuffer();
+  virtual ~IOBuffer();
 
   const char* data() const;
   char* data();
   /**< returns the data in this IObuf (may be NOT null-terminated).
    * data() should NOT be freed (this is done automatically when
-   * the UIObuf is destroyed).
+   * the IOBuffer is destroyed).
    */
 
   unsigned int size() const;
@@ -242,10 +240,9 @@ protected:
   unsigned int bufsize;        // total memory size (int not short!)
 };
 
-/* ==================================================== [Elc] ======= */
-/** UOutbuf (@see Socket).
+/** OutBuffer (@see Socket).
 */
-class UOutbuf : public UIObuf {
+class OutBuffer : public IOBuffer {
 public:
   void writeChar(char);
   void writeChar(unsigned char);
@@ -258,10 +255,9 @@ public:
                   long x, long y, unsigned long detail);
 };
 
-  /* ==================================================== [Elc] ======= */
-/** UInbuf (@see Socket).
+  /** InBuffer (@see Socket).
 */
-class UInbuf : public UIObuf {
+class InBuffer : public IOBuffer {
 public:
   void readChar(char&);
   void readChar(unsigned char&);

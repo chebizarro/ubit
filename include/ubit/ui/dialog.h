@@ -31,7 +31,7 @@ namespace ubit {
    * Dialog box.
    * 
    * Dialogs can't be iconified and are always located on the top of the
-   * "Main Frame" (@see UFrame). Also, Dialogs are hidden when the Main Frame
+   * "Main Frame" (@see Frame). Also, Dialogs are hidden when the Main Frame
    * is iconified
    *
    * @see class Window for inherited methods and other important remarks.
@@ -105,66 +105,64 @@ namespace ubit {
     virtual void removingFrom(Child&, Element& parent);  
   private:
     UCall* open_call;
-    static class UOptionDialog* messdialog;
+    static class OptionDialog* messdialog;
 #endif
   };
   
   inline Dialog& udialog(Args arglist = Args::none) {return *new Dialog(arglist);}
   ///< shortcut function that returns *new Dialog(args).
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  /** UFrame: toplevel and main window.
-   * The main window of the application should usually be a UFrame. This window, 
+    /** Frame: toplevel and main window.
+   * The main window of the application should usually be a Frame. This window, 
    * called the "Main Frame", has a special role for dialog boxes (@see Dialog)
    *
    * In contrast with Dialogs, Frames can be iconified separately. Most applications
    * have only 1 frame (the "Main Frame"). However, applications that require several 
    * iconfiable windows can create as many Frames as needed (the "Main Frame" is then
-   * the first UFrame that was added to the Application)
+   * the first Frame that was added to the Application)
    *
    * @see class Window for inherited methods and other important remarks.
    */
-  class UFrame : public Dialog {
+  class Frame : public Dialog {
     friend class Application;
   public: 
-    UCLASS(UFrame)
+    UCLASS(Frame)
     
-    UFrame(Args nodelist = Args::none);
+    Frame(Args nodelist = Args::none);
     ///< creates a new Frame Window; @see also shortcut function uframe().
     
     bool isMainFrame() const {return wmodes.IS_MAINFRAME;}
     ///< is this frame the "main frame"? (@see: Application)
     
-    virtual UFrame& setTitle(const String& title) {Window::setTitle(title); return *this;}
+    virtual Frame& setTitle(const String& title) {Window::setTitle(title); return *this;}
     ///< changes the title of the dialog box.
 
     virtual void show(bool state, Display*);  // redefined
-    virtual void show(bool state = true) {UFrame::show(state, null);}  // redefined
+    virtual void show(bool state = true) {Frame::show(state, null);}  // redefined
 
     static Style* createStyle();  // redefined
     virtual bool realize();  // redefined
   };
   
-  inline UFrame& uframe(const Args& a = Args::none) {return *new UFrame(a);}
-  ///< shortcut that returns *new UFrame(args).
+  inline Frame& uframe(const Args& a = Args::none) {return *new Frame(a);}
+  ///< shortcut that returns *new Frame(args).
   
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  /** Predefined dialog box with optional content, icon and buttons area.
+    /** Predefined dialog box with optional content, icon and buttons area.
    * @see Dialog.
    */
-  class UOptionDialog : public Dialog {
+  class OptionDialog : public Dialog {
   public:
-    UCLASS(UOptionDialog)
+    UCLASS(OptionDialog)
 
-    UOptionDialog(Args message_nodes = Args::none);
-    UOptionDialog(const String& title, Args message_nodes, Args icon, Args buttons);
+    OptionDialog(Args message_nodes = Args::none);
+    OptionDialog(const String& title, Args message_nodes, Args icon, Args buttons);
        
-    UOptionDialog& setTitle(const String& title);
-    UOptionDialog& setMessage(const String& string);
-    UOptionDialog& setMessage(Args nodelist);
-    UOptionDialog& setIcon(Args icon);
-    UOptionDialog& setButtons(Args buttons);
+    OptionDialog& setTitle(const String& title);
+    OptionDialog& setMessage(const String& string);
+    OptionDialog& setMessage(Args nodelist);
+    OptionDialog& setIcon(Args icon);
+    OptionDialog& setButtons(Args buttons);
 
   protected:
     unique_ptr<Box> picon, pmessage, pbuttons;

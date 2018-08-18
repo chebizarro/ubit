@@ -63,7 +63,6 @@ void Scale::update() {
   updateAutoParents(Update::LAYOUT_PAINT);
 }
 
-/* ==================================================== [Elc] ======= */
 // NB: ne marchera pas si inclus dans un proplist car addingTo n'est pas
 // execute dans ce cas
 

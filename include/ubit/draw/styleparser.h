@@ -31,7 +31,7 @@
 
 namespace ubit {
   
-  typedef char UChar;
+  typedef char Char;
   
   /** Style Parser.
    * Abstract class: methods addStyle() and addProp() must be
@@ -83,14 +83,14 @@ namespace ubit {
     bool readValue(String& value);
     bool readNameValuePair(String& name, String& value);
     
-    virtual void error(const char* msg, const UChar* line);
+    virtual void error(const char* msg, const Char* line);
     virtual void error(const char* msg_start, const String& name,
-                       const char* msg_end, const UChar* line);
-    virtual void unexpected(const char* msg, const UChar* line);
+                       const char* msg_end, const Char* line);
+    virtual void unexpected(const char* msg, const Char* line);
     
     bool permissive;
     int stat;
-    const UChar *text_buffer, *p;
+    const Char *text_buffer, *p;
     unique_ptr<UErrorHandler> perrhandler;
   };
   

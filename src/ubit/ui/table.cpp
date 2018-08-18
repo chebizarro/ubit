@@ -92,7 +92,6 @@ static void augmentCells(vector<UViewCell>& tab, unsigned int new_size) {
   if (new_size> tab.size()) tab.resize(new_size);
 }
 
-/* ==================================================== [Elc] ======= */
 
 UTcell::UTcell(Args a): UFlowbox(a) {
   colspan = 1;
@@ -438,7 +437,6 @@ static void computeSizes(vector<UViewCell>& cols, int ccur, int span,
   }  
 }
 
-/* ==================================================== [Elc] ======= */
 
 static void setSizes(View *chboxview, UpdateContext &ctx,
                      int colspan, int rowspan,

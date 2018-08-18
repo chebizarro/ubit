@@ -258,7 +258,6 @@ bool Font::equals(const Font& f) const {
 }
 
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /*
 Font& Font::setFamily(const Font &f) {
   if (checkConst()) return *this;
@@ -314,7 +313,6 @@ Font& Font::setFamily(const String& font_families) {
  
  */
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 Font& Font::setSize(const String& size) {
   if (checkConst()) return *this;
@@ -357,7 +355,6 @@ float Font::getPointSize() const {
   return fsize / Application::getDisp()->PT_TO_PX;
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 Font& Font::setStyles(int s) {
   if (checkConst()) return *this;
@@ -384,7 +381,6 @@ Font& Font::changeStyles(int s, bool add) {
   return *this;
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 bool Font::isPlain()  const {return on_styles == 0;}
 bool Font::isBold()   const {return (on_styles & BOLD) != 0;}

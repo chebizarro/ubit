@@ -143,7 +143,6 @@ static int CharWidth(XFontStruct* f, char _c) {
 }
 
 #endif
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /* FTGL doc:
 * void BBox( const char* string, float& llx, float& lly, float& llz, float& urx, float& ury, float& urz);
 * 
@@ -156,7 +155,6 @@ static int CharWidth(XFontStruct* f, char _c) {
 * @param ury       upper right far y coord
 * @param urz       upper right far z coord
 */
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 float UHardFont::getWidth(char c) const {
 #if UBIT_WITH_GL
@@ -177,7 +175,6 @@ float UHardFont::getWidth(char c) const {
   return 0;
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 float UHardFont::getWidth(const char* s, int len) const {
 #if UBIT_WITH_GL
@@ -194,7 +191,6 @@ float UHardFont::getWidth(const char* s, int len) const {
   return 0;   // GL and FreeType required
 }
 
-/* ==================================================== [Elc] ======= */
 
 static bool getNext(String& item, String& list) {
   int pos = list.find(',');
@@ -299,7 +295,6 @@ FTFont* UHardFont::loadFTGLFont(Display* nd, const FontDescription& fd) {
 }
 
 #endif
-/* ==================================================== [Elc] ======= */
 
 void UHardFont::drawString(const char* s, int len, float x, float y) const { // glcontext dependent!!!
 #if UBIT_WITH_GL

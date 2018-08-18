@@ -40,7 +40,7 @@ FileChooser::FileChooser(const Args& args) :
   fpath(new String), /*viewport(null), */ autoclose(true) 
 {
   static Border& btn_border = 
-  *new URoundBorder(+Border::ETCHED, Color::darkgrey, Color::white,2,2,10,10);
+  *new RoundBorder(+Border::ETCHED, Color::darkgrey, Color::white,2,2,10,10);
     
   fspec = "./";  // => scan du directory courant
   *ffilter = "*.*";
@@ -104,7 +104,7 @@ FileChooser::FileChooser(const Args& args) :
   mainbox->addAttr(uhflex() + uvflex());
   
   addAttr(Orientation::vertical + uvspacing(5) + upadding(4,4)
-          + new URoundBorder(Border::LINE,Color::black,Color::white,2,2,15,15));
+          + new RoundBorder(Border::LINE,Color::black,Color::white,2,2,15,15));
   
   add(utop()
       + args  //pbm place des args!
@@ -125,7 +125,6 @@ void FileChooser::showList(bool st) {
   show_list->setSelected(st);
 }
 
-/* ==================================================== [Elc:] ======= */
 // separer le chemin et du repertoire et le reste (remain) qui
 // servira de filtre
 // -- reduit s_dir si necessaire : enleve filter et / final
@@ -239,7 +238,7 @@ void FileChooser::rescan() {
     static UPadding& pad = upadding(10,UIGNORE);
 
     for (UFileInfos::const_iterator pe = entries.begin(); pe != entries.end(); ++pe) {
-       const UFileInfo& e = *(*pe);
+       const FileInfo& e = *(*pe);
       
       if (e.isDir()) {	// cas directory
         Args call = ucall(this, e.pname(), &FileChooser::changeDirImpl);
@@ -279,7 +278,7 @@ void FileChooser::rescan() {
     int n = 0;
     
     for (UFileInfos::const_iterator pe = entries.begin(); pe != entries.end(); ++pe) {
-      const UFileInfo& e = *(*pe);
+      const FileInfo& e = *(*pe);
 
       if (e.isDir()) {	// cas directory
         col->add(uitem(new_sel + e.getMiniIconImage() + *e.pname

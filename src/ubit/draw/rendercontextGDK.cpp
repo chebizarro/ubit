@@ -38,13 +38,11 @@ URenderContextGDK::URenderContextGDK(Display* d, RenderContext* notused) : Rende
   sys_gc = ....;
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void URenderContextGDK::flush() const {
   Flush(SYS_DISP);
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void URenderContextGDK::resetGraph() {
   GdkGCValues gcval;
@@ -53,7 +51,6 @@ void URenderContextGDK::resetGraph() {
   gdk_gc_set_values(gc, &gcval,
                     (GdkGCValuesMask)(GDK_GC_FUNCTION|GDK_GC_LINE_WIDTH));}
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void URenderContextGDK::resetClip() {
   GdkRectangle c = {(int)clip.x, (int)clip.y, (unsigned int)clip.width, (unsigned int)clip.height};
@@ -68,7 +65,6 @@ void URenderContextGDK::setClip(double x, double y, double width, double height)
   gdk_gc_set_clip_rectangle(sys_gc, &c);
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   
 void URenderContextGDK::setFont(const FontDescription& fd) {
   GdkGCValues gcval;
@@ -76,16 +72,14 @@ void URenderContextGDK::setFont(const FontDescription& fd) {
   gdk_gc_set_values(sys_gc, &gcval, GDK_GC_FONT);  //(GdkGCValuesMask)GDK_GC_FONT
 } 
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  
+    
   void URenderContextGDK::setWidth(double w) {  
     GCValues gcval;
     gcval.line_width = int(w);
     SetGC(SYS_DISP, SYS_GC, GCLINEWIDTH, &gcval);
   }
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  
+    
   void URenderContextGDK::setColor(const Color& c) {
     graph->color = c.getPixel(disp);
     
@@ -108,7 +102,6 @@ void URenderContextGDK::drawLine(double x1, double y1, double x2, double y2) con
   DrawLine(sys_disp, dest->sys_win, sys_gc, xwin + x1, ywin + y1, xwin + x2, ywin + y2);  
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void URenderContextGDK::drawRect(double x, double y, double w, double h, bool filled) const {
   if (filled)
@@ -117,7 +110,6 @@ void URenderContextGDK::drawRect(double x, double y, double w, double h, bool fi
     DrawRect(sys_disp, dest->sys_win, sys_gc, xwin + x, ywin + y, w, h);
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void URenderContextGDK::drawArc(double x, double y, double w, double h, 
                             double start, double ext, bool filled) const 
@@ -127,7 +119,6 @@ void URenderContextGDK::drawArc(double x, double y, double w, double h,
                int(start * 64.), int(ext * 64.));   //att: au *64 !
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void URenderContextGDK::drawString(const UHardFont*, const char* str, int str_len, 
                                double x, double y) const 
@@ -136,7 +127,6 @@ void URenderContextGDK::drawString(const UHardFont*, const char* str, int str_le
                 int(xwin + x), int(ywin + y), str, str_len);  
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // type is one of LINE_STRIP (polyline), LINE_LOOP (polygon), FILLED (filled polygon).
 
 void URenderContextGDK::drawPolygon(const float* coords2d, int card, int polytype) const {
@@ -161,7 +151,6 @@ void URenderContextGDK::drawPolygon(const float* coords2d, int card, int polytyp
   delete[] pmem;
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void URenderContextGDK::drawPolygon(const std::vector<Point>& points, int polytype) const {
   int card = points.size();
@@ -185,7 +174,6 @@ void URenderContextGDK::drawPolygon(const std::vector<Point>& points, int polyty
   delete[] pmem;
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void URenderContextGDK::copyArea(double x, double y, double w, double h, double delta_x, double delta_y,
                             bool generate_refresh_events_when_obscured) const
@@ -212,7 +200,6 @@ void URenderContextGDK::copyArea(double x, double y, double w, double h, double 
   Flush(SYS_DISP);
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 }
 #endif

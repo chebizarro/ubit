@@ -115,7 +115,6 @@ String Int::toString() const {
   return _s;
 }
 
-/* ==================================================== [Elc] ======= */
 
 Float::Float(const String& s) {
   setImpl(s.c_str(), false);  // dont call callbacks
@@ -185,7 +184,6 @@ String Float::toString() const {
   return _s;
 }
 
-/* ==================================================== [Elc] ======= */
 
 //Double::Double(const char* s) {
 //  setImpl(s, false);  // dont call callbacks

@@ -54,7 +54,6 @@ namespace ubit {
 static UAppliImpl appli_impl;
 UAppliImpl& Application::impl = appli_impl;
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 UAppliImpl::UAppliImpl() : 
 appli(null),
@@ -77,7 +76,6 @@ is_processing_update_requests(false),
 is_processing_layout_update_requests(false) {
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 String& Application::initConf(int& argc, char** argv, Option* opts, const char* cfile) {
   conf.readAttributes(cfile);
@@ -92,7 +90,6 @@ String& Application::initConf(int& argc, char** argv, Option* opts, const char* 
   return conf.display;
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 Application::Application(int& argc, char** argv, Option* opts, const char* confile) {
   String s = argv[0];
@@ -119,7 +116,6 @@ Application::Application(int& argc, char** argv, Option* opts, const char* confi
   impl.disp->startAppli(); 
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 Application::~Application() {
   impl.is_terminated = true;
@@ -129,7 +125,6 @@ Application::~Application() {
   impl.disp->quitAppli();
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /*  APPELE OU ?
 void Application::realize() {
   Display::realize();
@@ -144,7 +139,6 @@ void Application::realize() {
   //bool Application::isRealized() const {return natdisp->isRealized();}
   //const char* Application::getCommandName() const {return conf.app_name;}
   //const char* Application::getCommandPath() const {return (conf.app_argc>0 ? conf.app_argv[0] : null);}
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   
 Application& Application::appli() {
   if (!impl.appli)    // throws an exception
@@ -162,7 +156,7 @@ const char* Application::getVersion() {return UBIT_VERSION;}
 
 bool Application::isRunning() {return impl.mainloop_running;}
 
-UFrame* Application::getMainFrame() {return impl.main_frame;}
+Frame* Application::getMainFrame() {return impl.main_frame;}
 
 const String& Application::getName() {
   if (!appli_impl.app_name) appli_impl.app_name = new String();
@@ -192,14 +186,13 @@ void Application::setFocus(View* v) {
   getFlow(0)->setFocus(v);
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 // En arg: n'importe quelle Window; mais seul le MainFrame (= le 1er Frame 
 // ajoute a Application) est automatiquement affichee par defaut
 void Application::add(Window& win) {
   impl.disp->add(win);
-  UFrame* frame = dynamic_cast<UFrame*>(&win);
-  if (frame && !impl.main_frame) {    // makes the first UFrame be the 'Main Frame'
+  Frame* frame = dynamic_cast<Frame*>(&win);
+  if (frame && !impl.main_frame) {    // makes the first Frame be the 'Main Frame'
     impl.main_frame = frame; 
     impl.main_frame->wmodes.IS_MAINFRAME = true;
   }
@@ -220,7 +213,6 @@ void Application::remove(Window* win, bool remove_mode) {
   else remove(*win, remove_mode);
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 static void updateAll2(Element* grp, const Update& mode) {
   // NB: du fait des parents multiples, il est possible de remettre
@@ -242,7 +234,6 @@ void Application::updateAll(const Update& mode) {
   }
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 int Application::start() {
   // updateAll() remet l'affichage a jour avant d'entrer dans la mainloop
@@ -262,7 +253,6 @@ int Application::start() {
   return impl.main_status;
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void Application::quit(int status) {
   impl.main_status = status;
@@ -270,7 +260,6 @@ void Application::quit(int status) {
   impl.disp->quitLoop(true);  // main loop
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 int UAppliImpl::startModalWinLoop(Window& win) {
   modal_status = 0;
@@ -293,7 +282,6 @@ void UAppliImpl::removeModalWin(Window& win) {
   modalwins->remove(win, false);
 }
 
-//==============================================================================
 
 void UAppliImpl::processPendingRequests() {
   is_processing_update_requests = false;
@@ -318,14 +306,12 @@ void UAppliImpl::processDeleteRequests() {
   request_mask &= ~DELETE_REQUEST;
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void UAppliImpl::addDeleteRequest(View* v) {
   del_view_list.push_back(v);
   request_mask |= DELETE_REQUEST;
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void UAppliImpl::addDeleteRequest(UObject* b) {
   b->omodes.IS_DESTRUCTED = true;  // securite: normalement c'est deja le cas
@@ -349,7 +335,6 @@ void UAppliImpl::addDeleteRequest(UObject* b) {
   else ::operator delete(b);    // enforces deletion
 }
 
-//==============================================================================
 
 void UAppliImpl::processUpdateRequests() 
 {  
@@ -404,7 +389,6 @@ void UAppliImpl::processUpdateRequests()
   request_mask &= ~UPDATE_REQUEST;  // remove UPDATE_REQUEST
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void UAppliImpl::addUpdateRequest(Box* obj, const Update& upd) {
   // don't update an object that has been destructed
@@ -459,7 +443,6 @@ UpdateRequest* UAppliImpl::findUpdateRequest(Box* obj, unsigned int& k) {
   return null;
 }
 */
-//==============================================================================
 
 void Application::deleteNotify(Display* d) {
   for (unsigned int k = 0; k < impl.displist.size(); ++k) {
@@ -485,7 +468,6 @@ void Application::deleteNotify(Element* deleted_group) {
   }
 }
 
-//==============================================================================
 
 const UDispList& Application::getDispList() {
   return impl.displist;
@@ -519,7 +501,6 @@ bool Application::hasTelePointers() {
   return (conf.tele_pointers && impl.displist.size() > 1);
 }
 
-//==============================================================================
 
 const UFlowList& Application::getFlowList() {
   return impl.flowlist;
@@ -539,7 +520,6 @@ Selection* Application::getSelection(int _id) {
   else return fl->getSelection();
 }
 
-//==============================================================================
 
 Menu* Application::getOpenedMenu() {
   EventFlow* fl = impl.disp->obtainChannelFlow(0);  // DEFAULT IFLOW : A REVOIR
@@ -564,7 +544,6 @@ void Application::setImaPath(const String& value) {
   if (path[-1] != '/') path.append('/'); 
 }
 
-//==============================================================================
 
 void Application::setMotionLag(unsigned long app_lag, unsigned long nat_lag) {
   impl.app_motion_lag = app_lag;
@@ -586,7 +565,6 @@ void Application::addTimeout(unsigned long _delay, int _ntimes, UCall& c) {
   t->start();
 }
 
-//==============================================================================
 
 MessagePortMap* Application::getMessagePortMap() {return impl.messmap;}
 
@@ -606,7 +584,6 @@ void Application::onMessage(const String& name, UCall& c) {
   mp.add(c); 
 }
 
-//==============================================================================
 
 void Application::error(const char* fun, const char* format, ...){
   va_list ap;
@@ -636,7 +613,6 @@ void Application::internalError(const char* fun, const char* format, ...){
   va_end(ap);
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void Application::raiseError(int errnum, const UObject* obj, const char* funcname, 
                         const char* format, ...){
@@ -668,7 +644,6 @@ void Application::setErrorHandler(UErrorHandler& eh) {
   appli_impl.error_handler = eh;
 }
 
-//==============================================================================
 
 UErrorHandler::UErrorHandler(const String& _label, std::ostream* _fout) : 
 plabel(ustr(_label)),
@@ -686,7 +661,6 @@ void UErrorHandler::setOutputBuffer(String* s) {
   pbuffer = s;
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void UErrorHandler::warning(const char* fun, const char* format, ...) const {
   va_list ap;
@@ -710,15 +684,15 @@ void UErrorHandler::error(int errnum, const UObject *obj, const char* fun,
   va_end(ap);
 }
 
-void UErrorHandler::parserError(int errnum, const UChar* tbuffer,
+void UErrorHandler::parserError(int errnum, const Char* tbuffer,
                                 const char* msg1, const String& name,
-                                const char* msg2, const UChar* line) const {
+                                const char* msg2, const Char* line) const {
   // eviter erreurs de positionnement en debut de buffer
   if (line < tbuffer) line = tbuffer;
   
   // calculer la position de line dans text
   int l = 1;
-  for (const UChar* t = tbuffer; t <= line; t++ ) {
+  for (const Char* t = tbuffer; t <= line; t++ ) {
     if (*t == '\n') l++;
   }
   
@@ -763,7 +737,6 @@ void UErrorHandler::raiseError(int errnum, String* msg) const {
   if (e.errnum < 0) throw e;
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void UErrorHandler::formatMessage(UError& e, const char* format, va_list ap) const {
   // ICI traiter les translations !

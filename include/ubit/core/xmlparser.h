@@ -91,25 +91,25 @@ namespace ubit {
     void readSGMLData(Element* parent);
     
     void skipSpaces();
-    UChar readCharEntityReference();
+    Char readCharEntityReference();
     bool readName(String&);
-    bool readQuotedValue(String&, UChar quoting_char);
+    bool readQuotedValue(String&, Char quoting_char);
     bool readUnquotedValue(String&);
     bool readNameValuePair(String& name, String& value);
     Element* readElementStartTag(String& elem_name, int& stat);
     int  readElementEndTag(const String& elem_name);
     
-    void error(const char* msg, const UChar* line);
+    void error(const char* msg, const Char* line);
     void error(const char* msg_start, const String& name,
-               const char* msg_end, const UChar* line);
-    void unexpected(const char* msg, const UChar* line);
+               const char* msg_end, const Char* line);
+    void unexpected(const char* msg, const Char* line);
     
     
   private:
     static const int INVALID_TAG = 0, END_TAG = 1, END_TAG_AND_ELEM = 2;
     int status;
     bool permissive, collapse_spaces;
-    const UChar *text_buffer, *p;
+    const Char *text_buffer, *p;
     XmlDocument* doc;
     XmlGrammars* parser_grammars;
     unique_ptr<UErrorHandler> perrhandler;

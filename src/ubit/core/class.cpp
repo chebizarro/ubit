@@ -63,7 +63,6 @@ struct USubclass : public Class {
 template <class CC>
 inline const Class& MetaClass(const char*cc_name) {static Class& c = *new USubclass<CC>(cc_name); return c;}
 */
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 StyleSheet::~StyleSheet() {
   for (Map::iterator k = map.begin(); k != map.end(); k++) {
@@ -71,7 +70,6 @@ StyleSheet::~StyleSheet() {
   }
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 ElementClassMap::~ElementClassMap() {}
 
@@ -98,7 +96,6 @@ const Class* ElementClassMap::obtainClass(const String& classname) {
   }
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 AttributeClassMap::~AttributeClassMap() {
   //for (Map::iterator k = map.begin(); k != map.end(); k++) {

@@ -118,7 +118,6 @@ protected:
   virtual void doubleClickCB(MouseEvent&);
 };
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 U3DposHandle::U3DposHandle(U3Dpos& _pos, Transform _t) :
 transform(_t), pos(_pos), callbacks(null) {}
@@ -289,7 +288,6 @@ fovy(FOVY), aspect(1.), near(NEAR_PLANE), far(FAR_PLANE) {
 
 U3Dcanvas::~U3Dcanvas() {}
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 ViewStyle 3DCanvasView::style(&3DCanvasView::createView, UCONST);
 
@@ -354,7 +352,6 @@ void 3DCanvasView::doUpdate(UpdateContext& ctx, Rectangle r, Rectangle clip, UVi
 #endif
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 struct MatchView {
 public:
@@ -371,7 +368,6 @@ public:
   }
 };
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 View* 3DCanvasView::findInChildren(Element* grp, const Point& winpos,
                                      const UpdateContext& ctx, ViewFind& vf) 
@@ -544,7 +540,6 @@ View* 3DCanvasView::findInChildren(Element* grp, const Point& winpos,
 #endif
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 bool 3DCanvasView::unproject(const U3Dpos* pos3d,
                               const Point& winpos, Point& convpos) {

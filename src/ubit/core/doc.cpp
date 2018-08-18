@@ -141,7 +141,6 @@ Document* TextDocCreator::create(DocumentSource& so) {
   return doc;
 }
 
-/* ==================================================== [Elc] ======= */
 
 class ImaDocCreator : public DocumentCreator {
 public:
@@ -178,7 +177,6 @@ Document* ImaDocCreator::create(DocumentSource& so) {
   return doc;
 }
 
-/* ==================================================== [Elc] ======= */
 
 PluginDocument::PluginDocument(const String& _pathname) 
 : Document(_pathname) {
@@ -216,7 +214,7 @@ Document* UPluginDocCreator::create(DocumentSource& so) {
   doc->addAttr(utop() + upadding(13,13) + uvspacing(8) + Font::large);
   doc->add(uhbox(uelem(Font::bold + "File: ") + fname));
 
-  UFileMode fm(*so.path);
+  FileMode fm(*so.path);
   if (fm.isExec()) {
     doc->add(uhbox(uleft() + Symbol::right + " "
                    + ulinkbutton(Font::bold + "Execute"
@@ -311,7 +309,6 @@ void UPluginDocCreator::openAsText(InputEvent& e, Document* doc) {
   }
 }
 
-/* ==================================================== [Elc] ======= */
 
 DocumentFactory::DocumentFactory() {
   stat = 0;

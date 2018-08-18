@@ -86,7 +86,6 @@ void Choice::removingFrom(Child& c, Element& parent) {
   Attribute::removingFrom(c, parent);
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void Choice::update() {
   //if (container) container->update(Update::paint, now);
@@ -156,7 +155,6 @@ void Choice::mouseCB(InputEvent& e) {
   }
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // NB: actuellement il n'y a qu'une seule selection mais elle est stockee
 // dans un Element de telle sorte qu'il n'y ait pas de probleme si elle
 // elle est detruite par ailleurs (elle sera auto enlevee du Element)
@@ -265,7 +263,6 @@ Box* Choice::getSelectableItem(const String& s, bool ignore_case) const {
   return (i == container->cend()) ? null : dynamic_cast<Box*>(*i);
 }
 
-/* ==================================================== [Elc:] ======= */
 
 void Choice::changed(bool update_now) {
   changeCB(null);
@@ -303,28 +300,27 @@ void Choice::actionCB(InputEvent* source_event) {
   fireParents(UOn::action, selected_item);
 }
 
-/* ==================================================== [Elc:] ======= */
 
-URadioSelect::URadioSelect() :
+RadioSelect::RadioSelect() :
   can_unselect_mode(false),
   pindex(new Int(-1)),
-  pselect_callback(ucall(this, &URadioSelect::itemChanged)) {
-  pindex->onChange(ucall(this, &URadioSelect::setIndexImpl));
+  pselect_callback(ucall(this, &RadioSelect::itemChanged)) {
+  pindex->onChange(ucall(this, &RadioSelect::setIndexImpl));
 }
 
-URadioSelect::URadioSelect(Int& idx) :
+RadioSelect::RadioSelect(Int& idx) :
   can_unselect_mode(false),
   pindex(idx),
-  pselect_callback(ucall(this, &URadioSelect::itemChanged)) {
-  pindex->onChange(ucall(this, &URadioSelect::setIndexImpl));
+  pselect_callback(ucall(this, &RadioSelect::itemChanged)) {
+  pindex->onChange(ucall(this, &RadioSelect::setIndexImpl));
 }
 
-URadioSelect::~URadioSelect() {
+RadioSelect::~RadioSelect() {
   destructs();
 }
 
 
-void URadioSelect::addingTo(Child& c, Element& parent) {
+void RadioSelect::addingTo(Child& c, Element& parent) {
   Attribute::addingTo(c, parent);
   // ajouter handlers au parent
   // si on clique un item deja selectionne, il faut que
@@ -342,7 +338,7 @@ void URadioSelect::addingTo(Child& c, Element& parent) {
 
 //NB: removingFrom() requires a destructor to be defined
 
-void URadioSelect::removingFrom(Child& c, Element& parent) {
+void RadioSelect::removingFrom(Child& c, Element& parent) {
   // enlever les callbacks (2 occurences!)
   // false -> ne PAS detruire les ucall (qui sont partages!)
   parent.removeAttr(*pselect_callback, false);
@@ -350,27 +346,26 @@ void URadioSelect::removingFrom(Child& c, Element& parent) {
   Attribute::removingFrom(c, parent);
 }
 
-void URadioSelect::setCanUnselectMode(bool state) {
+void RadioSelect::setCanUnselectMode(bool state) {
   can_unselect_mode = state;
 } 
 
-bool URadioSelect::isCanUnselectMode() const {
+bool RadioSelect::isCanUnselectMode() const {
   return can_unselect_mode;
 } 
 
-/* ==================================================== [Elc:] ======= */
 
-void URadioSelect::update() {
+void RadioSelect::update() {
   updateAutoParents(Update::paint);
 }
 
-void URadioSelect::putProp(UpdateContext*, Element&) {}
+void RadioSelect::putProp(UpdateContext*, Element&) {}
 
-void URadioSelect::changed(bool update_now) {
+void RadioSelect::changed(bool update_now) {
   changed((Element*)null);
 }
 
-void URadioSelect::changed(Element* target) {
+void RadioSelect::changed(Element* target) {
   //if (update_now && (bmodes & UMode::NO_AUTO_UPDATE) == 0) update();
   if (_abegin() != _aend()) {
     Event e(UOn::change, this, target);  //UNodeEvent
@@ -384,7 +379,7 @@ void URadioSelect::changed(Element* target) {
 }
 
 
-void URadioSelect::itemChanged(InputEvent& e) {
+void RadioSelect::itemChanged(InputEvent& e) {
   Element* new_item = e.getSource();
   if (!new_item) return;
 
@@ -413,9 +408,8 @@ void URadioSelect::itemChanged(InputEvent& e) {
   }
 }
 
-/* ==================================================== [Elc:] ======= */
 
-Element* URadioSelect::getSelectedItem() const {
+Element* RadioSelect::getSelectedItem() const {
   if (pindex->intValue() < 0) return null;
   int k = 0;
   for (UParentIter p = pbegin(); p != pend(); ++p) {
@@ -426,7 +420,7 @@ Element* URadioSelect::getSelectedItem() const {
 }
 
 
-void URadioSelect::_selectItem(Element* selection) {
+void RadioSelect::_selectItem(Element* selection) {
   int k = 0;
    for (UParentIter p = pbegin(); p != pend(); ++p) {
     if (*p == selection) {
@@ -438,32 +432,32 @@ void URadioSelect::_selectItem(Element* selection) {
   *pindex = -1; // not found
 }
 
-void URadioSelect::setSelectedItem(Element& selection) {
+void RadioSelect::setSelectedItem(Element& selection) {
   _selectItem(&selection);
 }
 
-void URadioSelect::clearSelection() {
+void RadioSelect::clearSelection() {
   _selectItem(null);
 }
 
 
-int URadioSelect::getSelectedIndex() const {
+int RadioSelect::getSelectedIndex() const {
   return pindex->intValue();
 }
 
-void URadioSelect::setSelectedIndex(int new_index) {
+void RadioSelect::setSelectedIndex(int new_index) {
   if (new_index == -1)		// means last item
     *pindex = parents().size() - 1;
   else *pindex = new_index;
 }
 
-void URadioSelect::setSelectedIndex(const Int& new_index) {
+void RadioSelect::setSelectedIndex(const Int& new_index) {
   if (new_index.intValue() == -1)		// means last item
     *pindex = parents().size() - 1;
   else *pindex = new_index;
 }
 
-void URadioSelect::setIndexImpl() {
+void RadioSelect::setIndexImpl() {
   int k = 0;
   Element* found = null;
 

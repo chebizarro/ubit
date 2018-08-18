@@ -101,7 +101,7 @@ namespace ubit {
    * [impl] precompiled HTML Elements Styles.
    * to be completed...
    */
-  class UCssStyles {
+  class CssStyles {
   public:
     static Style* create_body_style();
     static Style* create_div_style();

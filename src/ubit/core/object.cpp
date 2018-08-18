@@ -41,7 +41,6 @@ const char* UError::what() const throw() {
   return message;
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 UObject::UConst UObject::UCONST;
 

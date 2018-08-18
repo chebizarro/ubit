@@ -233,7 +233,6 @@ void UConf::setDefaultBackground(Image& i) {
 
 void UConf::setTransparentScrollbars(bool s) {transp_scrollbars = s;}
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 static void freezed_error(const char* fct) {
   Application::error(fct,"this function must be called before the Application is created");

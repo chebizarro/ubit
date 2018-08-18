@@ -32,7 +32,7 @@
 namespace ubit {
 
  class UFinderDir;
- class UFinderHost;
+ class FinderHost;
  class UFinderFullwin;
  class UFinderControls;
  class UFinderCom;
@@ -80,9 +80,9 @@ public:
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   virtual bool browseHosts();
-  virtual UFinderHost* addHost(const String& hostname);
-  virtual UFinderHost* addHostCB(const String* hostname);
-  virtual void removeHost(UFinderHost*);
+  virtual FinderHost* addHost(const String& hostname);
+  virtual FinderHost* addHostCB(const String* hostname);
+  virtual void removeHost(FinderHost*);
   virtual void addHosts(const std::vector<String*>& hostnames);
   virtual void addHosts(const char* hostnames[]);
 
@@ -109,10 +109,10 @@ public:
   Options& getOptions() {return opts;}
   ///< returns the options of the Finder.
   
-  UDocbox*  getDocbox() {return pdocbox;}
+  DocumentBox*  getDocbox() {return pdocbox;}
   IconBox* getIconbox() {return piconbox;}
 
-  UDocbox* getCurrentBox();
+  DocumentBox* getCurrentBox();
   ///< returns docbox or iconbox depending on which is currently shown.
   
   Icon* getSelectedIcon();
@@ -173,7 +173,7 @@ protected:
   virtual void browseCB(MessageEvent&);
   bool isBrowsing() const;
   virtual void createCloneRequest(MessageEvent&);
-  virtual UFrame* createCloneFrame(const String& title);
+  virtual Frame* createCloneFrame(const String& title);
   
   virtual void initOptbox();
   void showSelectedIcon();
@@ -183,7 +183,7 @@ protected:
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 private:
   friend class UFinderDir;
-  friend class UFinderHost;
+  friend class FinderHost;
   friend class UFinderCom;  
   static UPix& doc_pix;
   enum {NoMode, DirMode, DocMode} mode;
@@ -202,7 +202,7 @@ private:
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // current selection
   unique_ptr<Document> pdocument;
-  unique_ptr<UDocbox> pdocbox;
+  unique_ptr<DocumentBox> pdocbox;
   unique_ptr<IconBox> piconbox;
   //unique_ptr<Box> docglass;
   unique_ptr<UFinderDir>last_direntry;

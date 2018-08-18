@@ -41,7 +41,6 @@ namespace ubit {
 // NOTE GLUT: There is no support for canceling a registered callback. 
 // Instead, ignore a callback based on its value parameter when it is triggered.
   
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 namespace impl {
 
 #if UBIT_WITH_GLUT          // !!! bug si unique_ptr<Timer> et ptr mis a null
@@ -108,7 +107,6 @@ void Timer::removeTimer() {
   timer_no = -1;
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 //void Timer::start(unsigned long d, int ntimes, bool _auto_delete) {
 void Timer::start(unsigned long d, int _ntimes) {
@@ -178,7 +176,6 @@ void Timer::stop() {
 #endif 
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 Timer::Timer(bool _auto_delete) :
 auto_delete(_auto_delete), is_running(false), is_looping(true),
@@ -214,7 +211,6 @@ void Timer::onAction(UCall& c) {
   _addAttr(*l);
 }
 
-//==============================================================================
 // ceci corrige un bug bien connu...
 
 static inline void FIX_TIME(timeval& time) {
@@ -269,7 +265,6 @@ bool UTimerImpl::lessTime(struct timeval& t1, struct timeval& t2) {
   return false;  // sinon
 }
 
-//==============================================================================
 #if UBIT_WITH_X11
 
 bool UTimerImpl::resetTimers(struct timeval& delay) {
@@ -308,7 +303,6 @@ bool UTimerImpl::resetTimers(struct timeval& delay) {
   return (delay.tv_sec != LONG_MAX || delay.tv_usec != LONG_MAX);
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void UTimerImpl::fireTimers() {
   if (timers.size() == 0) return;

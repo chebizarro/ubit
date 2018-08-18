@@ -35,7 +35,7 @@ namespace ubit {
 
 void StyleParser::skipSpaces() {                // skip comments
   while (true) {
-    const UChar* begin = p;
+    const Char* begin = p;
 
     while(*p && (*p==' ' || *p=='\n' || *p=='\r' || *p=='\t')) p++;
   
@@ -54,7 +54,7 @@ void StyleParser::skipSpaces() {                // skip comments
 
 bool StyleParser::readName(String& name) {
   if (!isalpha(*p) && *p!='_') return false; // 1st char must be in (alpha _ :)
-  const UChar* begin = p;
+  const Char* begin = p;
   p++;
 
   while (isalnum(*p) || *p == '-' || *p == '_' || *p == '.') p++;
@@ -68,7 +68,7 @@ bool StyleParser::readName(String& name) {
 
 bool StyleParser::readValue(String& value) {
   if (iscntrl(*p)) return false;
-  const UChar* begin = p;
+  const Char* begin = p;
 
   // !iscntrl() fait planter s'il y a un newline ou un tab
   while (*p && /*!iscntrl(*p) &&*/ *p != ';' && *p != '}') {
@@ -87,7 +87,7 @@ bool StyleParser::readValue(String& value) {
 // starts on the 1st char of the name
 
 bool StyleParser::readNameValuePair(String& name, String& value) {
-  const UChar* begin = p;
+  const Char* begin = p;
 
   if (!readName(name)) {
     error("invalid CSS attribute name", begin);
@@ -118,11 +118,10 @@ bool StyleParser::readNameValuePair(String& name, String& value) {
   }
 }
 
-/* ==================================================== [Elc] ======= */
 // reads the properties of the style definition, ie. the {} part after the selector
 
 bool StyleParser::readStyleProps(StyleMaker& xxx) {
-  const UChar* begin = p;
+  const Char* begin = p;
   if (*p == '{') p++;
 
   while (true) {
@@ -150,7 +149,6 @@ bool StyleParser::readStyleProps(StyleMaker& xxx) {
   }
 }
 
-/* ==================================================== [Elc] ======= */
 
 static void readBracketSelector(const char* n, String& aux) {
   const char* pn = n;
@@ -216,7 +214,7 @@ static bool readSingleSelector(String& name) {
 // reads the selector(s) of the style definition.
 
 bool StyleParser::readStyleSelectors(StyleMaker& xxx) {
-  const UChar* begin = p;
+  const Char* begin = p;
   bool multiple_sel = false;
 
   String sel;
@@ -254,11 +252,10 @@ bool StyleParser::readStyleSelectors(StyleMaker& xxx) {
   return true;
 }
 
-/* ==================================================== [Elc] ======= */
 // reads one complete style definition (= the selector and the value part).
 
 bool StyleParser::readStyleDef(StyleMaker& xxx) {
-  const UChar* begin = p;
+  const Char* begin = p;
 
   xxx.count = 0;
   //xxx.sel.clear();
@@ -295,7 +292,6 @@ bool StyleParser::readStyleDef(StyleMaker& xxx) {
   }
 }
 
-/* ==================================================== [Elc] ======= */
 // reads all style definitions included in the buffer.
 
 int StyleParser::parseImpl(StyleMaker& xxx, const String& _buffer) {
@@ -348,9 +344,8 @@ StyleParser::StyleMaker::~StyleMaker() {
     delete selectors[k];
 }
 
-/* ==================================================== [Elc] ======= */
 
-void StyleParser::unexpected(const char* msg, const UChar* line) {
+void StyleParser::unexpected(const char* msg, const Char* line) {
   if (!*p) {
     error("premature end of file ", "", msg, line);
   }
@@ -369,12 +364,12 @@ void StyleParser::unexpected(const char* msg, const UChar* line) {
   }
 }
 
-void StyleParser::error(const char* msg, const UChar* line) {
+void StyleParser::error(const char* msg, const Char* line) {
   error(msg, "", 0, line);
 }
 
 void StyleParser::error(const char* msg1, const String& name,
-                      const char* msg2, const UChar* line) {
+                      const char* msg2, const Char* line) {
   perrhandler->parserError(UError::CSS_ERROR, text_buffer, msg1, name, msg2, line);
 }
 

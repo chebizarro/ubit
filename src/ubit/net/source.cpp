@@ -26,14 +26,14 @@ using namespace std;
 namespace ubit {
 
 
-USource::USource(int _source) : is_opened(false), source(_source) {
+Source::Source(int _source) : is_opened(false), source(_source) {
 # ifdef UBIT_WITH_GDK
   gid = 0;
 # endif 
   if (source > -1) open(_source);
 }
 
-USource::~USource() {
+Source::~Source() {
 # ifdef UBIT_WITH_GDK
   if (is_opened) gdk_input_remove(gid);
   gid = 0;
@@ -44,12 +44,12 @@ USource::~USource() {
 
 #if UBIT_WITH_GDK
 static void inputCB(gpointer input, gint source, GdkInputCondition) {
-  USource* i = (USource*)input;
+  Source* i = (Source*)input;
   i->fireInput();
 }
 # endif
 
-void USource::open(int _source) {
+void Source::open(int _source) {
   source = _source;
   is_opened = true;
   Element* sources = Application::impl.sources;
@@ -62,7 +62,7 @@ void USource::open(int _source) {
   if (i == sources->cend()) sources->add(this);
 }
 
-void USource::close() {
+void Source::close() {
 # if UBIT_WITH_GDK
   gdk_input_remove(gid);
   gid = 0;
@@ -73,38 +73,37 @@ void USource::close() {
   is_opened = false;
 }
 
-void USource::onAction(UCall& c) {
+void Source::onAction(UCall& c) {
   Child* l = new Child(&c);
   l->setCond(UOn::action);
   _addAttr(*l);
 }
 
-void USource::onClose(UCall& c) {
+void Source::onClose(UCall& c) {
   Child* l = new Child(&c);
   l->setCond(UOn::close);
   _addAttr(*l);
 }
 
-void USource::fireInput() {
+void Source::fireInput() {
   if (isDestructed()) return;  // securite
   Event e(UOn::action, this);  //UNodeEvent
   //e.setWhen(Application::getTime());
   fire(e);
 }
 
-void USource::fireClose() {
+void Source::fireClose() {
   if (isDestructed()) return;  // securite
   Event e(UOn::close, this);  //UNodeEvent
   //e.setWhen(Application::getTime());
   fire(e);
 }
 
-//==============================================================================
 
 void UAppliImpl::resetSources(Element* sources, fd_set& read_set, int& maxfd) {
   if (!sources) return;
   for (ChildIter c = sources->cbegin(); c != sources->cend(); ++c) {
-    USource* i = static_cast<USource*>(*c);
+    Source* i = static_cast<Source*>(*c);
     int fd = 0;
     if (i && ((fd = i->source) >= 0)) {
       FD_SET(fd, &read_set);
@@ -118,7 +117,7 @@ void UAppliImpl::cleanSources(Element* sources) {
   struct stat statbuf;
   for (ChildIter c = sources->cbegin(); c != sources->cend(); ) {
     int fd = 0;
-    USource* i = static_cast<USource*>(*c);
+    Source* i = static_cast<Source*>(*c);
     ++c;  // possible destruction => faire ++ avant
     if (!i) continue;
     if (!i->isOpened() || (fd=i->getSource())<=0 || fstat(fd, &statbuf) < 0) {
@@ -131,8 +130,8 @@ void UAppliImpl::cleanSources(Element* sources) {
 void UAppliImpl::fireSources(Element* sources, fd_set& read_set) {
   if (!sources) return;
   for (ChildIter c = sources->cbegin(); c != sources->cend(); ) {
-    USource* i = static_cast<USource*>(*c);
-    ++c;  // stop() peut detruire le USource => faire ++ avant
+    Source* i = static_cast<Source*>(*c);
+    ++c;  // stop() peut detruire le Source => faire ++ avant
     
     if (!i || i->isDestructed()) {
       // cas malheureux ou fireInput() a detruit celui d'apres

@@ -117,12 +117,12 @@ namespace ubit {
   
   /** Rounded border.
    */
-  class URoundBorder : public Border {
+  class RoundBorder : public Border {
   public:
-    UCLASS(URoundBorder)
+    UCLASS(RoundBorder)
 
-    URoundBorder(int decoration = NONE);
-    URoundBorder(int decoration, const Color& color, const Color& bgcolor,
+    RoundBorder(int decoration = NONE);
+    RoundBorder(int decoration, const Color& color, const Color& bgcolor,
                  float width, float height, float arc_w, float arc_h);
 
     float getArcWidth()  const {return arc_w;}

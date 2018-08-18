@@ -21,11 +21,11 @@
 
 namespace ubit {
 
-/** a USource object fires callbacks when a file or a socket gets data.
+/** a Source object fires callbacks when a file or a socket gets data.
 * Example:
 * <pre>
 *    int source = ...;
-*    unique_ptr<USource> i = new USource(source);
+*    unique_ptr<Source> i = new Source(source);
 *    i->onAction( ucall(x, y, printArgs) );
 *    i->onAction( ucall(obj, val, &Demo::doIt) );
 * </pre>
@@ -34,19 +34,19 @@ namespace ubit {
 *
 * See also: Socket (Ubit simple sockets).
 */
-class USource : public Node {    // !!!@@@ devrait deriver de UObject !!!
+class Source : public Node {    // !!!@@@ devrait deriver de UObject !!!
 public:
-  UCLASS(USource)
+  UCLASS(Source)
     
-  USource(int source =-1);
+  Source(int source =-1);
   ///< creates a new Source listener and start listening to this source if >= 0.
   
-  virtual ~USource();
+  virtual ~Source();
   
   virtual void onAction(UCall& callback);
   /**< adds a callback that is fired when data is received.
    * the argument is a ucall<> expression (see UCall) that is destroyed when the
-   * USource is destroyed (except if "referenced elsewhere"; see Node).
+   * Source is destroyed (except if "referenced elsewhere"; see Node).
    */
   
   virtual void onInput(UCall& callback) {onAction(callback);}
@@ -65,7 +65,7 @@ public:
   ///< returns the OS ID of the the source.
 
   bool isOpened() const {return is_opened;}
-  ///< returns true if the USource is opened.
+  ///< returns true if the Source is opened.
         
   // - - - impl - - -    
   

@@ -42,7 +42,6 @@ namespace ubit {
 #define UNSET_PIXEL ULONG_MAX
 enum {RGBA_COLOR = 1, NONE_COLOR = 8, INHERIT_COLOR = 9};
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 struct NamedColor {
   const char* colname;
@@ -64,7 +63,6 @@ private:
   
 static NamedColorMap* named_colors = null;
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void Rgba::setRgbaF(float r, float g, float b, float a) {
   comps[0] = (unsigned char) (r*255); 
@@ -80,7 +78,6 @@ return (comps[0]==r*255 && comps[1]==g*255
 }
  */
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 Color Color::none(NONE_COLOR, UCONST);
 Color Color::inherit(INHERIT_COLOR, UCONST);
@@ -101,7 +98,6 @@ Color Color::orange(255, 165, 0, 255, UCONST);
 Color Color::wheat(245, 222, 179, 255, UCONST);
 Color Color::teal(95, 158, 160, 255, UCONST);
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #ifndef WITH_2D_GRAPHICS
 # define unsetPixels() 
 #endif
@@ -163,7 +159,6 @@ Color::Color(unsigned char special, UConst m)
 
 Color::~Color() {}
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  
 Color& Color::operator=(const Color& c) {
   if (checkConst()) return *this;
@@ -232,7 +227,6 @@ void Color::putProp(UpdateContext* props, Element&) {
   props->color = this;
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if WITH_2D_GRAPHICS
 
 void Color::unsetPixels() {
@@ -256,7 +250,6 @@ unsigned long Color::getPixel(Display* d) const {
 }
 
 #endif
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 bool Color::parseColor(const char* name, Rgba& c) {
   if (!name || !*name) {
@@ -315,7 +308,6 @@ bool Color::parseColor(const char* name, Rgba& c) {
   return false;
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 const NamedColor* NamedColorMap::find(const char* cname) const {
   if (!cname || !*cname) return null;
@@ -340,7 +332,6 @@ void Color::addNamedColor(const char* name, const Rgba& c) {
   named_colors->add(*nc);
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 NamedColorMap::NamedColorMap() {
   static NamedColor tab[] = {

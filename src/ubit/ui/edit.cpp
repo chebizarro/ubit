@@ -124,7 +124,6 @@ void TextEdit::update() {
   if (caret_str) caret_str->updateAutoParents(Update::layoutAndPaint);
 }
 
-/* ==================================================== [Elc:] ======= */
 /*
 static void scroll(View* view, int dir) {
   Scrollpane* spane = null;
@@ -196,7 +195,6 @@ TextEdit& TextEdit::setCaretPos(long pos, Element& par) {
   return *this;
 }
 
-/* ==================================================== [Elc:] ======= */
 
 String* TextEdit::getCaretStr(int& pos) const {
   pos = caret_pos;
@@ -310,7 +308,6 @@ String* TextEdit::getNextStr(String* from, Element& par) {
   return _getNextStr(from, from_found, par);
 }
 
-/* ==================================================== [Elc:] ======= */
 // devrait etre ailleurs car fct generique
 
 String* TextEdit::getParagraphFirstStr(String* from, int& pos, Element& par) {
@@ -383,7 +380,6 @@ String* TextEdit::getParagraphLastStr(String* from, int& pos, Element& par) {
   }
 }
 
-/* ==================================================== [Elc:] ======= */
 
 void TextEdit::deletePreviousChar(Element& par, View* view) {
   if (!caret_str) return;
@@ -491,7 +487,6 @@ bool TextEdit::nextChar(Element& par, View* view) {
   return stat;
 }
 
-/* ==================================================== [Elc:] ======= */
 
 void TextEdit::previousLine(Element& par, View* view) {
   FlowView* fview = view->toFlowView();
@@ -572,7 +567,6 @@ void TextEdit::endOfParagraph(Element* par) {
   if (s) setCaretStr(s, pos, true, view);
 }
 */
-/* ==================================================== [Elc:] ======= */
 
 float TextEdit::getXpos(UpdateContext& ctx, const Rectangle& r, int offset, int cellen) const {
   float xpos = r.x;

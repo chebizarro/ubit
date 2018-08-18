@@ -48,7 +48,6 @@ Symbol Symbol::radio(S_RADIO, UCONST);
 Symbol Symbol::square(S_SQUARE, UCONST);
 Symbol Symbol::circle(S_CIRCLE, UCONST);
 
-/* ==================================================== [Elc] ======= */
 
 Symbol::Symbol(const Symbol &o) : Data() {
   ix = o.ix;

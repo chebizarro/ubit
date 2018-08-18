@@ -104,7 +104,6 @@ void UFinderDir::emph(bool state) {
   //else font.set(Font::plain);
 }
 
-/* ==================================================== [Elc] ======= */
 // HISTORY
 
 UFinderDir* Finder::findDir(const String& name) {
@@ -152,7 +151,6 @@ void Finder::showDirInfo(UFinderDir* de) {
 //  if (de->iconbox) de->iconbox->iconify(!de->iconbox->isIconified());
 //}
 
-/* ==================================================== [Elc] ======= */
 
 void Finder::showFile(const String& pathname, Document* doc) {
   pdocbox->scrollpane().setScroll(0,0);
@@ -233,7 +231,6 @@ int Finder::openFile(const String& pathname, int path_type) {
   return fact.getStatus();
 }
 
-/* ==================================================== [Elc] ======= */
 
 int Finder::openDir(const String& pathname, int path_type) {
   int stat = false;
@@ -346,7 +343,6 @@ int Finder::openDir(UFinderDir* de) {
   return stat;
 }
 
-/* ==================================================== [Elc] ======= */
 
 Icon* Finder::getSelectedIcon() {
   return piconbox ? piconbox->getSelectedIcon() : null;
@@ -425,7 +421,6 @@ void Finder::openEntry() {
   }
 }
 
-/* ==================================================== [Elc] ======= */
 // Callbacks
 
 void Finder::iconActionCB(IconBox* ibox) {
@@ -516,19 +511,19 @@ void UFinderCom::loadDoc(UFinderCom* d) {        // A REVOIR!!!!!!!!!
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   
-  if (d->type == UFileInfo::SSH) {
+  if (d->type == FileInfo::SSH) {
     String server, spath;
-    d->mode = UFileMode::FILE;
-    if (d->path[-1]=='/') d->mode = UFileMode::DIR;
+    d->mode = FileMode::FILE;
+    if (d->path[-1]=='/') d->mode = FileMode::DIR;
 
     // makeCachePath enleve le / final
-    if (!UFileCache::getCachePath(d->path, UFileInfo::SSH,
+    if (!UFileCache::getCachePath(d->path, FileInfo::SSH,
                                   server, spath, d->cachepath)) {
       d->stat = INVALID_URL;
       goto END_THREAD;
     }
     
-    if (d->mode == UFileInfo::DIR)
+    if (d->mode == FileInfo::DIR)
       com = "ssh '" & server & "' ls -F " & spath 
         & " > \"" & d->cachepath & "\"; echo $?";
     else
@@ -538,9 +533,9 @@ void UFinderCom::loadDoc(UFinderCom* d) {        // A REVOIR!!!!!!!!!
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
-  else if (d->type == UFileInfo::HTTP) {
+  else if (d->type == FileInfo::HTTP) {
     String server, spath;
-    if (!UFileCache::getCachePath(d->path, UFileInfo::HTTP,
+    if (!UFileCache::getCachePath(d->path, FileInfo::HTTP,
                                   server, spath, d->cachepath)) {
       d->stat = INVALID_URL;
       goto END_THREAD;
@@ -553,9 +548,9 @@ void UFinderCom::loadDoc(UFinderCom* d) {        // A REVOIR!!!!!!!!!
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
-  else if (d->type == UFileInfo::FTP) {
+  else if (d->type == FileInfo::FTP) {
     String server, spath;
-    if (!UFileCache::getCachePath(d->path, UFileInfo::FTP,
+    if (!UFileCache::getCachePath(d->path, FileInfo::FTP,
                                   server, spath, d->cachepath)) {
       d->stat = INVALID_URL;
       goto END_THREAD;
@@ -600,32 +595,32 @@ void UFinderCom::showDoc() {
     return;
   }
   
-  UFileMode fm(cachepath);
+  FileMode fm(cachepath);
 
   if (!fm.isValid()) fd->showAlert("Can't find: " & path);
-  else if (type == UFileInfo::SSH) fd->openImpl(path, mode, UFileInfo::SSH);
+  else if (type == FileInfo::SSH) fd->openImpl(path, mode, FileInfo::SSH);
 
-  else if (type == UFileInfo::HTTP) {
+  else if (type == FileInfo::HTTP) {
     if (fm.isFile()) {
-      fd->openImpl(cachepath, UFileInfo::FILE, UFileInfo::HTTP);
+      fd->openImpl(cachepath, FileInfo::FILE, FileInfo::HTTP);
     }
     else if (fm.isDir()) {
       cachepath &= "index.htm";   // faudrait gerer les majuscules !
-      UFileMode fm2(cachepath);
+      FileMode fm2(cachepath);
 
       if (fm2.isValid())
-        fd->openImpl(cachepath, UFileInfo::FILE, UFileInfo::HTTP);
+        fd->openImpl(cachepath, FileInfo::FILE, FileInfo::HTTP);
       else {
         cachepath &= "l";  // index.html
-        UFileMode fm3(cachepath);
+        FileMode fm3(cachepath);
         if (fm3.isValid())
-          fd->openImpl(cachepath, UFileInfo::FILE, UFileInfo::HTTP);
+          fd->openImpl(cachepath, FileInfo::FILE, FileInfo::HTTP);
       }
     }
   }
 
-  else if (type == UFileInfo::FTP)
-    fd->openImpl(cachepath, UFileInfo::FILE, UFileInfo::FTP);
+  else if (type == FileInfo::FTP)
+    fd->openImpl(cachepath, FileInfo::FILE, FileInfo::FTP);
   else
     fd->showAlert("Unknown protocol: " & path);
 
@@ -634,18 +629,17 @@ void UFinderCom::showDoc() {
 
 #endif
 
-/* ==================================================== [Elc] ======= */
 
-void UFinderHost::putFile() {
+void FinderHost::putFile() {
   Icon* icon = fd.getSelectedIcon();
   if (!icon) {
     fd.showAlert("PutFile: no file selected (select an icon!)");
     return;
   }
-  resolve(&UFinderHost::putFileImpl);
+  resolve(&FinderHost::putFileImpl);
 }
 
-void UFinderHost::putFileImpl() {
+void FinderHost::putFileImpl() {
   Icon* icon = fd.getSelectedIcon();
   if (!icon) {
     fd.showAlert("PutFile: no file selected (select an icon!)"); // !!!ET SIL A CHANGE?
@@ -729,9 +723,9 @@ void Finder::browseCB(MessageEvent& e) {
   MessageService::BrowseReply r(e);
   if (r.serviceName.empty()) return;
  
-  UFinderHost* found = null;
+  FinderHost* found = null;
   for (ChildIter i = hostlist.cbegin(); i != hostlist.cend(); i++) {
-    UFinderHost* host = dynamic_cast<UFinderHost*>(*i);
+    FinderHost* host = dynamic_cast<FinderHost*>(*i);
     if (host) {
       if (host->hostname == r.serviceName) {
         found = host;
@@ -746,18 +740,18 @@ void Finder::browseCB(MessageEvent& e) {
     addHost(r.serviceName);
 }
 
-UFinderHost* Finder::addHost(const String& hostname) {
-  UFinderHost* host = new UFinderHost(this, hostname);
+FinderHost* Finder::addHost(const String& hostname) {
+  FinderHost* host = new FinderHost(this, hostname);
   hostlist.add(host);
   return host;
 }
 
-UFinderHost* Finder::addHostCB(const String* hostname) {
+FinderHost* Finder::addHostCB(const String* hostname) {
   if (!hostname || hostname->empty()) return null;
   else return addHost(*hostname);
 }
 
-void Finder::removeHost(UFinderHost* host) {
+void Finder::removeHost(FinderHost* host) {
   if (host) hostlist.remove(*host);
 }
 
@@ -772,21 +766,21 @@ void Finder::addHosts(char const* hostnames[]) {
 
 /* ==================================================== (c)[Elc] ======= */
 
-UFinderHost::UFinderHost(class Finder* _fd, const String& _hostname)
+FinderHost::FinderHost(class Finder* _fd, const String& _hostname)
 : fd(*_fd), hostname(_hostname), clone_win(null) //, remote_ums(null) 
 {
   clone_btn = 
   &ucheckbox(//Background::none
              "Clone"
-             + UOn::select / ucall(this, &UFinderHost::createClone)
-             + UOn::deselect / ucall(this, &UFinderHost::deleteClone)
+             + UOn::select / ucall(this, &FinderHost::createClone)
+             + UOn::deselect / ucall(this, &FinderHost::deleteClone)
              );
 
   xhost_btn = 
   &ucheckbox(//Background::none
              + "Xhost"
-             + UOn::select / ucall(this, &UFinderHost::addXhost)
-             + UOn::deselect / ucall(this, &UFinderHost::removeXhost)
+             + UOn::select / ucall(this, &FinderHost::addXhost)
+             + UOn::deselect / ucall(this, &FinderHost::removeXhost)
              );
 
   put_btn = null;
@@ -796,9 +790,9 @@ UFinderHost::UFinderHost(class Finder* _fd, const String& _hostname)
   funcbox.show(false);
 
   if (hostname == "localhost")
-    ;//box.add(ulinkbutton("Calibrate" + ucall(this, &UFinderHost::calibrate)));
+    ;//box.add(ulinkbutton("Calibrate" + ucall(this, &FinderHost::calibrate)));
   else {
-    put_btn = new LinkButton("-- Put"+ ucall(this, &UFinderHost::putFile));
+    put_btn = new LinkButton("-- Put"+ ucall(this, &FinderHost::putFile));
     funcbox.add(*put_btn /* + get_btn */);  // to be completed...
   }
   
@@ -811,7 +805,7 @@ UFinderHost::UFinderHost(class Finder* _fd, const String& _hostname)
      + UOn::select / ushow(funcbox, true)
      + UOn::deselect / ushow(funcbox, false)
      // essayer de se reconnecter si !isBrowsing()
-     //+ UOn::select / ucall(this, (HostMethod)0, &UFinderHost::resolve)
+     //+ UOn::select / ucall(this, (HostMethod)0, &FinderHost::resolve)
      );
   
   add(name_box + funcbox);
@@ -819,7 +813,7 @@ UFinderHost::UFinderHost(class Finder* _fd, const String& _hostname)
 
 /* ==================================================== (c)[Elc] ======= */
 
-void UFinderHost::resolve(HostMethod m) {
+void FinderHost::resolve(HostMethod m) {
   if (!fd.isBrowsing()) fd.browseHosts();     // tenter une reconnection
 
   if (!fd.isBrowsing()) {
@@ -835,11 +829,11 @@ void UFinderHost::resolve(HostMethod m) {
     if (m) (this->*m)();
   }
   else {           // NB: le ucall est detruit automatiquement
-    fd.local_ums->resolveUMServer(hostname, ucall(this,m,&UFinderHost::resolveCB));
+    fd.local_ums->resolveUMServer(hostname, ucall(this,m,&FinderHost::resolveCB));
   }
 }
 
-void UFinderHost::resolveCB(MessageEvent& e, HostMethod m) {
+void FinderHost::resolveCB(MessageEvent& e, HostMethod m) {
   MessageService::ResolveReply r(e);
   address = r.hosttarget;
   if (m) (this->*m)();
@@ -847,20 +841,20 @@ void UFinderHost::resolveCB(MessageEvent& e, HostMethod m) {
 
 /* ==================================================== (c)[Elc] ======= */
 
-void UFinderHost::calibrate() {
-  resolve(&UFinderHost::calibrateImpl);
+void FinderHost::calibrate() {
+  resolve(&FinderHost::calibrateImpl);
 }
 
-void UFinderHost::calibrateImpl() {
+void FinderHost::calibrateImpl() {
   if (fd.local_ums) fd.local_ums->sendRequest(UMSrequest::CALIBRATE);
 }
 
 
-void UFinderHost::addXhost() {
-  resolve(&UFinderHost::addXhostImpl);
+void FinderHost::addXhost() {
+  resolve(&FinderHost::addXhostImpl);
 }
 
-void UFinderHost::addXhostImpl() {
+void FinderHost::addXhostImpl() {
   if (address.empty()) {
     fd.showAlert("can't xhost + display: " & hostname & " address is unknown");
     return;
@@ -869,7 +863,7 @@ void UFinderHost::addXhostImpl() {
   system(com.c_str());
 }
 
-void UFinderHost::removeXhost() {
+void FinderHost::removeXhost() {
   if (address.empty()) {
     fd.showAlert("can't xhost - display: " & hostname & " address is unknown");
     return;
@@ -880,15 +874,15 @@ void UFinderHost::removeXhost() {
 
 
 void Finder::createClone(const String& hostname) {
-  UFinderHost* host = addHost(hostname);
+  FinderHost* host = addHost(hostname);
   host->createClone();
 }
 
-void UFinderHost::createClone() {
-  resolve(&UFinderHost::createCloneImpl);
+void FinderHost::createClone() {
+  resolve(&FinderHost::createCloneImpl);
 }
 
-void UFinderHost::createCloneImpl() {
+void FinderHost::createCloneImpl() {
   if (address.empty()) {
     fd.showAlert("can't open display: " & hostname & " address is unknown");
     return;
@@ -907,7 +901,7 @@ void UFinderHost::createCloneImpl() {
   clone_win->show();
 }
 
-void UFinderHost::deleteClone() {
+void FinderHost::deleteClone() {
   //host->select(false);
   if (clone_win) clone_win->show(false);
   delete clone_win;   // faudrait aussi fermer le display!
@@ -922,12 +916,12 @@ void Finder::createCloneRequest(MessageEvent& e) {
   *ask_dialog_msg = "Open Clone on " & *hostname & " ?";
   int resp = ask_dialog->showModal();
   if (resp > 0) {
-    UFinderHost* h = addHost(*hostname);
+    FinderHost* h = addHost(*hostname);
     h->createClone();
   }
 }
 
-UFrame* Finder::createCloneFrame(const String& title) {
+Frame* Finder::createCloneFrame(const String& title) {
   return &uframe(opts.clone_frame_size + this).setTitle(title);
 }
 

@@ -28,8 +28,7 @@
 
 namespace ubit {
     
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  /** 2D Point.
+    /** 2D Point.
    */
   class Point {
   public:
@@ -58,8 +57,7 @@ namespace ubit {
   ///< reads the point from an input stream (eg: cin >> point).  
   
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  /** 2D Dimension.
+    /** 2D Dimension.
    */
   class Dimension {
   public:
@@ -120,8 +118,7 @@ namespace ubit {
     virtual void fill(const Graph&) const = 0;
   };
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  /** 2D Line.
+    /** 2D Line.
    */
   class Line : public Shape {
   public:
@@ -167,8 +164,7 @@ namespace ubit {
     virtual void fill(const Graph&) const {};
   };
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  /** 2D Rectangle.
+    /** 2D Rectangle.
    */
   class Rectangle : public Shape {
   public:
@@ -218,8 +214,7 @@ namespace ubit {
     virtual void fill(const Graph&) const;
   };
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  /** 2D Ellipse.
+    /** 2D Ellipse.
    */
   class Ellipse : public Shape {
   public:
@@ -248,8 +243,7 @@ namespace ubit {
     virtual void fill(const Graph&) const;
   };
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  /** 2D Polygon or Polyline.
+    /** 2D Polygon or Polyline.
    */
   class Polygon : public Shape {
   public:

@@ -117,7 +117,6 @@ void AttributeList::putProp(UpdateContext *props, Element& par) {
   }
 }
 
-/* ==================================================== [Elc] ======= */
 
 UTip::UTip(const char* label) {set(label);}
 UTip::UTip(const Args& a) {set(a);}

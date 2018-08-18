@@ -111,7 +111,6 @@ static void sendShortMessage(UDispX11* nd, UHardwinX11* nw, const char* message)
   XFlush(nd->getSysDisp());
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  
 static void sendLongMessage(UDispX11* nd, UHardwinX11* nw,
                             const char* message, int message_len) {
@@ -132,7 +131,6 @@ static void sendLongMessage(UDispX11* nd, UHardwinX11* nw,
   // a revoir: le cas ou les XChangeProperty sont trop proches et s'accumulent
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void Message::send(UHardwinImpl& nw, const char* message) {
   if (!message) return;

@@ -58,7 +58,6 @@ unsigned short XmlGrammars::getCharEntityRef(const String& entity_name) const {
   return 0;
 }
 
-/* ==================================================== [Elc] ======= */
 
 XmlGrammar::XmlGrammar() {
   // create ISO Character entity references

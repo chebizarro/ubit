@@ -52,7 +52,6 @@ namespace ubit {
 // ! checks that the current context is the default context of the display !
 #define MAKE_CURRENT if (disp->current_glcontext != this) makeCurrent()
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if UBIT_WITH_X11
 
 GLContext::GLContext(Display* d, GLContext* sharelists) :
@@ -94,7 +93,6 @@ bool GLContext::isSharedWith(const RenderContext* c) const {
   return glc && glc->glxcontext == glxcontext; // !!! A COMPLETER : FAUT VERIFIER SHAREDLISTS !!!
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 #elif UBIT_WITH_GLUT
 
@@ -133,7 +131,6 @@ bool GLContext::isSharedWith(const RenderContext* c) const {
 }
 
 #endif
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void GLContext::setDest(UHardwinImpl* d, double x, double y) {
   dest = d;
@@ -181,7 +178,6 @@ void GLContext::setXORMode(Graph& g, const Color& bg) {
   glColor4ubv(g.bgcolor_rgba.comps);
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void GLContext::setColor(Graph& g, const Color& c) {
   MAKE_CURRENT;
@@ -196,20 +192,17 @@ void GLContext::setColor(Graph& g, const Color& c) {
   glColor4ubv(g.color_rgba.comps);
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void GLContext::setBackground(Graph& g, const Color& c) {
   //MAKE_CURRENT;
   g.bgcolor_rgba = c.getRgba();
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void GLContext::setFont(Graph& g, const FontDescription& fd) {
   //MAKE_CURRENT;
 } 
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void GLContext::setWidth(Graph& g, double w) { 
   MAKE_CURRENT;
@@ -219,7 +212,6 @@ void GLContext::setWidth(Graph& g, double w) {
   glLineWidth(w);
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void GLContext::copyArea(double x, double y, double w, double h, double delta_x, double delta_y,
                            bool generate_refresh_events_when_obscured) const 
@@ -228,7 +220,6 @@ void GLContext::copyArea(double x, double y, double w, double h, double delta_x,
   Application::error("Graph::copyArea","This function is not available when OpenGL is used");
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void GLContext::setClip(double x, double y, double width, double height) {
   MAKE_CURRENT;
@@ -260,7 +251,6 @@ void GLContext::setClip(double x, double y, double width, double height) {
   glEnable(GL_CLIP_PLANE3);
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void GLContext::drawArc(double x, double y, double w, double h, 
                          double start, double ext, bool filled) const {
@@ -305,7 +295,6 @@ void GLContext::drawArc(double x, double y, double w, double h,
   }
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void GLContext::drawLine(double x1, double y1, double x2, double y2) const {
   MAKE_CURRENT;
@@ -315,7 +304,6 @@ void GLContext::drawLine(double x1, double y1, double x2, double y2) const {
   glEnd();
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void GLContext::drawRect(double x, double y, double w, double h, bool filled) const {
   MAKE_CURRENT;
@@ -336,7 +324,6 @@ void GLContext::drawRect(double x, double y, double w, double h, bool filled) co
   }
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 #define RECT_ARC(center_x, center_y, aww, ahh, from, to, incr) { \
   for (double a = (from); a >= (to); a -= (incr))  \
@@ -405,7 +392,6 @@ void GLContext::drawRoundRect(double x, double y, double w, double h,
 }
 
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void GLContext::drawString(const UHardFont* nf, const char* str, int str_len, 
                              double x, double y) const {
@@ -423,7 +409,6 @@ void GLContext::drawString(const UHardFont* nf, const char* str, int str_len,
   nf->drawString(str+charpos_begin, charpos_end - charpos_begin+1, xpos_begin, cy-y);  
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // type is one of LINE_STRIP (polyline), LINE_LOOP (polygon), FILLED (filled polygon).
 
 void GLContext::drawPolygon(const float* coords2d, int card, int polytype) const {
@@ -452,7 +437,6 @@ void GLContext::drawPolygon(const std::vector<Point>& points, int polytype) cons
   glEnd();  
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void GLContext::drawIma(const Graph& g, const Image& ima, double x, double y, double scale) const {
   // une seule natima dans ce cas: la premiere

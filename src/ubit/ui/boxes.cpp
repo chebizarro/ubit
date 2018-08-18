@@ -272,9 +272,9 @@ void UCardbox::setSelectedIndex(int index) {
  return *this;
  }
  */
-// NB: ex: class UDocbox : public UVbox 
+// NB: ex: class DocumentBox : public UVbox 
 
-UDocbox::UDocbox(Args args) {
+DocumentBox::DocumentBox(Args args) {
   zoom_quantum = 1.166;
   
   ptitlebar = uhbox();
@@ -289,29 +289,29 @@ UDocbox::UDocbox(Args args) {
   add(uhflex() + utop() + *ptitlebar + uvflex() + *pspane);
 }
 
-UDocbox::~UDocbox() {}
+DocumentBox::~DocumentBox() {}
 
-void UDocbox::zoom(float z) {
+void DocumentBox::zoom(float z) {
   *pscale = z;
 }
 
-void UDocbox::zoomIn() {
+void DocumentBox::zoomIn() {
   pscale->mult(zoom_quantum);
 }
 
-void UDocbox::zoomOut() {
+void DocumentBox::zoomOut() {
   pscale->div(zoom_quantum);
 }
 
-void UDocbox::setZoomQuantum(float zq) {
+void DocumentBox::setZoomQuantum(float zq) {
   zoom_quantum = zq;
 }
 
-bool UDocbox::isIconified() const {
+bool DocumentBox::isIconified() const {
   return pspane->isShown();
 }
 
-void UDocbox::iconify(bool state) {
+void DocumentBox::iconify(bool state) {
   pspane->show(!state);
   //piconify_btn->select(state);
 }

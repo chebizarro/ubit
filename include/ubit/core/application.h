@@ -69,13 +69,13 @@ namespace ubit {
    * in ubit/ums). Finally, Event flows can be uniquely identified in callback 
    * functions through the getFlow() method of their Event& argument.
    *
-   * Classes Timer and USource make it possible to fire callback functions after
+   * Classes Timer and Source make it possible to fire callback functions after
    * a given timeout or when the application receives data on a file source
    * (such as a socket). Application::onTimeout() and Application::postpone() provide a 
    * simplified API for using timers. postpone() is used to fire CPU intensive 
    * methods when the event loop becomes idle.
    * 
-   * Classes Socket and UServerSocket provide a simple mechanism to handle 
+   * Classes Socket and ServerSocket provide a simple mechanism to handle 
    * sockets. The are based on simple communication protocol that can be
    * implemented in non Ubit programs. In addition, asynchronous messages
    * can be exchanged between Ubit applications and the UMS server through the
@@ -155,9 +155,9 @@ namespace ubit {
     
     
     static void add(Window&);
-    /**< adds a window (UFrame, Dialog, etc) to the Application.
+    /**< adds a window (Frame, Dialog, etc) to the Application.
      * Note that:
-     * - the first UFrame that is shown or added to the Application is said to be the
+     * - the first Frame that is shown or added to the Application is said to be the
      *   "Main Frame" of the application. It will be returned by Application::getMainFrame()
      *
      * - windows are initially hidden, their show() method must be called to make 
@@ -167,7 +167,7 @@ namespace ubit {
      * - the size of windows is computed when their show() method is called for the
      *   first time. It won't change afterwards excepts if Window::adjustSize() is called.
      *
-     * @see also: Window:show(), Window:update() and Window, UFrame and Dialog classes.
+     * @see also: Window:show(), Window:update() and Window, Frame and Dialog classes.
      */ 
     
     static void add(Window*);
@@ -196,9 +196,9 @@ namespace ubit {
      * Application::start() will return the 'status' value
      */
     
-    static UFrame* getMainFrame();
+    static Frame* getMainFrame();
     /**< returns the Main Frame (if any, null otherwise).
-     * the main frame is the first UFrame that was added to the Application by add().
+     * the main frame is the first Frame that was added to the Application by add().
      */
     
     static const String& getName();
@@ -316,7 +316,7 @@ namespace ubit {
     
     static Display* openDisp(const String& display_name);
     /**< opens a connection on another X display.
-     * returns null if the connection failed. Otherwise, windows (UFrame,
+     * returns null if the connection failed. Otherwise, windows (Frame,
      * Dialog...) can be added to the returned Display by using its add()
      * method. 
      * - 'display' is the name of the X Window server. It follows the syntax:
@@ -446,9 +446,9 @@ namespace ubit {
                        const char* format, ...) const;
     ///< raises an error; shortcut for raiseError(UError::ERROR, ...).
     
-    virtual void parserError(int errnum, const UChar* text_buffer,
+    virtual void parserError(int errnum, const Char* text_buffer,
                                   const char* msg_start, const String& name,
-                                  const char* msg_end, const UChar* line) const;
+                                  const char* msg_end, const Char* line) const;
     ///< used by XML and Style parsers to raise a formatted error.
     
     virtual void raiseError(int errnum, const Object*, const char* funcname, 

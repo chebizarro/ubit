@@ -43,7 +43,7 @@ void XmlParser::skipSpaces() {
 bool XmlParser::readName(String& name) {
   if (!isalpha(*p) && *p!='_' && *p!=':') return false; // 1st char must be in (alpha _ :)
   
-  const UChar* begin = p;
+  const Char* begin = p;
   p++;
 
   while (isalnum(*p) || *p == '-' || *p == '_' || *p == ':'|| *p == '.') p++;
@@ -57,10 +57,10 @@ bool XmlParser::readName(String& name) {
 // starts on starting " or '
 // ends on ending " or ' or the first control character
 
-bool XmlParser::readQuotedValue(String& value, UChar quoting_char) {
+bool XmlParser::readQuotedValue(String& value, Char quoting_char) {
   if (*p != quoting_char) return false;
   
-  const UChar* begin = p;
+  const Char* begin = p;
   p++;
 
   while (*p /*&& !iscntrl(*p)*/ && *p != quoting_char) p++;
@@ -74,7 +74,7 @@ bool XmlParser::readQuotedValue(String& value, UChar quoting_char) {
 bool XmlParser::readUnquotedValue(String& value) {
   if (iscntrl(*p)) return false; 
 
-  const UChar* begin = p;
+  const Char* begin = p;
 
   while (*p /*&& !iscntrl(*p)*/ && *p != ' ' && *p != '\n' 
 	 && *p != '\r' && *p != '\t' && *p != '>') p++;
@@ -84,11 +84,10 @@ bool XmlParser::readUnquotedValue(String& value) {
   return true;
 }
 
-  // ======================================================== [Elc] ===========
-// starts on the 1st char of the name
+  // starts on the 1st char of the name
 
 bool XmlParser::readNameValuePair(String& name, String& value) {
-  const UChar* begin = p;
+  const Char* begin = p;
 
   if (!readName(name)) {
     error("invalid attribute name", begin);
@@ -136,13 +135,12 @@ bool XmlParser::readNameValuePair(String& name, String& value) {
   }
 }
 
-// ======================================================== [Elc] ===========
 // starts on the 1st char of the name
 // ends on the >
 
   Element* XmlParser::readElementStartTag(String& name, int& stat) {
   stat = false;
-  const UChar* begin = p;
+  const Char* begin = p;
 
   if (!readName(name)) {
     error("invalid element name", begin-1);
@@ -199,12 +197,11 @@ bool XmlParser::readNameValuePair(String& name, String& value) {
   }
 }
 
-  // ======================================================== [Elc] ===========
-// starts on the 1st char of the name
+  // starts on the 1st char of the name
 // ends on the >
 
 int XmlParser::readElementEndTag(const String& elem_name) {
-  const UChar* begin = p;
+  const Char* begin = p;
   String ending_name;
   
   if (!readName(ending_name)) {
@@ -229,8 +226,7 @@ int XmlParser::readElementEndTag(const String& elem_name) {
   }
 }
 
-  // ======================================================== [Elc] ===========
-// starts on <
+  // starts on <
 // ends on the final >
 
 void XmlParser::readElement(Element* parent) {
@@ -238,7 +234,7 @@ void XmlParser::readElement(Element* parent) {
     error("element should start with a < sign", p);
     throw ParseError();
   }
-  const UChar* begin = p;
+  const Char* begin = p;
   p++;
 
   if (*p == '!') {
@@ -297,8 +293,7 @@ void XmlParser::readElement(Element* parent) {
   }
 }
 
-  // ======================================================== [Elc] ===========
-
+  
 static const char* findEndTag(const char* p, const String& end) {
   const char c = end[0];
   int l = end.length();
@@ -314,7 +309,7 @@ static const char* findEndTag(const char* p, const String& end) {
 
 // starts on text beginning, ends on following <
 void XmlParser::readText(Element* parent) {
-  const UChar* begin = p;
+  const Char* begin = p;
   String text;
 
   // <script> and <style> tags: no parsing 'till the corresponding
@@ -370,7 +365,7 @@ void XmlParser::readText(Element* parent) {
       
       if (*p == '&') {
         begin = p;
-        UChar charval = readCharEntityReference();
+        Char charval = readCharEntityReference();
         
         if (charval != 0) text.append(charval);
         // inserer la sequence telle quelle en cas d'erreur
@@ -402,13 +397,13 @@ void XmlParser::readText(Element* parent) {
 }
   
   
-  UChar XmlParser::readCharEntityReference() {
+  Char XmlParser::readCharEntityReference() {
   if (*p != '&') {
     error("character entity reference should start with an &", p);
     throw ParseError();
   }
 
-  const UChar* begin = p;
+  const Char* begin = p;
   p++;
 
   if (*p=='#') {    // numrical entity
@@ -443,19 +438,18 @@ void XmlParser::readText(Element* parent) {
     return val.intValue();
   }
   else {
-    UChar val = doc->grammars->getCharEntityRef(code);
+    Char val = doc->grammars->getCharEntityRef(code);
     if (val == 0) error("unknown character entity reference: ", code, "", begin);
     return val;
   }
 }
 
-  // ======================================================== [Elc] ===========
-// XML declaration:  <?xml version="1.0" encoding="iso-8859-1"?>
+  // XML declaration:  <?xml version="1.0" encoding="iso-8859-1"?>
 // starts on '?'
 // ends on '>'
 
 bool XmlParser::readXMLDeclaration() {
-  const UChar* begin = p;
+  const Char* begin = p;
   p++;
 
   String name;
@@ -520,7 +514,7 @@ void XmlParser::readXMLInstruction(Element* parent) {
   //  throw ParseError();
   //}
 
-  const UChar* begin = p;
+  const Char* begin = p;
   p++;
 
   String name;
@@ -571,13 +565,13 @@ void XmlParser::readSGMLData(Element* parent) {
     throw ParseError();
   }
 
-  const UChar* begin = p;
+  const Char* begin = p;
   p++;     // skip the !
   
   if (*p=='-' && *(p+1)=='-') {     // <-- comment
     p += 2;     // skip --
     
-    const UChar* final = strstr(p, "-->");   // --> is the end the comment
+    const Char* final = strstr(p, "-->");   // --> is the end the comment
     if (!final) {
       error("Unterminated comment", begin-1);
       throw ParseError();
@@ -597,7 +591,7 @@ void XmlParser::readSGMLData(Element* parent) {
       throw ParseError();
     }
     
-    const UChar* final = strchr(p, '>');
+    const Char* final = strchr(p, '>');
     if (!final) {
       error("Unterminated element ", name,"", begin-1);
       throw ParseError();
@@ -626,18 +620,17 @@ void XmlParser::readSGMLData(Element* parent) {
   }
 }
 
-// ======================================================== [Elc] ===========
 
-void XmlParser::error(const char* msg, const UChar* line) {
+void XmlParser::error(const char* msg, const Char* line) {
   error(msg, "", 0, line);
 }
 
 void XmlParser::error(const char* msg1, const String& name,
-                       const char* msg2, const UChar* line) {
+                       const char* msg2, const Char* line) {
   perrhandler->parserError(UError::XML_ERROR, text_buffer, msg1, name, msg2, line);
 }
 
-void XmlParser::unexpected(const char* msg, const UChar* line) {
+void XmlParser::unexpected(const char* msg, const Char* line) {
   if (!*p) {
     error("premature end of file ", "", msg, line);
   }
@@ -656,7 +649,6 @@ void XmlParser::unexpected(const char* msg, const UChar* line) {
   }
 }
 
-/* ==================================================== [Elc] ======= */
  // NB: pour un "vrai" parsing XML il faut : permissive(false), 
 
 XmlParser::XmlParser() :
@@ -713,7 +705,7 @@ XmlDocument* XmlParser::parse(const String& _name, const String& _buffer) {
     }
 
     while (*p) {
-      const UChar* begin = p;
+      const Char* begin = p;
       skipSpaces();
 
       if (*p == '<') {

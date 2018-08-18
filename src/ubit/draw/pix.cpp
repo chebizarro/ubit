@@ -155,7 +155,6 @@ UHardPix* UPix::getOrCreatePix(Display* d, float scale) const {
 }
 
 #endif
-/* ==================================================== [Elc] ======= */
 // a wrapping for using some of the great FVWM pixmaps in the Ubit toolkit
 // - these icons were originally designed by Ludvig A. Norin
 // - other icons are in file uufvwmpix.cc

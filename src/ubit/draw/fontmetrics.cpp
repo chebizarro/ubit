@@ -117,26 +117,6 @@ float FontMetrics::getHeight() const {
   return f->getHeight();
 }
 
-// - - - - - - - - - - - - - - -
-/*
- bool FontMetrics::getCharDefaultSize(const Font& font, int& w, int& h) const{
- FontDescription fd(font);
- return getCharDefaultSize(fd, w, h);
- }
- 
- bool Graph::getCharDefaultSize(const FontDescription& font, int& w, int& h) const {
- if (!wg) return false;
- USysFont f = wg->disp->natdisp->getFont(font);
- if (!f) {
- w = h = 0;
- return false;
- }
- w = CharDefaultWidth(f);
- h = f->ascent + f->descent;
- return true;
- }
- */
-/* ==================================================== [Elc] ======= */
 
 int FontMetrics::getCharPos(const char* s, int len, float x) const {
   UHardFont* f = disp->getFont(fd);
@@ -161,7 +141,6 @@ int FontMetrics::getCharPos(const char* s, int len, float x) const {
   return charpos;
 }
 
-// - - - - - - - - - - - - - - -
 
 float FontMetrics::getXPos(const char *s, int len, int charpos) const {
   UHardFont* f = disp->getFont(fd);
@@ -265,4 +244,3 @@ bool FontMetrics::getClippedText(const UHardFont* f, float clip_x, float clip_wi
 }
 
 }
-/* ==================================================== [Elc] ======= */

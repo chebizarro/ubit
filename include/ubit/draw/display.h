@@ -44,7 +44,7 @@ class UCursorImpl;
   * logically separated, ie. when a window cannot move freely from one screen
   * to another one).
   *
-  * Window objects (and UFrame, Dialog, Menu subclasses) can be attached to a
+  * Window objects (and Frame, Dialog, Menu subclasses) can be attached to a
   * specific Display by using Display::add(). Widgets that are contained in several 
   * Window objects ("contained" meaning they are a child of them) are AUTOMATICCALY
   * REPLICATED and synchronized on all these windows.
@@ -103,11 +103,11 @@ public:
   // - - - windows - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   virtual void add(Window&);
-  /**< add a window (UFrame, Dialog, etc) to this display.
+  /**< add a window (Frame, Dialog, etc) to this display.
    * Note that windows are initially hidden, their show() method must be called
    * to make them visible. Moreover, as show() calculates the window size, it should
    * called after adding the window children (see also: Window::adjustSize()).
-   * @see: Application::add() and classes Window, UFrame, Dialog, Menu.
+   * @see: Application::add() and classes Window, Frame, Dialog, Menu.
    */ 
   
   void add(Window*);

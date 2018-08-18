@@ -93,7 +93,6 @@ void Image::cleanCache() {
   natimas.clear();
 }
 
-/* ==================================================== [Elc] ======= */
 
 void Image::update() {
   _parents.updateAutoParents(Update::LAYOUT_PAINT);
@@ -130,7 +129,6 @@ void Image::setPixel(unsigned long p, int x, int y) {
   if (!natimas.empty()) (*natimas.begin())->setPixel(p, x, y);
 }
 */
-/* ==================================================== [Elc] ======= */
 
 Image& Image::operator=(const Image& ima2) {
   if (checkConst()) return *this;
@@ -291,7 +289,6 @@ void Image::setImpl(int w, int h) {
   }
 }
 
-/* ==================================================== [Elc] ======= */
 
 void Image::getSize(UpdateContext& ctx, Dimension& dim) const {
   Display* d = ctx.getDisp();
@@ -327,7 +324,6 @@ void Image::getSize(UpdateContext& ctx, Dimension& dim) const {
   }
 }
 
-/* ==================================================== [Elc] ======= */
 
 void Image::paint(Graph& g, UpdateContext& props, const Rectangle& r) const {
   if (natimas.empty()) {
@@ -360,7 +356,6 @@ void Image::paint(Graph& g, UpdateContext& props, const Rectangle& r) const {
 */
 }
 
-/* ==================================================== [Elc] ======= */
 #if WITH_2D_GRAPHICS
 
 UHardIma* Image::getOrCreateIma(Display* d, float xyscale) const {
@@ -415,7 +410,6 @@ UHardIma* Image::addImaInCache(Display* d, float xyscale) const {
 }
 
 #endif
-/* ==================================================== [Elc] ======= */
 
 void Image::getFullPath(String& path, const char* name) {
   if (!name || name[0] == '\0')

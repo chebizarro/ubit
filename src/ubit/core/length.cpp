@@ -40,7 +40,6 @@ const Length
 UAUTO(0., Unit(Unit::AUTO)),
 UIGNORE(0., Unit(Unit::IGNORE));
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 ostream& operator<<(ostream& s, const Length& l) {
   return (s << l.toString());
@@ -54,7 +53,6 @@ bool Length::operator!=(const Length& l) const {
   return val != l.val || unit.type != l.unit.type || modes.val != l.modes.val;
 } 
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 Length::Length(const String& spec) : val(0), unit(UPX), modes(0) {
   set(spec);

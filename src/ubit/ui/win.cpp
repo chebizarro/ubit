@@ -34,7 +34,6 @@ namespace ubit {
 static const char* Unrealized_Window = 
   "Window object %p is not realized; check if this window has a valid parent";
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 Style* Window::createStyle() {
   Style* style = new Style;
@@ -51,7 +50,6 @@ Style* Window::createStyle() {
   return style;
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 Window::Window(Args a) : Box(a) {  
   emodes.IS_SHOWABLE = false;
@@ -60,7 +58,6 @@ Window::Window(Args a) : Box(a) {
   wmodes.IS_AUTO_OPENED = true;
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // !ATTENTION: les appels aux fcts virtuelles ne marchent pas normalement
 // dans les constructeurs et les DESTRUCTEURS (l'appel est fait avec
 // la classe du destructeur, pas la classe effective)
@@ -85,7 +82,6 @@ Window::~Window() {
   wimpl.clear();  
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 USoftwinImpl* Window::softImpl() const {
   if (!wmodes.IS_HARDWIN && wimpl.size() == 1) {
@@ -102,7 +98,6 @@ USoftwinImpl* Window::softImpl() const {
   }  
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 UHardwinImpl* Window::hardImpl() const {
   if (wmodes.IS_HARDWIN && wimpl.size() == 1) {
@@ -119,7 +114,6 @@ UHardwinImpl* Window::hardImpl() const {
   }  
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // this function MUST return the same hardwin as hardImpl() WHEN the Window is a hardwin
 
 UHardwinImpl* Window::getHardwin(Display* disp) const {
@@ -302,7 +296,6 @@ bool Window::realize() {
   }
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 bool Window::realizeHardwin(char wintype) {
   UHardwinImpl* hardwin = hardImpl();
@@ -322,7 +315,6 @@ bool Window::realizeHardwin(char wintype) {
   }
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 View* Window::realizeSoftwin(Window* hardwin, View* hardwin_view,
                             Display* disp, bool add_to_the_end) {
@@ -367,7 +359,6 @@ View* Window::realizeSoftwin(Window* hardwin, View* hardwin_view,
   return winview;
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // !ATT: l'initialisation des descendant NE DOIT SE FAIRE qu'une seule
 // fois, c'est a dire pour la seule WinView effectivement creee
 // (sinon on irait creer des Views inutiles dans les descendants)
@@ -395,7 +386,6 @@ Window& Window::setTitle(const String& title) {
   return *this;
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 String Window::getTitle() const {
   if (!isHardwin()) return "";
@@ -405,7 +395,6 @@ String Window::getTitle() const {
   }
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void Window::toFront(Display* disp) {
   if (wmodes.IS_HARDWIN) {
@@ -428,7 +417,6 @@ void Window::toFront(Display* disp) {
   }
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void Window::toBack(Display* disp) {
   if (wmodes.IS_HARDWIN) {
@@ -440,14 +428,12 @@ void Window::toBack(Display* disp) {
   //else ... a faire...
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void Window::highlight(bool state) {
   Box::highlight(state);
   Window::toFront();
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void Window::setFullScreen(bool state, Display* disp) {
   //is_fullscreen = state;
@@ -494,7 +480,6 @@ bool Window::isShown(Display* disp) const {
   return false;
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void Window::show(bool state, Display* disp) {
   if (Application::isExiting()) return;
@@ -528,7 +513,6 @@ void Window::show(bool state, Display* disp) {
   }
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 int Window::showModal(Display* disp) {
   setModal(true);
@@ -544,7 +528,6 @@ bool Window::isModal() const {
   return wmodes.IS_MODAL;
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void Window::close(int status) {
   Application::impl.setModalStatus(status);
@@ -595,7 +578,7 @@ void Window::doUpdate(const Update& upd, Display* disp) {
       if (wmodes.IS_HARDWIN) Application::add(this);
       else {
         // !!!NB: il faudrait le mainframe associé au disp si != null !!!
-        UFrame* mainframe = Application::getMainFrame();
+        Frame* mainframe = Application::getMainFrame();
         if (mainframe) mainframe->add(this);
         else warning("Window::doUpdate","this soft window (%p) can't be displayed because it has no parent and there is no available mainframe window", this);
       }
@@ -644,7 +627,6 @@ void Window::doUpdate(const Update& upd, Display* disp) {
   }
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void USoftwinImpl::doUpdate(const Update& upd, Window* win, View* winview) {
   if (Application::isExiting()) return;
@@ -679,7 +661,6 @@ void USoftwinImpl::doUpdate(const Update& upd, Window* win, View* winview) {
   win->Box::doUpdate(upd, null);
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void UHardwinImpl::doUpdate(const Update& upd, Window* ww, View* winview) {
   if (Application::isExiting()) return;
@@ -748,7 +729,6 @@ void UHardwinImpl::doUpdate(const Update& upd, Window* ww, View* winview) {
   }
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //NB:impose une taille donnee en mode 'resize=true' (si les valeurs sont >0)
 
 void UHardwinImpl::doUpdateImpl(const Update& upd, Window* _win, View* winview,
@@ -810,7 +790,6 @@ void Window::setSize(const Dimension& s, Display* d) {
   }
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 Dimension Window::getSize(Display* disp) const {
   View* winview = null;
@@ -858,7 +837,6 @@ Point Window::getPos(const Window& win, Display* d) const {
   return p;
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void Window::setPos(MouseEvent& e, float x, float y) {
   Point p = e.getScreenPos();
@@ -921,7 +899,6 @@ void Window::setPos(const Window& win, const Point& p, Display* disp) {
   }
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 Point Window::getScreenPos(Display* disp) const {
   View* winview = getWinView(disp);
@@ -943,7 +920,6 @@ Point Window::getScreenPos(Display* disp) const {
   return p;
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void Window::setScreenPos(const Point& p, Display* d) {
   if (wmodes.IS_HARDWIN) {

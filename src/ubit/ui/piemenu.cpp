@@ -102,7 +102,6 @@ PieMenu::~PieMenu() {
   unlinkFromAndToMenus();
 }
 
-/* ==================================================== [Elc] ======= */
 /*
  int getCenterRadius() const {return center_radius;}
  //returns the radius of the rest area.
@@ -239,7 +238,6 @@ void PieMenu::startNoviceMode() {
   gitems.show(true);
 }
 
-/* ==================================================== [Elc] ======= */
 
 void PieMenu::resizeCB(UResizeEvent& e) {
   float scale = getScaleValue();
@@ -381,7 +379,6 @@ void PieMenu::paintCB(PaintEvent& e) {
   }  
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void PieMenu::forwardToMenu(PieMenu* submenu) {
   if (to_menu != submenu) {
@@ -423,7 +420,6 @@ void PieMenu::addSubMenu(int N, PieMenu* submenu) {
           );
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 float PieMenu::getCentredCoords(MouseEvent& e, Point& p, bool& must_forward) {
   View* v = getView();
@@ -501,7 +497,6 @@ Point PieMenu::getCenterInContainingWin(Display* disp) const {
   return p; 
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void PieMenu::armItemCB(MouseEvent& e, PieMenu* m2) {
   if (!m2) return;
@@ -555,7 +550,6 @@ void PieMenu::armItemCB(MouseEvent& e, PieMenu* m2) {
   forwardToMenu(m2);  // forward events
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void PieMenu::disarmItem(InputEvent& e, bool is_browsing) {
   if (parmed) {
@@ -571,7 +565,6 @@ void PieMenu::disarmItemCB(InputEvent& e, PieMenu* m2) {
   m2->show(false);
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // att: e.getSource() incorrect si forwarded (toujours le menu principal)
 
 void PieMenu::motionCB(MouseEvent& e) {

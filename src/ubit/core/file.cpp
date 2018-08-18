@@ -34,12 +34,11 @@
 using namespace std;
 namespace ubit {
   
-  const int UFileMode::DIR  = S_IFDIR;
-  const int UFileMode::FILE = S_IFREG;
-  const int UFileMode::LINK = S_IFLNK;
+  const int FileMode::DIR  = S_IFDIR;
+  const int FileMode::FILE = S_IFREG;
+  const int FileMode::LINK = S_IFLNK;
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  
+    
   struct UFileType {
     enum {NONE, FOLDER, TXT, HTML, CODE };
     int   type;
@@ -63,9 +62,8 @@ namespace ubit {
     Map ftmap;
   };
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  
-  UFileMode::UFileMode(const String& path) {
+    
+  FileMode::FileMode(const String& path) {
     const char* p = path.c_str();
     struct stat st;
     // lstat pour eviter de suivre les liens (ce qui peut provoquer
@@ -76,33 +74,32 @@ namespace ubit {
       mode = 0;
   }
   
-  bool UFileMode::isValid() const {return mode > 0;}
-  bool UFileMode::isDir()   const {return S_ISDIR(mode);}
-  bool UFileMode::isFile()  const {return S_ISREG(mode);}
-  bool UFileMode::isLink()  const {return S_ISLNK(mode);}
+  bool FileMode::isValid() const {return mode > 0;}
+  bool FileMode::isDir()   const {return S_ISDIR(mode);}
+  bool FileMode::isFile()  const {return S_ISREG(mode);}
+  bool FileMode::isLink()  const {return S_ISLNK(mode);}
   
-  bool UFileMode::isExec() const {
+  bool FileMode::isExec() const {
     // return (mode & (S_IXUSR | S_IXGRP | S_IXOTH)) != 0;
     return (mode & S_IXUSR) != 0;
   }
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  
-  UFileInfo::UFileInfo(const String& path) {
+    
+  FileInfo::FileInfo(const String& path) {
     setPath(path);
   }
   
-  UFileInfo::UFileInfo(const char* fullpath, const char* _name) {
+  FileInfo::FileInfo(const char* fullpath, const char* _name) {
     pname = new String(_name);
     stat(fullpath);
   }
   
-  void UFileInfo::setPath(const String& path) {
+  void FileInfo::setPath(const String& path) {
     pname = new String(path);
     stat(path.c_str());
   }
   
-  void UFileInfo::stat(const char* p) {
+  void FileInfo::stat(const char* p) {
     struct stat st;
     // lstat pour eviter de suivre les liens (ce qui peut provoquer
     // des blocages quand les fichiers sont indisponibles par nfs)
@@ -120,22 +117,21 @@ namespace ubit {
   
   
   /*
-   bool UFileInfo::isIma() const {
+   bool FileInfo::isIma() const {
    }
    
-   bool UFileInfo::isText() const {
+   bool FileInfo::isText() const {
    }
    
-   bool UFileInfo::isCode() const {
+   bool FileInfo::isCode() const {
    }
    
-   bool UFileInfo::isHtml() const {
+   bool FileInfo::isHtml() const {
    }
    */
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  
-  Image& UFileInfo::getMiniIconImage() const {
+    
+  Image& FileInfo::getMiniIconImage() const {
     if (S_ISDIR(mode)) {              // directory
       return UPix::folder;
     }
@@ -149,7 +145,7 @@ namespace ubit {
     else return UPix::question;	 // whatever
   }
   
-  Image& UFileInfo::getIconImage() const {
+  Image& FileInfo::getIconImage() const {
     if (isDir()) {
       if (*pname == "..") return UPix::bigUp;
       else return UPix::bigFolder;
@@ -197,9 +193,8 @@ namespace ubit {
     return UPix::bigDoc;	 // default
   }
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  
-  void UFileInfo::getInfoString(String& s) const {
+    
+  void FileInfo::getInfoString(String& s) const {
     char str[200];
     
     if (S_ISDIR(mode))       // directory
@@ -242,8 +237,7 @@ namespace ubit {
     s = str;
   }
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  
+    
   static bool cmpPrefix(const String& path, const char* prefix) {
     for (int k = 0; prefix[k]!=0; k++) {
       if (path[k] != prefix[k]) return false;
@@ -251,7 +245,7 @@ namespace ubit {
     return true;
   }
   
-  int UFileInfo::parsePrefix(const String& path) {
+  int FileInfo::parsePrefix(const String& path) {
     if (cmpPrefix(path, "http:") || cmpPrefix(path, "https:"))
       return HTTP;
     else if (cmpPrefix(path, "ssh:"))
@@ -262,8 +256,7 @@ namespace ubit {
       return LOCAL;
   }
   
-  /* ==================================================== [Elc] ======= */
-  // NB: la fonction Unix 'scandir' n'est pas standard (que BSD)!
+    // NB: la fonction Unix 'scandir' n'est pas standard (que BSD)!
   
   UFileDir::UFileDir() : dir_info("") {}
   
@@ -278,7 +271,7 @@ namespace ubit {
   
   const String& UFileDir::getPath() const {return *dir_info.getFileName();}
   
-  bool UFileDir::compareEntries(const UFileInfo* e1, const UFileInfo* e2) {
+  bool UFileDir::compareEntries(const FileInfo* e1, const FileInfo* e2) {
     if (e1->isDir() && !e2->isDir()) return true;
     else if (!e1->isDir() && e2->isDir()) return false;
     else return strcmp(e1->pname->c_str(), e2->pname->c_str()) < 0;
@@ -357,7 +350,7 @@ namespace ubit {
         strcpy(namepos, dname);
         
         //EX: lstat(fullpath, &statstr);
-        UFileInfo* finfo = new UFileInfo(fullpath, dname);
+        FileInfo* finfo = new FileInfo(fullpath, dname);
         
         // SKIP si pas directory et ne correspond pas au filtre
         // NOTE: on ne filtre PAS les directories (sinon resultat illisible)
@@ -378,7 +371,7 @@ namespace ubit {
   void UFileDir::readRemote(const String& path, const String& prefix,
                             const String& filter, bool hidden_files) {
     String host, fpath, cachepath;
-    UFileCache::getCachePath(path, UFileInfo::SSH, host, fpath, cachepath);
+    UFileCache::getCachePath(path, FileInfo::SSH, host, fpath, cachepath);
     
     dir_info.setPath(cachepath);
     if (!dir_info.pname) return;
@@ -426,12 +419,12 @@ namespace ubit {
         // copier nom du fichier dans fullpath pour faire stat()
         strcpy(namepos, dname);
         
-        UFileInfo* finfo = new UFileInfo("@ssh", dname);
+        FileInfo* finfo = new FileInfo("@ssh", dname);
         
         int ll = strlen(dname);
-        if (dname[ll-1] == '/') finfo->mode = UFileInfo::DIR;
-        else if (dname[ll-1] == '@') finfo->mode = UFileInfo::LINK;
-        else finfo->mode = UFileInfo::FILE;
+        if (dname[ll-1] == '/') finfo->mode = FileInfo::DIR;
+        else if (dname[ll-1] == '@') finfo->mode = FileInfo::LINK;
+        else finfo->mode = FileInfo::FILE;
         
         // SKIP si pas directory et ne correspond pas au filtre
         // NOTE: on ne filtre PAS les directories (sinon resultat illisible)
@@ -506,11 +499,10 @@ namespace ubit {
     if (dir[-1] != '/') dir.append("/");
   }
   
-  /* ==================================================== [Elc] ======= */
-  
+    
   static void makeDir(const String& path) {
     if (path.empty()) return;
-    UFileMode fm(path);
+    FileMode fm(path);
     if (fm.isDir()) return;  // already created
     String com = "mkdir " & path;
     system(com.c_str());     // eviter system
@@ -603,7 +595,7 @@ namespace ubit {
       if (*p == '/' || *p == ':') break;
     }
     
-    if (path_type == UFileInfo::SSH) {
+    if (path_type == FileInfo::SSH) {
       if (*p==0 || *(p+1)==0) {
         spath = "";
         cachepath = cache & "ssh:/" & server;
@@ -627,9 +619,9 @@ namespace ubit {
   
   const String* UFileCache::getOrCreateFullPath(const String& path) {
     if (path.empty()) return &path;
-    int type = UFileInfo::parsePrefix(path);
+    int type = FileInfo::parsePrefix(path);
     
-    if (type == UFileInfo::LOCAL) {
+    if (type == FileInfo::LOCAL) {
       if (path[0] != '~') return &path;
       else {
         String* fullp = new String(path);

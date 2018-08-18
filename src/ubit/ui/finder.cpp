@@ -126,7 +126,7 @@ ctlmenu(&createContextMenu()),
 local_ums(null),
 remote_ums(null),
 pdocument(null),
-pdocbox(new UDocbox()),
+pdocbox(new DocumentBox()),
 piconbox(null),
 //docglass(new Box()),
 last_direntry(null),
@@ -281,9 +281,8 @@ void Finder::initOptbox() {
   optbox.add(*filelist_btn + uvflex() + filelist);
 }
 
-/* ==================================================== [Elc] ======= */
 
-UDocbox* Finder::getCurrentBox() {
+DocumentBox* Finder::getCurrentBox() {
   if (mode == DirMode) return getIconbox();
   else if (mode == DocMode) return getDocbox();
   else return null;
@@ -333,15 +332,14 @@ void Finder::showDirBox() {
   filelist_btn->show(false);
 }
 
-/* ==================================================== [Elc] ======= */
 
 void Finder::open(const String& path) {
   if (path.empty()) return;
 
-  int path_type = UFileInfo::parsePrefix(path);
+  int path_type = FileInfo::parsePrefix(path);
 
-  if (path_type == UFileInfo::LOCAL)
-    openImpl(path, 0/*mode unknow at this stage*/, UFileInfo::LOCAL);
+  if (path_type == FileInfo::LOCAL)
+    openImpl(path, 0/*mode unknow at this stage*/, FileInfo::LOCAL);
   else
     new UFinderCom(this, path, path_type);
 }
@@ -366,8 +364,8 @@ void Finder::openImpl(const String& path_name, int path_mode, int path_type) {
     path.remove(-1, 1);  // remove last char
   }
 
-  if (path_type == UFileInfo::LOCAL) {
-    UFileMode fmode(path);
+  if (path_type == FileInfo::LOCAL) {
+    FileMode fmode(path);
     if (!fmode.isValid()) {
       showAlert("Can't load: " & path);
       return;
@@ -378,12 +376,11 @@ void Finder::openImpl(const String& path_name, int path_mode, int path_type) {
   }
 
   else {
-    if (path_mode == UFileInfo::DIR) openDir(path, path_type);
+    if (path_mode == FileInfo::DIR) openDir(path, path_type);
     else openFile(path, path_type);
   }
 }
 
-/* ==================================================== [Elc] ======= */
 
 void Finder::openParent() {
   String name;

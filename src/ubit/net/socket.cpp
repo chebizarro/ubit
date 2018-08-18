@@ -43,14 +43,14 @@ namespace ubit {
 const int DEFAULT_BACKLOG = 20;
 
 
-UServerSocket::UServerSocket() :
+ServerSocket::ServerSocket() :
 listen_port(-1),
 listen_sock(-1),
 sin(new sockaddr_in()),
 input(null) {
 }
 
-UServerSocket::UServerSocket(int _port) :
+ServerSocket::ServerSocket(int _port) :
   listen_port(_port),
   listen_sock(-1),
   sin(new sockaddr_in()),
@@ -59,11 +59,11 @@ UServerSocket::UServerSocket(int _port) :
   bind(listen_port, 0, true);
 }
 
-bool UServerSocket::bind(int port, int backlog, bool reuse_address) {
+bool ServerSocket::bind(int port, int backlog, bool reuse_address) {
   listen_port = port;
   listen_sock = ::socket(AF_INET, SOCK_STREAM, 0);
   if (listen_sock < 0) {
-    //cerr << "UServerSocket: can't create listen socket" << endl;
+    //cerr << "ServerSocket: can't create listen socket" << endl;
     return false;
   }
 
@@ -78,7 +78,7 @@ bool UServerSocket::bind(int port, int backlog, bool reuse_address) {
   ::setsockopt(listen_sock,SOL_SOCKET,SO_REUSEADDR,(char*)&tmp,sizeof(tmp));
   
   if (::bind(listen_sock, (struct sockaddr*)sin, sizeof(*sin)) < 0) {
-    //cerr << "UServerSocket: port " << listen_port << " busy" << endl;
+    //cerr << "ServerSocket: port " << listen_port << " busy" << endl;
     if (!reuse_address) return false;
   }
 
@@ -95,7 +95,7 @@ bool UServerSocket::bind(int port, int backlog, bool reuse_address) {
 
   // verifications sur le serveur
   if (::getsockname(listen_sock, (struct sockaddr*)sin, &taille) < 0) {
-    //cerr << "UServerSocket: fatal error on getsocketname" << endl;
+    //cerr << "ServerSocket: fatal error on getsocketname" << endl;
     listen_sock = -1;
     return false;
   }
@@ -105,24 +105,24 @@ bool UServerSocket::bind(int port, int backlog, bool reuse_address) {
   return true;
 }
 
-void UServerSocket::onInput(UCall& c) {
-  if (!input) input = new USource();
+void ServerSocket::onInput(UCall& c) {
+  if (!input) input = new Source();
   input->onInput(c);
   if (listen_sock >= 0) input->open(listen_sock);
 }
 
-//void UServerSocket::acceptOnInput() {
-  //  onInput(ucall(this, &UServerSocket::accept));
+//void ServerSocket::acceptOnInput() {
+  //  onInput(ucall(this, &ServerSocket::accept));
 // ne sert a rien car de toute facon il faut faire qq chose sur le socket
 // (typiquement un  onInput(ucall(socket, qqchose))
 //}
 
-UServerSocket::~UServerSocket() {
+ServerSocket::~ServerSocket() {
   close();
   delete sin;
 }
 
-void UServerSocket::close() {
+void ServerSocket::close() {
   if (listen_sock >= 0) {
     //::shutdown(sock, 2); ??
     ::close(listen_sock);
@@ -134,12 +134,12 @@ void UServerSocket::close() {
 }
 
 
-Socket* UServerSocket::accept() {
+Socket* ServerSocket::accept() {
   int sock_com = -1;
 
   // cf. man -s 3n accept, attention EINTR ou EWOULBLOCK ne sont pas geres!
   if ((sock_com = ::accept(listen_sock, NULL, NULL)) == -1) {
-    //cerr << "UServerSocket: error on accept" << endl;
+    //cerr << "ServerSocket: error on accept" << endl;
     return null;
   }
 
@@ -174,7 +174,7 @@ Socket::~Socket() {
 }
 
 void Socket::onInput(UCall& c) {
-  if (!input) input = new USource();
+  if (!input) input = new Source();
   input->onInput(c);
   if (sock >= 0) input->open(sock);  
 }
@@ -248,7 +248,7 @@ bool Socket::sendBlock(const char* data, unsigned short size) {
   return sendBytes(data, size);
 }
 
-bool Socket::sendBlock(UOutbuf& ob) {
+bool Socket::sendBlock(OutBuffer& ob) {
   if (sock < 0) return false;
 
   uint16_t net_size = htons(ob.outpos);
@@ -294,10 +294,10 @@ bool Socket::receiveBlock(char*& data, unsigned short& size) {
   return receiveBytes(data, size);
 }
 */
-// NB: UInbuf contient egalement 2 bytes de size au debut, ce qui n'est
+// NB: InBuffer contient egalement 2 bytes de size au debut, ce qui n'est
 // pas indispensable mais permet un traitement symetrique
 
-bool Socket::receiveBlock(UInbuf& buf) {
+bool Socket::receiveBlock(InBuffer& buf) {
   if (sock < 0) return false;
 
   uint16_t net_size = 0;   // get block size
@@ -312,19 +312,19 @@ bool Socket::receiveBlock(UInbuf& buf) {
 }
 
 
-UIObuf::UIObuf() {
+IOBuffer::IOBuffer() {
   buffer  = default_buffer;
   bufsize = DEFAULT_BUFSIZE;
   inpos = outpos = 2;  // skip the size
 }
 
-UIObuf::~UIObuf() {
+IOBuffer::~IOBuffer() {
   if (buffer != default_buffer && buffer) free(buffer);
   buffer = null;
 }
 
 /*
-UIObuf::UIObuf(unsigned short _size) {
+IOBuffer::IOBuffer(unsigned short _size) {
   if (_size+2 <= DEFAULT_SIZE) {
     buffer  = default_buffer;
     memsize = DEFAULT_SIZE;
@@ -337,23 +337,23 @@ UIObuf::UIObuf(unsigned short _size) {
 }
 */
  
-char* UIObuf::data() {
+char* IOBuffer::data() {
   return ((buffer && outpos > 2) ? buffer+2 : null);
 }
 
-const char* UIObuf::data() const {
+const char* IOBuffer::data() const {
   return ((buffer && outpos > 2) ? buffer+2 : null);
 }
 
-unsigned int UIObuf::size() const {
+unsigned int IOBuffer::size() const {
   return outpos > 2 ? outpos-2 : 0;
 }
 
-unsigned int UIObuf::consumed() const {
+unsigned int IOBuffer::consumed() const {
   return inpos > 2 ? inpos-2 : 0;
 }
 
-bool UIObuf::resize(unsigned short _size) {
+bool IOBuffer::resize(unsigned short _size) {
   bufsize = _size+2;
   
   if (buffer == null) {  // should not happen
@@ -371,7 +371,7 @@ bool UIObuf::resize(unsigned short _size) {
   return (buffer!=null);
 }
 
-bool UIObuf::augment(unsigned short sz) {
+bool IOBuffer::augment(unsigned short sz) {
   int nblocks = sz / AUGMENT_QUANTUM + 1;
   bufsize += nblocks * AUGMENT_QUANTUM;
   resize(bufsize-2);
@@ -379,31 +379,31 @@ bool UIObuf::augment(unsigned short sz) {
 }
 
 
-void UOutbuf::writeChar(char x) {
+void OutBuffer::writeChar(char x) {
   if (outpos >= bufsize) augment(1);
   buffer[outpos++] = x;
 }
 
-void UOutbuf::writeChar(unsigned char x) {
+void OutBuffer::writeChar(unsigned char x) {
   if (outpos >= bufsize) augment(1);
   buffer[outpos++] = char(x);
 }
 
-void UOutbuf::writeShort(short x) {
+void OutBuffer::writeShort(short x) {
   if (outpos+1 >= bufsize) augment(2);
   uint16_t net_x = htons((uint16_t) x);
   memcpy(&buffer[outpos], &net_x, 2);
   outpos += 2;
 }
 
-void UOutbuf::writeLong(long x) {
+void OutBuffer::writeLong(long x) {
   if (outpos+3 >= bufsize) augment(4);
   uint32_t net_x = htonl((uint32_t) x);
   memcpy(&buffer[outpos], &net_x, 4);
   outpos += 4;
 }
 
-void UOutbuf::writeString(const char* s, unsigned int ll) {
+void OutBuffer::writeString(const char* s, unsigned int ll) {
   if (!s || !*s) return; 
   if (outpos+ll >= bufsize) augment(ll+1);
   strncpy(&buffer[outpos], s, ll);
@@ -411,39 +411,38 @@ void UOutbuf::writeString(const char* s, unsigned int ll) {
   outpos += ll+1;
 }
 
-void UOutbuf::writeString(const char* s) {
+void OutBuffer::writeString(const char* s) {
   if (s) writeString(s, strlen(s));
 }
 
-void UOutbuf::writeString(const String& s) {
+void OutBuffer::writeString(const String& s) {
   writeString(s.c_str(), s.length());
 }
 
-/* ==================================================== [Elc:] ======= */
 
-void UInbuf::readChar(char& x) {
+void InBuffer::readChar(char& x) {
   x = (char)buffer[inpos++];
 }
 
-void UInbuf::readChar(unsigned char& x) {
+void InBuffer::readChar(unsigned char& x) {
   x = (unsigned char)buffer[inpos++];
 }
 
-void UInbuf::readShort(short& x) {
+void InBuffer::readShort(short& x) {
   uint16_t netl;
   memcpy(&netl, &buffer[inpos], 2);
   inpos += 2;
   x = short(htons(netl));
 }
 
-void UInbuf::readLong(long& x) {
+void InBuffer::readLong(long& x) {
   uint32_t netl;
   memcpy(&netl, &buffer[inpos], 4);
   inpos += 4;
   x = long(htonl(netl));
 }
 
-void UInbuf::readString(String& s) {
+void InBuffer::readString(String& s) {
   s = "";
   // 12jan05: c'est seulement le 0 qui sert de separateur, plus space!
   int ll = 0;
@@ -454,7 +453,7 @@ void UInbuf::readString(String& s) {
 }
 
 
-void UOutbuf::writeEvent(unsigned char event_type, unsigned char event_flow,
+void OutBuffer::writeEvent(unsigned char event_type, unsigned char event_flow,
                          long x, long y, unsigned long detail) {
   if (outpos+13 >= bufsize) augment(14);
 
@@ -477,7 +476,7 @@ void UOutbuf::writeEvent(unsigned char event_type, unsigned char event_flow,
   outpos += 4;
 };
 
-void UInbuf::readEvent(unsigned char& event_type, unsigned char& event_flow,
+void InBuffer::readEvent(unsigned char& event_type, unsigned char& event_flow,
                        long& x, long& y, unsigned long& detail) {
   event_type = buffer[inpos];
   inpos += 1;

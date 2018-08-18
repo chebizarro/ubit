@@ -116,7 +116,6 @@ static int
 InterlacedOffset[] = { 0, 4, 2, 1 },  /* The way Interlaced image should. */
 InterlacedJumps[]  = { 8, 8, 4, 2 };   /* be read - offsets and jumps... */
 
-/* ==================================================== [Elc] ======= */
 
 int UImaGIF::read(UHardIma& nima, const String& fpath, int wmax, int hmax) {
   UGif ug(nima, fpath, wmax, hmax);    // !! wmax, hmax only for GL !!!!!!
@@ -365,7 +364,6 @@ void UGif::putLine_X16(int x1, int x2, int y) {
 
 #endif
 #endif
-/* ==================================================== [Elc] ======= */
 
 void UGif::readImage() {
   if (DGifGetImageDesc(gfile) == GIF_ERROR)

@@ -53,7 +53,6 @@ GLContext* GLCanvas::getGlcontext() const {
 //void GLCanvas::shareContextResources(GLContext* gc) {shared_res_ctx = gc;}
 //void GLCanvas::setAutoBufferSwap(bool state) {is_autoswap = state;}
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void enableClips() {
   glEnable(GL_CLIP_PLANE0);
@@ -69,7 +68,6 @@ void disableClips() {
   glDisable(GL_CLIP_PLANE3);  
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 bool GLCanvas::realize() {
   if (! wmodes.IS_HARDWIN) {
@@ -97,7 +95,6 @@ bool GLCanvas::realize() {
   }
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void GLCanvas::initImpl() {
   is_init = true;
@@ -107,7 +104,6 @@ void GLCanvas::initImpl() {
   initGL();
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void GLCanvas::resizeImpl(UResizeEvent& e) 
 {
@@ -128,7 +124,6 @@ void GLCanvas::resizeImpl(UResizeEvent& e)
    }
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void GLCanvas::paintImpl(PaintEvent& e) 
 {
@@ -151,7 +146,6 @@ void GLCanvas::paintImpl(PaintEvent& e)
   }
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void GLCanvas::makeCurrent() {
   UHardwinImpl* hw = hardImpl();

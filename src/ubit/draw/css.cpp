@@ -32,7 +32,6 @@ using namespace std;
 namespace ubit {
 
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 struct UCssMaker: public StyleParser::StyleMaker {
   XmlDocument* doc;
@@ -79,7 +78,6 @@ struct UCssMaker: public StyleParser::StyleMaker {
  }
 };
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 int CssParser::parse(const String& buf, XmlDocument* doc) {
   UCssMaker* smaker = new UCssMaker(doc, null);
@@ -102,7 +100,6 @@ int CssParser::parseAttr(const String& buf, XmlDocument* doc, AttributeList* pro
   return stat;
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void StyleProperties::defProp(const char* propname, StyleProperties::AddPropFunc func) {
   prop_map[new String(propname)] = func;
@@ -244,7 +241,6 @@ void CssProperties::create_font_style(XmlDocument*, AttributeList* props, const 
 
 // etc...
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void CssProperties::create_color(XmlDocument*, AttributeList* props, const String& v) {
   Color* p = new Color();
@@ -403,7 +399,7 @@ remplacent cellspacing et cellpadding
 */
 
 
-Style* UCssStyles::create_body_style() {
+Style* CssStyles::create_body_style() {
   //Style* style = UVbox::createStyle();
   Style* style = Box::createStyle();
   style->setVertPadding(8,8);
@@ -411,34 +407,34 @@ Style* UCssStyles::create_body_style() {
   return style;
 }
 
-Style* UCssStyles::create_div_style() {
+Style* CssStyles::create_div_style() {
   Style* style = UFlowbox::createStyle();
   style->local.padding.set(6,1);
   return style;
 }
 
-Style* UCssStyles::create_p_style() {
+Style* CssStyles::create_p_style() {
   Style* style = UFlowbox::createStyle();
   style->local.padding.set(6,1);
   return style;
 }
 
 
-Style* UCssStyles::create_ul_style() {
+Style* CssStyles::create_ul_style() {
   Style* style = UFlowbox::createStyle();
   style->setHorizPadding(30, 0);
   style->setVertPadding(1, 0);
   return style;
 }
 
-Style* UCssStyles::create_ol_style() {
+Style* CssStyles::create_ol_style() {
   Style* style = UFlowbox::createStyle();
   style->setHorizPadding(30, 1);
   style->setVertPadding(1, 0);
   return style;
 }
 
-Style* UCssStyles::create_li_style() {
+Style* CssStyles::create_li_style() {
   Style* style = UFlowbox::createStyle();
   style->local.padding.set(1, 1);
   //style->local.content = new Element(UPix::rball);
@@ -447,7 +443,7 @@ Style* UCssStyles::create_li_style() {
 }
 
 
-Style* UCssStyles::create_pre_style() {
+Style* CssStyles::create_pre_style() {
   Style* style = UFlowbox::createStyle();
   style->setHorizPadding(80,0);
   style->setVertPadding(5,5);
@@ -455,57 +451,56 @@ Style* UCssStyles::create_pre_style() {
   return style;
 }
 
-Style* UCssStyles::create_blockquote_style() {
+Style* CssStyles::create_blockquote_style() {
   Style* style = UFlowbox::createStyle();
   style->local.padding.set(20, 8);
   return style;
 }
 
-Style* UCssStyles::create_center_style() {
+Style* CssStyles::create_center_style() {
   Style* style = UFlowbox::createStyle();
   style->local.padding.set(1, 1);
   style->halign = Valign::CENTER;
   return style;
 }
 
-/* ==================================================== [Elc] ======= */
 
-Style* UCssStyles::create_h1_style() {
+Style* CssStyles::create_h1_style() {
   Style* style = UFlowbox::createStyle();
   style->setVertPadding(14,14);
   Font* f = new Font(Font::bold); f->setPointSize(32); style->setFont(f);
   return style;
 }
 
-Style* UCssStyles::create_h2_style() {
+Style* CssStyles::create_h2_style() {
   Style* style = UFlowbox::createStyle();
   style->setVertPadding(12,12);
   Font* f = new Font(Font::bold); f->setPointSize(18); style->setFont(f);
   return style;
 }
 
-Style* UCssStyles::create_h3_style() {
+Style* CssStyles::create_h3_style() {
   Style* style = UFlowbox::createStyle();
   style->setVertPadding(10,10);
   Font* f = new Font(Font::bold); f->setPointSize(14); style->setFont(f);
   return style;
 }
 
-Style* UCssStyles::create_h4_style() {
+Style* CssStyles::create_h4_style() {
   Style* style = UFlowbox::createStyle();
   style->setVertPadding(8,8);
   Font* f = new Font(Font::bold); f->setPointSize(12); style->setFont(f);
   return style;
 }
 
-Style* UCssStyles::create_h5_style() {
+Style* CssStyles::create_h5_style() {
   Style* style = UFlowbox::createStyle();
   style->setVertPadding(7,7);
   Font* f = new Font(Font::bold); f->setPointSize(10); style->setFont(f);
   return style;
 }
 
-Style* UCssStyles::create_h6_style() {
+Style* CssStyles::create_h6_style() {
   Style* style = UFlowbox::createStyle();
   style->setVertPadding(6,6);
   Font* f = new Font(Font::bold); f->setPointSize(8); style->setFont(f);
@@ -513,14 +508,14 @@ Style* UCssStyles::create_h6_style() {
 }
 
 
-Style* UCssStyles::create_table_style() {
+Style* CssStyles::create_table_style() {
   Style* style = Table::createStyle();
   style->valign = Valign::BOTTOM;
   style->halign = Halign::LEFT;
   return style;
 }
 
-Style* UCssStyles::create_tr_style() {
+Style* CssStyles::create_tr_style() {
   Style* style = UTrow::createStyle();
   style->hspacing = 0;
   style->valign = Valign::BOTTOM;
@@ -528,65 +523,65 @@ Style* UCssStyles::create_tr_style() {
   return style;
 }
 
-Style* UCssStyles::create_td_style() {
+Style* CssStyles::create_td_style() {
   Style* style = UTcell::createStyle();
   style->valign = Valign::BOTTOM;
   style->halign = Halign::LEFT;
   return style;
 }
 
-Style* UCssStyles::create_th_style() {
+Style* CssStyles::create_th_style() {
   Style* style = UTcell::createStyle();
   return style;
 }
 
 
-Style* UCssStyles::create_span_style() {
+Style* CssStyles::create_span_style() {
   Style* style = Element::createStyle();
   return style;
 }
 
-Style* UCssStyles::create_b_style() {
+Style* CssStyles::create_b_style() {
   Style* style = Element::createStyle();
   style->setFont(&Font::bold);
   return style;
 }
 
-Style* UCssStyles::create_i_style() {
+Style* CssStyles::create_i_style() {
   Style* style = Element::createStyle();
   style->setFont(&Font::italic);
   return style;
 }
 
-Style* UCssStyles::create_em_style() {
+Style* CssStyles::create_em_style() {
   Style* style = Element::createStyle();
   //style->font = &Font::fill;
   style->setColors(Color::orange, Color::white);
   return style;
 }
 
-Style* UCssStyles::create_u_style() {
+Style* CssStyles::create_u_style() {
   Style* style = Element::createStyle();
   style->setFont(&Font::underline);
   return style;
 }
 
-Style* UCssStyles::create_font_style() {
+Style* CssStyles::create_font_style() {
   Style* style = Element::createStyle();
   return style;
 }
 
-Style* UCssStyles::create_img_style() {
+Style* CssStyles::create_img_style() {
   Style* style = Box::createStyle();
   return style;
 }
 
-Style* UCssStyles::create_br_style() {
+Style* CssStyles::create_br_style() {
   Style* style = Element::createStyle();
   return style;
 }
 
-Style* UCssStyles::create_a_style() {                  // A REVOIR  !!!@@@@
+Style* CssStyles::create_a_style() {                  // A REVOIR  !!!@@@@
   Style* href_style = LinkButton::createStyle();
   href_style->setBgcolors(Color::none);
   return href_style;

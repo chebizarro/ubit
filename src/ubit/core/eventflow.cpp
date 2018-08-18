@@ -600,7 +600,6 @@ void EventFlow::openTipCB(TimerEvent& e) {
   }
 }
 
-/* ==================================================== [Elc] ======= */
 
 static const char* telepointer_xpm[] = {
   " 8 8 2 1",

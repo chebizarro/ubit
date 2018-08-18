@@ -131,8 +131,7 @@ namespace ubit {
 #endif
   };
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  
+    
   class UTimerImpl {
   public:
     static unsigned long getTime();

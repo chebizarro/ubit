@@ -351,7 +351,6 @@ const String* MessageEvent::getMessage() const {
 
 UResizeEvent::UResizeEvent(const Condition& c, View* v) : UViewEvent(c, v) {} 
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 PaintEvent::PaintEvent(const Condition& c, View* v, const Rectangle* winclip) : 
 UViewEvent(c, v),

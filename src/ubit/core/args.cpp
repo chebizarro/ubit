@@ -39,7 +39,6 @@ int Ncreate, Ndelete;
 UArgsChildren::UArgsChildren() {Ncreate++;}
 UArgsChildren::~UArgsChildren() {Ndelete--;}
 */
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 Child operator/(const Condition& cond, Node& b) {
   return Child(&b, cond);
@@ -53,7 +52,6 @@ Child operator/(const Condition& cond, Node* b) {
   else return Child(b, cond);
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 bool Args::empty() const {
   return children->empty();

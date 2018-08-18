@@ -29,8 +29,7 @@
 
 namespace ubit {
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  /** UFlowBox = Box with a Flow Layout (similar to an HTML page).
+    /** UFlowBox = Box with a Flow Layout (similar to an HTML page).
    *  Base class for creating text areas or hypermedia gadgets.
    *
    *  Geometry: the width of a UFlowbox object does do not change when its content
@@ -56,8 +55,7 @@ namespace ubit {
   ///< shortcut that creates a new UFlowBox.
   
    
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  /** UBar = horizontal toolbar or status bar.
+    /** UBar = horizontal toolbar or status bar.
    *  This class is similar to UHbox but with a specific ("toolbar like") decoration.
    *  Buttons included in this object are displayed in a specific
    *  way (their border does not appear, etc.)
@@ -79,8 +77,7 @@ namespace ubit {
   ///< shortcut function that creates a new UBar.
   
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  /** Status bar.
+    /** Status bar.
    *  This class is similar to UHbox but with a specific ("statusbar like") 
    *  decoration.
    *  Buttons included in this object are also displayed in a specific
@@ -102,8 +99,7 @@ namespace ubit {
   ///< shortcut that creates a new UStatusbar.
   
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  /** Card box (or Tabbed Pane).
+    /** Card box (or Tabbed Pane).
    */
   class UCardbox : public Box {
   public:
@@ -162,18 +158,17 @@ namespace ubit {
   ///< shortcut that creates a new UCardbox.
   
     
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  /** document box gadget.
+    /** document box gadget.
    *¨ a box that has a titlebar and a zoomable+scrollable working area.
    *  when a docbox is iconfied the working area is hidden but the titlebar
    * remains visible.
    */
-  class UDocbox : public Box {
+  class DocumentBox : public Box {
   public:
-    UCLASS(UDocbox)
+    UCLASS(DocumentBox)
 
-    UDocbox(Args args = Args::none);
-    virtual ~UDocbox();
+    DocumentBox(Args args = Args::none);
+    virtual ~DocumentBox();
     
     virtual Box& titlebar()           {return *ptitlebar;}
     virtual Scrollpane& scrollpane()  {return *pspane;}
@@ -196,8 +191,7 @@ namespace ubit {
   };
   
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  /** Alertbox gadget
+    /** Alertbox gadget
    */
   class AlertBox : public Box {
   public:

@@ -107,7 +107,7 @@ protected:
   //Scrollpane* scrollpane;
   Box *mainbox;
   Box *show_list, *show_hidden_files;
-  URadioSelect new_sel;
+  RadioSelect new_sel;
   bool autoclose;
   
   virtual void cancelBehavior(InputEvent&);

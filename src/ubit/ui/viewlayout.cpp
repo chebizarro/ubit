@@ -198,7 +198,6 @@ void UViewLayoutImpl::computeHeight(const UpdateContext& ctx,
   else vl.dim.height = vl.min_h = vl.max_h = view->height;
 }
 
-/* ==================================================== [Elc] ======= */
 
 bool View::doLayout(UpdateContext& parp, ViewLayout& vl) {
   UViewLayoutImpl vd(this); 
@@ -359,7 +358,6 @@ void View::doLayout2(UViewLayoutImpl& vd, Element& grp, UpdateContext& curp, Vie
   }
 }
 
-/* ==================================================== [Elc] ======= */
 
 void hintElemHoriz(UViewLayoutImpl& vd, const UpdateContext& curp,
                    const ViewLayout& chvl, Element* chbox) {

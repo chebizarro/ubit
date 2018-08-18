@@ -87,7 +87,6 @@ void View::operator delete(void* p) {
   else Application::impl.addDeleteRequest(static_cast<View*>(p));
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 bool   View::isRealized() const {return hardwin && hardwin->isRealized();}
 Display* View::getDisp()    const {return hardwin ? hardwin->disp : null;}
@@ -125,7 +124,6 @@ bool View::isShown() const {                 // devrait etre optimise !!!
     return parview->isShown();
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /*
  //void setPos(const Point&);
  * changes the position of the view (see details).
@@ -179,7 +177,6 @@ Point View::getWinPos() const {
   else return Point(x, y);
 }
 */
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 Dimension View::getSize() const {return Dimension(width, height);}
 void View::setSize(const Dimension& s) {width = s.width; height = s.height;}
@@ -265,7 +262,6 @@ void View::updatePaintData(const Rectangle* winrect) {     // window coordinates
   //return vup.above_damaged_count;
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void View::updatePaint(const Rectangle* winrect) {     // window coordinates
   View* winview = getWinView();
@@ -297,7 +293,6 @@ void View::updatePaint(const Rectangle* winrect) {     // window coordinates
   //cerr << "<<< View::paintImpl: PAINT win: " << winview->getWin() << endl; 
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void View::updateLayout(const Dimension* size, bool upd_paint_data) {
   View* winview = getWinView();
@@ -375,7 +370,6 @@ View* View::findInChildren(Element* grp, const Point& winpos,
   return null;
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 View* View::findInGroup(Element* grp, const Point& winpos, 
                           const UpdateContext& par_ctx, ViewFind& vf)
@@ -385,7 +379,6 @@ View* View::findInGroup(Element* grp, const Point& winpos,
   return findInChildren(grp, winpos, ctx, vf);
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // wpos = pos in hard window or in 3D window
 
 bool View::containsWC(const Point& pos_in_win) {     // CF SHAPE & HIDE   !!!@@@!!!!
@@ -454,7 +447,6 @@ FOUND:
   return this;
 } 
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 View* View::findSource(ViewFind& vf, Point& source_pos) {
   // vf.ref_pos = pos in refview
@@ -481,7 +473,6 @@ View* View::findSourceNext(ViewFind& vf, Point& source_pos) {
   return source_view;
 }
   
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     
 ViewFind::ViewFind(View* win_view, const Point win_pos, 
                      UBehavior::InputType intype, unsigned char catch_mask) :
@@ -521,7 +512,6 @@ UViewContext::~UViewContext() {
   delete upd_context;
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 namespace impl {
 
 struct UViewLink {
@@ -594,7 +584,6 @@ static bool findView(UViewLink* l, UViewContext& vc) {
 }
 
 }  //endof namespace impl
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 bool View::findContext(UViewContext& vc, FindMode fmode) {
   delete vc.upd_context; vc.upd_context = null; // faudrait un unique_ptr<> !!!
@@ -606,7 +595,6 @@ bool View::findContext(UViewContext& vc, FindMode fmode) {
   return impl::findView(&l, vc);
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 Data* View::findData(UDataContext& dc, const Point& pos,
                        const Data* searched_data, int strpos1, int strpos2) {
@@ -678,7 +666,6 @@ bool View::findDataH(UpdateContext& ctx, ChildIter data_iter, ChildIter end_iter
   return false;	// continuer a chercher (dans les 2cas)
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 bool View::findDataV(UpdateContext& ctx, ChildIter data_iter, ChildIter end_iter, 
                       const Rectangle& r, UViewUpdate& vup) {
@@ -701,7 +688,6 @@ bool View::findDataV(UpdateContext& ctx, ChildIter data_iter, ChildIter end_iter
   return false;	// continuer a chercher (dans les 2cas)
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 bool View::findDataPtr(UpdateContext& ctx, ChildIter data_iter, ChildIter end_iter, 
                         const Rectangle& r, UViewUpdate& vup) {

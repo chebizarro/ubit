@@ -49,9 +49,9 @@ namespace ubit {
   
     /** file mode.
    */
-  class UFileMode {
+  class FileMode {
   public:
-    UFileMode(const String& pathname);
+    FileMode(const String& pathname);
     
     bool isValid() const;
     bool isDir()  const;
@@ -63,18 +63,18 @@ namespace ubit {
     int getMode() const {return mode;}
     
   protected:
-    UFileMode() {}
+    FileMode() {}
     int mode;  //mode_t mode;
   };
   
     /** file info.
    */
-  class UFileInfo : public UFileMode {
+  class FileInfo : public FileMode {
   public:
-    UFileInfo(const String& path);
+    FileInfo(const String& path);
     ///< sets fileinfo data for this path and stores path as a name.
     
-    UFileInfo(const char* fullpath, const char* fname);  
+    FileInfo(const char* fullpath, const char* fname);  
     ///< sets fileinfo data for fullpath and stores fname as a name.
     
     void setPath(const String& path);
@@ -117,7 +117,7 @@ namespace ubit {
   
   /** file info container.
    */
-  typedef std::vector<UFileInfo*> UFileInfos;
+  typedef std::vector<FileInfo*> UFileInfos;
   
     /** File Directory.
    */
@@ -160,10 +160,10 @@ namespace ubit {
     
   private:
     friend class IconBox;
-    UFileInfo dir_info;
+    FileInfo dir_info;
     UFileInfos file_infos;
     std::vector<String*> filters;
-    static bool compareEntries(const UFileInfo*, const UFileInfo*);  
+    static bool compareEntries(const FileInfo*, const FileInfo*);  
     static void parseFilter(std::vector<String*>& filters, const String& filter);
   };
   

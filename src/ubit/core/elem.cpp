@@ -73,7 +73,6 @@ Style* Element::createStyle() {
   return s;
 }
 
-/* ==================================================== [Elc] ======= */
 
 Element::Element(Args a) {
   memset(&emodes, 0, sizeof(emodes));
@@ -148,7 +147,6 @@ void Element::destructs() {
   omodes.IS_DESTRUCTED = true;
 }
 
-/* ==================================================== [Elc] ======= */
 
 Element& Element::addImpl(const Args& a, ChildIter pos, Children& list) {
   bool update = false;
@@ -199,7 +197,6 @@ bool Element::addImpl1(const Child& c, ChildIter pos, Children& list) {
   return true;
 }
 
-/* ==================================================== [Elc] ======= */
 
 Element& Element::removeImpl(ChildIter pos, int N, bool autodel, Children& list) {
   bool update = false;
@@ -297,7 +294,6 @@ bool Element::removeImpl1(ChildIter pos, int auto_delete, Children& list) {
   return true;
 }
 
-/* ==================================================== [Elc] ======= */
 
 bool Element::isParentOf(const Node& b) const {
   return b.isChildOf(*this, true);
@@ -429,7 +425,7 @@ Element& Element::removeAllAttrs(bool autodel) {
  void Element::closeWin(int status) {
    for (UParentIter p = pbegin(); p != pend(); ++p) {
     Element* par = *p;
-    if (par) {    // par == null if no other parent (UFrame or similar)
+    if (par) {    // par == null if no other parent (Frame or similar)
       Window* win = par->toWin();
       if (!win) par->closeWin(status);
       //pas question de fermer le mainframe de cette maniere
@@ -497,7 +493,7 @@ bool Element::isShown() const {
   
   for (UParentIter p = pbegin(); p != pend(); ++p) {
     Element* parent = *p;
-    if (!parent || parent == this) {  // cas toplevel (UFrame or similar)
+    if (!parent || parent == this) {  // cas toplevel (Frame or similar)
       if (isShowable()) return true;
     }
     else {
@@ -584,7 +580,6 @@ void Element::deleteViewsInside(const vector<View*>& parent_views) {
     getSubGroup()->deleteViewsInside(parent_views);
 }
 
-/* ==================================================== [Elc] ======= */
 
 int Element::_getTextLength(bool recursive) const {
   int len = 0;
@@ -666,7 +661,6 @@ String Element::retrieveText(bool recursive) const {
   return res;
 }
 
-/* ==================================================== [Elc] ======= */
 
 bool Element::isEnabled() const  {return ostate != UOn::DISABLED;}
 bool Element::isArmed()   const  {return ostate == UOn::ARMED;}
@@ -725,7 +719,6 @@ Element& Element::ignoreEvents(bool state)  {
   return *this;
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 Element& Element::catchEvents(const Child& condition_callback_expr)  {
   const Condition* cond = condition_callback_expr.getCond();
@@ -744,7 +737,6 @@ Element& Element::catchEvents(const Child& condition_callback_expr)  {
   return *this;
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 struct _UObserverCallbacks : public Attribute {
   void addAttr(const Child& callback) {_addAttr(callback);}
@@ -768,7 +760,6 @@ Element& Element::observeChildrenEvents(const Child& callback) {
   return *this;
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 namespace impl {
   
   struct CALLCELL {
@@ -813,7 +804,6 @@ namespace impl {
   };
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 bool Element::hasCallback(long c) const {
   return (c & callback_mask) != 0; 
@@ -888,7 +878,6 @@ bool Element::fire(Event& e) const {
   return fired;
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 Element& Element::setEnabled(bool state, bool call_cbs) {
   if (state == isEnabled()) return *this;  // avoid infinite loop!  
@@ -984,7 +973,6 @@ void Element::enterBehavior(InputEvent& e, bool is_browsing) {
   }
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void Element::leaveBehavior(InputEvent& e, bool is_browsing) {
   EventFlow& f = *e.getFlow();
@@ -1027,7 +1015,6 @@ void Element::leaveBehavior(InputEvent& e, bool is_browsing) {
   if (emodes.HAS_TIP) f.closeTipRequest(e);
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void Element::armBehavior(InputEvent& e, bool is_browsing) {
   EventFlow& f = getEventFlow(e);
@@ -1130,7 +1117,6 @@ void Element::armBehavior(InputEvent& e, bool is_browsing) {
   }  //endif(armable)
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void Element::disarmBehavior(InputEvent& e, bool is_browsing) {
   EventFlow& f = getEventFlow(e);
@@ -1230,7 +1216,6 @@ void Element::disarmBehavior(InputEvent& e, bool is_browsing) {
   }
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void Element::actionBehavior(InputEvent& e) {
   //f.inAction = this;
@@ -1274,7 +1259,6 @@ void Element::actionBehavior(InputEvent& e) {
   }
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void Element::keyPressBehavior(UKeyEvent& e) {
   if (ostate == UOn::DISABLED) return;    // jamais execute si disabled
@@ -1296,7 +1280,6 @@ void Element::keyPressBehavior(UKeyEvent& e) {
   }
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // NB: certaines implementation pourraient etre nettement plus compliquees,
 // le UOn::type pouvant eventuellement etre appele apres le keyReleaseBehavior
 

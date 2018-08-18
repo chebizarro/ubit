@@ -111,7 +111,6 @@ Node& Node::removeAllAttrs(bool autodel) {  // @@@@ a revoir % Element::removeAl
   return *this;
 }
 
-/* ==================================================== [Elc] ======= */
 // ATT avec les parents: les objets UCONST peuvent avoir bcp de parents
 // (idealement il ne faudrait pas faire ces liens)
 
@@ -190,7 +189,6 @@ View* Node::getParentView(const InputEvent& e) const {
   return getParentView(e.getView());
 }
 
-/* ==================================================== [Elc] ======= */
 
 void Node::removeFromParents(bool update_parents) {
   // nb: on enleve le 1er jusuq'a ce qu'il n'y en ait plus
@@ -244,7 +242,7 @@ bool Node::isChildOf(const Element& possible_ancestor, bool indirect) const {
 
   for (UParentIter p = pbegin(); p != pend(); ++p) {
     Element* par = *p;
-    // par == null or this if no other parent (UFrame or similar)
+    // par == null or this if no other parent (Frame or similar)
     if (par && par != this) {
       if (par == &possible_ancestor) return true; 
       else if (indirect) {
@@ -255,7 +253,6 @@ bool Node::isChildOf(const Element& possible_ancestor, bool indirect) const {
   return false; // not found
 }
 
-/* ==================================================== [Elc] ======= */
 
   // !!! cf Element::fire() !!!@@@@@              !!!!!!!!!!!!!!!!
   
@@ -286,7 +283,6 @@ bool Node::fire(Event& e) const {
   return fired;
 }
 
-/* ==================================================== [Elc] ======= */
 
 Data& Data::onChange(UCall& c) {
   addChangeCall(c);
@@ -355,7 +351,6 @@ ChildIter Children::findBox(const String& str, bool ignore_case) {
   return end();
 }
 
-/* ==================================================== [Elc] ======= */
 
 void Parents::removeFirst(Child* c) {
   for (UParentIter p = begin(); p != end(); ++p) {

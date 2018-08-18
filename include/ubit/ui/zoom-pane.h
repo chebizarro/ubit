@@ -78,8 +78,7 @@ namespace ubit {
   ///< shortcut function that creates a new ZoomPane.
 
 
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  /** Zoom menu for zooming and panning widgets.
+    /** Zoom menu for zooming and panning widgets.
    * used in ZoomPane among other things.
    */
   class ZoomMenu: public ControlMenu {
@@ -102,8 +101,7 @@ namespace ubit {
   };
   
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  /** Zooming conditions (for semantic zooming).
+    /** Zooming conditions (for semantic zooming).
    * objects prefixed by this range condition will only appear or be effective
    * if the scale (see Scale) is inside this range.
    * example:

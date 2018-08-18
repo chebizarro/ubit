@@ -32,8 +32,7 @@
 
 namespace ubit {
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  
+    
   class UDefaultAttribute : public Attribute {
   public:
     struct MetaClass : public Class {
@@ -58,8 +57,7 @@ namespace ubit {
     const Class& cid;  // !!ATT aux destructions, un unique_ptr<> serait preferable !!
   };
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  
+    
   class UDefaultInlineElement : public Element {
   public:
     struct MetaClass : public Class {
@@ -85,8 +83,7 @@ namespace ubit {
     const Class& cid;  // !!ATT aux destructions, un unique_ptr<> serait preferable !!
   };
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  
+    
   class UDefaultBlockElement : public Element {
   public:
     struct MetaClass : public Class {
@@ -112,8 +109,7 @@ namespace ubit {
     const Class& cid;  // !!ATT aux destructions, un unique_ptr<> serait preferable !!
   };
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  
+    
   class AttributeClassMap {
   public:
     ~AttributeClassMap();
@@ -136,8 +132,7 @@ namespace ubit {
     Map map;
   };
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  
+    
   class ElementClassMap {
   public:
     ~ElementClassMap();
@@ -159,8 +154,7 @@ namespace ubit {
     Map map;
   };
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  
+    
   class StyleSheet : public ElementClassMap {
   public:
     ~StyleSheet();

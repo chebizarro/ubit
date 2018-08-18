@@ -75,11 +75,10 @@ presize_btn(new Box)
       + *presize_btn);
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 Style* UPalette::createStyle() {
   Style* s = Box::createStyle();
-  static Border* b = new URoundBorder(Border::LINE,Color::navy,Color::white,2,2,15,15);
+  static Border* b = new RoundBorder(Border::LINE,Color::navy,Color::white,2,2,15,15);
   s->local.border = b;
   return s;
 }

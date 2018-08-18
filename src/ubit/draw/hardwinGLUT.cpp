@@ -49,7 +49,6 @@ void UHardwinGLUT::swapBuffers() {
   if (cur_win != sys_win) glutSetWindow(cur_win);
 }
 */
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 //NB: move fait par programme (PAS par l'utilisateur: cf Display::on_configure())
 void UHardwinGLUT::setPos(const Point& p) {
@@ -97,7 +96,6 @@ Point UHardwinGLUT::getScreenPos() const {
   return pos;
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //NB: resize fait par programme (PAS par l'utilisateur: cf Display::on_configure())
 
 void UHardwinGLUT::setSize(const Dimension& size) {
@@ -112,7 +110,6 @@ void UHardwinGLUT::setSize(const Dimension& size) {
   if (cur_win != sys_win) glutSetWindow(cur_win);
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 Dimension UHardwinGLUT::getSize() const {
   if (sys_win <= 0) return Dimension(0,0);
@@ -126,7 +123,6 @@ Dimension UHardwinGLUT::getSize() const {
   return dim;
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void UHardwinGLUT::show(bool state) {
   if (sys_win <= 0) return;
@@ -138,7 +134,6 @@ void UHardwinGLUT::show(bool state) {
   if (cur_win != sys_win) glutSetWindow(cur_win);
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void UHardwinGLUT::toFront() {
   if (sys_win <= 0) return;
@@ -149,7 +144,6 @@ void UHardwinGLUT::toFront() {
   if (cur_win != sys_win) glutSetWindow(cur_win);
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void UHardwinGLUT::toBack() {
   if (sys_win <= 0) return;
@@ -160,7 +154,6 @@ void UHardwinGLUT::toBack() {
   if (cur_win != sys_win) glutSetWindow(cur_win);
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void UHardwinGLUT::setCursor(const Cursor* curs) {
   if (sys_win <= 0) return;
@@ -172,7 +165,6 @@ void UHardwinGLUT::setCursor(const Cursor* curs) {
   if (cur_win != sys_win) glutSetWindow(cur_win);  
  }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void UHardwinGLUT::setTitle(const String& s) {
   if (sys_win <= 0 || !s.c_str()) return;
@@ -183,7 +175,6 @@ void UHardwinGLUT::setTitle(const String& s) {
   if (cur_win != sys_win) glutSetWindow(cur_win);
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 String UHardwinGLUT::getTitle() const {
   if (sys_win <= 0) return "";
@@ -196,7 +187,6 @@ String UHardwinGLUT::getTitle() const {
   return "";
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void UHardwinGLUT::setIconTitle(const String& s) {
   if (sys_win <= 0 || !s.c_str()) return;
@@ -207,7 +197,6 @@ void UHardwinGLUT::setIconTitle(const String& s) {
   if (cur_win != sys_win) glutSetWindow(cur_win);
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 String UHardwinGLUT::getIconTitle() const {
   if (sys_win <= 0) return "";
@@ -220,7 +209,6 @@ String UHardwinGLUT::getIconTitle() const {
   return "";
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // no effect with GLUT
 
 void UHardwinGLUT::setClassProperty(const String& instance_name, const String& class_name) {
