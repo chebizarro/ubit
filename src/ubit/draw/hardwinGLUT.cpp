@@ -22,7 +22,7 @@
 #include <ubit/ucall.hpp>
 #include <ubit/uon.hpp>
 #include <ubit/core/string.h>
-#include <ubit/ucursor.hpp>
+#include <ubit/ui/cursor.h>
 #include <ubit/ui/window.h>
 #include <ubit/umsproto.hpp>
 #include <ubit/nat/udispGLUT.hpp>

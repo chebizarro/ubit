@@ -25,11 +25,11 @@
 #include <ubit/ucall.hpp>
 #include <ubit/uon.hpp>
 #include <ubit/ui/box.h>
-#include <ubit/ucolor.hpp>
+#include <ubit/draw/color.h>
 #include <ubit/ui/view.h>
 #include <ubit/core/event.h>
 #include <ubit/ui/updatecontext.h>
-#include <ubit/ucursor.hpp>
+#include <ubit/ui/cursor.h>
 #include <ubit/core/application.h>
 
 namespace ubit {

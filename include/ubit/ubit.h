@@ -36,11 +36,11 @@
 
 #include <ubit/core/attribute.h>
 #include <ubit/uboxgeom.hpp>
-#include <ubit/uborder.hpp>
+#include <ubit/ui/uborder.h>
 #include <ubit/ui/background.h>
-#include <ubit/ucolor.hpp>
-#include <ubit/ucursor.hpp>
-#include <ubit/uedit.hpp>
+#include <ubit/draw/color.h>
+#include <ubit/ui/cursor.h>
+#include <ubit/ui/textedit.h>
 #include <ubit/draw/font.h>
 
 #include <ubit/uon.hpp>
@@ -49,7 +49,7 @@
 #include <ubit/core/data.h>
 #include <ubit/core/string.h>
 #include <ubit/usymbol.hpp>
-#include <ubit/uima.hpp>
+#include <ubit/draw/image.h>
 #include <ubit/upix.hpp>
 
 #include <ubit/core/element.h>
@@ -60,36 +60,36 @@
 #include <ubit/ui/menu.h>
 #include <ubit/ui/control-menu.h>
 #include <ubit/ui/interactors.h>
-#include <ubit/uscrollpane.hpp>
-#include <ubit/uscrollbar.hpp>
-#include <ubit/uslider.hpp>
-#include <ubit/utable.hpp>
-#include <ubit/uchoice.hpp>
-#include <ubit/ufilebox.hpp>
-#include <ubit/ulistbox.hpp>
-#include <ubit/upalette.hpp>
-#include <ubit/utreebox.hpp>
+#include <ubit/ui/scrollpane.h>
+#include <ubit/ui/scrollbar.h>
+#include <ubit/ui/slider.h>
+#include <ubit/ui/table.h>
+#include <ubit/ui/choice.h>
+#include <ubit/ui/filechooser.h>
+#include <ubit/ui/listbox.h>
+#include <ubit/ui/palette.h>
+#include <ubit/ui/treebox.h>
 
-#include <ubit/uzoom.hpp>
-#include <ubit/uglcanvas.hpp>
-#include <ubit/u3d.hpp>
+#include <ubit/ui/zoom-pane.h>
+#include <ubit/ui/glcanvas.h>
+#include <ubit/ui/3d.h>
 
 #include <ubit/core/application.h>
 #include <ubit/ui/display.h>
 #include <ubit/core/event.h>
 #include <ubit/ukey.hpp>
 #include <ubit/ui/view.h>
-#include <ubit/ufontmetrics.hpp>
-#include <ubit/uupdate.hpp>
+#include <ubit/ui/fontmetrics.h>
+#include <ubit/ui/update.h>
 #include <ubit/ui/updatecontext.h>
-#include <ubit/ugraph.hpp>
+#include <ubit/draw/graph.h>
 #include <ubit/core/config.h>
-#include <ubit/ustyle.hpp>
-#include <ubit/utimer.hpp>
-#include <ubit/usource.hpp>
-#include <ubit/ueventflow.hpp>
-#include <ubit/selection.hpp>
-#include <ubit/ufile.hpp>
+#include <ubit/draw/style.h>
+#include <ubit/ui/timer.h>
+#include <ubit/net/source.h>
+#include <ubit/ui/eventflow.h>
+#include <ubit/ui/selection.h>
+#include <ubit/core/file.h>
 
 #endif
 

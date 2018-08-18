@@ -17,15 +17,15 @@
 #include <iostream>
 #include <ubit/uboxgeom.hpp>
 #include <ubit/ui/interactors.h>
-#include <ubit/upalette.hpp>
-#include <ubit/ucolor.hpp>
+#include <ubit/ui/palette.h>
+#include <ubit/draw/color.h>
 #include <ubit/draw/font.h>
 #include <ubit/uon.hpp>
 #include <ubit/ucall.hpp>
 #include <ubit/core/event.h>
-#include <ubit/uborder.hpp>
+#include <ubit/ui/uborder.h>
 #include <ubit/usymbol.hpp>
-#include <ubit/ustyle.hpp>
+#include <ubit/draw/style.h>
 #include <ubit/ui/background.h>
 using namespace std;
 

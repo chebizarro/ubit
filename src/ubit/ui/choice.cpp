@@ -28,9 +28,9 @@
 #include <ubit/uon.hpp>
 #include <ubit/ui/box.h>
 #include <ubit/core/event.h>
-#include <ubit/uchoice.hpp>
-#include <ubit/uupdate.hpp>
-#include <ubit/ueventflow.hpp>
+#include <ubit/ui/choice.h>
+#include <ubit/ui/update.h>
+#include <ubit/ui/eventflow.h>
 #include <ubit/ucall.hpp>
 using namespace std;
 

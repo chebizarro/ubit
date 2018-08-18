@@ -25,7 +25,7 @@
 #define	_uinteractors_hpp_ 1
 
 #include <ubit/core/string.h>
-#include <ubit/uedit.hpp>
+#include <ubit/ui/textedit.h>
 #include <ubit/ui/box.h>
 
 namespace ubit {

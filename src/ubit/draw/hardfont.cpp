@@ -28,7 +28,7 @@
 #include <ubit/core/string.h>
 #include <ubit/draw/font.h>
 #include <ubit/draw/ufontImpl.hpp>
-#include <ubit/core/uappliImpl.hpp>
+#include <ubit/core/appimpl.h>
 #include <ubit/udispX11.hpp>
 #include <ubit/uhardfont.hpp>
 

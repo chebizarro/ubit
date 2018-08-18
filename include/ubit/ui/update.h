@@ -110,7 +110,7 @@ private:
   friend class Box;
   friend class Window;
   friend class View;
-  friend class UAppliImpl;
+  friend class AppImpl;
   friend class UpdateRequest;
   long modes;
 

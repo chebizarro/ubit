@@ -16,7 +16,7 @@
 #include <iostream>
 #include <ubit/ubit_features.h>
 #include <ubit/ubit.hpp>
-#include <ubit/ufile.hpp>
+#include <ubit/core/file.h>
 #include <ubit/core/doc.h>
 #include <ubit/core/dom.h>
 using namespace std;

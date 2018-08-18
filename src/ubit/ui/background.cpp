@@ -26,7 +26,7 @@
 #include <iostream>
 #include <ubit/ui/background.h>
 #include <ubit/ui/updatecontext.h>
-#include <ubit/ucolor.hpp>
+#include <ubit/draw/color.h>
 #include <ubit/upix.hpp>
 #include <ubit/core/application.h>
 using namespace std;

@@ -25,7 +25,7 @@
 #define	_uupdatecontext_hpp_ 1
 
 #include <ubit/udefs.hpp>
-#include <ubit/ustyle.hpp>
+#include <ubit/draw/style.h>
 #include <ubit/draw/ufontImpl.hpp>
 #include <ubit/ui/view.h>
 #include <vector>

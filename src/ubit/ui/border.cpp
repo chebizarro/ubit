@@ -16,12 +16,12 @@
 #include <iostream>
 #include <ubit/ubit_features.h>
 #include <ubit/ucall.hpp>
-#include <ubit/ucolor.hpp>
-#include <ubit/uborder.hpp>
-#include <ubit/ugraph.hpp>
+#include <ubit/draw/color.h>
+#include <ubit/ui/uborder.h>
+#include <ubit/draw/graph.h>
 #include <ubit/ui/view.h>
 #include <ubit/ui/uviewImpl.hpp>
-#include <ubit/uupdate.hpp>
+#include <ubit/ui/update.h>
 #include <ubit/ui/updatecontext.h>
 #include <ubit/ui/box.h>
 #include <ubit/ui/window.h>

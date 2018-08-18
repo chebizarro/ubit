@@ -26,7 +26,7 @@
 
 #include <map>
 #include <ubit/udefs.hpp>
-#include <ubit/ustyle.hpp>
+#include <ubit/draw/style.h>
 #include <ubit/ustyleparser.hpp>
 #include <ubit/core/dom.h>
 

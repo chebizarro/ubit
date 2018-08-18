@@ -22,10 +22,10 @@
 #include <ubit/udialogs.hpp>
 #include <ubit/ui/uwinImpl.hpp>
 #include <ubit/core/application.h>
-#include <ubit/core/uappliImpl.hpp>
+#include <ubit/core/appimpl.h>
 #include <ubit/ui/interactors.h>
 #include <ubit/ui/background.h>
-#include <ubit/ucolor.hpp>
+#include <ubit/draw/color.h>
 #include <ubit/ucall.hpp>
 using namespace std;
 namespace ubit {

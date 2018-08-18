@@ -15,10 +15,10 @@
 
 #include <iostream>
 #include <ubit/ubit_features.h>
-#include <ubit/uslider.hpp>
-#include <ubit/uscrollbar.hpp>
-#include <ubit/ustyle.hpp>
-#include <ubit/uupdate.hpp>
+#include <ubit/ui/slider.h>
+#include <ubit/ui/scrollbar.h>
+#include <ubit/draw/style.h>
+#include <ubit/ui/update.h>
 #include <ubit/ui/updatecontext.h>
 #include <ubit/upix.hpp>
 #include <ubit/uon.hpp>

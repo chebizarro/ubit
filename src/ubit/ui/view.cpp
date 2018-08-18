@@ -30,9 +30,9 @@
 #include <ubit/ui/window.h>
 #include <ubit/ui/uwinImpl.hpp>
 #include <ubit/core/application.h>
-#include <ubit/core/uappliImpl.hpp>
-#include <ubit/ugraph.hpp>
-#include <ubit/ufontmetrics.hpp>
+#include <ubit/core/appimpl.h>
+#include <ubit/draw/graph.h>
+#include <ubit/ui/fontmetrics.h>
 #include <ubit/uon.hpp>
 #include <ubit/core/event.h>
 using namespace std;
@@ -274,7 +274,7 @@ void View::updatePaint(const Rectangle* winrect) {     // window coordinates
   //cerr << endl <<">>> View::paintImpl: PAINT win: " << winview->getWin() << endl; 
   
   if (Application::impl.isProcessingLayoutUpdateRequests()) {
-    // UAppliImpl::processUpdateRequests() is processing the layout requests
+    // AppImpl::processUpdateRequests() is processing the layout requests
     // so that nothing should be drawn at this stage (normally the next line
     // should never be executed except in exotic cases)
     updatePaintData(winrect);

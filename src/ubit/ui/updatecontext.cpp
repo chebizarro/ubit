@@ -15,7 +15,7 @@
 
 #include <ubit/ubit_features.h>
 #include <iostream>
-#include <ubit/ucolor.hpp>
+#include <ubit/draw/color.h>
 #include <ubit/uboxgeom.hpp>
 #include <ubit/ui/box.h>
 #include <ubit/ui/updatecontext.h>

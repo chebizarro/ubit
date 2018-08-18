@@ -17,13 +17,13 @@
 #include <iostream>
 #include <ubit/udefs.hpp>
 #include <ubit/ucond.hpp>
-#include <ubit/uedit.hpp>
+#include <ubit/ui/textedit.h>
 #include <ubit/uboxgeom.hpp>
 #include <ubit/ui/window.h>
 #include <ubit/ui/view.h>
 #include <ubit/ui/uviewImpl.hpp>
-#include <ubit/ugraph.hpp>
-#include <ubit/ufontmetrics.hpp>
+#include <ubit/draw/graph.h>
+#include <ubit/ui/fontmetrics.h>
 #include <ubit/core/application.h>
 #include <ubit/uon.hpp>
 using namespace std;

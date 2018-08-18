@@ -127,18 +127,18 @@ namespace ubit {
     
     virtual ~Application();
     
-    static Application& appli();
+    static Application& application();
     /**< returns a reference to the Application instance of the program.
      * There is *only one* Application for a given program.
      * Throws a UError exception if the Application has not yet been created.
      */
     
-    static Application* getAppli();
+    static Application* getApplication();
     /**< returns a pointer the Application instance of the program.
-     * same as Application::appli() except that no exception is thrown.
+     * same as Application::application() except that no exception is thrown.
      */
     
-    static Config& getConf() {return conf;}
+    static Config& getConfig() {return conf;}
     ///< returns the configuration of the application, @see Config.
     
     static const char* getVersion();
@@ -390,12 +390,6 @@ namespace ubit {
     static bool hasTelePointers();
     ///< [impl] returns true if the appli has telepointers.
     
-    // - - - Impl - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-    
-    friend class EventFlow;
-    
-    static class UAppliImpl& impl;
-    ///< [impl] reference to the object that stores the application data.
     
     String& initConf(int& argc, char** argv, Option*, const char* confile);
     ///< [impl] parses the config specs, inits the global data of the appli, returns the display name.
@@ -410,71 +404,17 @@ namespace ubit {
 
     static void deleteNotify(View*);
     ///< [impl] notifies that a view is being destroyed.
-  };
-  
-  
-  /** Error management.
-   */
-  class ErrorHandler : public Object {
-  public:    
-    ErrorHandler(const String& label, std::ostream* out_stream = &std::cerr);
-    /**< creates a new error handler.
-     * - 'label' identifies the handler (it is the name of the application for the
-     *    default Application error handler).
-     * - 'out_stream' specifies on which output stream errors are written. std::cerr is
-     *    used by default. No errors are written if this argument is null.
-     */
-    
-    virtual ~ErrorHandler();
-    
-    virtual void setOutputStream(std::ostream*);
-    ///< specifies on which output stream errors are written (errors not written on a stream if argument is null).
-    
-    virtual void setOutputBuffer(String*);
-    ///< specifies a string buffer on which errors are written (errors not written on a buffer if argument is null).
-    
-    String& label() {return *plabel;}
-    ///< returns the label property of this ErrorHandler.
-    
-    virtual void warning(const char* funcname, const char* format, ...) const;
-    ///< raises a warning; shortcut for raiseError(UError::WARNING, null, ...).
-    
-    virtual void error(const char* funcname, const char* format, ...) const;
-    ///< raises an error; shortcut for raiseError(UError::ERROR, null, ...).
-    
-    virtual void error(int errnum, const Object*, const char* funcname, 
-                       const char* format, ...) const;
-    ///< raises an error; shortcut for raiseError(UError::ERROR, ...).
-    
-    virtual void parserError(int errnum, const Char* text_buffer,
-                                  const char* msg_start, const String& name,
-                                  const char* msg_end, const Char* line) const;
-    ///< used by XML and Style parsers to raise a formatted error.
-    
-    virtual void raiseError(int errnum, const Object*, const char* funcname, 
-                            const char* format, va_list) const;
-    /**< raises an error: prints out a message and/or generate an exception.
-     * this method:
-     * - displays an error message (on std::cerr by default, see below)
-     * - throws a UError exception if 'errnum' is < 0.
-     *   Predefined errnums are UError::WARNING, ERROR, FATAL_ERROR, INTERNAL_ERROR 
-     *   but other values may be used if needed.
-     * - 'funcname' should be the name of the function where the error occured
-     * - 'format'is a printf-like format
-     * - '...' is a variadic list of arguments that correspond to 'format'.
-     */
-            
-    virtual void raiseError(int errnum, String* msg) const;
 
-    virtual const char* getErrorName(int errnum) const;
-    virtual void formatMessage(UError&, const char* format, va_list) const;
-    virtual void printOnStream(const UError&) const;
-    virtual void printOnBuffer(const UError&) const;
-    
-  protected:
-    unique_ptr<String> plabel;
-    unique_ptr<String> pbuffer;
-    std::ostream* fout;
+private:
+    //static class AppImpl& impl;
+    ///< [impl] reference to the object that stores the application data.
+
+	const AppImpl* impl() const { return impl_.get(); }
+    AppImpl* impl() { return impl_.get(); }
+	
+	std::unique_ptr<AppImpl> impl_;
+
+
   };
   
 }

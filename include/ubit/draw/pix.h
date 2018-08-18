@@ -25,7 +25,7 @@
 #ifndef _upix_hpp_
 #define	_upix_hpp_ 1
 
-#include <ubit/uima.hpp>
+#include <ubit/draw/image.h>
 
 namespace ubit {
 

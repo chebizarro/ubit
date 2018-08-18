@@ -23,7 +23,7 @@
 
 #ifndef _ufinder_hpp_
 #define _ufinder_hpp_
-#include <ubit/ucolor.hpp>
+#include <ubit/draw/color.h>
 #include <ubit/ui/background.h>
 #include <ubit/ui/menu.h>
 #include <ubit/core/doc.h>

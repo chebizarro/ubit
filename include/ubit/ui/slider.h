@@ -26,7 +26,7 @@
 
 #include <ubit/core/number.h>
 #include <ubit/ui/box.h>
-#include <ubit/ustyle.hpp>
+#include <ubit/draw/style.h>
 
 namespace ubit {
   

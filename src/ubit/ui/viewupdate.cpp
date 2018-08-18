@@ -19,15 +19,15 @@
 #include <ubit/ui/updatecontext.h>
 #include <ubit/uboxgeom.hpp>
 #include <ubit/ui/background.h>
-#include <ubit/uedit.hpp>
-#include <ubit/uima.hpp>
-#include <ubit/ugraph.hpp>
+#include <ubit/ui/textedit.h>
+#include <ubit/draw/image.h>
+#include <ubit/draw/graph.h>
 #include <ubit/ui/uviewImpl.hpp>
 #include <ubit/ui/uwinImpl.hpp>
-#include <ubit/utable.hpp>
-#include <ubit/uscrollpane.hpp>
+#include <ubit/ui/table.h>
+#include <ubit/ui/scrollpane.h>
 #include <ubit/core/application.h>
-#include <ubit/uborder.hpp>
+#include <ubit/ui/uborder.h>
 using namespace std;
 namespace ubit {
 

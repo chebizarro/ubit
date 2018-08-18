@@ -28,13 +28,13 @@
 #include <ubit/uboxgeom.hpp>
 #include <ubit/ui/background.h>
 #include <ubit/uboxes.hpp>
-#include <ubit/ucolor.hpp>  
+#include <ubit/draw/color.h>  
 #include <ubit/upix.hpp>
 #include <ubit/ucall.hpp>
-#include <ubit/uborder.hpp>
+#include <ubit/ui/uborder.h>
 #include <ubit/ui/interactors.h>
-#include <ubit/ulistbox.hpp>
-#include <ubit/uscrollpane.hpp>
+#include <ubit/ui/listbox.h>
+#include <ubit/ui/scrollpane.h>
 #include <ubit/ui/updatecontext.h>
 using namespace std;
 

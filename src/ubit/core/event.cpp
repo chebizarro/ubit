@@ -24,10 +24,10 @@
 #include <ubit/ui/updatecontext.h>
 #include <ubit/ui/uviewImpl.hpp>
 #include <ubit/ui/uwinImpl.hpp>
-#include <ubit/ucolor.hpp>
-#include <ubit/ugraph.hpp>
-#include <ubit/core/uappliImpl.hpp>
-#include <ubit/ueventflow.hpp>
+#include <ubit/draw/color.h>
+#include <ubit/draw/graph.h>
+#include <ubit/core/appimpl.h>
+#include <ubit/ui/eventflow.h>
 #include <ubit/umsproto.hpp>
 #include <ubit/umessage.hpp>
 #include <ubit/uflag.hpp>

@@ -30,9 +30,9 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <ubit/core/application.h>
-#include <ubit/core/uappliImpl.hpp>
+#include <ubit/core/appimpl.h>
 #include <ubit/uon.hpp>
-#include <ubit/utimer.hpp>
+#include <ubit/ui/timer.h>
 #include <ubit/ugl.hpp>
 #include <ubit/ucall.hpp>
 using namespace std;

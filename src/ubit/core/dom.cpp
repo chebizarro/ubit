@@ -16,13 +16,15 @@
 #include <typeinfo>
 #include <iostream>
 #include <cstdio>
+
 #include <ubit/ubit_features.h>
 #include <ubit/ubit.hpp>
 #include <ubit/core/dom.h>
 #include <ubit/core/xmlgrammar.h>
 #include <ubit/core/xmlparser.h>
-#include <ubit/uhtml.hpp>
-#include <ubit/ucss.hpp>   // pour CssAttachment
+#include <ubit/core/html.h>
+#include <ubit/draw/css.h>
+
 using namespace std;
 namespace ubit {
 

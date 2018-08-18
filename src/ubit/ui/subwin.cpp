@@ -28,11 +28,11 @@
 #include <ubit/usubwin.hpp>
 #include <ubit/ui/uwinImpl.hpp>
 #include <ubit/ui/view.h>
-#include <ubit/ustyle.hpp>
+#include <ubit/draw/style.h>
 #include <ubit/core/application.h>
-#include <ubit/core/uappliImpl.hpp>
+#include <ubit/core/appimpl.h>
 #include <ubit/uon.hpp>
-#include <ubit/ucolor.hpp>
+#include <ubit/draw/color.h>
 
 #include <ubit/udispX11.hpp>  // !!!@@@
 

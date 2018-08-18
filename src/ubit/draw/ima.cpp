@@ -26,20 +26,20 @@
 #include <list>
 #include <iostream>
 #include <cstring>
-#include <ubit/ufile.hpp>
+#include <ubit/core/file.h>
 #include <ubit/ucall.hpp>
 #include <ubit/ui/updatecontext.h>
-#include <ubit/ugraph.hpp>
+#include <ubit/draw/graph.h>
 #include <ubit/ui/window.h>
 #include <ubit/ui/view.h>
-#include <ubit/ucolor.hpp>
+#include <ubit/draw/color.h>
 #include <ubit/core/string.h>
-#include <ubit/uima.hpp>
+#include <ubit/draw/image.h>
 #include <ubit/upix.hpp>
 #include <ubit/core/event.h>
 #include <ubit/core/application.h>
 #include <ubit/ui/box.h>
-#include <ubit/uupdate.hpp>
+#include <ubit/ui/update.h>
 #include <ubit/core/config.h>
 #include <ubit/uhardima.hpp>
 using namespace std;
@@ -303,8 +303,8 @@ void Image::getSize(UpdateContext& ctx, Dimension& dim) const {
 
   if (natimas.empty()) {
     if (show_unknown_ima) {            // empecher recursion infinie
-      if (this != d->getConf().unknow_image) {
-        d->getConf().unknow_image->getSize(ctx, dim);
+      if (this != d->getConfig().unknow_image) {
+        d->getConfig().unknow_image->getSize(ctx, dim);
       }
       else dim.width = dim.height = 0;
     }
@@ -328,8 +328,8 @@ void Image::getSize(UpdateContext& ctx, Dimension& dim) const {
 void Image::paint(Graph& g, UpdateContext& props, const Rectangle& r) const {
   if (natimas.empty()) {
     if (show_unknown_ima) {                //empecher recursion infinie
-      if (this != g.getDisp()->getConf().unknow_image) 
-        g.getDisp()->getConf().unknow_image->paint(g, props, r);
+      if (this != g.getDisp()->getConfig().unknow_image) 
+        g.getDisp()->getConfig().unknow_image->paint(g, props, r);
     }
     //else nop;
     return;

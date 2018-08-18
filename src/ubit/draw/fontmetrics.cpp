@@ -18,10 +18,10 @@
 #include <ctype.h>
 #include <ubit/core/node.h>
 #include <ubit/draw/font.h>
-#include <ubit/ufontmetrics.hpp>
+#include <ubit/ui/fontmetrics.h>
 #include <ubit/draw/ufontImpl.hpp>
 #include <ubit/core/string.h>
-#include <ubit/ugraph.hpp>
+#include <ubit/draw/graph.h>
 #include <ubit/ui/window.h>
 #include <ubit/ui/updatecontext.h>
 #include <ubit/core/application.h>

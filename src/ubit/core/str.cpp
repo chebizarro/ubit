@@ -25,13 +25,13 @@
 #include <sys/stat.h>
 #include <ubit/udefs.hpp>
 #include <ubit/uon.hpp>
-#include <ubit/ufile.hpp>
+#include <ubit/core/file.h>
 #include <ubit/ui/updatecontext.h>
-#include <ubit/ugraph.hpp>
-#include <ubit/ufontmetrics.hpp>
+#include <ubit/draw/graph.h>
+#include <ubit/ui/fontmetrics.h>
 #include <ubit/ui/view.h>
 #include <ubit/core/string.h>
-#include <ubit/uedit.hpp>
+#include <ubit/ui/textedit.h>
 #include <ubit/Selection.hpp>
 #include <ubit/ui/window.h>
 #include <ubit/core/application.h>

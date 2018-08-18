@@ -77,7 +77,7 @@ public:
    * the ID of the default Display is 0 (the default Display is the Application).
    */
   
-  const UConf& getConf() const {return conf;}
+  const UConf& getConfig() const {return conf;}
   ///< returns the configuration of this Display.
 
   int getBpp() const {return bpp;}
@@ -282,7 +282,7 @@ public:
 
 private:
   friend class Application;
-  friend class UAppliImpl;
+  friend class AppImpl;
   friend class Window;
   friend class UHardwinImpl;
   friend class View;

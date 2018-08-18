@@ -32,7 +32,7 @@
 #include <arpa/inet.h>
 #include <ubit/ucall.hpp>
 #include <ubit/core/application.h>
-#include <ubit/usource.hpp>
+#include <ubit/net/source.h>
 #include <ubit/net/socket.h>
 using namespace std;
 namespace ubit {

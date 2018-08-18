@@ -1,5 +1,5 @@
 /*
- *  appliImpl.hpp
+ *  appimpl.hpp
  *  Ubit GUI Toolkit - Version 8
  *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
@@ -29,10 +29,10 @@
 #include <ubit/core/application.h>
 #include <ubit/core/uclassImpl.hpp>
 #include <ubit/ui/window.h>
-#include <ubit/uupdate.hpp>
-#include <ubit/ustyle.hpp>
+#include <ubit/ui/update.h>
+#include <ubit/draw/style.h>
 #include <ubit/umessage.hpp>
-#include <ubit/utimer.hpp>
+#include <ubit/ui/timer.h>
 
 namespace ubit {
   
@@ -45,9 +45,9 @@ namespace ubit {
   };
   
   
-  class UAppliImpl {
+  class AppImpl {
   public:
-    UAppliImpl();
+    AppImpl();
     
     bool isTerminated() const {return is_terminated;}
     

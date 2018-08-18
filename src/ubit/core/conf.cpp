@@ -28,13 +28,13 @@
 #include <ubit/udefs.hpp>
 #include <ubit/core/node.h>
 #include <ubit/core/config.h>
-#include <ubit/ucolor.hpp>
+#include <ubit/draw/color.h>
 #include <ubit/upix.hpp>
 #include <ubit/ustyleparser.hpp>
 #include <ubit/core/application.h>
 #include <ubit/core/uclassImpl.hpp>  // for StyleSheet (bizarrement)
 #include <ubit/core/event.h>
-#include <ubit/uima.hpp>
+#include <ubit/draw/image.h>
 #include <ubit/ui/background.h>
 using namespace std;
 namespace ubit {

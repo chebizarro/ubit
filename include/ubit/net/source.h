@@ -73,7 +73,7 @@ public:
   virtual void fireClose();
 
 private:
-  friend class UAppliImpl;
+  friend class AppImpl;
   bool is_opened;
   int source;
   int gid;  // input ID when GDK is used

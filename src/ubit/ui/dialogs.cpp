@@ -26,12 +26,12 @@
 #include <ubit/ucall.hpp>
 #include <ubit/udialogs.hpp>
 #include <ubit/ui/uwinImpl.hpp>
-#include <ubit/ustyle.hpp>
+#include <ubit/draw/style.h>
 #include <ubit/uboxgeom.hpp>
 #include <ubit/uboxes.hpp>
 #include <ubit/ui/interactors.h>
 #include <ubit/upix.hpp>
-#include <ubit/ucolor.hpp>
+#include <ubit/draw/color.h>
 using namespace std;
 namespace ubit {
 

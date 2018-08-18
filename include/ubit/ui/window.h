@@ -269,7 +269,7 @@ namespace ubit {
   protected:
     friend class Box;
     friend class Application;
-    friend class UAppliImpl;
+    friend class AppImpl;
     friend class UHardwinImpl;
     friend class USoftwinImpl;
     

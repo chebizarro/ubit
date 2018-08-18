@@ -18,13 +18,13 @@
 
 #include <iostream>
 #include <errno.h>
-#include <ubit/ugraph.hpp>
+#include <ubit/draw/graph.h>
 #include <ubit/core/application.h>
 #include <ubit/uappliImpl.hpp>
-#include <ubit/ueventflow.hpp>
+#include <ubit/ui/eventflow.h>
 #include <ubit/core/config.h>
 #include <ubit/ui/window.h>
-#include <ubit/ucursor.hpp>
+#include <ubit/ui/cursor.h>
 #include <ubit/nat/udispGLUT.hpp>
 #include <ubit/nat/urendercontext.hpp>
 using namespace std;

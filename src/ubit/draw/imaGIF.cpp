@@ -58,8 +58,8 @@ extern "C" {
 }
 
 #include <ubit/udefs.hpp>
-#include <ubit/ufile.hpp>
-#include <ubit/uima.hpp>
+#include <ubit/core/file.h>
+#include <ubit/draw/image.h>
 #include <ubit/core/application.h>
 #include <ubit/uhardima.hpp>
 using namespace std;

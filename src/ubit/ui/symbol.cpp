@@ -24,9 +24,9 @@
 #include <iostream>
 #include <ubit/ubit_features.h>
 #include <ubit/usymbol.hpp>
-#include <ubit/ufontmetrics.hpp>
+#include <ubit/ui/fontmetrics.h>
 #include <ubit/ui/updatecontext.h>
-#include <ubit/ugraph.hpp>
+#include <ubit/draw/graph.h>
 #include <ubit/ui/view.h>
 #include <ubit/ui/window.h>
 #include <ubit/uon.hpp>

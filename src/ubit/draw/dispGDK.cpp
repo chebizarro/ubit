@@ -21,10 +21,10 @@
 #include <ubit/core/config.h>
 #include <ubit/core/application.h>
 #include <ubit/uappliImpl.hpp>
-#include <ubit/ueventflow.hpp>
+#include <ubit/ui/eventflow.h>
 #include <ubit/uon.hpp>
 #include <ubit/ui/window.h>
-#include <ubit/ucursor.hpp>
+#include <ubit/ui/cursor.h>
 #include <ubit/umsproto.hpp>
 #include <ubit/nat/udispGDK.hpp>
 #include <ubit/nat/unatwin.hpp>
@@ -251,7 +251,7 @@ unsigned long UDispGDK::createColor(const unsigned char rgba[4]) {
 
 void UDispGDK::flush() {
 #if UBIT_WITH_GL 
-  //if (disp.getConf().using_gl) glFlush();
+  //if (disp.getConfig().using_gl) glFlush();
   if (Application::isUsingGL()) glFlush();
 #endif
   Flush(sys_disp);
@@ -299,7 +299,7 @@ static GMainLoop *gmainloop = 0, *gsubloop = 0;
 
 void UDispGDK::eventHandler(GdkEvent* e, gpointer appli) {
   if (!e) return;
-  UAppliImpl* a = (UAppliImpl*)appli;
+  AppImpl* a = (AppImpl*)appli;
   UDispGDK* nd = (UDispGDK*)a->displist[0]->getNatDisp();  // A COMPLETER !!!
   nd->dispatchEvent(e);
   if (a->request_mask) a->processPendingRequests();
@@ -308,7 +308,7 @@ void UDispGDK::eventHandler(GdkEvent* e, gpointer appli) {
 static void destroyHandler(gpointer) {}
 
 void UDispGDK::startAppli() {
-  UAppliImpl& a = Application::impl;
+  AppImpl& a = Application::impl;
   gdk_error_trap_push();    // supprimer les XErrors
   gdk_rgb_init();
   gdk_event_handler_set(eventHandler, &a, destroyHandler);
@@ -320,7 +320,7 @@ void UDispGDK::quitAppli() {
 }
 
 void UDispGDK::startLoop(bool main) {
-  UAppliImpl& a = Application::impl;
+  AppImpl& a = Application::impl;
   if (main) {
     a.mainloop_running = true;
     g_main_loop_run(gmainloop);
@@ -332,7 +332,7 @@ void UDispGDK::startLoop(bool main) {
 }
 
 void UDispGDK::quitLoop(bool main) {
-  UAppliImpl& a = Application::impl;
+  AppImpl& a = Application::impl;
   if (main) {
     a.mainloop_running = a.subloop_running = false;
     g_main_loop_quit(gmainloop);

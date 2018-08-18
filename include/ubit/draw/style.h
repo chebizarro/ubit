@@ -25,7 +25,7 @@
 #define	UBIT_DRAW_STYLE_H_
 
 #include <ubit/udefs.hpp>
-#include <ubit/uborder.hpp>
+#include <ubit/ui/uborder.h>
 #include <ubit/draw/font.h>
 #include <ubit/ugeom.hpp>
 #include <ubit/uon.hpp>

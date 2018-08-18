@@ -22,9 +22,9 @@
 #include <ubit/ui/box.h>
 #include <ubit/ui/view.h>
 #include <ubit/core/event.h>
-#include <ubit/uupdate.hpp>
+#include <ubit/ui/update.h>
 #include <ubit/core/application.h>
-#include <ubit/core/uappliImpl.hpp>
+#include <ubit/core/appimpl.h>
 using namespace std;
 namespace ubit {
 

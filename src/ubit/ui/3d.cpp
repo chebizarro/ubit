@@ -21,14 +21,14 @@
 #include <ubit/ubit.hpp>
 #include <ubit/ugl.hpp>
 #include <ubit/core/event.h>
-#include <ubit/uupdate.hpp>
+#include <ubit/ui/update.h>
 #include <ubit/ui/updatecontext.h>
 #include <ubit/ui/uviewImpl.hpp>
-#include <ubit/u3d.hpp>
+#include <ubit/ui/3d.h>
 #include <ubit/u3dicon.hpp>
-#include <ubit/ustyle.hpp>
-#include <ubit/core/uappliImpl.hpp>
-#include <ubit/ugraph.hpp>
+#include <ubit/draw/style.h>
+#include <ubit/core/appimpl.h>
+#include <ubit/draw/graph.h>
 using namespace std;
 namespace ubit {
 

@@ -28,7 +28,7 @@
 
 #include <vector>
 #include <ubit/udefs.hpp>
-#include <ubit/ucolor.hpp>
+#include <ubit/draw/color.h>
 #include <ubit/ugeom.hpp>
 
 namespace ubit {

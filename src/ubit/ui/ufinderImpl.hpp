@@ -27,7 +27,7 @@
 #include <ubit/ui/window.h>
 #include <ubit/uicon.hpp>
 #include <ubit/draw/font.h>
-#include <ubit/ulistbox.hpp>
+#include <ubit/ui/listbox.h>
 
 namespace ubit {
   

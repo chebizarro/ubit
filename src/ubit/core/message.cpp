@@ -23,7 +23,7 @@
 #include <ubit/ui/box.h>
 #include <ubit/core/event.h>
 #include <ubit/core/application.h>
-#include <ubit/core/uappliImpl.hpp>
+#include <ubit/core/appimpl.h>
 #include <ubit/umessage.hpp>
 #include <ubit/umservice.hpp>
 #include <ubit/umsproto.hpp>

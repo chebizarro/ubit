@@ -28,12 +28,12 @@
 #include <cstdio>
 #include <cstdlib>
 #include <ubit/udefs.hpp>
-#include <ubit/ufile.hpp>
+#include <ubit/core/file.h>
 #include <ubit/ucall.hpp>
-#include <ubit/ucolor.hpp>
+#include <ubit/draw/color.h>
 #include <ubit/draw/font.h>
 #include <ubit/core/application.h>
-#include <ubit/uima.hpp>
+#include <ubit/draw/image.h>
 #include <ubit/uhardima.hpp>
 
 #if WITH_2D_GRAPHICS

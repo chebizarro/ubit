@@ -17,7 +17,7 @@
 #ifndef _utreebox_hpp_
 #define	_utreebox_hpp_  1
 
-#include <ubit/ulistbox.hpp>
+#include <ubit/ui/listbox.h>
 
 namespace ubit {
 

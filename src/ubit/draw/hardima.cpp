@@ -19,11 +19,11 @@
 #include <ubit/ubit_features.h>
 #include <cstring>
 #include <cmath>
-#include <ubit/ufile.hpp>
+#include <ubit/core/file.h>
 #include <ubit/ucall.hpp>
-#include <ubit/ucolor.hpp>
+#include <ubit/draw/color.h>
 #include <ubit/draw/font.h>
-#include <ubit/uima.hpp>
+#include <ubit/draw/image.h>
 #include <ubit/core/string.h>
 #include <ubit/core/application.h>
 #include <ubit/uhardima.hpp>

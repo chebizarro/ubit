@@ -27,12 +27,12 @@
 #include <ubit/ui/box.h>
 #include <ubit/uboxgeom.hpp>
 #include <ubit/draw/font.h>
-#include <ubit/ucolor.hpp>
-#include <ubit/uborder.hpp>
-#include <ubit/ustyle.hpp>
+#include <ubit/draw/color.h>
+#include <ubit/ui/uborder.h>
+#include <ubit/draw/style.h>
 #include <ubit/ui/view.h>
 #include <ubit/core/application.h>
-#include <ubit/core/uappliImpl.hpp>
+#include <ubit/core/appimpl.h>
 #include <ubit/uon.hpp>
 using namespace std;
 namespace ubit {

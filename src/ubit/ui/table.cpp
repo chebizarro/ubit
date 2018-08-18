@@ -29,7 +29,7 @@
 #include <ubit/ui/uviewImpl.hpp>
 #include <ubit/ui/updatecontext.h>
 #include <ubit/core/application.h>
-#include <ubit/utable.hpp>
+#include <ubit/ui/table.h>
 using namespace std;
 namespace ubit {
 

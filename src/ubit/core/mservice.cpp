@@ -20,8 +20,8 @@
 #include <unistd.h>
 #include <ubit/ucall.hpp>
 #include <ubit/core/application.h>
-#include <ubit/core/uappliImpl.hpp>
-#include <ubit/usource.hpp>
+#include <ubit/core/appimpl.h>
+#include <ubit/net/source.h>
 #include <ubit/net/socket.h>
 #include <ubit/umessage.hpp>
 #include <ubit/umservice.hpp>

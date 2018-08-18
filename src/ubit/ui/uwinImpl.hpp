@@ -174,10 +174,10 @@ namespace ubit {
     friend class Graph;
     friend class PaintEvent;
     friend class InputEvent;
-    friend class UAppliImpl;
+    friend class AppImpl;
     friend class GLCanvas;
     unsigned char wintype;       // one of UWinImpl::WinType
-    unsigned char must_update;   // see UAppliImpl::processUpdateRequests
+    unsigned char must_update;   // see AppImpl::processUpdateRequests
     Display* disp;
     Window* win;
     Children* softwin_list;
@@ -187,6 +187,3 @@ namespace ubit {
    
 }
 #endif
-
-
-

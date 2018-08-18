@@ -19,8 +19,8 @@
 #include <ubit/core/string.h>
 #include <ubit/ucall.hpp>
 #include <ubit/ui/view.h>
-#include <ubit/ugraph.hpp>
-#include <ubit/uupdate.hpp>
+#include <ubit/draw/graph.h>
+#include <ubit/ui/update.h>
 using namespace std;
 
 namespace ubit {

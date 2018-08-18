@@ -23,13 +23,13 @@
 #include <ubit/ui/window.h>
 #include <ubit/ui/view.h>
 #include <ubit/core/event.h>
-#include <ubit/ustyle.hpp>
-#include <ubit/utimer.hpp>
+#include <ubit/draw/style.h>
+#include <ubit/ui/timer.h>
 #include <ubit/core/application.h>
 #include <ubit/uon.hpp>
-#include <ubit/ugraph.hpp>
+#include <ubit/draw/graph.h>
 #include <ubit/uglcontext.hpp>
-#include <ubit/uglcanvas.hpp>
+#include <ubit/ui/glcanvas.h>
 #include <ubit/udispX11.hpp>
 using namespace std;
 namespace ubit {

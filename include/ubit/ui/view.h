@@ -324,7 +324,7 @@ namespace ubit {
     friend class Child;
     friend class UViewLayoutImpl;
     friend class UViewUpdateImpl;
-    friend class UAppliImpl;
+    friend class AppImpl;
     friend class InputEvent;
     friend class EventFlow;
     friend class U3DCanvasView;

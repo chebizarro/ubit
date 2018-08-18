@@ -24,8 +24,8 @@
 #include <dirent.h>
 #include <ctime>
 #include <ubit/ubit.hpp>
-#include <ubit/ufile.hpp>
-#include <ubit/core/uappliImpl.hpp>
+#include <ubit/core/file.h>
+#include <ubit/core/appimpl.h>
 using namespace std;
 namespace ubit {
 

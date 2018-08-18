@@ -25,7 +25,7 @@
 #define	_uviewImpl_hpp_ 1
 
 #include <ubit/core/event.h>
-#include <ubit/uborder.hpp>
+#include <ubit/ui/uborder.h>
 #include <ubit/ui/updatecontext.h>
 
 namespace ubit {

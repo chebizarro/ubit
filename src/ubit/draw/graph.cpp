@@ -30,14 +30,14 @@
 #include <ubit/udefs.hpp>
 #include <ubit/uon.hpp>
 #include <ubit/draw/font.h>
-#include <ubit/ufontmetrics.hpp>
-#include <ubit/uima.hpp>
+#include <ubit/ui/fontmetrics.h>
+#include <ubit/draw/image.h>
 #include <ubit/core/string.h>
-#include <ubit/ugraph.hpp>
+#include <ubit/draw/graph.h>
 #include <ubit/ui/window.h>
 #include <ubit/core/application.h>
 #include <ubit/ui/updatecontext.h>
-#include <ubit/uglcanvas.hpp>     // !!!! DEPENDANCE A OPEN GL UTILISER SUBWIN !!!
+#include <ubit/ui/glcanvas.h>     // !!!! DEPENDANCE A OPEN GL UTILISER SUBWIN !!!
 #include <ubit/udispX11.hpp>
 #include <ubit/udispGLUT.hpp>
 //#include <ubit/udispGDK.hpp>

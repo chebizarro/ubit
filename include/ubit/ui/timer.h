@@ -113,7 +113,7 @@ namespace ubit {
     
   private:
     friend class Application;
-    friend class UAppliImpl;
+    friend class AppImpl;
     friend class UTimerImpl;
     bool auto_delete, is_running, is_looping;
     int  timer_no, ntimes; 

@@ -28,10 +28,10 @@
 #include <ubit/ui/window.h>
 #include <ubit/udialogs.hpp>
 #include <ubit/ui/updatecontext.h>
-#include <ubit/ueventflow.hpp>
-#include <ubit/ucursor.hpp>
+#include <ubit/ui/eventflow.h>
+#include <ubit/ui/cursor.h>
 #include <ubit/uboxgeom.hpp>
-#include <ubit/core/uappliImpl.hpp>
+#include <ubit/core/appimpl.h>
 using namespace std;
 namespace ubit {
 

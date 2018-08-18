@@ -33,17 +33,17 @@
 #include <ubit/ui/view.h>
 #include <ubit/ui/uviewImpl.hpp>
 #include <ubit/core/event.h>
-#include <ubit/ustyle.hpp>
-#include <ubit/ucolor.hpp>
-#include <ubit/uborder.hpp>
-#include <ubit/ugraph.hpp>
+#include <ubit/draw/style.h>
+#include <ubit/draw/color.h>
+#include <ubit/ui/uborder.h>
+#include <ubit/draw/graph.h>
 #include <ubit/core/application.h>
 #include <ubit/uboxgeom.hpp>
-#include <ubit/ueventflow.hpp>
+#include <ubit/ui/eventflow.h>
 #include <ubit/ui/umenuImpl.hpp>
 #include <ubit/core/config.h>
 #include <ubit/ui/background.h>
-#include <ubit/utimer.hpp>
+#include <ubit/ui/timer.h>
 using namespace std;
 namespace ubit {
 

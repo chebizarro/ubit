@@ -25,7 +25,7 @@
 #define	_ufilebox_hpp_ 1
 
 #include <ubit/ui/box.h>
-#include <ubit/uchoice.hpp>
+#include <ubit/ui/choice.h>
 
 namespace ubit {
 

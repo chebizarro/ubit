@@ -30,37 +30,38 @@
 #include <locale.h>
 #include <unistd.h>       // darwin
 #include <sys/stat.h>
+
 #include <ubit/uon.hpp>
 #include <ubit/ucall.hpp>
 #include <ubit/udialogs.hpp>
 #include <ubit/ui/umenuImpl.hpp>
 #include <ubit/ui/uwinImpl.hpp>
-#include <ubit/core/uappliImpl.hpp>
-#include <ubit/ueventflow.hpp>
-#include <ubit/uupdate.hpp>
+#include <ubit/core/appimpl.h>
+#include <ubit/ui/eventflow.h>
+#include <ubit/ui/update.h>
 #include <ubit/Selection.hpp>
 #include <ubit/core/config.h>
 #include <ubit/core/string.h>
-#include <ubit/usource.hpp>
-#include <ubit/utimer.hpp>
-#include <ubit/ugraph.hpp>
-using namespace std;
+#include <ubit/net/source.h>
+#include <ubit/ui/timer.h>
+#include <ubit/draw/graph.h>
+
 namespace ubit {
 
 
 //UConf Application::conf is in uconf.cpp to avoid init problems
 
 // the (unique) implementation of the application context
-static UAppliImpl appli_impl;
-UAppliImpl& Application::impl = appli_impl;
+static AppImpl appli_impl;
+AppImpl& Application::impl = appli_impl;
 
 
-UAppliImpl::UAppliImpl() : 
-appli(null),
+AppImpl::AppImpl() : 
+application(null),
 disp(null),
 app_name(null),
 is_terminated(false),
-// should not be set to null because UAppliImpl constr may be called after the
+// should not be set to null because AppImpl constr may be called after the
 // init. of this variable
 //error_handler(null), cf Application::getErrorHandler()
 main_frame(null),
@@ -84,9 +85,6 @@ String& Application::initConf(int& argc, char** argv, Option* opts, const char* 
   conf.parseUbitOptions(argc, argv);
   conf.freeze_options = true;
 
-#ifdef UBIT_WITH_GDK
-  gdk_init(&argc, &argv);     // une seule fois!
-#endif  
   return conf.display;
 }
 
@@ -140,13 +138,13 @@ void Application::realize() {
   //const char* Application::getCommandName() const {return conf.app_name;}
   //const char* Application::getCommandPath() const {return (conf.app_argc>0 ? conf.app_argv[0] : null);}
   
-Application& Application::appli() {
+Application& Application::application() {
   if (!impl.appli)    // throws an exception
-    Application::fatalError("Application::appli()","no Application instance (not created yet?, already destroyed?)");
+    Application::fatalError("Application::application()","no Application instance (not created yet?, already destroyed?)");
   return *impl.appli;
 }
 
-Application* Application::getAppli() {return impl.appli;}
+Application* Application::getApplication() {return impl.appli;}
 
 bool Application::isExiting() {return impl.is_terminated;}
 
@@ -261,36 +259,36 @@ void Application::quit(int status) {
 }
 
 
-int UAppliImpl::startModalWinLoop(Window& win) {
+int AppImpl::startModalWinLoop(Window& win) {
   modal_status = 0;
   disp->startLoop(false);  // sub loop
   processPendingRequests();
   return modal_status;
 }
 
-void UAppliImpl::setModalStatus(int status) {
+void AppImpl::setModalStatus(int status) {
   modal_status = status;
 }
 
-void UAppliImpl::addModalWin(Window& win) {
+void AppImpl::addModalWin(Window& win) {
   modalwins->remove(win, false);   // remove if already in the list
   modalwins->add(win, 0);            // add at the beginning of the list
 }
 
-void UAppliImpl::removeModalWin(Window& win) {
+void AppImpl::removeModalWin(Window& win) {
   disp->quitLoop(false);     // subloop
   modalwins->remove(win, false);
 }
 
 
-void UAppliImpl::processPendingRequests() {
+void AppImpl::processPendingRequests() {
   is_processing_update_requests = false;
   processUpdateRequests();
   processDeleteRequests();
   request_mask = 0;
 }
 
-void UAppliImpl::processDeleteRequests() {
+void AppImpl::processDeleteRequests() {
   // views
   for (unsigned int k = 0; k < del_view_list.size(); ++k) {
     ::operator delete(del_view_list[k]);    // enforces deletion
@@ -307,13 +305,13 @@ void UAppliImpl::processDeleteRequests() {
 }
 
 
-void UAppliImpl::addDeleteRequest(View* v) {
+void AppImpl::addDeleteRequest(View* v) {
   del_view_list.push_back(v);
   request_mask |= DELETE_REQUEST;
 }
 
 
-void UAppliImpl::addDeleteRequest(UObject* b) {
+void AppImpl::addDeleteRequest(UObject* b) {
   b->omodes.IS_DESTRUCTED = true;  // securite: normalement c'est deja le cas
   
   // si b est dans updatelist il faut l'enlever
@@ -336,7 +334,7 @@ void UAppliImpl::addDeleteRequest(UObject* b) {
 }
 
 
-void UAppliImpl::processUpdateRequests() 
+void AppImpl::processUpdateRequests() 
 {  
   // NB: is_processing_update_requests: avoid infinite loops: this fct cant call itself
   if (is_processing_update_requests || (request_mask & UPDATE_REQUEST)==0 || is_terminated)
@@ -390,7 +388,7 @@ void UAppliImpl::processUpdateRequests()
 }
 
 
-void UAppliImpl::addUpdateRequest(Box* obj, const Update& upd) {
+void AppImpl::addUpdateRequest(Box* obj, const Update& upd) {
   // don't update an object that has been destructed
   if (obj->omodes.IS_DESTRUCTED || obj->omodes.IS_DESTRUCTING || is_terminated) return;
   
@@ -427,7 +425,7 @@ END:
   request_mask |= UPDATE_REQUEST;
 }
 
-void UAppliImpl::removeUpdateRequests(Box* box) {
+void AppImpl::removeUpdateRequests(Box* box) {
   if (is_terminated || box == null) return;
   for (unsigned int k = 0; k < update_list.size(); ++k) {
     if (box == update_list[k].obj) update_list[k].obj = null;
@@ -435,7 +433,7 @@ void UAppliImpl::removeUpdateRequests(Box* box) {
 }
 
 /*
-UpdateRequest* UAppliImpl::findUpdateRequest(Box* obj, unsigned int& k) {
+UpdateRequest* AppImpl::findUpdateRequest(Box* obj, unsigned int& k) {
   if (is_terminated) return null;
   for (; k < update_list.size(); k++) {
     if (obj == update_list[k].obj) return &update_list[k];
@@ -628,7 +626,7 @@ void Application::raiseError(int errnum, const UObject* obj, const char* funcnam
 }
 
 UErrorHandler& Application::getErrorHandler() {
-  // this variable should be null even if this UAppliImpl constr was not called
+  // this variable should be null even if this AppImpl constr was not called
   if (!appli_impl.error_handler) {
     appli_impl.error_handler = 
     new UErrorHandler((appli_impl.app_name ? *appli_impl.app_name : ""), &std::cerr);

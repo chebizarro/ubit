@@ -16,11 +16,11 @@
 #include <ubit/ubit_features.h>
 #include <iostream>
 #include <ubit/ucall.hpp>
-#include <ubit/ucolor.hpp>
+#include <ubit/draw/color.h>
 #include <ubit/core/string.h>
 #include <ubit/draw/font.h>
 #include <ubit/core/element.h>
-#include <ubit/uupdate.hpp>
+#include <ubit/ui/update.h>
 #include <ubit/core/event.h>
 #include <ubit/Selection.hpp>
 #include <ubit/core/application.h>

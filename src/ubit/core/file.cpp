@@ -27,7 +27,7 @@
 #include <sys/stat.h>
 #include <ubit/ubit_features.h>
 #include <ubit/udefs.hpp>
-#include <ubit/ufile.hpp>
+#include <ubit/core/file.h>
 #include <ubit/core/string.h>
 #include <ubit/upix.hpp>
 #include <ubit/core/application.h>

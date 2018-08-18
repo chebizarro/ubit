@@ -29,18 +29,18 @@
 #include <ubit/ui/umenuImpl.hpp>
 #include <ubit/ui/uwinImpl.hpp>
 #include <ubit/core/application.h>
-#include <ubit/core/uappliImpl.hpp>
+#include <ubit/core/appimpl.h>
 #include <ubit/core/event.h>
-#include <ubit/ueventflow.hpp>
+#include <ubit/ui/eventflow.h>
 #include <ubit/Selection.hpp>
 #include <ubit/upix.hpp>
 #include <ubit/uon.hpp>
-#include <ubit/utimer.hpp>
-#include <ubit/ucolor.hpp>
+#include <ubit/ui/timer.h>
+#include <ubit/draw/color.h>
 #include <ubit/ui/background.h>
 #include <ubit/ui/updatecontext.h>
 #include <ubit/ui/uviewImpl.hpp>
-#include <ubit/u3d.hpp>
+#include <ubit/ui/3d.h>
 using namespace std;
 namespace ubit {
 
@@ -79,9 +79,9 @@ auto_repeat_timer(new Timer(Application::conf.auto_repeat_delay, -1, false)),
 tip_timer(new Timer(false)),
 tip_win(*new Menu()),
 menu_man(*new MenuManager(this)),
-selection(*new Selection(disp.getConf().selection_color,
-                          disp.getConf().selection_bgcolor,
-                          disp.getConf().selection_font)),
+selection(*new Selection(disp.getConfig().selection_color,
+                          disp.getConfig().selection_bgcolor,
+                          disp.getConfig().selection_font)),
 user_data(null) {
   lastArmed     = null;
   dragSource    = dropTarget = null;

@@ -29,13 +29,13 @@
 #include <cmath>
 #include <ubit/udefs.hpp>
 #include <ubit/draw/font.h>
-#include <ubit/ufontmetrics.hpp>
+#include <ubit/ui/fontmetrics.h>
 #include <ubit/draw/ufontImpl.hpp>
-#include <ubit/ucolor.hpp>
-#include <ubit/uima.hpp>
+#include <ubit/draw/color.h>
+#include <ubit/draw/image.h>
 #include <ubit/core/application.h>
 #include <ubit/ugl.hpp>
-#include <ubit/ugraph.hpp>
+#include <ubit/draw/graph.h>
 #include <ubit/uglcontext.hpp>
 #include <ubit/uhardima.hpp>
 #include <ubit/uhardfont.hpp>

@@ -20,12 +20,12 @@
 #include <iostream>
 #include <cmath>
 #include <ubit/udefs.hpp>
-#include <ubit/ucolor.hpp>
-#include <ubit/uima.hpp>
+#include <ubit/draw/color.h>
+#include <ubit/draw/image.h>
 #include <ubit/upix.hpp>
 #include <ubit/nat/udispGDK.hpp>
 #include <ubit/nat/uhardima.hpp>
-#include <ubit/ugraph.hpp>
+#include <ubit/draw/graph.h>
 #include <ubit/nat/ugraphGDK.hpp>
 #include <ubit/nat/uhardfont.hpp>
 

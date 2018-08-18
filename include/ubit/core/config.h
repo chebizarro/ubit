@@ -53,7 +53,7 @@ namespace ubit {
  *   // if the corresponding options are specified in the command line
  *
  *   UConf conf(argc, argv, options);
- *   Application appli(conf);
+ *   Application application(conf);
  *   ...
  * </pre>
  */
@@ -233,7 +233,7 @@ public:
 private:
   friend class Display;
   friend class Application;
-  friend class UAppliImpl;
+  friend class AppImpl;
   friend class UpdateContext;
   friend class EventFlow;
   friend class Element;

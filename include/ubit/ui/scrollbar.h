@@ -25,8 +25,8 @@
 #define	_uscrollbar_hpp_ 1
 
 #include <ubit/ui/box.h>
-#include <ubit/ucolor.hpp>
-#include <ubit/ustyle.hpp>
+#include <ubit/draw/color.h>
+#include <ubit/draw/style.h>
 #include <ubit/ui/view.h>
 
 namespace ubit {

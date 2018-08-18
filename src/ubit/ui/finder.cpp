@@ -25,7 +25,7 @@
 #include <cmath>
 #include <unistd.h>
 #include <ubit/udefs.hpp>
-#include <ubit/ufile.hpp>
+#include <ubit/core/file.h>
 #include <ubit/umservice.hpp>
 #include <ubit/umsproto.hpp>
 #include <ubit/ui/control-menu.h>
@@ -36,11 +36,11 @@
 #include <ubit/core/doc.h>
 #include <ubit/upix.hpp>
 #include <ubit/usymbol.hpp>
-#include <ubit/uscrollpane.hpp>
+#include <ubit/ui/scrollpane.h>
 #include <ubit/uicon.hpp>
 #include <ubit/core/application.h>
-#include <ubit/utimer.hpp>
-#include <ubit/ufilebox.hpp>
+#include <ubit/ui/timer.h>
+#include <ubit/ui/filechooser.h>
 #include <ubit/ufinder.hpp>
 #include <ubit/ui/ufinderImpl.hpp>
 using namespace std;

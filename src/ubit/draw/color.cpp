@@ -28,11 +28,11 @@
 #include <climits>
 #include <cstdio>   // sscanf()
 #include <ubit/ucall.hpp>
-#include <ubit/uupdate.hpp>
+#include <ubit/ui/update.h>
 #include <ubit/ui/updatecontext.h>
 #include <ubit/core/string.h>
 #include <ubit/ui/box.h>
-#include <ubit/ucolor.hpp>
+#include <ubit/draw/color.h>
 #include <ubit/core/application.h>
 #include <ubit/ui/box.h>
 

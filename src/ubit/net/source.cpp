@@ -18,9 +18,9 @@
 #include <unistd.h>       // darwin
 #include <sys/stat.h>
 #include <ubit/core/application.h>
-#include <ubit/core/uappliImpl.hpp>
+#include <ubit/core/appimpl.h>
 #include <ubit/uon.hpp>
-#include <ubit/usource.hpp>
+#include <ubit/net/source.h>
 #include <ubit/ucall.hpp>
 using namespace std;
 namespace ubit {
@@ -100,7 +100,7 @@ void Source::fireClose() {
 }
 
 
-void UAppliImpl::resetSources(Element* sources, fd_set& read_set, int& maxfd) {
+void AppImpl::resetSources(Element* sources, fd_set& read_set, int& maxfd) {
   if (!sources) return;
   for (ChildIter c = sources->cbegin(); c != sources->cend(); ++c) {
     Source* i = static_cast<Source*>(*c);
@@ -112,7 +112,7 @@ void UAppliImpl::resetSources(Element* sources, fd_set& read_set, int& maxfd) {
   }
 }
 
-void UAppliImpl::cleanSources(Element* sources) {
+void AppImpl::cleanSources(Element* sources) {
   if (!sources) return;
   struct stat statbuf;
   for (ChildIter c = sources->cbegin(); c != sources->cend(); ) {
@@ -127,7 +127,7 @@ void UAppliImpl::cleanSources(Element* sources) {
   }
 }
 
-void UAppliImpl::fireSources(Element* sources, fd_set& read_set) {
+void AppImpl::fireSources(Element* sources, fd_set& read_set) {
   if (!sources) return;
   for (ChildIter c = sources->cbegin(); c != sources->cend(); ) {
     Source* i = static_cast<Source*>(*c);

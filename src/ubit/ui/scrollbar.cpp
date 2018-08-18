@@ -19,14 +19,14 @@
 #include <ubit/ucall.hpp>
 #include <ubit/uboxgeom.hpp>
 #include <ubit/ui/background.h>
-#include <ubit/uscrollbar.hpp>
-#include <ubit/uscrollpane.hpp>
+#include <ubit/ui/scrollbar.h>
+#include <ubit/ui/scrollpane.h>
 #include <ubit/ui/uviewImpl.hpp>
 #include <ubit/ui/updatecontext.h>
 #include <ubit/upix.hpp>
 #include <ubit/usymbol.hpp>
 #include <ubit/ui/interactors.h>
-#include <ubit/core/uappliImpl.hpp>
+#include <ubit/core/appimpl.h>
 using namespace std;
 namespace ubit {
 

@@ -15,10 +15,10 @@
 
 #include <iostream>
 #include <ubit/ubit_features.h>
-#include <ubit/uzoom.hpp>
+#include <ubit/ui/zoom-pane.h>
 #include <ubit/uboxgeom.hpp>
 #include <ubit/ui/updatecontext.h>
-#include <ubit/ucolor.hpp>
+#include <ubit/draw/color.h>
 #include <ubit/upix.hpp>
 
 using namespace std;

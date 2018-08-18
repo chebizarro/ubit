@@ -17,7 +17,7 @@
 #include <iostream>
 #include <sys/stat.h>
 #include <ubit/ubit.hpp>
-#include <ubit/ufile.hpp>
+#include <ubit/core/file.h>
 #include <ubit/uicon.hpp>
 using namespace std;
 

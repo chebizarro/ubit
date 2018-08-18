@@ -20,7 +20,7 @@
 #include <ubit/core/node.h>
 #include <ubit/core/string.h>
 #include <ubit/core/application.h>
-#include <ubit/core/uappliImpl.hpp>
+#include <ubit/core/appimpl.h>
 using namespace std;
 namespace ubit {
 

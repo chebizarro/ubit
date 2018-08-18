@@ -27,7 +27,7 @@
 #include <ubit/uclass.hpp>
 #include <ubit/core/uclassImpl.hpp>
 #include <ubit/core/application.h>
-#include <ubit/core/uappliImpl.hpp>
+#include <ubit/core/appimpl.h>
 using namespace std;
 namespace ubit {
 

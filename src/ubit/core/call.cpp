@@ -29,7 +29,7 @@
 #include <ubit/ui/window.h>
 #include <ubit/ui/view.h>
 #include <ubit/ui/menu.h>
-#include <ubit/utimer.hpp>
+#include <ubit/ui/timer.h>
 #include <iostream>
 using namespace std; 
 

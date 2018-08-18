@@ -19,9 +19,9 @@
 #include <ubit/ucall.hpp>
 #include <ubit/uboxgeom.hpp>
 #include <ubit/ui/box.h>
-#include <ubit/uscrollbar.hpp>
-#include <ubit/uscrollpane.hpp>
-#include <ubit/ustyle.hpp>
+#include <ubit/ui/scrollbar.h>
+#include <ubit/ui/scrollpane.h>
+#include <ubit/draw/style.h>
 #include <ubit/core/application.h>
 #include <ubit/core/config.h>
 using namespace std;

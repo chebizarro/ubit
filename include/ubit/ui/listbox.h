@@ -26,7 +26,7 @@
 #define	_ulistbox_hpp_ 1
 
 #include <ubit/ui/interactors.h>
-#include <ubit/uchoice.hpp>
+#include <ubit/ui/choice.h>
 
 namespace ubit {
   

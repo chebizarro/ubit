@@ -22,7 +22,7 @@
 #include <ubit/ui/view.h>
 #include <ubit/ui/uviewImpl.hpp>
 #include <ubit/core/application.h>
-#include <ubit/uscrollpane.hpp>
+#include <ubit/ui/scrollpane.h>
 using namespace std;
 namespace ubit {
 

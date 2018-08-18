@@ -17,9 +17,9 @@
 #include <ubit/ubit_features.h>
 #include <ubit/ubit.hpp>
 #include <ubit/core/dom.h>
-#include <ubit/uhtml.hpp>
+#include <ubit/core/html.h>
 #include <ubit/ucss.hpp>
-#include <ubit/core/uappliImpl.hpp>
+#include <ubit/core/appimpl.h>
 using namespace std;
 namespace ubit {
 

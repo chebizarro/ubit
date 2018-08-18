@@ -28,7 +28,7 @@
 
 #include <ubit/core/attribute.h>
 
-#include <ubit/uupdate.hpp>
+#include <ubit/ui/update.h>
 #include <ubit/uargs.hpp>
 #include <ubit/core/string.h>
 
