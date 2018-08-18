@@ -13,12 +13,14 @@
  * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
  * **********************************************************************/
 
-#ifndef _uchild_hpp_
-#define	_uchild_hpp_ 1
+#ifndef UBIT_CORE_CHILD_H_
+#define	UBIT_CORE_CHILD_H_
+
 namespace ubit {
 
-/** [impl] Internal implementation of a child node.
-*/
+/**
+ * [impl] Internal implementation of a child node.
+ */
 class Child {
 public:
   Child(Node& o) : obj(&o), parent(0), cond(0) {}
@@ -58,7 +60,6 @@ public:
   const Condition* getCond() {return _Iter::operator*().getCond();}
 };
 
-// ==================================================== [(c)Elc] ======= 
 
 /** forward iterator in a child or attribute list.
 * @see: Element::cbegin(), Node::abegin(), Children.
@@ -109,5 +110,5 @@ public:
 };
 
 }
-#endif
+#endif // UBIT_CORE_CHILD_H_
 

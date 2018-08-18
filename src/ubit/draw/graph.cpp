@@ -29,13 +29,13 @@
 #include <cmath>
 #include <ubit/udefs.hpp>
 #include <ubit/uon.hpp>
-#include <ubit/ufont.hpp>
+#include <ubit/draw/font.h>
 #include <ubit/ufontmetrics.hpp>
 #include <ubit/uima.hpp>
-#include <ubit/ustr.hpp>
+#include <ubit/core/string.h>
 #include <ubit/ugraph.hpp>
-#include <ubit/uwin.hpp>
-#include <ubit/uappli.hpp>
+#include <ubit/ui/window.h>
+#include <ubit/core/application.h>
 #include <ubit/ui/updatecontext.h>
 #include <ubit/uglcanvas.hpp>     // !!!! DEPENDANCE A OPEN GL UTILISER SUBWIN !!!
 #include <ubit/udispX11.hpp>

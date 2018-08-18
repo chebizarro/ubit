@@ -20,9 +20,9 @@
 #include <ubit/uboxgeom.hpp>
 #include <ubit/ucursor.hpp>
 #include <ubit/ui/updatecontext.h>
-#include <ubit/uwin.hpp>
+#include <ubit/ui/window.h>
 #include <ubit/uscrollpane.hpp>
-#include <ubit/uappli.hpp>
+#include <ubit/core/application.h>
 #include <ubit/ucall.hpp>
 #include <ubit/ueventflow.hpp>
 #include <ubit/ucursor.hpp>
@@ -193,7 +193,6 @@ void USize::putProp(UpdateContext* props, Element& obj) {
   }
 }
 
-// ==================================================== Ubit Gui Toolkit =======
 
 UPadding& UPadding::setWidth(Length l) {
   if (checkConst() || (val.left == l && val.right == l)) return *this;
@@ -250,7 +249,6 @@ void UPadding::putProp(UpdateContext* props, Element&) {
  if (val.left != UIGNORE)   props->local.padding.left = val.left;
 }
 
-// ==================================================== Ubit Gui Toolkit =======
 
 Orientation Orientation::vertical(VERTICAL, UCONST);
 Orientation Orientation::horizontal(HORIZONTAL, UCONST);
@@ -300,7 +298,6 @@ void Orientation::putProp(UpdateContext* props, Element& par) {
   else if (value == HORIZONTAL) par.emodes.IS_VERTICAL = false;
 }
 
-// ==================================================== Ubit Gui Toolkit =======
 
 Valign Valign::top(TOP, UCONST);
 Valign Valign::bottom(BOTTOM, UCONST);
@@ -328,7 +325,6 @@ void Valign::putProp(UpdateContext *props, Element&) {
   props->valign = value;
 }
 
-// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
 Halign Halign::left(LEFT, UCONST);
 Halign Halign::right(RIGHT, UCONST);
@@ -356,7 +352,6 @@ void Halign::putProp(UpdateContext *props, Element&) {
   props->halign = value;
 }
 
-// ==================================================== Ubit Gui Toolkit =======
 
 HSpacing HSpacing::none(0);
 
@@ -382,7 +377,6 @@ void HSpacing::putProp(UpdateContext *props, Element&) {
   props->hspacing = value;
 }
 
-// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
 VSpacing VSpacing::none(0);
 
@@ -408,7 +402,6 @@ void VSpacing::putProp(UpdateContext *props, Element&) {
   props->vspacing = value;
 }
 
-// ==================================================== Ubit Gui Toolkit =======
 
 UPosControl::UPosControl(UPos* p) :
 change_cursor(false), freeze_x(false), freeze_y(false), 
@@ -539,7 +532,6 @@ void UPosControl::dragCB(MouseEvent& e) {
   posAttr->set(Length(xnew, posAttr->x.unit), Length(ynew, posAttr->y.unit));
 }
 
-// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
 //UMagicLensControl::UMagicLensControl(UPos& _pos, Scrollpane& _pane) 
 //: UPosControl(_pos), pane(_pane) {}
@@ -564,7 +556,6 @@ void UMagicLensControl::dragCB(MouseEvent& e) {
   }
 }
 
-// ==================================================== Ubit Gui Toolkit =======
 
 USizeControl::USizeControl(USize* s) :
 freeze_w(false), freeze_h(false), 
@@ -638,7 +629,6 @@ void USizeControl::dragCB(MouseEvent& e) {
   psize->set(w, h);
 }
 
-// ==================================================== Ubit Gui Toolkit =======
 #if 0
 
 class Shape : public Attribute {
@@ -680,7 +670,6 @@ void Shape::putProp(UpdateContext *props, Element&){
   props->local.shape = this;
 }
 
-//------------------------------------------------------------------------------
 /* Box Width property than can be changed interactively.
  * a handle is added to the parent box that makes it possible to resize it.
  * Note: a box should not contain a UWidthChooser and a UWidth brick simultaneously
@@ -692,7 +681,6 @@ public:
   UWidthChooser(Length _width);
   virtual ~UWidthChooser();
   
-#ifndef NO_DOC
   void addingTo(Child&, Element& parent);
   void removingFrom(Child&, Element& parent);
 protected:
@@ -700,7 +688,6 @@ protected:
   float curpos;
   virtual void press(MouseEvent&);
   virtual void drag(MouseEvent&);
-#endif
 };
 
 /* Box Height property than can be changed interactively.
@@ -714,7 +701,6 @@ public:
   UHeightChooser(Length height);
   virtual ~UHeightChooser();
   
-#ifndef NO_DOC
   void addingTo(Child&, Element& parent);
   void removingFrom(Child&, Element& parent);
 protected:
@@ -722,7 +708,6 @@ protected:
   float curpos;
   virtual void press(MouseEvent&);
   virtual void drag(MouseEvent&);
-#endif
 };
 
 

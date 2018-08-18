@@ -27,8 +27,8 @@
 #include <ctype.h>
 #include <string.h>
 #include <ubit/ustyleparser.hpp>
-#include <ubit/ustr.hpp>
-#include <ubit/uappli.hpp>
+#include <ubit/core/string.h>
+#include <ubit/core/application.h>
 using namespace std;
 namespace ubit {
 

@@ -25,9 +25,9 @@
 #define UBIT_CORE_DOM_H_
 
 #include <map>
-#include <ubit/udoc.hpp>
+#include <ubit/core/doc.h>
 #include <ubit/core/uclassImpl.hpp>  //StyleSheet
-#include <ubit/ustr.hpp>
+#include <ubit/core/string.h>
 #include <fstream>
 
 namespace ubit {
@@ -152,11 +152,9 @@ namespace ubit {
     virtual int  loadAttachments(bool reload = false);
     virtual bool loadAttachment(DocumentAttachment*, bool reload = false);
     virtual void addAttachment(DocumentAttachment*);
-    ///< impl.
     
     const StyleSheet& getStyleSheet() const {return doc_stylesheet;}
     StyleSheet& getStyleSheet() {return doc_stylesheet;}
-    ///< impl.
     
   protected:
     friend class XmlParser;

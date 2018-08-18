@@ -17,7 +17,7 @@
 #include <iostream>
 #include <unistd.h>       // darwin
 #include <sys/stat.h>
-#include <ubit/uappli.hpp>
+#include <ubit/core/application.h>
 #include <ubit/core/uappliImpl.hpp>
 #include <ubit/uon.hpp>
 #include <ubit/usource.hpp>

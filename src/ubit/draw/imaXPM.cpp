@@ -31,8 +31,8 @@
 #include <ubit/ufile.hpp>
 #include <ubit/ucall.hpp>
 #include <ubit/ucolor.hpp>
-#include <ubit/ufont.hpp>
-#include <ubit/uappli.hpp>
+#include <ubit/draw/font.h>
+#include <ubit/core/application.h>
 #include <ubit/uima.hpp>
 #include <ubit/uhardima.hpp>
 

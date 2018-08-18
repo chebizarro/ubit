@@ -24,7 +24,7 @@
 #ifndef _upalette_hpp_
 #define	_upalette_hpp_ 1
 
-#include <ubit/ubox.hpp>
+#include <ubit/ui/box.h>
 
 namespace ubit {
   

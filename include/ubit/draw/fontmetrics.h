@@ -22,8 +22,9 @@
  */
 
 
-#ifndef _ufontmetrics_hpp_
-#define	_ufontmetrics_hpp_ 1
+#ifndef UBIT_DRAW_FONTMETRICS_H_
+#define	UBIT_DRAW_FONTMETRICS_H_
+
 namespace ubit {
 
 class FontMetrics {
@@ -86,4 +87,4 @@ protected:
 };
 
 }
-#endif
+#endif // UBIT_DRAW_FONTMETRICS_H_

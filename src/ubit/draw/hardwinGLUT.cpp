@@ -18,12 +18,12 @@
 
 #include <iostream>
 #include <cstdio>
-#include <ubit/uappli.hpp>
+#include <ubit/core/application.h>
 #include <ubit/ucall.hpp>
 #include <ubit/uon.hpp>
-#include <ubit/ustr.hpp>
+#include <ubit/core/string.h>
 #include <ubit/ucursor.hpp>
-#include <ubit/uwin.hpp>
+#include <ubit/ui/window.h>
 #include <ubit/umsproto.hpp>
 #include <ubit/nat/udispGLUT.hpp>
 #include <ubit/nat/uglcontext.hpp>

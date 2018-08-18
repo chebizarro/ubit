@@ -25,7 +25,7 @@
 #define	_uscrollpane_hpp_ 1
 
 #include <ubit/uborder.hpp>
-#include <ubit/uview.hpp>
+#include <ubit/ui/view.h>
 
 namespace ubit {
   
@@ -105,8 +105,6 @@ namespace ubit {
      * of the scrolled box.
      */
   
-    // - - - Impl.  - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-#ifndef NO_DOC
     virtual void setScrollImpl(float xscroll, float yscroll);    
   protected:
     friend class UScrollbar;
@@ -118,7 +116,6 @@ namespace ubit {
     virtual void unsetVScrollbar();
     virtual void resizeCB(UResizeEvent&);
     virtual void wheelCB(UWheelEvent&);
-#endif
   };
   
   inline Scrollpane& uscrollpane(const Args& args = Args::none) 
@@ -152,11 +149,9 @@ namespace ubit {
     
     void setPadding(const PaddingSpec& p) {padding = p;} // for View::initLayoutViewport
     
-#ifndef NO_DOC
     friend class Scrollpane;
     PaddingSpec padding;
     float xscroll, yscroll;
-#endif
   };
 }
 #endif

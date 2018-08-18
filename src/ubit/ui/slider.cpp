@@ -23,7 +23,7 @@
 #include <ubit/upix.hpp>
 #include <ubit/uon.hpp>
 #include <ubit/ucall.hpp>
-#include <ubit/uappli.hpp>
+#include <ubit/core/application.h>
 #include <ubit/uboxgeom.hpp>
 using namespace std;
 
@@ -259,7 +259,6 @@ public:
     * Note: UOn::change callbacks are activated when the value is changed.
     */
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // implementation
   
   virtual Class* getClass() const;

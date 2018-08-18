@@ -25,7 +25,7 @@
 #define _upiemenu_hpp_ 1
 
 #include <ubit/uboxgeom.hpp>
-#include <ubit/umenu.hpp>
+#include <ubit/ui/menu.h>
 
 namespace ubit {
   
@@ -175,8 +175,6 @@ public:
   virtual void disarmItemCB(InputEvent& e, PieMenu* submenu);
   ///< [impl] called when an item is disarmed.
 
-  // - - - impl - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#ifndef NO_DOC
   
   enum MenuType {CONCENTRIC, COMPOUND, MULTISTROKE};
   
@@ -226,7 +224,6 @@ protected:
   Element gitems;
   Length pie_radius, center_radius, item_radius;
   unique_ptr<Color> ppie_color, pcenter_color, pslice_color, ppie_border_color, pcenter_border_color;
-#endif
 };
 
 inline PieMenu& upiemenu() {return *new PieMenu();}

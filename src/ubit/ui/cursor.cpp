@@ -24,13 +24,13 @@
 #include <ubit/ubit_features.h>
 #include <ubit/ucall.hpp>
 #include <ubit/uon.hpp>
-#include <ubit/ubox.hpp>
+#include <ubit/ui/box.h>
 #include <ubit/ucolor.hpp>
-#include <ubit/uview.hpp>
+#include <ubit/ui/view.h>
 #include <ubit/core/event.h>
 #include <ubit/ui/updatecontext.h>
 #include <ubit/ucursor.hpp>
-#include <ubit/uappli.hpp>
+#include <ubit/core/application.h>
 
 namespace ubit {
 

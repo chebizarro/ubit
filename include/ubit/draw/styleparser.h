@@ -27,7 +27,7 @@
 #include <vector> 
 #include <fstream>
 #include <ubit/core/node.h>
-#include <ubit/ustr.hpp>
+#include <ubit/core/string.h>
 
 namespace ubit {
   

@@ -23,25 +23,25 @@
 
 #include <ubit/ubit_features.h>
 #include <iostream>
-#include <ubit/umenu.hpp>
+#include <ubit/ui/menu.h>
 #include <ubit/ui/uwinImpl.hpp>
 #include <ubit/ucall.hpp>
-#include <ubit/ustr.hpp>
+#include <ubit/core/string.h>
 #include <ubit/uon.hpp>
-#include <ubit/ubox.hpp>
-#include <ubit/uwin.hpp>
-#include <ubit/uview.hpp>
+#include <ubit/ui/box.h>
+#include <ubit/ui/window.h>
+#include <ubit/ui/view.h>
 #include <ubit/ui/uviewImpl.hpp>
 #include <ubit/core/event.h>
 #include <ubit/ustyle.hpp>
 #include <ubit/ucolor.hpp>
 #include <ubit/uborder.hpp>
 #include <ubit/ugraph.hpp>
-#include <ubit/uappli.hpp>
+#include <ubit/core/application.h>
 #include <ubit/uboxgeom.hpp>
 #include <ubit/ueventflow.hpp>
 #include <ubit/ui/umenuImpl.hpp>
-#include <ubit/uconf.hpp>
+#include <ubit/core/config.h>
 #include <ubit/ui/background.h>
 #include <ubit/utimer.hpp>
 using namespace std;
@@ -57,7 +57,7 @@ PopupMenu::PopupMenu(const Args& a) : Menu(a) {
 }
 
 
-Style* UMenubar::createStyle() {
+Style* MenuBar::createStyle() {
   Style* style = new Style();
   style->textSeparator = new String("\t");
   style->orient = Orientation::HORIZONTAL;
@@ -70,7 +70,7 @@ Style* UMenubar::createStyle() {
   return style;
 }
 
-UMenubar::UMenubar(const Args& a): UBar(a) {
+MenuBar::MenuBar(const Args& a): UBar(a) {
   emodes.IS_BROWSABLE = true;
   
   static MultiCondition* cond = null;
@@ -82,10 +82,10 @@ UMenubar::UMenubar(const Args& a): UBar(a) {
     *cond += UOn::arm;  // only by menubar
   }
   // recupere evenements dans les enfants
-  observeChildrenEvents(*cond / ucall(this, &UMenubar::menuChildCB));
+  observeChildrenEvents(*cond / ucall(this, &MenuBar::menuChildCB));
 }
 
-void UMenubar::menuChildCB(InputEvent& e) {
+void MenuBar::menuChildCB(InputEvent& e) {
   MenuManager& mc = e.getFlow()->getMenuManager();
   mc.menuChildCB(e, this);
 }
@@ -308,7 +308,7 @@ static Menu* getMenuParent(View* opener) {
   for (View *v = opener; v != null; v = v->getParentView()) {
     Box* box = v->getBox();
     if (box) {
-      if (dynamic_cast<UMenubar*>(box)) return null;
+      if (dynamic_cast<MenuBar*>(box)) return null;
       Menu* menu = dynamic_cast<Menu*>(box);
       if (menu) return menu;
     }
@@ -514,108 +514,5 @@ void MenuManager::closeSubMenus(Menu* menu, bool including_this_menu) {
   }
   menu_count = found;
 }
-
-
-
-/* $$$void MenuManager::enterMenuOpener(InputEvent& e, Menu* menu_to_open) {
- // si autoOpenMode et meme browsing group, alors auto ouvrir
- //if (eflow.getBrowsingGroup() && e.getBrowsingGroup() == eflow.getBrowsingGroup()) { @@@@!!!!!
- possible_opener = e.getView();
- possible_opener_menu = menu_to_open;
- possible_closer = null;
- possible_closer_menu = null;
- open_timer->start(Application::conf.open_submenu_delay, 1, false);
- //}
- }
- 
- void MenuManager::enterMenubarChild(InputEvent& e, bool inside_menubar) {
- //if (eflow.getBrowsingGroup() && e.getBrowsingGroup() == eflow.getBrowsingGroup()) 
- 
- Element* opener = e.getSource();
- cerr << "enterMenubarChild" <<  opener << endl;
- 
- if (top_menu && opener && opener->isChildOf(*top_menu)) {
- 
- Menu* menu = null;
- opener->attributes().findClass(menu);
- 
- cerr << " - enterMenubarChild" <<  " menu" << menu << endl;
- if (!menu) return;
- 
- leaveMenubarChild(e, inside_menubar);
- 
- possible_opener = e.getView();
- possible_opener_menu = menu;
- possible_closer = null;
- possible_closer_menu = null;
- //open_timer->start(Application::conf.open_submenu_delay, 1, false);
- 
- // set by enterMenuOpener
- if (!inside_menubar && possible_opener && possible_opener_menu) {
- possible_opener_menu->openImpl(*this, possible_opener,
- true, null);
- }
- possible_opener = null;
- possible_opener_menu = null;
- }
- }
- 
- void MenuManager::leaveMenubarChild(InputEvent& e, bool inside_menubar) {
- Element* opener = e.getSource();
- cerr << "leaveMenubarChild" <<  opener << endl;
- 
- if (active_menu) {
- if (inside_menubar) closeAllMenus();
- else closeSubMenus(active_menu, false);
- }
- possible_closer = null;
- possible_closer_menu = null;
- //}
- }
- 
- void MenuManager::enterMenuChild(InputEvent& e, Menu* containing_menu) {
- // on est toujours sur le meme bouton (enterMenuChild est apppele
- // apres enterMeuOpener)
- if (possible_opener == e.getView()) {
- possible_closer = null;
- }
- 
- else {
- // on a change de bouton avant l'ouverture du menu
- // => interdire son ouverture
- possible_opener = null;
- 
- // il y a deja un menu ouvert => le fermer (avec delai)
- if (active_menu
- // ni sur l'opener du menu (sinon fermerait le menu qu'il a ouvert)
- && active_opener != e.getView()
- // on est bien dans le meme menu group (dans les cas ou il y a
- // plusieurs menu groups, interdire les interactions indesirables
- // entre eux (seul un btn d'un meme menu group que le menu ouvert
- // doit pouvoir le fermer
- //&& eflow.getBrowsingGroup()
- // && e.getBrowsingGroup() == eflow.getBrowsingGroup()             @@@@!!!!!!!!!
- // en plus si c'est un enfant contenu dans le menu ouvert (ou un
- // sous menu) il ne faut bien sur pas le fermer
- && !e.getSource()->isChildOf(*active_menu, true)
- ) {
- possible_closer = e.getView();
- possible_closer_menu = containing_menu;
- //close_timer->start(Application::conf.open_submenu_delay, 1, false);
- }
- }
- }
- 
- void MenuManager::leaveMenuChild(InputEvent& e) {
- if (possible_closer == e.getView()) possible_closer = null;
- if (possible_opener == e.getView()) possible_opener = null;
- }
- 
- void MenuManager::releaseMenuChild(InputEvent& e) {
- if (active_opener != e.getView() && !e.isMenuClosingDisabled()) closeAllMenus();
- }
- 
- */
-
 
 }

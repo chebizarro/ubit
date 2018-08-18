@@ -21,12 +21,13 @@
  * 
  */
 
-#ifndef _umessage_hpp_
-#define	_umessage_hpp_
+#ifndef UBIT_CORE_MESSAGE_H_
+#define	UBIT_CORE_MESSAGE_H_
+
 #include <map>
 #include <string>
-#include <ubit/uelem.hpp>
-#include <ubit/uattr.hpp>
+#include <ubit/core/element.h>
+#include <ubit/core/attribute.h>
 
 namespace ubit {
 
@@ -73,5 +74,5 @@ private:
 };
 
 }
-#endif
+#endif // UBIT_CORE_MESSAGE_H_
 

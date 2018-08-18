@@ -22,11 +22,11 @@
 #include <ctype.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include <ubit/uappli.hpp>
+#include <ubit/core/application.h>
 #include <ubit/ustyleparser.hpp>
-#include <ubit/udom.hpp>
-#include <ubit/uxmlparser.hpp>
-#include <ubit/uxmlgrammar.hpp>
+#include <ubit/core/dom.h>
+#include <ubit/core/xmlparser.h>
+#include <ubit/core/xmlgrammar.h>
 using namespace std;
 namespace ubit {
 

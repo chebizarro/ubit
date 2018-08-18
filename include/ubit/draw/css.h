@@ -28,7 +28,7 @@
 #include <ubit/udefs.hpp>
 #include <ubit/ustyle.hpp>
 #include <ubit/ustyleparser.hpp>
-#include <ubit/udom.hpp>
+#include <ubit/core/dom.h>
 
 namespace ubit {
   
@@ -54,8 +54,6 @@ namespace ubit {
     void defProp(const char* prop_name, AddPropFunc);
     void defProp(const String& prop_name, AddPropFunc);
     
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    // useful fcts.
     
     static bool parseUrl(const String&, String& url, String& remain);
      

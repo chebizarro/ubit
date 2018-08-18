@@ -23,7 +23,7 @@
 
 #ifndef _uicon_hpp_
 #define _uicon_hpp_
-#include <ubit/udoc.hpp>
+#include <ubit/core/doc.h>
 
 namespace ubit {
   

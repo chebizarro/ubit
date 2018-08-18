@@ -21,11 +21,11 @@
  * 
  */
 
-#ifndef _ufont_hpp_
-#define	_ufont_hpp_ 1
+#ifndef UBIT_DRAW_FONT_H_
+#define	UBIT_DRAW_FONT_H_
 
-#include <ubit/uattr.hpp>
-#include <ubit/ustr.hpp>
+#include <ubit/core/attribute.h>
+#include <ubit/core/string.h>
 
 namespace ubit {
   
@@ -155,7 +155,6 @@ namespace ubit {
     virtual void update();
     ///< update parents' graphics.
     
-    // - impl. - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     
     virtual void realize(Display*);
     /**< [impl] allocates physical resources.
@@ -225,7 +224,6 @@ namespace ubit {
      * available one is used).
      */
     
-    // - impl. - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   protected:
     friend class FontDescription;  
     friend class UHardFont;  
@@ -257,4 +255,4 @@ namespace ubit {
   };
   
 }
-#endif
+#endif // UBIT_DRAW_FONT_H_

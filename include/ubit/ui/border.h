@@ -25,8 +25,8 @@
 #ifndef _uborder_hpp_
 #define	_uborder_hpp_ 1
 
-#include <ubit/uattr.hpp>
-#include <ubit/ulength.hpp>
+#include <ubit/core/attribute.h>
+#include <ubit/core/length.h>
 
 namespace ubit {
   
@@ -98,7 +98,6 @@ namespace ubit {
     virtual void paintDecoration(Graph& g, const Rectangle& r, Element& obj, 
                                  const Color& fg, const Color& bg) const;
     
-#ifndef NO_DOC
   protected:
     short decoration;
     bool is_overlaid, is_rounded;
@@ -109,7 +108,6 @@ namespace ubit {
             float width, float height, UConst);    
     virtual void constructs(int decoration, const Color& _color, const Color& _bgcolor);
     virtual void putProp(UpdateContext*, Element&);
-#endif
   };
   
   inline Border& uborder(Border& b) {return *new Border(b);}

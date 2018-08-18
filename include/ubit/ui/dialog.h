@@ -23,7 +23,7 @@
 
 #ifndef UBIT_UI_DIALOG_H_
 #define	UBIT_UI_DIALOG_H_
-#include <ubit/uwin.hpp>
+#include <ubit/ui/window.h>
 
 namespace ubit {
 
@@ -100,13 +100,11 @@ namespace ubit {
     static Style* createStyle();  // redefined
     virtual bool realize(); // redefined
 
-#ifndef NO_DOC
     virtual void addingTo(Child&, Element& parent);
     virtual void removingFrom(Child&, Element& parent);  
   private:
     UCall* open_call;
     static class OptionDialog* messdialog;
-#endif
   };
   
   inline Dialog& udialog(Args arglist = Args::none) {return *new Dialog(arglist);}

@@ -29,7 +29,7 @@
 #include <sys/time.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <ubit/uappli.hpp>
+#include <ubit/core/application.h>
 #include <ubit/core/uappliImpl.hpp>
 #include <ubit/uon.hpp>
 #include <ubit/utimer.hpp>

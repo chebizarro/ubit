@@ -22,10 +22,10 @@
  * 
  */
 
-#ifndef _uflag_hpp_
-#define	_uflag_hpp_ 1
+#ifndef UBIT_CORE_FLAG_H_
+#define	UBIT_CORE_FLAG_H_
 
-#include <ubit/uattr.hpp>
+#include <ubit/core/attribute.h>
 #include <ubit/ucond.hpp>
 
 namespace ubit {
@@ -144,6 +144,6 @@ namespace ubit {
   };
   
 }
-#endif
+#endif // UBIT_CORE_FLAG_H_
 
 

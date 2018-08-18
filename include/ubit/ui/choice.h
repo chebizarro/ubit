@@ -24,7 +24,7 @@
 #ifndef _uchoice_hpp_
 #define	_uchoice_hpp_ 1
 
-#include <ubit/uattr.hpp>
+#include <ubit/core/attribute.h>
 
 namespace ubit {
   
@@ -100,8 +100,6 @@ namespace ubit {
     
     virtual void update();
     
-    // - - - impl - -  - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#ifndef NO_DOC
     virtual void putProp(UpdateContext*, Element&);
     virtual void addingTo(Child&, Element& parent);
     virtual void removingFrom(Child&, Element& parent);
@@ -140,7 +138,6 @@ namespace ubit {
     virtual void changed(bool update = true);
     virtual Box* setSelectedItemImpl(Box* item, InputEvent*);
     virtual Box* getSelectedItemImpl() const;
-#endif
   };
   
   inline Choice& uchoice() {return *new Choice;}
@@ -193,8 +190,6 @@ namespace ubit {
     
     virtual void update();
     
-    // - - impl  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#ifndef NO_DOC
     virtual void changed(bool update = true);
     virtual void changed(Element* target);
     /**< called when the selection is changed.
@@ -216,7 +211,6 @@ namespace ubit {
     void itemChanged(InputEvent&);
     void setIndexImpl();
     void _selectItem(Element*);
-#endif
   };
   
   inline RadioSelect& uradioSelect() {return *new RadioSelect();}

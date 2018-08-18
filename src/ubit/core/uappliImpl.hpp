@@ -26,9 +26,9 @@
 
 #include <vector>
 #include <sys/time.h>  // fd_set
-#include <ubit/uappli.hpp>
+#include <ubit/core/application.h>
 #include <ubit/core/uclassImpl.hpp>
-#include <ubit/uwin.hpp>
+#include <ubit/ui/window.h>
 #include <ubit/uupdate.hpp>
 #include <ubit/ustyle.hpp>
 #include <ubit/umessage.hpp>

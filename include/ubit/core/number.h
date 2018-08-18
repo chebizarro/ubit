@@ -22,8 +22,8 @@
  */
 
 
-#ifndef _unumber_hpp_
-#define	_unumber_hpp_ 1
+#ifndef UBIT_CORE_NUMBER_H_
+#define	UBIT_CORE_NUMBER_H_
 
 #include <iostream>
 #include <ubit/core/node.h>
@@ -78,7 +78,6 @@ public:
   //static int parseInt(String s);
   //static int parseInt(String s, int radix);
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   Int& operator=(int v)          {return setImpl(v);}
   Int& operator=(const Int& v)  {return setImpl(v.value);}
@@ -90,7 +89,6 @@ public:
   friend std::ostream& operator<<(std::ostream&, const Int&);
   ///< reads value from input stream.
 
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   bool operator==(int v)         const {return value == v;}
   bool operator==(double v)      const {return value == v;}
@@ -116,7 +114,6 @@ public:
   bool operator>=(double v)      const {return value >= v;}
   bool operator>=(const Int& v) const {return value >= v.value;}
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   Int& operator++() {return setImpl(value+1);}
   Int  operator++(int);
@@ -168,8 +165,7 @@ public:
   double doubleValue() const {return double(value);}
   String   toString()    const;
   
-   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
+ 
   Float& operator=(float v)           {return setImpl(v);}
   Float& operator=(const Float& v)   {return setImpl(v.value);}
   Float& operator=(const Int& v) {return setImpl(v.value);}
@@ -180,7 +176,6 @@ public:
   friend std::istream& operator>>(std::istream&, Float&);
   ///< reads value from input stream.
 
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   bool operator==(float v)          const {return value == v;}
   bool operator==(double v)         const {return value == v;}
@@ -206,7 +201,6 @@ public:
   bool operator>=(double v)         const {return value >= v;}
   bool operator>=(const Float& v)  const {return value >= v.value;}
 
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   Float& operator++() {return setImpl(value+1);}
   Float  operator++(int);
@@ -258,7 +252,6 @@ public:
   double doubleValue() const {return value;}
   String   toString()    const;
 
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   Double& operator=(double v)           {return setImpl(v);}
   Double& operator=(const Double& v)   {return setImpl(v.value);}
@@ -272,7 +265,6 @@ public:
   friend std::istream& operator>>(std::istream&, Double&);
   ///< reads value from input stream.
 
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   bool operator==(float v)          const {return value == v;}
   bool operator==(double v)         const {return value == v;}
@@ -298,7 +290,6 @@ public:
   bool operator>=(double v)         const {return value >= v;}
   bool operator>=(const Double& v) const {return value >= v.value;}
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   Double& operator++() {return setImpl(value+1);}
   Double  operator++(int);
@@ -326,5 +317,5 @@ private:
 };
 
 }
-#endif
+#endif // UBIT_CORE_NUMBER_H_
 

@@ -25,7 +25,7 @@
 #ifndef _uboxes_hpp_
 #define	_uboxes_hpp_ 1
 
-#include <ubit/ubox.hpp>
+#include <ubit/ui/box.h>
 
 namespace ubit {
   
@@ -61,7 +61,7 @@ namespace ubit {
    *  way (their border does not appear, etc.)
    *
    *  See class Box for details.
-   *  See also: class UMenubar for creating menu bars
+   *  See also: class MenuBar for creating menu bars
    */
   class UBar: public Box {
   public:
@@ -147,11 +147,9 @@ namespace ubit {
     ListBox& tablist() {return *ptabs;}
     ///< returns the tab list.
     
-#ifndef NO_DOC
   protected:
     unique_ptr<ListBox> ptabs;
     virtual void setSelectedImpl();
-#endif
   };
   
   inline UCardbox& ucardbox(Args args = Args::none) {return *new UCardbox(args);}
@@ -181,13 +179,11 @@ namespace ubit {
     virtual void zoomOut();
     virtual void setZoomQuantum(float);
     
-#ifndef NO_DOC
   protected:
     unique_ptr<Box> ptitlebar, pcontent;
     unique_ptr<Scrollpane> pspane;
     unique_ptr<Scale> pscale;
     float zoom_quantum;
-#endif
   };
   
   

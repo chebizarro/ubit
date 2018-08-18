@@ -18,8 +18,8 @@
 #include <ubit/ugl.hpp>
 #include <ubit/ucall.hpp>
 #include <ubit/uon.hpp>
-#include <ubit/ubox.hpp>
-#include <ubit/ustr.hpp>
+#include <ubit/ui/box.h>
+#include <ubit/core/string.h>
 #include <ubit/ukey.hpp>
 #include <ubit/ui/updatecontext.h>
 #include <ubit/ui/uviewImpl.hpp>
@@ -87,8 +87,6 @@ public:
  //  else sp.modes |=  UEventProps::GO_THROUGH;
  //}
   
-  // - - - Impl. - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#ifndef NO_DOC
   //protected:  
   void addFlagdef(const UFlagdef*);
   ///< [advanced] adds a Flag to the Event (for transparent tools, etc); see: Flag.
@@ -103,7 +101,6 @@ public:
   // events will go through this object.
   
   std::vector<const UFlagdef*>flagdefs;   // event flags
-#endif
 };
 
  void Event::addFlagdef(const UFlagdef* f) {
@@ -134,7 +131,6 @@ public:
  return last_pdef;
  }
  */
-// ==================================================== ======== ===============
 
 Event::Event(const Condition& c, UObject* s, UObject* a)
 : cond(&c), source(s), aux(a) {} 
@@ -146,7 +142,6 @@ void Event::setCond(const Condition& c) {cond = &c;}
 //UNodeEvent::UNodeEvent(const Condition& c, Node* s, Node* t) 
 //: UAnyEvent(c), source(s), target(t) {}
 
-// ==================================================== ======== ===============
 /*
 UElemEvent::UElemEvent(const Condition& _c, Element* _src, Node* _target)
 : UAnyEvent(_c), source(_src), target(_target) {}
@@ -173,7 +168,6 @@ sys_event(sev) {
 //  return source_view ? source_view->getBox() : null;
 //}
   
-// ==================================================== ======== ===============
 
 InputEvent::InputEvent(const Condition& c, View* v, EventFlow* f, 
                          unsigned long time, int st) : 
@@ -229,7 +223,6 @@ bool InputEvent::isMetaDown() const
 bool InputEvent::isAltGraphDown() const 
 {return (getModifiers() & Modifier::AltGraphDown) != 0;}
 
-// ==================================================== ======== ===============
   
 MouseEvent::MouseEvent(const Condition& c, View* source, EventFlow* f, 
                          unsigned long time, int state,
@@ -267,7 +260,6 @@ Point MouseEvent::getPosAndViewIn(const Box& parent, View*& parent_view) const {
   else return Point(0,0);
 }
 
-// ==================================================== ======== ===============
 
 Data* MouseEvent::getData() {
   if (!source_view) return null;
@@ -294,7 +286,6 @@ String* MouseEvent::getStr(UDataContext& dc) {
   return (data ? data->toStr() : null);
 }
 
-// ==================================================== ======== ===============
 
 UWheelEvent::UWheelEvent(const Condition& c, View* source, EventFlow* f, 
                          unsigned long time, int state,
@@ -304,7 +295,6 @@ MouseEvent(c, source, f, time, state, pos, abs_pos, wheel_btn),
 delta(wheel_delta) {
 } 
     
-// ==================================================== ======== ===============
 
 UKeyEvent::UKeyEvent(const Condition& c, View* source, EventFlow* f, unsigned long when, 
                      int mods, int kcode, short kchar)
@@ -313,7 +303,6 @@ UKeyEvent::UKeyEvent(const Condition& c, View* source, EventFlow* f, unsigned lo
 void UKeyEvent::setKeyChar(short ch) {keychar = ch;}
 void UKeyEvent::setKeyCode(int ks) {keycode = ks;}
 
-// ==================================================== ======== ===============
 
 UViewEvent::UViewEvent(const Condition& c, View* v) : 
 Event(c, (v? v->getBox(): null)), 
@@ -330,7 +319,6 @@ Display* UViewEvent::getDisp() const {
   else return null;
 }
 
-// ==================================================== ======== ===============
 
 TimerEvent::TimerEvent(const Condition& c, Timer* t, unsigned long w) 
 : Event(c, t), /*timer(t),*/ when(w) {}
@@ -347,7 +335,6 @@ const String* MessageEvent::getMessage() const {
   else return null;
 }
 
-// ==================================================== ======== ===============
 
 UResizeEvent::UResizeEvent(const Condition& c, View* v) : UViewEvent(c, v) {} 
 

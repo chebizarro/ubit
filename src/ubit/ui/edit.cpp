@@ -24,10 +24,10 @@
 #include <ubit/ubit_features.h>
 #include <ctype.h>
 #include <iostream>
-#include <ubit/ustr.hpp>
+#include <ubit/core/string.h>
 #include <ubit/ucall.hpp>
 #include <ubit/uon.hpp>
-#include <ubit/ubox.hpp>
+#include <ubit/ui/box.h>
 #include <ubit/ui/updatecontext.h>
 #include <ubit/ugraph.hpp>
 #include <ubit/uedit.hpp>
@@ -37,7 +37,7 @@
 #include <ubit/uscrollbar.hpp>
 #include <ubit/Selection.hpp>
 #include <ubit/ukey.hpp>
-#include <ubit/uappli.hpp>
+#include <ubit/core/application.h>
 using namespace std;
 
 namespace ubit {

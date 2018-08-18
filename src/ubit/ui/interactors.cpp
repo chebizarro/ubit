@@ -21,21 +21,21 @@ using namespace std;
 namespace ubit {
 
 
-struct USeparStyle : public Style {
-  USeparStyle();
+struct SeparatorStyle : public Style {
+  SeparatorStyle();
   virtual const Style& getStyle(UpdateContext*) const;
 private:
   Style vstyle;
 };
 
-const Style& USeparStyle::getStyle(UpdateContext* ctx) const {
+const Style& SeparatorStyle::getStyle(UpdateContext* ctx) const {
   Box* parent = null;
   if (ctx && (parent = ctx->getBoxParent()) && parent->isVertical())
     return vstyle; 
   else return *this;
 }
 
-USeparStyle::USeparStyle() {
+SeparatorStyle::SeparatorStyle() {
   orient = Orientation::HORIZONTAL;
   halign = Halign::FLEX;
   valign = Valign::CENTER;
@@ -56,7 +56,7 @@ USeparStyle::USeparStyle() {
 }
 
 Style* Separator::createStyle() {
-  return new USeparStyle();
+  return new SeparatorStyle();
 }
 
 Separator::Separator() : Box() {
@@ -228,7 +228,7 @@ const Style& ButtonStyle::getStyle(UpdateContext* ctx) const {
     Box* parent = null;
     if ((parent = ctx->getBoxParent())) {
       // faudrait separer les 2 cas et rajouter listbox
-      if (dynamic_cast<const Menu*>(parent) || dynamic_cast<const UMenubar*>(parent))
+      if (dynamic_cast<const Menu*>(parent) || dynamic_cast<const MenuBar*>(parent))
         return menu;
       else if (dynamic_cast<const UBar*>(parent))
         return bar;

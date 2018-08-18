@@ -105,8 +105,6 @@ namespace ubit {
     virtual void update();
     virtual void putProp(UpdateContext*, Element&);
         
-    // - impl. - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#ifndef NO_DOC
     Background(Color&, UConst);
     Background(Image&, UConst);
   protected:
@@ -114,7 +112,6 @@ namespace ubit {
     unique_ptr<Image> pima;
     float alpha;
     bool tiling;
-#endif
   };
   
   inline Background& ubackground() {return *new Background();}
@@ -165,5 +162,5 @@ namespace ubit {
   ///< shortcut function that returns *new UAlpha(value).
   
 }
-#endif
+#endif // UBIT_UI_BACKGROUND_H_
 

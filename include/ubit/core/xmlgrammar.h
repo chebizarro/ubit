@@ -21,12 +21,12 @@
  * 
  */
 
-#ifndef _uxmlgrammar_hpp_
-#define _uxmlgrammar_hpp_ 1
+#ifndef UBIT_CORE_XMLGRAMMAR_H_
+#define UBIT_CORE_XMLGRAMMAR_H_
 
 #include <map>
 #include <vector>
-#include <ubit/udom.hpp>
+#include <ubit/core/dom.h>
 
 namespace ubit {
   
@@ -81,5 +81,5 @@ namespace ubit {
   
   
 }
-#endif
+#endif // UBIT_CORE_XMLGRAMMAR_H_
 

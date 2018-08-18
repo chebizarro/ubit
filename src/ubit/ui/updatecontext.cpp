@@ -17,9 +17,9 @@
 #include <iostream>
 #include <ubit/ucolor.hpp>
 #include <ubit/uboxgeom.hpp>
-#include <ubit/ubox.hpp>
+#include <ubit/ui/box.h>
 #include <ubit/ui/updatecontext.h>
-#include <ubit/uappli.hpp>
+#include <ubit/core/application.h>
 #include <ubit/uflag.hpp>
 using namespace std;
 namespace ubit {

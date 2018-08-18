@@ -16,7 +16,7 @@
 #include <iostream>
 #include <ubit/ubit_features.h>
 #include <ubit/ubit.hpp>
-#include <ubit/udom.hpp>
+#include <ubit/core/dom.h>
 #include <ubit/uhtml.hpp>
 #include <ubit/ucss.hpp>
 #include <ubit/core/uappliImpl.hpp>

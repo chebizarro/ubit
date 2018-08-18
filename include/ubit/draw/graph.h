@@ -23,8 +23,8 @@
  */
 
 
-#ifndef _ugraph_hpp_
-#define	_ugraph_hpp_ 1
+#ifndef UBIT_DRAW_GRAPH_H_
+#define	UBIT_DRAW_GRAPH_H_
 
 #include <vector>
 #include <ubit/udefs.hpp>
@@ -307,8 +307,6 @@ public:
     *    events for repainting the missing parts if the last argument is true 
     */
     
-  // === Impl. =================================================================
-#ifndef NO_DOC
 
   Graph(View*);
   /**< constructor for drawing in a view.
@@ -341,7 +339,7 @@ private:
   Graph& operator=(const Graph&);
 protected:
   friend class View;
-  friend class 3DCanvasView;
+  friend class U3DCanvasView;
   friend class PaintEvent;
   friend class FontMetrics;
   friend class RenderContext;
@@ -353,8 +351,7 @@ protected:
   UHardFont* font;     // native font that is currently used
   RenderContext* rc;  // corresponding rendering context
   bool is_client;
-#endif // NO_DOC
 };
 
 }
-#endif
+#endif // UBIT_DRAW_GRAPH_H_

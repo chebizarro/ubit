@@ -17,14 +17,14 @@
 #include <iostream>
 #include <ctype.h>
 #include <ubit/core/node.h>
-#include <ubit/ufont.hpp>
+#include <ubit/draw/font.h>
 #include <ubit/ufontmetrics.hpp>
 #include <ubit/draw/ufontImpl.hpp>
-#include <ubit/ustr.hpp>
+#include <ubit/core/string.h>
 #include <ubit/ugraph.hpp>
-#include <ubit/uwin.hpp>
+#include <ubit/ui/window.h>
 #include <ubit/ui/updatecontext.h>
-#include <ubit/uappli.hpp>
+#include <ubit/core/application.h>
 #include <ubit/uhardfont.hpp>
 
 namespace ubit {

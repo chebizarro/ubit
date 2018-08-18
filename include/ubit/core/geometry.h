@@ -1,5 +1,5 @@
 /*
- *  geom.h: graphics geometry
+ *  geometry.h: graphics geometry
  *  Ubit GUI Toolkit - Version 8
  *  (C) 2018 Chris Daley
  *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
@@ -21,15 +21,16 @@
  * 
  */
 
-#ifndef _ugeom_hpp_
-#define	_ugeom_hpp_ 1
+#ifndef UBIT_CORE_GEOMETRY_H_
+#define	UBIT_CORE_GEOMETRY_H_
 
-#include <ubit/uobject.hpp>
+#include <ubit/core/object.h>
 
 namespace ubit {
     
-    /** 2D Point.
-   */
+   /**
+    * 2D Point.
+    */
   class Point {
   public:
     float x, y;
@@ -301,4 +302,4 @@ namespace ubit {
   };
   
 }
-#endif
+#endif // UBIT_CORE_GEOMETRY_H_

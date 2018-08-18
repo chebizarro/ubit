@@ -25,15 +25,15 @@
 #include <algorithm>
 #include <ubit/ubit_features.h>
 #include <ubit/ucall.hpp>
-#include <ubit/uwin.hpp>
+#include <ubit/ui/window.h>
 #include <ubit/ueventflow.hpp>
 #include <ubit/uscrollbar.hpp>
 #include <ubit/Selection.hpp>
-#include <ubit/uconf.hpp>
-#include <ubit/uappli.hpp>
+#include <ubit/core/config.h>
+#include <ubit/core/application.h>
 #include <ubit/core/uappliImpl.hpp>
 #include <ubit/ucursor.hpp>
-#include <ubit/ufont.hpp>
+#include <ubit/draw/font.h>
 #include <ubit/draw/ufontImpl.hpp>
 #include <ubit/uon.hpp>
 #include <ubit/utimer.hpp>
@@ -42,7 +42,7 @@
 #include <ubit/udispGLUT.hpp>
 //#include <ubit/udispGDK.hpp>
 #include <ubit/uhardfont.hpp>
-#include <ubit/urendercontext.hpp>
+#include <ubit/draw/rendercontext.h>
 #include <ubit/uglcontext.hpp>
 using namespace std;
 namespace ubit {

@@ -24,9 +24,9 @@
 #ifndef _ufinderImpl_hpp_
 #define _ufinderImpl_hpp_
 #include <pthread.h>
-#include <ubit/uwin.hpp>
+#include <ubit/ui/window.h>
 #include <ubit/uicon.hpp>
-#include <ubit/ufont.hpp>
+#include <ubit/draw/font.h>
 #include <ubit/ulistbox.hpp>
 
 namespace ubit {

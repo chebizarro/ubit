@@ -27,11 +27,11 @@
 #include <iostream>
 #include <ubit/udefs.hpp>
 #include <ubit/core/node.h>
-#include <ubit/uconf.hpp>
+#include <ubit/core/config.h>
 #include <ubit/ucolor.hpp>
 #include <ubit/upix.hpp>
 #include <ubit/ustyleparser.hpp>
-#include <ubit/uappli.hpp>
+#include <ubit/core/application.h>
 #include <ubit/core/uclassImpl.hpp>  // for StyleSheet (bizarrement)
 #include <ubit/core/event.h>
 #include <ubit/uima.hpp>

@@ -24,7 +24,7 @@
 #ifndef _uedit_hpp_
 #define	_uedit_hpp_ 1
 
-#include <ubit/uattr.hpp>
+#include <ubit/core/attribute.h>
 
 namespace ubit {
   
@@ -117,7 +117,6 @@ namespace ubit {
      * [unstable] this fct is not defined at the right place!
      */
     
-    // - - - impl - - - - -- - - - - - - - - - - - - - - - - - - - - - - -
     
     Selection* getSelection(InputEvent& e, String& sel_text);
     void deleteSelection(Selection* sel, String& sel_text, Element& container);

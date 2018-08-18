@@ -24,12 +24,12 @@
 #include <ubit/ubit_features.h>
 #include <iostream>
 #include <ubit/ucond.hpp>
-#include <ubit/ubox.hpp>
-#include <ubit/uview.hpp>
+#include <ubit/ui/box.h>
+#include <ubit/ui/view.h>
 #include <ubit/ui/uviewImpl.hpp>
-#include <ubit/uwin.hpp>
+#include <ubit/ui/window.h>
 #include <ubit/ui/uwinImpl.hpp>
-#include <ubit/uappli.hpp>
+#include <ubit/core/application.h>
 #include <ubit/core/uappliImpl.hpp>
 #include <ubit/ugraph.hpp>
 #include <ubit/ufontmetrics.hpp>

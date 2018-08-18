@@ -30,17 +30,17 @@
 #include <ubit/ucall.hpp>
 #include <ubit/ui/updatecontext.h>
 #include <ubit/ugraph.hpp>
-#include <ubit/uwin.hpp>
-#include <ubit/uview.hpp>
+#include <ubit/ui/window.h>
+#include <ubit/ui/view.h>
 #include <ubit/ucolor.hpp>
-#include <ubit/ustr.hpp>
+#include <ubit/core/string.h>
 #include <ubit/uima.hpp>
 #include <ubit/upix.hpp>
 #include <ubit/core/event.h>
-#include <ubit/uappli.hpp>
-#include <ubit/ubox.hpp>
+#include <ubit/core/application.h>
+#include <ubit/ui/box.h>
 #include <ubit/uupdate.hpp>
-#include <ubit/uconf.hpp>
+#include <ubit/core/config.h>
 #include <ubit/uhardima.hpp>
 using namespace std;
 namespace ubit {

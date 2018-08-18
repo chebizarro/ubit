@@ -24,7 +24,7 @@
 #ifndef _ufilebox_hpp_
 #define	_ufilebox_hpp_ 1
 
-#include <ubit/ubox.hpp>
+#include <ubit/ui/box.h>
 #include <ubit/uchoice.hpp>
 
 namespace ubit {
@@ -67,7 +67,6 @@ public:
     
   virtual ~FileChooser();
 
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   const String& getDir() const {return *fdir2;}
   ///< returns the directory of the file (without the file name).
@@ -82,7 +81,6 @@ public:
   const String& getFilter() const {return *ffilter;}
   ///< returns the extension filter.
 
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   virtual void setDir(const String&);
   ///< note that setDir and setFilter reload the directory.

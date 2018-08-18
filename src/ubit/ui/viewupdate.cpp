@@ -26,7 +26,7 @@
 #include <ubit/ui/uwinImpl.hpp>
 #include <ubit/utable.hpp>
 #include <ubit/uscrollpane.hpp>
-#include <ubit/uappli.hpp>
+#include <ubit/core/application.h>
 #include <ubit/uborder.hpp>
 using namespace std;
 namespace ubit {

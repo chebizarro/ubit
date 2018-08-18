@@ -17,13 +17,13 @@
 #include <iostream>
 #include <ubit/uon.hpp>
 #include <ubit/uboxgeom.hpp>
-#include <ubit/uwin.hpp>
+#include <ubit/ui/window.h>
 #include <ubit/uboxes.hpp>
 #include <ubit/udialogs.hpp>
 #include <ubit/ui/uwinImpl.hpp>
-#include <ubit/uappli.hpp>
+#include <ubit/core/application.h>
 #include <ubit/core/uappliImpl.hpp>
-#include <ubit/uinteractors.hpp>
+#include <ubit/ui/interactors.h>
 #include <ubit/ui/background.h>
 #include <ubit/ucolor.hpp>
 #include <ubit/ucall.hpp>

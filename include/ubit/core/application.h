@@ -27,8 +27,8 @@
 #include <cstdio>
 #include <cstdarg>
 
-#include <ubit/udisp.hpp>
-#include <ubit/uconf.hpp>
+#include <ubit/ui/display.h>
+#include <ubit/core/config.h>
 
 namespace ubit {
   

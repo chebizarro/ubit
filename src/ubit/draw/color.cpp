@@ -30,11 +30,11 @@
 #include <ubit/ucall.hpp>
 #include <ubit/uupdate.hpp>
 #include <ubit/ui/updatecontext.h>
-#include <ubit/ustr.hpp>
-#include <ubit/ubox.hpp>
+#include <ubit/core/string.h>
+#include <ubit/ui/box.h>
 #include <ubit/ucolor.hpp>
-#include <ubit/uappli.hpp>
-#include <ubit/ubox.hpp>
+#include <ubit/core/application.h>
+#include <ubit/ui/box.h>
 
 namespace ubit {
 

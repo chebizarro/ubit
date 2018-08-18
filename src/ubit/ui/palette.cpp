@@ -16,10 +16,10 @@
 #include <ubit/ubit_features.h>
 #include <iostream>
 #include <ubit/uboxgeom.hpp>
-#include <ubit/uinteractors.hpp>
+#include <ubit/ui/interactors.h>
 #include <ubit/upalette.hpp>
 #include <ubit/ucolor.hpp>
-#include <ubit/ufont.hpp>
+#include <ubit/draw/font.h>
 #include <ubit/uon.hpp>
 #include <ubit/ucall.hpp>
 #include <ubit/core/event.h>

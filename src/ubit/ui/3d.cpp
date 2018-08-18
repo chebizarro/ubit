@@ -270,7 +270,7 @@ Box& U3Dwin::createTitleBar(const String& title) {
 
 Style* U3Dcanvas::createStyle() {
   Style* style = Box::createStyle();
-  style->viewStyle = &3DCanvasView::style;
+  style->viewStyle = &U3DCanvasView::style;
   style->halign = Halign::LEFT;
   style->valign = Valign::TOP;
   return style;
@@ -289,9 +289,9 @@ fovy(FOVY), aspect(1.), near(NEAR_PLANE), far(FAR_PLANE) {
 U3Dcanvas::~U3Dcanvas() {}
 
 
-ViewStyle 3DCanvasView::style(&3DCanvasView::createView, UCONST);
+ViewStyle U3DCanvasView::style(&U3DCanvasView::createView, UCONST);
 
-void 3DCanvasView::doUpdate(UpdateContext& ctx, Rectangle r, Rectangle clip, UViewUpdate& vu) {
+void U3DCanvasView::doUpdate(UpdateContext& ctx, Rectangle r, Rectangle clip, UViewUpdate& vu) {
 #ifndef UBIT_WITH_GL
   View::doUpdate(ctx, r, clip, vu);
 #else
@@ -302,7 +302,7 @@ void 3DCanvasView::doUpdate(UpdateContext& ctx, Rectangle r, Rectangle clip, UVi
   if (g) {
     g->set3Dmode(true);
     // set the viewport for drawing in the 3Dcanvas
-    //cerr << "<<3DCanvasView glViewport: "<< int(x)<<" "<<int(frame_height - height - y)<<" "<< int(width)<<" "<< int(height)<< endl;
+    //cerr << "<<U3DCanvasView glViewport: "<< int(x)<<" "<<int(frame_height - height - y)<<" "<< int(width)<<" "<< int(height)<< endl;
     
     glViewport(int(x), int(frame_height - height - y), int(width), int(height));
      
@@ -344,7 +344,7 @@ void 3DCanvasView::doUpdate(UpdateContext& ctx, Rectangle r, Rectangle clip, UVi
     glDisable(GL_POLYGON_SMOOTH);
     
     // set the viewport for drawing in the whole hard window
-    //cerr << ">>3DCanvasView glViewport: 0 0 " << frame_width<< " " << frame_height << endl << endl;
+    //cerr << ">>U3DCanvasView glViewport: 0 0 " << frame_width<< " " << frame_height << endl << endl;
     glViewport(0, 0, frame_width, frame_height);
 
     g->set3Dmode(false);
@@ -369,7 +369,7 @@ public:
 };
 
 
-View* 3DCanvasView::findInChildren(Element* grp, const Point& winpos,
+View* U3DCanvasView::findInChildren(Element* grp, const Point& winpos,
                                      const UpdateContext& ctx, ViewFind& vf) 
 {
   if (!grp->isShowable() || grp->isIgnoringEvents()) return null;
@@ -541,7 +541,7 @@ View* 3DCanvasView::findInChildren(Element* grp, const Point& winpos,
 }
 
 
-bool 3DCanvasView::unproject(const U3Dpos* pos3d,
+bool U3DCanvasView::unproject(const U3Dpos* pos3d,
                               const Point& winpos, Point& convpos) {
   glMatrixMode(GL_MODELVIEW);
   

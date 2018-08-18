@@ -19,12 +19,12 @@
 #include <ubit/ucond.hpp>
 #include <ubit/uedit.hpp>
 #include <ubit/uboxgeom.hpp>
-#include <ubit/uwin.hpp>
-#include <ubit/uview.hpp>
+#include <ubit/ui/window.h>
+#include <ubit/ui/view.h>
 #include <ubit/ui/uviewImpl.hpp>
 #include <ubit/ugraph.hpp>
 #include <ubit/ufontmetrics.hpp>
-#include <ubit/uappli.hpp>
+#include <ubit/core/application.h>
 #include <ubit/uon.hpp>
 using namespace std;
 namespace ubit {

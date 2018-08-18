@@ -24,7 +24,7 @@
 #ifndef _usubwin_hpp_
 #define	_usubwin_hpp_ 1
 
-#include <ubit/uwin.hpp>
+#include <ubit/ui/window.h>
 
 namespace ubit {
   

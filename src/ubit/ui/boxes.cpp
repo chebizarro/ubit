@@ -32,7 +32,7 @@
 #include <ubit/upix.hpp>
 #include <ubit/ucall.hpp>
 #include <ubit/uborder.hpp>
-#include <ubit/uinteractors.hpp>
+#include <ubit/ui/interactors.h>
 #include <ubit/ulistbox.hpp>
 #include <ubit/uscrollpane.hpp>
 #include <ubit/ui/updatecontext.h>

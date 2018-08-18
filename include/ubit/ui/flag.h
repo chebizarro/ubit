@@ -25,7 +25,7 @@
 #ifndef _uflag_hpp_
 #define	_uflag_hpp_ 1
 
-#include <ubit/uattr.hpp>
+#include <ubit/core/attribute.h>
 #include <ubit/ucond.hpp>
 
 namespace ubit {

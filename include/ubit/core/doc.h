@@ -21,13 +21,13 @@
  * 
  */
 
-#ifndef _udoc_hpp_
-#define _udoc_hpp_ 1
+#ifndef UBIT_CORE_DOC_H_
+#define UBIT_CORE_DOC_H_
 
 #include <list>
 #include <map>
 #include <ubit/udefs.hpp>
-#include <ubit/ustr.hpp>
+#include <ubit/core/string.h>
 #include <ubit/uboxes.hpp>
 
 namespace ubit {
@@ -170,7 +170,6 @@ namespace ubit {
      * occurs in a link (typically a href anchor) of this document.
      */
     
-    // - - - Impl. - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     
     virtual void linkEventCB(InputEvent&, const String* path);
     
@@ -244,4 +243,4 @@ namespace ubit {
   };
   
 }
-#endif
+#endif // UBIT_CORE_DOC_H_

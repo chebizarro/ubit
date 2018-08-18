@@ -24,8 +24,8 @@
 #ifndef _uslider_hpp_
 #define	_uslider_hpp_ 1
 
-#include <ubit/unumber.hpp>
-#include <ubit/ubox.hpp>
+#include <ubit/core/number.h>
+#include <ubit/ui/box.h>
 #include <ubit/ustyle.hpp>
 
 namespace ubit {

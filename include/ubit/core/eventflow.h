@@ -21,10 +21,10 @@
  * 
  */
 
-#ifndef _ueventflow_hpp_
-#define	_ueventflow_hpp_  1
+#ifndef UBIT_CORE_EVENTFLOW_H_
+#define	UBIT_CORE_EVENTFLOW_H_
 
-#include <ubit/uappli.hpp>
+#include <ubit/core/application.h>
 #include <ubit/core/event.h>
 #include <ubit/ui/uviewImpl.hpp>
 
@@ -139,7 +139,7 @@ namespace ubit {
       View* view;
       Box* box;
       Point win_in_screen;        // pos of win in the screen (for drag and release events)
-      3DCanvasView* canvas_view;  // != null if the source is in a 3Dwidget
+      U3DCanvasView* canvas_view;  // != null if the source is in a 3Dwidget
       U3Dpos* refpos_in_canvas;    // 3Dpos of the 3Dwidget in canvas_view (if it is != null)
       UBehavior behavior;
     } lastPressed;
@@ -160,4 +160,4 @@ namespace ubit {
   };
   
 }
-#endif
+#endif // UBIT_CORE_EVENTFLOW_H_

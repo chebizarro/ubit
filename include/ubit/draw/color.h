@@ -22,11 +22,11 @@
  */
 
 
-#ifndef _ucolor_hpp_
-#define	_ucolor_hpp_ 1
+#ifndef UBIT_DRAW_COLOR_H_
+#define	UBIT_DRAW_COLOR_H_
 
 #include <string.h>
-#include <ubit/uattr.hpp>
+#include <ubit/core/attribute.h>
 
 namespace ubit {
   
@@ -50,11 +50,6 @@ namespace ubit {
       return (comps[0]==c.comps[0] && comps[1]==c.comps[1] 
               && comps[2]==c.comps[2] && comps[3]==c.comps[3]);
     }    
-
-    //bool equals(unsigned int r, unsigned int g, unsigned int b, unsigned int a) const {
-    //return components[0]==r && components[1]==g && components[2]==b && components[3]==a;}
-    
-    //bool equals(float r, float g, float b, float a) const;
 
     unsigned int getRedI()   const {return comps[0];}
     unsigned int getGreenI() const {return comps[1];}
@@ -197,4 +192,4 @@ namespace ubit {
   ///< shortcut function that performs *new Color(color_name, alpha);
 
 }
-#endif
+#endif // UBIT_DRAW_COLOR_H_

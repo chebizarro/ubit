@@ -21,8 +21,8 @@
  * 
  */
 
-#ifndef _ufile_hpp_
-#define	_ufile_hpp_ 1
+#ifndef UBIT_CORE_FILE_H_
+#define	UBIT_CORE_FILE_H_
 
 #include <vector>
 #include <ubit/core/node.h>
@@ -189,4 +189,4 @@ namespace ubit {
   };
   
 }
-#endif
+#endif // UBIT_CORE_FILE_H_

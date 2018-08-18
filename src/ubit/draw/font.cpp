@@ -18,11 +18,11 @@
 #include <ubit/ucall.hpp>
 #include <ubit/uupdate.hpp>
 #include <ubit/ui/updatecontext.h>
-#include <ubit/ufont.hpp>
+#include <ubit/draw/font.h>
 #include <ubit/draw/ufontImpl.hpp>
-#include <ubit/uappli.hpp>
-#include <ubit/ubox.hpp>
-#include <ubit/uconf.hpp>
+#include <ubit/core/application.h>
+#include <ubit/ui/box.h>
+#include <ubit/core/config.h>
 using namespace std;
 namespace ubit {
 

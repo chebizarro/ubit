@@ -24,8 +24,8 @@
 #ifndef uboxgeom_hpp
 #define	uboxgeom_hpp 1
 
-#include <ubit/uattr.hpp>
-#include <ubit/ulength.hpp>
+#include <ubit/core/attribute.h>
+#include <ubit/core/length.h>
 #include <ubit/ugeom.hpp>
 
 namespace ubit {
@@ -75,7 +75,6 @@ namespace ubit {
   ///< shortcut that creates a new Scale.
   
   
-  // ==================================================== Ubit Toolkit =========  
   /** Widget position.
    * The UPos Attribute specifies the position of a widget (Box subclasses) relatively
    * to its parent widget (note that, currently, UPos don't work with Window widgets)
@@ -179,8 +178,6 @@ namespace ubit {
     UPosControl& freezeX(bool state);
     UPosControl& freezeY(bool state);
     
-    // - - - impl - - - - -- - - - - - - - - - - - - - - - - - - - - - - -
-#ifndef NO_DOC
   protected:
     static const int MARGIN = 5;
     Point box_pos0, pt_in_pane0;
@@ -198,7 +195,6 @@ namespace ubit {
     virtual void pressCB(MouseEvent&);
     virtual void releaseCB(MouseEvent&);
     virtual void dragCB(MouseEvent&);
-#endif
   };
   
   /** Makes it possible to change the UPos of a Magic Lens interactively.
@@ -301,8 +297,6 @@ namespace ubit {
     USizeControl& freezeWidth(bool state);
     USizeControl& freezeHeight(bool state);
     
-    // - - - impl - - - - -- - - - - - - - - - - - - - - - - - - - - - - -
-#ifndef NO_DOC
     virtual void putProp(UpdateContext*, Element&) {}
     virtual void addingTo(Child&, Element& parent);
     virtual void removingFrom(Child&, Element& parent);
@@ -317,7 +311,6 @@ namespace ubit {
     virtual void pressCB(MouseEvent&);
     virtual void releaseCB(MouseEvent&);
     virtual void dragCB(MouseEvent&);
-#endif
   };
   
   
@@ -384,15 +377,12 @@ namespace ubit {
     virtual void update();
     virtual void putProp(UpdateContext*, Element&);
     
-    // - impl. - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#ifndef NO_DOC
     enum {HORIZONTAL=0, VERTICAL=1, INHERIT=2}; //dont change values
     void addingTo(Child&, Element& parent);
     void removingFrom(Child&, Element& parent);
   private:
     char value;
     Orientation(char value, UConst);
-#endif
   };
   
   inline Orientation& uorient(const Orientation& val) {return *new Orientation(val);}
@@ -430,7 +420,6 @@ namespace ubit {
     virtual void update();
     virtual void putProp(UpdateContext*, Element&);
     
-    // - impl. - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     enum {INHERIT, LEFT, RIGHT, FLEX, CENTER};
   private:
     char value;
@@ -497,7 +486,6 @@ namespace ubit {
     virtual void update();
     virtual void putProp(UpdateContext*, Element&);
     
-    // - impl. - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     enum {INHERIT, TOP, BOTTOM, FLEX, CENTER};
   private:
     char value;
@@ -558,7 +546,6 @@ namespace ubit {
     
     virtual void update();
     
-    // - impl. - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     enum {INHERIT = -1};
     virtual void putProp(UpdateContext*, Element&);
   private:
@@ -589,7 +576,6 @@ namespace ubit {
     
     virtual void update();
     
-    // - impl. - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     enum {INHERIT = -1};
     virtual void putProp(UpdateContext*, Element&);
   private:

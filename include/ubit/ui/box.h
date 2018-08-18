@@ -24,7 +24,7 @@
 #ifndef UBIT_UI_BOX_H_
 #define	UBIT_UI_BOX_H_
 
-#include <ubit/uelem.hpp>
+#include <ubit/core/element.h>
 
 namespace ubit {
   
@@ -33,7 +33,7 @@ namespace ubit {
    * 
    * Box is the base class for widgets:
    * - interactors: Button, Item, TextField, TextArea...
-   * - containers: Hbox, Vbox, UMenubar...
+   * - containers: Hbox, Vbox, MenuBar...
    * - windows: Window, Dialog, Menu...
    * Most widgets' methods are inherited from Box and Element.
    *

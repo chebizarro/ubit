@@ -18,10 +18,10 @@
 #include <cstdio>
 #include <ubit/ucall.hpp>
 #include <ubit/uon.hpp>
-#include <ubit/ustr.hpp>
+#include <ubit/core/string.h>
 #include <ubit/core/event.h>
-#include <ubit/unumber.hpp>
-#include <ubit/uappli.hpp>
+#include <ubit/core/number.h>
+#include <ubit/core/application.h>
 using namespace std;
 
 namespace ubit {

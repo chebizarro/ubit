@@ -19,12 +19,12 @@
 #include <ubit/ucolor.hpp>
 #include <ubit/uborder.hpp>
 #include <ubit/ugraph.hpp>
-#include <ubit/uview.hpp>
+#include <ubit/ui/view.h>
 #include <ubit/ui/uviewImpl.hpp>
 #include <ubit/uupdate.hpp>
 #include <ubit/ui/updatecontext.h>
-#include <ubit/ubox.hpp>
-#include <ubit/uwin.hpp>
+#include <ubit/ui/box.h>
+#include <ubit/ui/window.h>
 #include <ubit/uon.hpp>
 using namespace std;
 namespace ubit {

@@ -25,7 +25,7 @@
 #define	_uview_hpp_ 1
 
 #include <list>
-#include <ubit/uelem.hpp>
+#include <ubit/core/element.h>
 #include <ubit/core/event.h>
 #include <ubit/ugeom.hpp>
 
@@ -195,21 +195,16 @@ namespace ubit {
      */         
 
     virtual View* findSource(ViewFind&, Point& pos_in_src);
-    ///< [Impl].
     
     virtual View* findSourceNext(ViewFind&, Point& pos_in_src);
-    ///< [Impl].
     
     enum FindMode {FIND_CLIP, FIND_VIEW_CONTEXT, FIND_PARENT_CONTEXT};
 
     virtual bool findContext(UViewContext&, FindMode);
-    ///< [Impl].
     
     virtual Data* findData(UDataContext&, const Point& pos,
                             const Data* searched_data, int strpos1, int strpos2);
-    ///< [Impl].
 
-#ifndef NO_DOC
     enum VMODES {
       // INITIALIZING is set at the 1st update, INITIALIZED at the 2nd update
       // (a combination of layout+update+layout is necessary for correct init)
@@ -320,7 +315,7 @@ namespace ubit {
                         const Dimension& dim, Element* chgrp, View* chview);
     static void layoutViewport(UViewUpdateImpl& vd, const UpdateContext& curp,
                                ChildIter link, const Dimension& dim, View* chview);
-#endif
+
   private:
     friend class Box;
     friend class Window;
@@ -332,12 +327,11 @@ namespace ubit {
     friend class UAppliImpl;
     friend class InputEvent;
     friend class EventFlow;
-    friend class 3DCanvasView;
+    friend class U3DCanvasView;
     View(const View&);
     View& operator=(const View&);  // assigment is forbidden
   };
   
-  // ==================================================== ===== ======= //
   
   class FlowView: public View {
   public:
@@ -362,7 +356,6 @@ namespace ubit {
     
     float getMaxWidth() const;
     
-    // - - - Impl. - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   private:
     friend class UFlowLayoutImpl;
     friend class UFlowUpdateImpl;

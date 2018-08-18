@@ -24,7 +24,7 @@
 #ifndef _ucursor_hpp_
 #define	_ucursor_hpp_ 1
 
-#include <ubit/uattr.hpp>
+#include <ubit/core/attribute.h>
 
 namespace ubit {
   
@@ -68,14 +68,12 @@ namespace ubit {
     
     int getCursorType() const {return cursor_type;}
     
-    // - - - impl  - - - - - - - - - - - - - - - - - - - - - - - - - - -
     
     virtual void update() {} 
     
     UCursorImpl* getCursorImpl(Display*) const;
     ///< [impl] returns internal data for this display.
     
-#ifndef NO_DOC
     virtual void addingTo(Child&, Element& parent);
     virtual void removingFrom(Child&, Element& parent);
     virtual void putProp(UpdateContext*, Element&);
@@ -84,7 +82,6 @@ namespace ubit {
   private:
     int cursor_type;
     mutable std::vector<UCursorImpl*> cimpl;
-#endif
   };
   
 }

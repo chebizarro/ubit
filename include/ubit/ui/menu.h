@@ -25,7 +25,7 @@
 #define	_umenu_hpp_ 1
 
 #include <ubit/uboxes.hpp>
-#include <ubit/uwin.hpp>
+#include <ubit/ui/window.h>
 
 namespace ubit {
   
@@ -33,25 +33,21 @@ namespace ubit {
   
   /** Menu bar.
    */
-  class UMenubar: public UBar {
+  class MenuBar: public UBar {
   public:
-    UCLASS(UMenubar)
+    UCLASS(MenuBar)
     
-    UMenubar(const Args& a = Args::none);
+    MenuBar(const Args& a = Args::none);
     ///< create a new Menu Bar; see also shortcut function umenubar().
     
     static  Style* createStyle();
     
-    // - - -impl - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#ifndef NO_DOC
-    //virtual Element* getBrowsingGroup() {return this;}  
   protected:
     virtual void menuChildCB(InputEvent&);
-#endif
   };
   
-  inline UMenubar& umenubar(const Args& args = Args::none) {return *new UMenubar(args);}
-  ///< shortcut function that return *new UMenubar(args).
+  inline MenuBar& umenubar(const Args& args = Args::none) {return *new MenuBar(args);}
+  ///< shortcut function that return *new MenuBar(args).
   
   
     /** Menu: pulldown and cascaded menux. 
@@ -67,7 +63,7 @@ namespace ubit {
    * Note that the PopupMenu class must be used to create contextual menus (and that
    * popmenus are not automatically opened to allow more programming control)
    * 
-   * @see: Window, UMenubar, PopupMenu.
+   * @see: Window, MenuBar, PopupMenu.
    */
   class Menu : public Window {
   public:
@@ -98,8 +94,6 @@ namespace ubit {
     
     virtual bool realize();
     
-    // - - - Impl. - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#ifndef NO_DOC
     virtual void addingTo(Child&, Element& parent);
     virtual void removingFrom(Child&, Element& parent);
     ///< NOTE that this function require a specific destructor.
@@ -112,7 +106,6 @@ namespace ubit {
     virtual void openImpl(MenuManager&, View* opener, bool auto_place, Display*);
     virtual void menuOpenerCB(InputEvent&);
     virtual void menuChildCB(InputEvent&);
-#endif
   };
   
   inline Menu& umenu(const Args& args = Args::none) {return *new Menu(args);}

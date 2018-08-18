@@ -31,9 +31,9 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <ubit/ucall.hpp>
-#include <ubit/uappli.hpp>
+#include <ubit/core/application.h>
 #include <ubit/usource.hpp>
-#include <ubit/usocket.hpp>
+#include <ubit/net/socket.h>
 using namespace std;
 namespace ubit {
 

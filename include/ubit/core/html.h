@@ -21,11 +21,12 @@
  * 
  */
 
-#ifndef _uhtml_hpp_
-#define _uhtml_hpp_
+#ifndef UBIT_CORE_HTML_H_
+#define UBIT_CORE_HTML_H_
+
 #include <ubit/udefs.hpp>
-#include <ubit/uxmlgrammar.hpp>
-#include <ubit/uxmlparser.hpp>
+#include <ubit/core/xmlgrammar.h>
+#include <ubit/core/xmlparser.h>
 
 namespace ubit {
   
@@ -36,7 +37,6 @@ namespace ubit {
     HtmlGrammar();
   };
 
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   /** HTML Parser.
    * this parser should be used instead of XmlParser for parsing HTML text.
    * It automatically:
@@ -49,7 +49,6 @@ namespace ubit {
     HtmlParser();
   };
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   /** HTML Attribute.
    */ 
   struct HtmlAttribute : public Attribute {
@@ -209,7 +208,7 @@ namespace ubit {
   };
   
 }
-#endif
+#endif // UBIT_CORE_HTML_H_
 
 
 

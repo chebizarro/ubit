@@ -22,14 +22,15 @@
  */
 
 
-#ifndef _ukey_hpp_
-#define _ukey_hpp_ 1
+#ifndef UBIT_DRAW_KEY_H_
+#define UBIT_DRAW_KEY_H_
 
 #include <ubit/udefs.hpp>
 
 namespace ubit {
   
-  /** Modifier masks.
+  /**
+   * Modifier masks.
    * modifier masks are returned by InputEvent::getModifiers(), MouseEvent::getButton(),
    * MouseEvent::getButtons().
    * @see also class Key for key codes.
@@ -44,7 +45,9 @@ namespace ubit {
     ///< impl: init keys mapping.
   };
   
-  /** Key codes.
+  /**
+   * Key codes.
+   * 
    * key codes are returned by UKeyEvent::getKeyCode()
    * Note: do not confuse Key::Shift (key code) with UMod::ShiftMod (modifier mask)
    * @see also class UMod for modifier mask.
@@ -64,5 +67,5 @@ namespace ubit {
   };
   
 }
-#endif
+#endif // UBIT_DRAW_KEY_H_
 

@@ -14,10 +14,10 @@
 * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
 * ***********************************************************************/
 
-#ifndef _usource_hpp_
-#define	_usource_hpp_ 1
+#ifndef UBIT_NET_SOURCE_H_
+#define	UBIT_NET_SOURCE_H_
 
-#include <ubit/uobject.hpp>
+#include <ubit/core/object.h>
 
 namespace ubit {
 
@@ -80,4 +80,4 @@ private:
 };
 
 }
-#endif
+#endif // UBIT_NET_SOURCE_H_

@@ -25,9 +25,9 @@
 #define	_uclassImpl_hpp_ 1
 
 #include <map>
-#include <ubit/uattr.hpp>
+#include <ubit/core/attribute.h>
 #include <ubit/uelem.hpp>
-#include <ubit/ubox.hpp>
+#include <ubit/ui/box.h>
 #include <ubit/uclass.hpp>
 
 namespace ubit {

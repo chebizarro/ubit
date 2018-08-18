@@ -39,8 +39,8 @@
 #include <ubit/ueventflow.hpp>
 #include <ubit/uupdate.hpp>
 #include <ubit/Selection.hpp>
-#include <ubit/uconf.hpp>
-#include <ubit/ustr.hpp>
+#include <ubit/core/config.h>
+#include <ubit/core/string.h>
 #include <ubit/usource.hpp>
 #include <ubit/utimer.hpp>
 #include <ubit/ugraph.hpp>

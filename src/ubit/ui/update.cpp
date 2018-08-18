@@ -16,9 +16,9 @@
 #include <ubit/ubit_features.h>
 #include <cstdio>
 #include <iostream>
-#include <ubit/ustr.hpp>
+#include <ubit/core/string.h>
 #include <ubit/ucall.hpp>
-#include <ubit/uview.hpp>
+#include <ubit/ui/view.h>
 #include <ubit/ugraph.hpp>
 #include <ubit/uupdate.hpp>
 using namespace std;

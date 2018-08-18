@@ -24,7 +24,7 @@
 #ifndef UBIT_CORE_ATTRIBUTE_H_
 #define	UBIT_CORE_ATTRIBUTE_H_
 
-#include <ubit/unumber.hpp>
+#include <ubit/core/number.h>
 
 namespace ubit {
   

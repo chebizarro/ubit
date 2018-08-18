@@ -29,12 +29,12 @@
 #include <ubit/ui/updatecontext.h>
 #include <ubit/ugraph.hpp>
 #include <ubit/ufontmetrics.hpp>
-#include <ubit/uview.hpp>
-#include <ubit/ustr.hpp>
+#include <ubit/ui/view.h>
+#include <ubit/core/string.h>
 #include <ubit/uedit.hpp>
 #include <ubit/Selection.hpp>
-#include <ubit/uwin.hpp>
-#include <ubit/uappli.hpp>
+#include <ubit/ui/window.h>
+#include <ubit/core/application.h>
 using namespace std;
 
 namespace ubit {

@@ -18,12 +18,12 @@
 #include <ubit/core/node.h>
 #include <ubit/uon.hpp>
 #include <ubit/ucall.hpp>
-#include <ubit/ustr.hpp>
-#include <ubit/ubox.hpp>
-#include <ubit/uview.hpp>
+#include <ubit/core/string.h>
+#include <ubit/ui/box.h>
+#include <ubit/ui/view.h>
 #include <ubit/core/event.h>
 #include <ubit/uupdate.hpp>
-#include <ubit/uappli.hpp>
+#include <ubit/core/application.h>
 #include <ubit/core/uappliImpl.hpp>
 using namespace std;
 namespace ubit {

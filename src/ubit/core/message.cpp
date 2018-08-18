@@ -20,9 +20,9 @@
 #include <cstdio>
 #include <ubit/uon.hpp>
 #include <ubit/ucall.hpp>
-#include <ubit/ubox.hpp>
+#include <ubit/ui/box.h>
 #include <ubit/core/event.h>
-#include <ubit/uappli.hpp>
+#include <ubit/core/application.h>
 #include <ubit/core/uappliImpl.hpp>
 #include <ubit/umessage.hpp>
 #include <ubit/umservice.hpp>

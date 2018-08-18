@@ -22,10 +22,10 @@
  */
 
 
-#ifndef _uima_hpp_
-#define	_uima_hpp_ 1
+#ifndef UBIT_DRAW_IMAGE_H_
+#define	UBIT_DRAW_IMAGE_H_
 
-#include <ubit/udata.hpp>
+#include <ubit/core/data.h>
 
 namespace ubit {
 
@@ -96,7 +96,6 @@ public:
 
   virtual ~Image();
 
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   Image& operator=(const Image& ima2);
   /**< copies the content of ima2 to this image.
@@ -123,7 +122,6 @@ public:
   bool rescale(float xscale, float yscale);
   ///< rescales this image.
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   virtual int read(const String& filename, int max_width = 0, int max_height =0);
   /**< loads an image file.
@@ -163,8 +161,6 @@ public:
     * the file is not loaded immediately but when the image appears for
     * the first time. Call load() to load the file immediately.
     */
-
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   
   int getWidth()  const;
   ///< returns the image width (0 if the image is not loaded).
@@ -187,7 +183,6 @@ public:
   virtual void update(); 
   ///< update parents' views.
 
-  // - - - impl - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   int realize(int max_w = 0, int max_h = 0,
               Display* disp = null, bool force_reload = true) const;
@@ -215,7 +210,6 @@ public:
     * to image filenames that don't start with / or .
     */
 
-#ifndef NO_DOC
   friend class Box;
   friend class UHardIma;
   friend class UPix;
@@ -239,7 +233,6 @@ protected:
   enum Mode {EMPTY, CREATE, READ_FROM_FILE, READ_FROM_DATA};
   mutable char mode;
   bool show_unknown_ima;
-#endif
 };
 
 inline Image& uima(const String& filename)  {return *new Image(filename);}
@@ -252,4 +245,4 @@ inline Image& uima(const char** xpm_data) {return *new Image(xpm_data);}
 ///< shortcut function that creates a new Image image.
 
 }
-#endif
+#endif // UBIT_DRAW_IMAGE_H_

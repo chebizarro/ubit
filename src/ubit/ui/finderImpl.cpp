@@ -26,12 +26,12 @@
 #include <ubit/upix.hpp>
 #include <ubit/usymbol.hpp>
 #include <ubit/uborder.hpp>
-#include <ubit/ubox.hpp>
+#include <ubit/ui/box.h>
 #include <ubit/uboxgeom.hpp>
 #include <ubit/utimer.hpp>
 #include <ubit/ulistbox.hpp>
 #include <ubit/uscrollpane.hpp>
-#include <ubit/uappli.hpp>
+#include <ubit/core/application.h>
 #include <ubit/umservice.hpp>
 #include <ubit/umsproto.hpp>
 #include <ubit/umessage.hpp>

@@ -18,12 +18,12 @@
 
 #include <iostream>
 #include <errno.h>
-#include <ubit/uconf.hpp>
-#include <ubit/uappli.hpp>
+#include <ubit/core/config.h>
+#include <ubit/core/application.h>
 #include <ubit/uappliImpl.hpp>
 #include <ubit/ueventflow.hpp>
 #include <ubit/uon.hpp>
-#include <ubit/uwin.hpp>
+#include <ubit/ui/window.h>
 #include <ubit/ucursor.hpp>
 #include <ubit/umsproto.hpp>
 #include <ubit/nat/udispGDK.hpp>

@@ -24,14 +24,14 @@
 #include <iostream>
 #include <ubit/ubit_features.h>
 #include <ubit/ucall.hpp>
-#include <ubit/ubox.hpp>
+#include <ubit/ui/box.h>
 #include <ubit/uboxgeom.hpp>
-#include <ubit/ufont.hpp>
+#include <ubit/draw/font.h>
 #include <ubit/ucolor.hpp>
 #include <ubit/uborder.hpp>
 #include <ubit/ustyle.hpp>
-#include <ubit/uview.hpp>
-#include <ubit/uappli.hpp>
+#include <ubit/ui/view.h>
+#include <ubit/core/application.h>
 #include <ubit/core/uappliImpl.hpp>
 #include <ubit/uon.hpp>
 using namespace std;

@@ -14,11 +14,11 @@
 * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
 * ***********************************************************************/
 
-#ifndef _usocket_hpp_
-#define	_usocket_hpp_ 1
+#ifndef UBIT_NET_SOCKET_H_
+#define	UBIT_NET_SOCKET_H_
 
 #include <ubit/udefs.hpp>
-#include <ubit/ustr.hpp>
+#include <ubit/core/string.h>
 
 extern "C" {
   struct sockaddr_in;
@@ -269,7 +269,7 @@ public:
 };
 
 }
-#endif
+#endif // UBIT_NET_SOCKET_H_
 
 
 

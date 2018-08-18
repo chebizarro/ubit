@@ -24,9 +24,9 @@
 #ifndef _uinteractors_hpp_
 #define	_uinteractors_hpp_ 1
 
-#include <ubit/ustr.hpp>
+#include <ubit/core/string.h>
 #include <ubit/uedit.hpp>
-#include <ubit/ubox.hpp>
+#include <ubit/ui/box.h>
 
 namespace ubit {
   
@@ -219,7 +219,7 @@ namespace ubit {
    * A Button is similar to a Button except that:
    * - it is clickable (see the "callback" section below)
    * - its "look" depends on parent(s): its backgound is transparent if the button
-   *   is contained in a Menu, a UMenubar or a UBar and grey otherwise.
+   *   is contained in a Menu, a MenuBar or a UBar and grey otherwise.
    *
    * As other widgets, a button can contain any combination of text, images and  
    * other widgets and its look can be changed by adding appropriate Attribute(s)

@@ -24,7 +24,7 @@
 #ifndef _uwinImpl_hpp_
 #define	_uwinImpl_hpp_ 1
 
-#include <ubit/uwin.hpp>
+#include <ubit/ui/window.h>
 
 namespace ubit {
   
@@ -156,8 +156,6 @@ namespace ubit {
   protected:
     UHardwinImpl(Display*, Window*);
     
-    // - - - impl - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-#ifndef NO_DOC
   public:
     Children* getSoftwinList();
     UWinList*  getSoftwins();
@@ -185,7 +183,6 @@ namespace ubit {
     Children* softwin_list;
     // glcanvas windows and GLUT window have their own GLContext
     GLContext* glcontext;
-#endif
   };  
    
 }

@@ -18,9 +18,9 @@
 #include <cstdio>
 #include <ubit/ubit_features.h>
 #include <ubit/ubit.hpp>
-#include <ubit/udom.hpp>
-#include <ubit/uxmlgrammar.hpp>
-#include <ubit/uxmlparser.hpp>
+#include <ubit/core/dom.h>
+#include <ubit/core/xmlgrammar.h>
+#include <ubit/core/xmlparser.h>
 #include <ubit/uhtml.hpp>
 #include <ubit/ucss.hpp>   // pour CssAttachment
 using namespace std;

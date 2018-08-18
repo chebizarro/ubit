@@ -17,7 +17,7 @@
 #include <iostream>
 #include <ubit/ui/uwinImpl.hpp>
 #include <ubit/ui/uviewImpl.hpp>
-#include <ubit/udisp.hpp>
+#include <ubit/ui/display.h>
 #include <ubit/uglcontext.hpp>
 using namespace std;
 

@@ -17,13 +17,13 @@
 #include <iostream>
 #include <ubit/ucall.hpp>
 #include <ubit/ucolor.hpp>
-#include <ubit/ustr.hpp>
-#include <ubit/ufont.hpp>
-#include <ubit/uelem.hpp>
+#include <ubit/core/string.h>
+#include <ubit/draw/font.h>
+#include <ubit/core/element.h>
 #include <ubit/uupdate.hpp>
 #include <ubit/core/event.h>
 #include <ubit/Selection.hpp>
-#include <ubit/uappli.hpp>
+#include <ubit/core/application.h>
 using namespace std;
 namespace ubit {
 

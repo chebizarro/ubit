@@ -25,8 +25,8 @@
 #define	_uconf_hpp_ 1
 
 #include <ubit/udefs.hpp>
-#include <ubit/ustr.hpp>
-#include <ubit/ufont.hpp>
+#include <ubit/core/string.h>
+#include <ubit/draw/font.h>
 
 namespace ubit {
 
@@ -126,7 +126,6 @@ public:
   virtual void printHelp();
   ///< prints Ubit help on cout.
   
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   
   bool isUsingGL() const {return is_using_gl;}  
   bool isUsingFreeType() const {return is_using_freetype;}

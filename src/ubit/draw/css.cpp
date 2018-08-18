@@ -26,7 +26,7 @@
 #include <ubit/ubit.hpp>
 #include <ubit/ui/updatecontext.h>
 #include <ubit/ucss.hpp>
-#include <ubit/udom.hpp>
+#include <ubit/core/dom.h>
 using namespace std;
 
 namespace ubit {

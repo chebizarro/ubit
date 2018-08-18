@@ -18,10 +18,10 @@
 #include <ubit/udefs.hpp>
 #include <ubit/ucall.hpp>
 #include <ubit/uon.hpp>
-#include <ubit/uelem.hpp>
+#include <ubit/core/element.h>
 #include <ubit/ui/updatecontext.h>
 #include <ubit/core/event.h>
-#include <ubit/ustr.hpp>
+#include <ubit/core/string.h>
 using namespace std;
 
 namespace ubit {

@@ -21,12 +21,12 @@
  * 
  */
 
-#ifndef _ustyle_hpp_
-#define	_ustyle_hpp_ 1
+#ifndef UBIT_DRAW_STYLE_H_
+#define	UBIT_DRAW_STYLE_H_
 
 #include <ubit/udefs.hpp>
 #include <ubit/uborder.hpp>
-#include <ubit/ufont.hpp>
+#include <ubit/draw/font.h>
 #include <ubit/ugeom.hpp>
 #include <ubit/uon.hpp>
 
@@ -47,7 +47,8 @@ namespace ubit {
   };
   
   
-  /** Compiled Object Style.
+  /**
+   * Compiled Object Style.
    * specify the appearance of Element/Box/Window objects and subclasses.
    */
   class Style {
@@ -94,4 +95,4 @@ namespace ubit {
   };
   
 }
-#endif
+#endif // UBIT_DRAW_STYLE_H_

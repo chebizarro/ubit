@@ -22,8 +22,8 @@
  */
 
 
-#ifndef _urendercontext_hpp_
-#define	_urendercontext_hpp_ 1
+#ifndef UBIT_DRAW_RENDERCONTEXT_H_
+#define	UBIT_DRAW_RENDERCONTEXT_H_
 
 #include <ubit/ui/uwinImpl.hpp>
 
@@ -138,4 +138,4 @@ protected:
 };
 
 }
-#endif
+#endif // UBIT_DRAW_RENDERCONTEXT_H_

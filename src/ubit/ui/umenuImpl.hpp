@@ -59,7 +59,7 @@ public:
  
 protected:
   friend class Menu;
-  friend class UMenubar;
+  friend class MenuBar;
   friend class EventFlow;
   std::vector<Menu*> menustack;  // stack of menus that are currently being grabbed
   int menu_count;

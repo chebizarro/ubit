@@ -25,7 +25,7 @@
 #define	_utable_hpp_ 1
 
 #include <vector>
-#include <ubit/ubox.hpp>
+#include <ubit/ui/box.h>
 #include <ubit/uboxes.hpp>
 
 namespace ubit {
@@ -124,7 +124,6 @@ namespace ubit {
     static View* createView(Box*, View* parview, UHardwinImpl*);
     virtual UTableView* toTableView() {return this;}
     
-#ifndef NO_DOC
     std::vector<UViewCell> cols, lines;
     int lcur, ccur; 
     int ccount, lcount;
@@ -133,7 +132,6 @@ namespace ubit {
                               Element& grp, ViewLayout&);
     static void rowDoLayout(View* row_view, class UTableLayoutImpl&, 
                             UpdateContext& parctx, Element& grp, ViewLayout&);
-#endif
   };
 
 }

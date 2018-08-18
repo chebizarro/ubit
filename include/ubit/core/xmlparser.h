@@ -13,10 +13,10 @@
  * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
  * ***********************************************************************/
 
-#ifndef _uxmlparser_hpp_
-#define _uxmlparser_hpp_ 1
+#ifndef UBIT_CORE_XMLPARSER_H_
+#define UBIT_CORE_XMLPARSER_H_
 
-#include <ubit/udom.hpp>
+#include <ubit/core/dom.h>
 #include <fstream>
 
 namespace ubit {
@@ -115,7 +115,7 @@ namespace ubit {
     unique_ptr<UErrorHandler> perrhandler;
   };
 }
-#endif
+#endif // UBIT_CORE_XMLPARSER_H_
 
 
 

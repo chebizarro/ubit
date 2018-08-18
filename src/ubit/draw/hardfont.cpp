@@ -25,8 +25,8 @@
 #include <cstdio>
 #include <iostream>
 #include <ubit/ubit_features.h>
-#include <ubit/ustr.hpp>
-#include <ubit/ufont.hpp>
+#include <ubit/core/string.h>
+#include <ubit/draw/font.h>
 #include <ubit/draw/ufontImpl.hpp>
 #include <ubit/core/uappliImpl.hpp>
 #include <ubit/udispX11.hpp>

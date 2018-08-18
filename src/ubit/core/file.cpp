@@ -28,9 +28,9 @@
 #include <ubit/ubit_features.h>
 #include <ubit/udefs.hpp>
 #include <ubit/ufile.hpp>
-#include <ubit/ustr.hpp>
+#include <ubit/core/string.h>
 #include <ubit/upix.hpp>
-#include <ubit/uappli.hpp>
+#include <ubit/core/application.h>
 using namespace std;
 namespace ubit {
   

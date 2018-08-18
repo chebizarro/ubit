@@ -22,10 +22,10 @@
 #include <ubit/ufile.hpp>
 #include <ubit/ucall.hpp>
 #include <ubit/ucolor.hpp>
-#include <ubit/ufont.hpp>
+#include <ubit/draw/font.h>
 #include <ubit/uima.hpp>
-#include <ubit/ustr.hpp>
-#include <ubit/uappli.hpp>
+#include <ubit/core/string.h>
+#include <ubit/core/application.h>
 #include <ubit/uhardima.hpp>
 
 #if UBIT_WITH_X11 

@@ -27,7 +27,7 @@
 #include <list>
 #include <map>
 #include <ubit/udefs.hpp>
-#include <ubit/ustr.hpp>
+#include <ubit/core/string.h>
 #include <ubit/uboxes.hpp>
 
 namespace ubit {
@@ -170,7 +170,6 @@ namespace ubit {
      * occurs in a link (typically a href anchor) of this document.
      */
     
-    // - - - Impl. - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     
     virtual void linkEventCB(InputEvent&, const String* path);
     

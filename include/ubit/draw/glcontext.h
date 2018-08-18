@@ -28,7 +28,7 @@
 #define	_UGlcontext_hpp_ 1
 
 #include <ubit/ugl.hpp>
-#include <ubit/urendercontext.hpp>
+#include <ubit/draw/rendercontext.h>
 
 namespace ubit {
 

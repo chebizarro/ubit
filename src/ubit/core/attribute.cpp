@@ -24,12 +24,12 @@
 #include <iostream>
 #include <ubit/ubit_features.h>
 #include <ubit/udefs.hpp>
-#include <ubit/uattr.hpp>
-#include <ubit/uwin.hpp>
+#include <ubit/core/attribute.h>
+#include <ubit/ui/window.h>
 #include <ubit/uon.hpp>
 #include <ubit/ucall.hpp>
 #include <ubit/ui/updatecontext.h>
-#include <ubit/uappli.hpp>
+#include <ubit/core/application.h>
 using namespace std;
 
 namespace ubit {

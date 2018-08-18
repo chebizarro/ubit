@@ -24,8 +24,8 @@
 #ifndef _uwin_hpp_
 #define	_uwin_hpp_ 1
 
-#include <ubit/ubox.hpp>
-#include <ubit/uview.hpp>
+#include <ubit/ui/box.h>
+#include <ubit/ui/view.h>
 
 namespace ubit {
   
@@ -243,7 +243,6 @@ namespace ubit {
     bool isMapped() const {return wmodes.IS_MAPPED;}
     void setMapped(bool s) {wmodes.IS_MAPPED = s;}
     
-    // - - - Impl. - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     
     virtual bool realize();
     /**< [impl] initializes the window and its children. 
@@ -259,7 +258,6 @@ namespace ubit {
      * that contains this soft window otherwise
      */
     
-#ifndef NO_DOC
     UHardwinImpl* hardImpl() const;
     USoftwinImpl* softImpl() const;  
     virtual void highlight(bool state);
@@ -296,7 +294,6 @@ namespace ubit {
     
     virtual void realizeChildren(View* winview);
     // called by realize() to create the views of the children
-#endif
   };
   
 

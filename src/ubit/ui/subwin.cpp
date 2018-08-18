@@ -27,9 +27,9 @@
 #include <ubit/ucall.hpp>
 #include <ubit/usubwin.hpp>
 #include <ubit/ui/uwinImpl.hpp>
-#include <ubit/uview.hpp>
+#include <ubit/ui/view.h>
 #include <ubit/ustyle.hpp>
-#include <ubit/uappli.hpp>
+#include <ubit/core/application.h>
 #include <ubit/core/uappliImpl.hpp>
 #include <ubit/uon.hpp>
 #include <ubit/ucolor.hpp>

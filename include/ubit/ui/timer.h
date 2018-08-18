@@ -29,7 +29,7 @@ extern "C" {
   struct timeval;
 }
 
-#include <ubit/uobject.hpp>
+#include <ubit/core/object.h>
 
 namespace ubit {
   
@@ -107,8 +107,6 @@ namespace ubit {
     bool isRunning() const {return is_running;}
     ///< returns true if the timer is currently running.
     
-    // - impl - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#ifndef NO_DOC
     
     int getTimerNo() const {return timer_no;}
     bool timerCB();
@@ -127,7 +125,6 @@ namespace ubit {
     struct timeval& timeout;
 #elif UBIT_WITH_GDK
     unsigned int gid;  // timer ID when GDK is used
-#endif
 #endif
   };
   

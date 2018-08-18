@@ -24,13 +24,15 @@
 #ifndef uboxgeom_hpp
 #define	uboxgeom_hpp 1
 
-#include <ubit/uattr.hpp>
-#include <ubit/ulength.hpp>
+#include <ubit/core/attribute.h>
+#include <ubit/core/length.h>
+
 #include <ubit/ugeom.hpp>
 
 namespace ubit {
   
-  /** Widget scale.
+  /**
+   * sWidget scale.
    * The Scale attribute specifies the scaling factor of widgets (Box subclasses)
    * and their direct and indirect children in the instance graph. 
    *
@@ -75,8 +77,8 @@ namespace ubit {
   ///< shortcut that creates a new Scale.
   
   
-  // ==================================================== Ubit Toolkit =========  
-  /** Widget position.
+  /**
+   * Widget position.
    * The UPos Attribute specifies the position of a widget (Box subclasses) relatively
    * to its parent widget (note that, currently, UPos don't work with Window widgets)
    *
@@ -162,7 +164,8 @@ namespace ubit {
   ///< shortcut that creates a new UPos.
 
   
-  /** Position Control: interactive control of the position of a widget.
+  /**
+   * Position Control: interactive control of the position of a widget.
    * when dragged interactivelly, a handle widget (typically a button) having  
    * this attribute changes the UPos of another widget (typically a palette) 
    * that contains this handle.
@@ -179,8 +182,6 @@ namespace ubit {
     UPosControl& freezeX(bool state);
     UPosControl& freezeY(bool state);
     
-    // - - - impl - - - - -- - - - - - - - - - - - - - - - - - - - - - - -
-#ifndef NO_DOC
   protected:
     static const int MARGIN = 5;
     Point box_pos0, pt_in_pane0;
@@ -198,10 +199,10 @@ namespace ubit {
     virtual void pressCB(MouseEvent&);
     virtual void releaseCB(MouseEvent&);
     virtual void dragCB(MouseEvent&);
-#endif
   };
   
-  /** Makes it possible to change the UPos of a Magic Lens interactively.
+  /**
+   * Makes it possible to change the UPos of a Magic Lens interactively.
    * PBM: aucun effet si on modifie pos directement par programme !!
    */
   class UMagicLensControl : public UPosControl {
@@ -215,7 +216,8 @@ namespace ubit {
   };
   
   
-  /** Widget Size.
+  /**
+   * Widget Size.
    * The USize attribute specifies the size of a widget (a node deriving from Box).
    *
    * USize specifies the preferred size of the widget and its behavior. The actual
@@ -285,7 +287,8 @@ namespace ubit {
   ///< shortcut function that returns *new USize(d).
   
   
-  /** Size Control: interactive control of the size of a widget.
+  /**
+   * Size Control: interactive control of the size of a widget.
    * when dragged interactivelly, a handle widget (typically a button) having  
    * this attribute changes the USize of another widget (typically a palette) 
    * that contains this handle.
@@ -301,8 +304,6 @@ namespace ubit {
     USizeControl& freezeWidth(bool state);
     USizeControl& freezeHeight(bool state);
     
-    // - - - impl - - - - -- - - - - - - - - - - - - - - - - - - - - - - -
-#ifndef NO_DOC
     virtual void putProp(UpdateContext*, Element&) {}
     virtual void addingTo(Child&, Element& parent);
     virtual void removingFrom(Child&, Element& parent);
@@ -317,11 +318,11 @@ namespace ubit {
     virtual void pressCB(MouseEvent&);
     virtual void releaseCB(MouseEvent&);
     virtual void dragCB(MouseEvent&);
-#endif
   };
   
   
-  /** Widget padding.
+  /**
+   * Widget padding.
    */
   class UPadding : public Attribute {
   public:
@@ -362,7 +363,8 @@ namespace ubit {
   ///< shortcut function that returns *new UPadding(horiz,vert).
 
   
-  /** Widget Orientation.
+  /**
+   * Widget Orientation.
    * specifies the orientation of box(es) that contain this brick.
    * Possible values: Orientation::vertical or Orientation::horizontal
    */
@@ -384,15 +386,12 @@ namespace ubit {
     virtual void update();
     virtual void putProp(UpdateContext*, Element&);
     
-    // - impl. - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#ifndef NO_DOC
     enum {HORIZONTAL=0, VERTICAL=1, INHERIT=2}; //dont change values
     void addingTo(Child&, Element& parent);
     void removingFrom(Child&, Element& parent);
   private:
     char value;
     Orientation(char value, UConst);
-#endif
   };
   
   inline Orientation& Orientation(const Orientation& val) {return *new Orientation(val);}
@@ -430,7 +429,6 @@ namespace ubit {
     virtual void update();
     virtual void putProp(UpdateContext*, Element&);
     
-    // - impl. - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     enum {INHERIT, LEFT, RIGHT, FLEX, CENTER};
   private:
     char value;
@@ -497,7 +495,6 @@ namespace ubit {
     virtual void update();
     virtual void putProp(UpdateContext*, Element&);
     
-    // - impl. - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     enum {INHERIT, TOP, BOTTOM, FLEX, CENTER};
   private:
     char value;
@@ -558,7 +555,6 @@ namespace ubit {
     
     virtual void update();
     
-    // - impl. - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     enum {INHERIT = -1};
     virtual void putProp(UpdateContext*, Element&);
   private:
@@ -568,8 +564,9 @@ namespace ubit {
   inline VSpacing& uvspacing(float val = 0) {return *new VSpacing(val);}
   ///< shortcut function that returns a new VSpacing.
   
-  /** Box horizontal spacing.
-  */
+  /**
+   * Box horizontal spacing.
+   */
   class HSpacing : public Attribute {
   public:
     UCLASS(HSpacing)
@@ -589,7 +586,6 @@ namespace ubit {
     
     virtual void update();
     
-    // - impl. - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     enum {INHERIT = -1};
     virtual void putProp(UpdateContext*, Element&);
   private:

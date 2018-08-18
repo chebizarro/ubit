@@ -30,7 +30,7 @@
 
 #include <ubit/uupdate.hpp>
 #include <ubit/uargs.hpp>
-#include <ubit/ustr.hpp>
+#include <ubit/core/string.h>
 
 namespace ubit {
   

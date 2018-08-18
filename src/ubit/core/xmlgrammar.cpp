@@ -16,9 +16,9 @@
 
 #include <ubit/ubit_features.h>
 #include <iostream>
-#include <ubit/uappli.hpp>
-#include <ubit/udom.hpp>
-#include <ubit/uxmlgrammar.hpp>
+#include <ubit/core/application.h>
+#include <ubit/core/dom.h>
+#include <ubit/core/xmlgrammar.h>
 using namespace std;
 namespace ubit {
 

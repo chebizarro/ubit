@@ -26,8 +26,8 @@
 #include <ubit/core/node.h>
 #include <ubit/ucall.hpp>
 #include <ubit/uargs.hpp>
-#include <ubit/ustr.hpp>
-#include <ubit/uappli.hpp>
+#include <ubit/core/string.h>
+#include <ubit/core/application.h>
 using namespace std;
 namespace ubit {
 

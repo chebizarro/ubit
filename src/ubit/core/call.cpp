@@ -24,11 +24,11 @@
 #include <ubit/ubit_features.h>
 #include <ubit/ucall.hpp>
 #include <ubit/uon.hpp>
-#include <ubit/ubox.hpp>
+#include <ubit/ui/box.h>
 #include <ubit/core/event.h>
-#include <ubit/uwin.hpp>
-#include <ubit/uview.hpp>
-#include <ubit/umenu.hpp>
+#include <ubit/ui/window.h>
+#include <ubit/ui/view.h>
+#include <ubit/ui/menu.h>
 #include <ubit/utimer.hpp>
 #include <iostream>
 using namespace std; 

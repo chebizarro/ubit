@@ -28,8 +28,8 @@
 
 #include <list>
 #include <ubit/udefs.hpp>
-#include <ubit/ustr.hpp>
-#include <ubit/uelem.hpp>
+#include <ubit/core/string.h>
+#include <ubit/core/element.h>
 #include <ubit/ugeom.hpp>
 
 namespace ubit {
@@ -280,7 +280,6 @@ public:
     * the XEvent must be a XSelectionEvent event.
     */
 
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 private:
   friend class Application;
   friend class UAppliImpl;

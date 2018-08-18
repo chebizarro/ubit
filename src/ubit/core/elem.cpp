@@ -25,7 +25,7 @@
 #include <iostream>
 #include <ubit/uon.hpp>
 #include <ubit/ucall.hpp>
-#include <ubit/uwin.hpp>
+#include <ubit/ui/window.h>
 #include <ubit/udialogs.hpp>
 #include <ubit/ui/updatecontext.h>
 #include <ubit/ueventflow.hpp>

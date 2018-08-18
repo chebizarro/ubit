@@ -28,7 +28,7 @@
 #include <ubit/ui/updatecontext.h>
 #include <ubit/ucolor.hpp>
 #include <ubit/upix.hpp>
-#include <ubit/uappli.hpp>
+#include <ubit/core/application.h>
 using namespace std;
 
 namespace ubit {

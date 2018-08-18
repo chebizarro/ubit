@@ -21,10 +21,10 @@
  * 
  */
 
-#ifndef _ulength_hpp_
-#define	_ulength_hpp_ 1
+#ifndef UBIT_CORE_LENGTH_H_
+#define	UBIT_CORE_LENGTH_H_
 
-#include <ubit/uobject.hpp>
+#include <ubit/core/object.h>
 
 namespace ubit {
   
@@ -150,7 +150,8 @@ namespace ubit {
     Length width, height;
   };
   
-  /** Box padding.
+  /**
+   * Box padding.
    */
   struct PaddingSpec {
     PaddingSpec(Length horiz, Length vert) : top(vert), right(horiz), bottom(vert), left(horiz) {}
@@ -161,5 +162,5 @@ namespace ubit {
   };
   
 }
-#endif
+#endif // UBIT_CORE_LENGTH_H_
 

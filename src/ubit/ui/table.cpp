@@ -28,7 +28,7 @@
 #include <ubit/uboxgeom.hpp>
 #include <ubit/ui/uviewImpl.hpp>
 #include <ubit/ui/updatecontext.h>
-#include <ubit/uappli.hpp>
+#include <ubit/core/application.h>
 #include <ubit/utable.hpp>
 using namespace std;
 namespace ubit {

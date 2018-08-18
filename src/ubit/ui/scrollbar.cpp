@@ -25,7 +25,7 @@
 #include <ubit/ui/updatecontext.h>
 #include <ubit/upix.hpp>
 #include <ubit/usymbol.hpp>
-#include <ubit/uinteractors.hpp>
+#include <ubit/ui/interactors.h>
 #include <ubit/core/uappliImpl.hpp>
 using namespace std;
 namespace ubit {

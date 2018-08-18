@@ -18,8 +18,8 @@
 #include <typeinfo>
 #include <cstdarg>
 #include <ubit/core/node.h>
-#include <ubit/ustr.hpp>
-#include <ubit/uappli.hpp>
+#include <ubit/core/string.h>
+#include <ubit/core/application.h>
 #include <ubit/core/uappliImpl.hpp>
 using namespace std;
 namespace ubit {

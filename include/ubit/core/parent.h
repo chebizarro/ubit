@@ -22,13 +22,14 @@
  */
 
 
-#ifndef _uparent_hpp_
-#define	_uparent_hpp_ 1
+#ifndef UBIT_CORE_PARENT_H_
+#define	UBIT_CORE_PARENT_H_
 
 namespace ubit {
 
-/** [impl] Internal implementation of a parent node.
-*/
+/**
+ * [impl] Internal implementation of a parent node.
+ */
 class Parent {
 public:
   Parent(ChildIter i) : child_iter(i) {}
@@ -79,4 +80,4 @@ public:
 };
 
 }
-#endif
+#endif // UBIT_CORE_PARENT_H_

@@ -21,14 +21,15 @@
  * 
  */
 
-#ifndef _ustr_hpp_
-#define	_ustr_hpp_ 1
+#ifndef UBIT_CORE_STRING_H_
+#define	UBIT_CORE_STRING_H_
 
-#include <ubit/udata.hpp>
+#include <ubit/core/data.h>
 
 namespace ubit {
   
-  /** Ubit String.
+  /**
+   * Ubit String.
    *
    * Strings can have callback functions that are fired when their value is
    * changed (see an example below). String parents can also be notified when
@@ -490,4 +491,4 @@ namespace ubit {
   };
   
 }
-#endif
+#endif // UBIT_CORE_STRING_H_

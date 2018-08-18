@@ -20,12 +20,12 @@
 #include <algorithm>
 #include <ubit/ugl.hpp>
 #include <ubit/ucall.hpp>
-#include <ubit/uwin.hpp>
-#include <ubit/uview.hpp>
+#include <ubit/ui/window.h>
+#include <ubit/ui/view.h>
 #include <ubit/core/event.h>
 #include <ubit/ustyle.hpp>
 #include <ubit/utimer.hpp>
-#include <ubit/uappli.hpp>
+#include <ubit/core/application.h>
 #include <ubit/uon.hpp>
 #include <ubit/ugraph.hpp>
 #include <ubit/uglcontext.hpp>

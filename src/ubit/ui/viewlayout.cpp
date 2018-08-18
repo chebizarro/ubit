@@ -17,11 +17,11 @@
 #include <iostream>
 #include <ubit/ucond.hpp>
 #include <ubit/ui/updatecontext.h>
-#include <ubit/ubox.hpp>
+#include <ubit/ui/box.h>
 #include <ubit/uboxgeom.hpp>
-#include <ubit/uview.hpp>
+#include <ubit/ui/view.h>
 #include <ubit/ui/uviewImpl.hpp>
-#include <ubit/uappli.hpp>
+#include <ubit/core/application.h>
 #include <ubit/uscrollpane.hpp>
 using namespace std;
 namespace ubit {

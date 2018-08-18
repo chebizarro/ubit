@@ -25,7 +25,7 @@
 #ifndef _ulistbox_hpp_
 #define	_ulistbox_hpp_ 1
 
-#include <ubit/uinteractors.hpp>
+#include <ubit/ui/interactors.h>
 #include <ubit/uchoice.hpp>
 
 namespace ubit {

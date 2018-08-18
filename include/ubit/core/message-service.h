@@ -21,14 +21,16 @@
  * 
  */
 
-#ifndef _umservice_hpp_
-#define	_umservice_hpp_
+#ifndef UBIT_CORE_MESSAGE_SERVICE_H_
+#define	UBIT_CORE_MESSAGE_SERVICE_H_
+
 #include <ubit/udefs.hpp>
-#include <ubit/usocket.hpp>
+#include <ubit/net/socket.h>
 
 namespace ubit {
   
-  /** MessageService: Ubit Mouse/Message Service.
+  /**
+   * MessageService: Ubit Mouse/Message Service.
    */
   class MessageService : public Socket {
   public:
@@ -50,7 +52,6 @@ namespace ubit {
     
     ~MessageService();
     
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     
     /** see browseUMServers().*/
     struct BrowseReply {
@@ -81,7 +82,6 @@ namespace ubit {
      </tt></pre>
      */
     
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     
     /** see resolveUMServer().*/
     struct ResolveReply {
@@ -113,7 +113,6 @@ namespace ubit {
      </tt></pre>
      */
     
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     
     bool browseUMSNeighbors(UCall& callback);
     /**< browse the neigbors of this UMS.
@@ -121,12 +120,10 @@ namespace ubit {
      *  flags indicates the position and is one of 't', 'b', 'l', 'r'.
      */
     
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     
     //bool tactos(const char* data);
     // tactile output stream.
     
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     
     bool pressMouse(int event_flow, int button_id);
     bool releaseMouse(int event_flow, int button_id);
@@ -194,4 +191,4 @@ namespace ubit {
   };
   
 }
-#endif
+#endif // UBIT_CORE_MESSAGE_SERVICE_H_

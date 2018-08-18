@@ -25,7 +25,7 @@
 #ifndef uevent_hpp
 #define	uevent_hpp  1
 
-#include <ubit/ubox.hpp>
+#include <ubit/ui/box.h>
 #include <ubit/ugeom.hpp>
 #include <ubit/ukey.hpp>
 
@@ -146,10 +146,7 @@ namespace ubit {
      */
     
     bool dontCloseMenu() const {return modes.DONT_CLOSE_MENU;}
-    ///< impl.
     
-    // - - - Impl. - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#ifndef NO_DOC
   protected:
     friend class Element;
     friend class EventFlow;
@@ -171,7 +168,6 @@ namespace ubit {
     View* source_view;    // the view that contains the mouse
     EventFlow* eflow;     // the event flow that produced this event
     Element* event_observer;
-#endif
   };
   
   /** mouse events
@@ -274,8 +270,6 @@ namespace ubit {
      * @see also: UDataContext
      */
     
-    // - - - Impl. - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#ifndef NO_DOC
   protected:
     friend class EventFlow;
     friend class Element;
@@ -283,7 +277,6 @@ namespace ubit {
     friend class FlowView;
     int button, click_count;
     Point pos, abs_pos;
-#endif
   };
   
   /** wheel events
@@ -395,7 +388,6 @@ namespace ubit {
     const Rectangle getClip() const {Rectangle r; getClip(r); return r;}
     ///< shortcut for getClip(Rectangle& r).
     
-#ifndef NO_DOC
     virtual bool setSourceAndProps(View*);
     void setContext(UpdateContext& c) {current_context = &c;}
     
@@ -410,7 +402,6 @@ namespace ubit {
     View* layout_view;
     
     virtual void setProps(const class UViewContext&);
-#endif
   };
   
   /** Resize event.

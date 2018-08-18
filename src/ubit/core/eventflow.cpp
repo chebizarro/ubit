@@ -24,11 +24,11 @@
 #include <ubit/ubit_features.h>
 #include <algorithm>
 #include <ubit/uboxgeom.hpp>
-#include <ubit/uwin.hpp>
-#include <ubit/umenu.hpp>
+#include <ubit/ui/window.h>
+#include <ubit/ui/menu.h>
 #include <ubit/ui/umenuImpl.hpp>
 #include <ubit/ui/uwinImpl.hpp>
-#include <ubit/uappli.hpp>
+#include <ubit/core/application.h>
 #include <ubit/core/uappliImpl.hpp>
 #include <ubit/core/event.h>
 #include <ubit/ueventflow.hpp>

@@ -27,8 +27,8 @@
 #include <ubit/ufontmetrics.hpp>
 #include <ubit/ui/updatecontext.h>
 #include <ubit/ugraph.hpp>
-#include <ubit/uview.hpp>
-#include <ubit/uwin.hpp>
+#include <ubit/ui/view.h>
+#include <ubit/ui/window.h>
 #include <ubit/uon.hpp>
 using namespace std;
 

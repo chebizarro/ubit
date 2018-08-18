@@ -26,7 +26,7 @@
 #ifndef _usymbol_hpp_
 #define	_usymbol_hpp_ 1
 
-#include <ubit/udata.hpp>
+#include <ubit/core/data.h>
 
 namespace ubit {
 

@@ -48,7 +48,7 @@ extern "C" {
 #include <ubit/udefs.hpp>
 #include <ubit/ufile.hpp>
 #include <ubit/uima.hpp>
-#include <ubit/uappli.hpp>
+#include <ubit/core/application.h>
 #include <ubit/uhardima.hpp>
 using namespace std;
 namespace ubit {

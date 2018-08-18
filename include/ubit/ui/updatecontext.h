@@ -27,7 +27,7 @@
 #include <ubit/udefs.hpp>
 #include <ubit/ustyle.hpp>
 #include <ubit/draw/ufontImpl.hpp>
-#include <ubit/uview.hpp>
+#include <ubit/ui/view.h>
 #include <vector>
 
 namespace ubit {
@@ -71,7 +71,6 @@ namespace ubit {
     const UPropdef* getPropdef(const Flag&) const;
     const UPropdef* getPropdef(const Flag*) const;
     
-#ifndef NO_DOC
     // cette implementation est dangereuse car dans certains cas win_ctx est undef
     const UpdateContext* parent_ctx;
     WindowUpdateContext* win_ctx;  // not const because of the flags vector
@@ -97,7 +96,6 @@ namespace ubit {
     friend class ViewFind;
     UpdateContext() {}  // pour ViewFind
     UpdateContext(View* win_view); // for WindowUpdateContext
-#endif
   };
   
     /* [impl] WindowUpdateContext = the first layer of the context cstack

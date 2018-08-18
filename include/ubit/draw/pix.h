@@ -69,8 +69,6 @@ public:
   virtual bool isPix() const {return true;}
   ///< returns true as this Image is a UPix.
   
-  // - - - impl - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#ifndef NO_DOC
   virtual void cleanCache();
   virtual void getSize(UpdateContext&, Dimension&) const;
   virtual void paint(Graph&, UpdateContext&, const Rectangle&) const;
@@ -79,7 +77,6 @@ private:
 #if WITH_2D_GRAPHICS
   std::vector<UHardPix*>& getNatPixs() const {return natpixs;}
   mutable std::vector<UHardPix*> natpixs;
-#endif
 #endif
 };
 

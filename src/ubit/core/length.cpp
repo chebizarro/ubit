@@ -16,9 +16,9 @@
 #include <ubit/ubit_features.h>
 #include <iostream>
 #include <ubit/ubit_features.h>
-#include <ubit/ulength.hpp>
-#include <ubit/ustr.hpp>
-#include <ubit/uappli.hpp>
+#include <ubit/core/length.h>
+#include <ubit/core/string.h>
+#include <ubit/core/application.h>
 #include <ubit/draw/ufontImpl.hpp>
 using namespace std;
 namespace ubit {

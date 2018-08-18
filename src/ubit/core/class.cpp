@@ -23,10 +23,10 @@
 
 #include <ubit/ubit_features.h>
 #include <iostream>
-#include <ubit/ustr.hpp>
+#include <ubit/core/string.h>
 #include <ubit/uclass.hpp>
 #include <ubit/core/uclassImpl.hpp>
-#include <ubit/uappli.hpp>
+#include <ubit/core/application.h>
 #include <ubit/core/uappliImpl.hpp>
 using namespace std;
 namespace ubit {

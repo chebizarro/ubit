@@ -25,8 +25,8 @@
 #define _ufinder_hpp_
 #include <ubit/ucolor.hpp>
 #include <ubit/ui/background.h>
-#include <ubit/umenu.hpp>
-#include <ubit/udoc.hpp>
+#include <ubit/ui/menu.h>
+#include <ubit/core/doc.h>
 #include <ubit/uicon.hpp>
 
 namespace ubit {

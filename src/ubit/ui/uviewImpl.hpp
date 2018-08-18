@@ -30,7 +30,7 @@
 
 namespace ubit {
   
-  class 3DCanvasView;
+  class U3DCanvasView;
   class U3Dpos;
   
   // ==================================================== ===== =======
@@ -106,7 +106,7 @@ namespace ubit {
     
     View* ref_view;             // window or 3Dwidget view (if canvas_view != null)
     Point ref_pos;              // pos in ref_view (whatever it is)
-    3DCanvasView* canvas_view;  // != null if the source is in a 3Dwidget
+    U3DCanvasView* canvas_view;  // != null if the source is in a 3Dwidget
     U3Dpos* refpos_in_canvas;    // 3Dpos of the 3Dwidget in canvas_view (if it is != null)
     
     WindowUpdateContext win_ctx;

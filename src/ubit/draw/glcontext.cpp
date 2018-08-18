@@ -28,12 +28,12 @@
 #include <iostream>
 #include <cmath>
 #include <ubit/udefs.hpp>
-#include <ubit/ufont.hpp>
+#include <ubit/draw/font.h>
 #include <ubit/ufontmetrics.hpp>
 #include <ubit/draw/ufontImpl.hpp>
 #include <ubit/ucolor.hpp>
 #include <ubit/uima.hpp>
-#include <ubit/uappli.hpp>
+#include <ubit/core/application.h>
 #include <ubit/ugl.hpp>
 #include <ubit/ugraph.hpp>
 #include <ubit/uglcontext.hpp>

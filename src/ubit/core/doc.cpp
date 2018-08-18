@@ -17,8 +17,8 @@
 #include <ubit/ubit_features.h>
 #include <ubit/ubit.hpp>
 #include <ubit/ufile.hpp>
-#include <ubit/udoc.hpp>
-#include <ubit/udom.hpp>
+#include <ubit/core/doc.h>
+#include <ubit/core/dom.h>
 using namespace std;
 namespace ubit {
 

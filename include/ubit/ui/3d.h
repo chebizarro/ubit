@@ -13,13 +13,13 @@
  * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
  * ***********************************************************************/
 
-#ifndef _u3d_hpp_
-#define	_u3d_hpp_ 1
+#ifndef UBIT_UI_3D_H_
+#define	UBIT_UI_3D_H_
 
-#include <ubit/uattr.hpp>
-#include <ubit/ubox.hpp>
-#include <ubit/uctlmenu.hpp>
-#include <ubit/uview.hpp>
+#include <ubit/core/attribute.h>
+#include <ubit/ui/box.h>
+#include <ubit/ui/control-menu.h>
+#include <ubit/ui/view.h>
 
 namespace ubit {
   
@@ -51,14 +51,13 @@ namespace ubit {
     void setFar(float f)    {far = f;}
     
   private:
-    friend class 3DCanvasView;
+    friend class U3DCanvasView;
     float fovy, aspect, near, far;
   };
   
   inline U3Dcanvas& u3dcanvas(Args a = Args::none) {return *new U3Dcanvas(a);}
   ///< shortcut function that creates a new U3Dcanvas.
   
-  /* ==================================================== ==== ======= */
   /** [Instable/OpenGL] 3D box: a box that can be orientated in 3D space.
    * 
    * This widget must be included in a U3Dcanvas. Its pos() method returns a reference
@@ -97,7 +96,6 @@ namespace ubit {
   inline U3Dbox& u3dbox(Args a = Args::none) {return *new U3Dbox(a);}
   ///< shortcut function that creates a new U3Dbox.
   
-  /* ==================================================== ==== ======= */
   /** [Instable/OpenGL] 3D window: framed U3Dbox with a title. 
    */
   class U3Dwin : public U3Dbox {
@@ -116,7 +114,6 @@ namespace ubit {
   inline U3Dwin& u3dwin(Args a = Args::none) {return *new U3Dwin(a);}
   ///< shortcut function that creates a new U3Dwin.
   
-  /* ==================================================== ==== ======= */
   /** [Instable/OpenGL] 3D position.
    *
    * This attribute controls the position of a Box in 3D space [i.e. the x,y,z translation
@@ -157,7 +154,7 @@ namespace ubit {
     
   private:
     friend class View;
-    friend class 3DCanvasView;
+    friend class U3DCanvasView;
     float z, x_rot, y_rot, z_rot;
   };
   
@@ -166,18 +163,18 @@ namespace ubit {
   
   /* [Impl] U3Dcanvas' view.
    *
-   * Mouse and paint coordinates are transformed by 3DCanvasView when passed 
+   * Mouse and paint coordinates are transformed by U3DCanvasView when passed 
    * to its children to make geometrical transformations transparent for them.
    */
-  class 3DCanvasView: public View {
+  class U3DCanvasView: public View {
   public:
     static  ViewStyle style;  // renderer
     virtual ViewStyle* getViewStyle() {return &style;}
     
-    3DCanvasView(Box* _box, View* _parview, UHardwinImpl* hw) : View(_box, _parview, hw) {}
+    U3DCanvasView(Box* _box, View* _parview, UHardwinImpl* hw) : View(_box, _parview, hw) {}
     
     static View* createView(Box* box, View* parv, UHardwinImpl* hw) {
-      return new 3DCanvasView(box, parv, hw);
+      return new U3DCanvasView(box, parv, hw);
     }
     
     virtual void doUpdate(UpdateContext&, Rectangle r, Rectangle clip, class UViewUpdate&);
@@ -188,4 +185,4 @@ namespace ubit {
   };
   
 }
-#endif
+#endif // UBIT_UI_3D_H_

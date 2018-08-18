@@ -18,12 +18,12 @@
 #include <ubit/uon.hpp>
 #include <ubit/ucall.hpp>
 #include <ubit/uboxgeom.hpp>
-#include <ubit/ubox.hpp>
+#include <ubit/ui/box.h>
 #include <ubit/uscrollbar.hpp>
 #include <ubit/uscrollpane.hpp>
 #include <ubit/ustyle.hpp>
-#include <ubit/uappli.hpp>
-#include <ubit/uconf.hpp>
+#include <ubit/core/application.h>
+#include <ubit/core/config.h>
 using namespace std;
 
 namespace ubit {
