@@ -370,7 +370,7 @@ void StyleParser::error(const char* msg, const Char* line) {
 
 void StyleParser::error(const char* msg1, const String& name,
                       const char* msg2, const Char* line) {
-  perrhandler->parserError(UError::CSS_ERROR, text_buffer, msg1, name, msg2, line);
+  perrhandler->parserError(Error::CSS_ERROR, text_buffer, msg1, name, msg2, line);
 }
 
 

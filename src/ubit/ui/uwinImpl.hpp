@@ -70,7 +70,7 @@ namespace ubit {
     USoftwinImpl(Window&);
     virtual ~USoftwinImpl();
     
-    UPos& pos() {return *ppos;}
+    Position& pos() {return *ppos;}
     
     View* getActualView(View* winviews);
     void setActualView(View* winview);
@@ -78,7 +78,7 @@ namespace ubit {
     void doUpdate(const Update&, Window*, View* winview);
     
   private:
-    unique_ptr<UPos> ppos;
+    unique_ptr<Position> ppos;
     View* actual_view;  
   };
   

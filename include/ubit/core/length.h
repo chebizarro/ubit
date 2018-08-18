@@ -63,7 +63,7 @@ namespace ubit {
   
   
   /**
-   * Length of positions (UPos), sizes (USize) and padding (UPadding) 
+   * Length of positions (Position), sizes (Size) and padding (Padding) 
    */
   class Length {
   public:
@@ -139,8 +139,8 @@ namespace ubit {
   
   
   
-  struct PosSpec {    
-    PosSpec(Length _x, Length _y) : x(_x), y(_y) {}
+  struct PositionSpec {    
+    PositionSpec(Length _x, Length _y) : x(_x), y(_y) {}
     Length x, y;
   };
   

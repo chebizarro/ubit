@@ -52,18 +52,18 @@ namespace ubit {
     Box& resizeBtn() {return *presize_btn;}
     ///<returns the resize button (not show by default, resizeBtn().show() to make it appear).
 
-    UPos&   pos()   {return *ppos;}
-    USize&  size()  {return *psize;}
+    Position&   pos()   {return *ppos;}
+    Size&  size()  {return *psize;}
     Scale& contentScale() {return *pcontent_scale;}  
   
-    void setPosModel(UPos*);
-    void setPosControlModel(UPosControl*);
+    void setPosModel(Position*);
+    void setPosControlModel(PositionControl*);
 
   protected:
-    unique_ptr<UPos> ppos;
-    unique_ptr<UPosControl> ppos_ctrl;
-    unique_ptr<USize> psize;
-    unique_ptr<USizeControl> psize_ctrl;
+    unique_ptr<Position> ppos;
+    unique_ptr<PositionControl> ppos_ctrl;
+    unique_ptr<Size> psize;
+    unique_ptr<SizeControl> psize_ctrl;
     unique_ptr<Scale> pcontent_scale;
     unique_ptr<Box> pcontent;
     unique_ptr<Element> ptitle;

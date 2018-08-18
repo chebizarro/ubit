@@ -279,7 +279,6 @@ namespace ubit {
   UCall& ucopy(CC& _o, VAL _v) {return *new UCall_assign<CC&,VAL>(_o,_v);}
   
   
-  // ============================================================== [Elc] ======== 
   // Callback objects for firing objects' methods. 
   
   // ucall(obj, &Obj::method)
@@ -421,8 +420,6 @@ namespace ubit {
   {return *new UCall_M2E<O&,A1,A2,R,M,E>(*o, m, a1, a2);}
   ///< callback object that calls obj->foo(Event&, arg1, arg2); syntax: ucall(obj, arg1, arg2, &Obj::foo).
   
-  
-  // ============================================================ [Elc] ======== 
   // Callback objects for firing functions. 
   
   // ucall(func)

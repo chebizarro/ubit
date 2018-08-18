@@ -64,7 +64,7 @@ namespace ubit {
     Dimension size;
   };
   
-  // used by the keep size mode of USize
+  // used by the keep size mode of Size
   struct UViewKeepSizeProp : public UViewProp {
     UViewKeepSizeProp() : width(-1), height(-1) {}
     float width, height;

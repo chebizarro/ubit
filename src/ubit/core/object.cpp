@@ -1,18 +1,25 @@
 /*
  *  object.cpp: Base Class for all Ubit Objects
- *  Ubit GUI Toolkit - Version 6
- *  (C) 2009 | Eric Lecolinet | ENST Paris | www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE :
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION;
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
-
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
+ *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
 #include <ubit/ubit_features.h>
 #include <iostream>
 #include <typeinfo>
@@ -25,19 +32,19 @@ using namespace std;
 namespace ubit {
 
 
-UError::UError(int _errnum, const UObject* obj, const char* funcname) :
+Error::Error(int _errnum, const UObject* obj, const char* funcname) :
 errnum(_errnum),
 object(obj),
 function_name(funcname) {
   message[0] = 0;
 }
 
-UError::~UError() throw () {
-  //cerr << "UError destroyed " << (function_name? function_name:"")
+Error::~Error() throw () {
+  //cerr << "Error destroyed " << (function_name? function_name:"")
   //<< " / " <<  (message?*message:"") << endl << endl;
 }
 
-const char* UError::what() const throw() {
+const char* Error::what() const throw() {
   return message;
 }
 
@@ -55,28 +62,28 @@ const String& UObject::getClassName() const {
 void UObject::error(const char* funcname, const char* format, ...) const {
   va_list ap;
   va_start(ap, format);
-  Application::raiseError(UError::ERROR, this, funcname, format, ap);
+  Application::raiseError(Error::ERROR, this, funcname, format, ap);
   va_end(ap);
 }
 
 void UObject::warning(const char* funcname, const char* format, ...) const {
   va_list ap;
   va_start(ap, format);
-  Application::raiseError(UError::WARNING, this, funcname, format, ap);
+  Application::raiseError(Error::WARNING, this, funcname, format, ap);
   va_end(ap);
 }
 
 void uerror(const char* funcname, const char* format, ...) {
   va_list ap;
   va_start(ap, format);
-  Application::raiseError(UError::ERROR, null/*object*/, funcname, format, ap);
+  Application::raiseError(Error::ERROR, null/*object*/, funcname, format, ap);
   va_end(ap);
 }
 
 void uwarning(const char* funcname, const char* format, ...) {
   va_list ap;
   va_start(ap, format);
-  Application::raiseError(UError::WARNING, null/*object*/, funcname, format, ap);
+  Application::raiseError(Error::WARNING, null/*object*/, funcname, format, ap);
   va_end(ap);
 }
 

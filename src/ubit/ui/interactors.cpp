@@ -1,18 +1,25 @@
 /*
  *  interactors.cpp
- *  Ubit GUI Toolkit - Version 6.0
- *  (C) 2009 | Eric Lecolinet | ENST Paris | www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE :
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION;
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
-
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
+ *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
 #include <ubit/ubit_features.h>
 #include <iostream>
 #include <ubit/ubit.hpp>
@@ -43,7 +50,7 @@ SeparatorStyle::SeparatorStyle() {
   local.border = &Border::shadowIn;
   // len = -1 means "keep initial size"
   // UNRESIZABLE prevents a uhflex/uvflex to resize the widget
-  local.size.width = Length(-1, UPX, USize::UNRESIZABLE);
+  local.size.width = Length(-1, UPX, Size::UNRESIZABLE);
 
   vstyle.orient = Orientation::VERTICAL;
   vstyle.halign = Halign::CENTER;
@@ -52,7 +59,7 @@ SeparatorStyle::SeparatorStyle() {
   vstyle.local.border = &Border::shadowIn;
   // len = -1 means "keep initial size"
   // UNRESIZABLE prevents a uhflex/uvflex to resize the widget
-  vstyle.local.size.height = Length(-1, UPX, USize::UNRESIZABLE);
+  vstyle.local.size.height = Length(-1, UPX, Size::UNRESIZABLE);
 }
 
 Style* Separator::createStyle() {
@@ -76,7 +83,7 @@ Style* Label::createStyle() {
 }
 
 Label::Label(int nbchars, Args a) : Box(a) {
-  obtainAttr<USize>().setWidth(nbchars|UEX);
+  obtainAttr<Size>().setWidth(nbchars|UEX);
 }
 
 
@@ -99,7 +106,7 @@ Style* TextField::createStyle() {
   //s.local.border = &Border::shadowIn;
   
   //style->cursor = &Cursor::text;  // done by TextEdit
-  s.setSize(USize::INITIAL, USize::INITIAL);
+  s.setSize(Size::INITIAL, Size::INITIAL);
   return &s;
 }
 
@@ -111,7 +118,7 @@ TextField::TextField(Args a) : Box(a) {
 }
 
 TextField::TextField(int nbchars, Args a) : Box(a) {
-  obtainAttr<USize>().setWidth(nbchars|UEX);
+  obtainAttr<Size>().setWidth(nbchars|UEX);
   obtainAttr<TextEdit>();
   emodes.IS_TEXT_SELECTABLE = true;     // also added by uedit
   emodes.HAS_CURSOR = true;
@@ -153,7 +160,7 @@ Style* TextArea::createStyle() {
   // could not grow vertically when children are added or resized (for instance
   // the height of a text flow could not grow)
   //s.local.size.width = -1;   // len = -1 means "keep initial size"
-  s.setSize(USize::INITIAL, UAUTO);
+  s.setSize(Size::INITIAL, UAUTO);
   return &s;
 }
 

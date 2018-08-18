@@ -98,8 +98,8 @@ namespace ubit {
   protected:
     unique_ptr<Float> pvalue;        // corresponding value (percent)
     unique_ptr<Box> prail, pknob;
-    unique_ptr<UPos> pknob_pos;
-    unique_ptr<class UPosControl> pknob_ctrl;
+    unique_ptr<Position> pknob_pos;
+    unique_ptr<class PositionControl> pknob_ctrl;
     
     void constructs();
     virtual void gotoPosCB(MouseEvent&);

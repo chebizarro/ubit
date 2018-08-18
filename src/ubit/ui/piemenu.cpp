@@ -339,7 +339,7 @@ void PieMenu::resizeCB(UResizeEvent& e) {
       //v->setAutoPositioning(false);
       //v->setPos(p);
       
-      b->obtainAttr<UPos>() = p;
+      b->obtainAttr<Position>() = p;
     }
   }
 }

@@ -1,18 +1,25 @@
 /*
  *  scrollbar.cpp
- *  Ubit GUI Toolkit - Version 6.0
- *  (C) 2008 | Eric Lecolinet | ENST Paris | www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE :
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION;
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
-
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
+ *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
 #include <ubit/ubit_features.h>
 #include <iostream>
 #include <ubit/uon.hpp>
@@ -281,7 +288,7 @@ void UScrollbar::constructs() {
   pmore_btn = createMoreButton(isVertical());
   prail = new Box;
   pknob = createKnob(isVertical());
-  pknob_pos = new UPos(0,0);
+  pknob_pos = new Position(0,0);
   show_rail = true;
   is_transparent = false; //(_modes & TRANSP) != 0;
   tracking_mode = true;
@@ -309,12 +316,12 @@ void UScrollbar::constructs() {
     // !! A REVOIR AVEC STYLES APPROPRIES !!
     if (isVertical()) {
       //rail->addAttr(uwidth(style.rail_thickness));
-      rail->addAttr(new USize(style.rail_thickness, UAUTO));
+      rail->addAttr(new Size(style.rail_thickness, UAUTO));
       prail->add(uvflex() + uhcenter() + rail);
     }
     else {
       //rail->addAttr(uheight(style.rail_thickness));
-      rail->addAttr(new USize(UAUTO, style.rail_thickness));
+      rail->addAttr(new Size(UAUTO, style.rail_thickness));
       prail->add(uhflex() + uvcenter() + rail);
     }
   }

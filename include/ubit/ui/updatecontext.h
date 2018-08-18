@@ -81,7 +81,7 @@ namespace ubit {
     UViewUpdateImpl* view_impl;
     const Style* obj_style;
     ULocalProps local;
-    UPos* pos;                // UPos ou U3dpos, UPos peut etre proportionnelle
+    Position* pos;                // Position ou U3dpos, Position peut etre proportionnelle
     FontDescription fontdesc;
     bool boxIsHFlex, boxIsVFlex; // true if the object is Horiz or Vert Flexible
     char valign, halign; 

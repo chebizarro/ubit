@@ -260,7 +260,7 @@ bool MessageService::sendMessage(const char* target, const String& message) {
 bool MessageService::sendMessage(const char* target, const char* message) {
   // on ne doit retrourner false que si la comm deconne !
   //if (!message || !*message || !target || !*target) {
-  //  UError::error("warning@UMSclient::sendMessage","empty target or message (not sent)");
+  //  Error::error("warning@UMSclient::sendMessage","empty target or message (not sent)");
   //  return false;
   //}
   UMSrequest req(UMSrequest::SEND_MESSAGE);

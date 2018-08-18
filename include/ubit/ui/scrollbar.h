@@ -129,7 +129,7 @@ namespace ubit {
     unique_ptr<Float> pvalue;	        // scrollbar value (percentage)
     unique_ptr<Scrollpane> ppane;	    // the pane controlled by this scrollbar
     unique_ptr<Box> pless_btn, pmore_btn, pknob, prail;
-    unique_ptr<UPos> pknob_pos;		      // current position of the knob
+    unique_ptr<Position> pknob_pos;		      // current position of the knob
     float unit_increment, block_increment;
     float delta_mouse;
     bool press_rail_goto_pos;     // dont scroll but goes to pos is trus

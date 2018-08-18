@@ -67,54 +67,54 @@ void Scale::update() {
 // execute dans ce cas
 
 const Length::Modes 
-UPos::TOP(0), 
-UPos::LEFT(0), 
-UPos::RIGHT(1), 
-UPos::BOTTOM(1);
+Position::TOP(0), 
+Position::LEFT(0), 
+Position::RIGHT(1), 
+Position::BOTTOM(1);
 
-void UPos::addingTo(Child& c, Element& parent) {
+void Position::addingTo(Child& c, Element& parent) {
   Attribute::addingTo(c, parent);
   
   if (parent.emodes.IS_FLOATING) {    // !!! ce n'est plus tout a fait vrai: cf plus bas
-    warning("UPos::addingTo",
-            "This UPos instance is being added to a widget (%s %p) that contains another UPos (a widget should not contain multiple UPos instances)",
+    warning("Position::addingTo",
+            "This Position instance is being added to a widget (%s %p) that contains another Position (a widget should not contain multiple Position instances)",
             this, &parent.getClassName());
   }
   
   Box* par = parent.toBox();
   if (!par) {
-    warning("UPos::addingTo",
-            "This UPos instance is being added to a container (%s %p) that does not derive from Box",
+    warning("Position::addingTo",
+            "This Position instance is being added to a container (%s %p) that does not derive from Box",
             this, &parent.getClassName());
   }
   else par->emodes.IS_FLOATING = isFloating();
 }
 
-void UPos::removingFrom(Child& c, Element& parent) {
+void Position::removingFrom(Child& c, Element& parent) {
   Box* par = parent.toBox();
   if (par) par->emodes.IS_FLOATING = false;
   Attribute::removingFrom(c, parent);
 }
 
-bool UPos::equals(const Length& _x, const Length& _y) const {
+bool Position::equals(const Length& _x, const Length& _y) const {
   return _x==x && _y==y;
 }
 
-void UPos::update()  {
+void Position::update()  {
   //hum, c'est pas le layout qui change mais la position...!
   updateAutoParents(Update::LAYOUT_PAINT);
 }
 
-void UPos::putProp(UpdateContext *props, Element&) {
+void Position::putProp(UpdateContext *props, Element&) {
   props->pos = this;  // pos peut etre proportionnelle etc.
 }
 
-bool UPos::isFloating() const {
+bool Position::isFloating() const {
   return (x.unit.type != Unit::AUTO && x.unit.type != Unit::IGNORE
           && y.unit.type != Unit::AUTO && y.unit.type != Unit::IGNORE);
 }
 
-UPos& UPos::set(const Length& newx, const Length& newy) {
+Position& Position::set(const Length& newx, const Length& newy) {
   if (checkConst()) return *this;
 
   Length _x = newx, _y = newy;
@@ -159,11 +159,11 @@ UPos& UPos::set(const Length& newx, const Length& newy) {
 
 
 
-const Length USize::INITIAL(-1);                 // !!!   A REVOIR !!!!!!  
-const Length::Modes USize::UNRESIZABLE(1);       // !!!   A REVOIR !!!!!!  
+const Length Size::INITIAL(-1);                 // !!!   A REVOIR !!!!!!  
+const Length::Modes Size::UNRESIZABLE(1);       // !!!   A REVOIR !!!!!!  
 
 
-USize& USize::set(const Length& w, const Length& h) {
+Size& Size::set(const Length& w, const Length& h) {
   if (checkConst()) return *this;
   if (width == w && height == h) return *this;
   width = w;
@@ -172,29 +172,29 @@ USize& USize::set(const Length& w, const Length& h) {
   return *this;
 }
 
-bool USize::equals(const Length& w, const Length& h) const {
+bool Size::equals(const Length& w, const Length& h) const {
   return width==w && height==h;
 }
 
-void USize::update()  {
+void Size::update()  {
   _parents.setParentsViewsModes(View::SIZE_HAS_CHANGED, true);
   updateAutoParents(Update::LAYOUT_PAINT);
 }
 
-void USize::putProp(UpdateContext* props, Element& obj) {
+void Size::putProp(UpdateContext* props, Element& obj) {
   //props->local.size = *this;
   if (width != UIGNORE) {
     props->local.size.width = width;
-    obj.emodes.IS_WIDTH_UNRESIZABLE = (width.modes.val & USize::UNRESIZABLE.val);
+    obj.emodes.IS_WIDTH_UNRESIZABLE = (width.modes.val & Size::UNRESIZABLE.val);
   }
   if (height != UIGNORE) {
     props->local.size.height = height;
-    obj.emodes.IS_HEIGHT_UNRESIZABLE = (height.modes.val & USize::UNRESIZABLE.val);
+    obj.emodes.IS_HEIGHT_UNRESIZABLE = (height.modes.val & Size::UNRESIZABLE.val);
   }
 }
 
 
-UPadding& UPadding::setWidth(Length l) {
+Padding& Padding::setWidth(Length l) {
   if (checkConst() || (val.left == l && val.right == l)) return *this;
   val.left = l;
   val.right = l;
@@ -202,7 +202,7 @@ UPadding& UPadding::setWidth(Length l) {
   return *this;
 }
 
-UPadding& UPadding::setHeight(Length l) {
+Padding& Padding::setHeight(Length l) {
   if (checkConst() || (val.top == l && val.bottom == l)) return *this;
   val.top = l;
   val.bottom = l;
@@ -210,39 +210,39 @@ UPadding& UPadding::setHeight(Length l) {
   return *this;
 }
 
-UPadding& UPadding::setLeft(Length l) {
+Padding& Padding::setLeft(Length l) {
   if (checkConst() || val.left == l) return *this;
   val.left = l;
   changed();
   return *this;
 }
 
-UPadding& UPadding::setRight(Length l) {
+Padding& Padding::setRight(Length l) {
   if (checkConst() || val.right == l) return *this;
   val.right = l;
   changed();
   return *this;
 }
 
-UPadding& UPadding::setTop(Length l) {
+Padding& Padding::setTop(Length l) {
   if (checkConst() || val.top == l) return *this;
   val.top = l;
   changed();
   return *this;
 }
 
-UPadding& UPadding::setBottom(Length l) {
+Padding& Padding::setBottom(Length l) {
   if (checkConst() || val.bottom == l) return *this;
   val.bottom = l;
   changed();
   return *this;
 }
 
-void UPadding::update() {
+void Padding::update() {
   updateAutoParents(Update::LAYOUT_PAINT);
 }
 
-void UPadding::putProp(UpdateContext* props, Element&) {
+void Padding::putProp(UpdateContext* props, Element&) {
  if (val.top != UIGNORE)    props->local.padding.top = val.top;
  if (val.right != UIGNORE)  props->local.padding.right = val.right;
  if (val.bottom != UIGNORE) props->local.padding.bottom = val.bottom;
@@ -403,15 +403,15 @@ void VSpacing::putProp(UpdateContext *props, Element&) {
 }
 
 
-UPosControl::UPosControl(UPos* p) :
+PositionControl::PositionControl(Position* p) :
 change_cursor(false), freeze_x(false), freeze_y(false), 
 moved_view(null), 
-callbacks(ucall(this, &UPosControl::mouseCB)),
+callbacks(ucall(this, &PositionControl::mouseCB)),
 posAttr(p) {}
 
-UPosControl::~UPosControl() {}
+PositionControl::~PositionControl() {}
 
-void UPosControl::addingTo(Child& c, Element& parent) {
+void PositionControl::addingTo(Child& c, Element& parent) {
   Attribute::addingTo(c, parent);
   //parent.addAttr(UOn::mdrag/callbacks + UOn::mpress/callbacks + UOn::mrelease/callbacks);
   MultiCondition& mcond = *new MultiCondition;
@@ -419,34 +419,34 @@ void UPosControl::addingTo(Child& c, Element& parent) {
   parent.addAttr(mcond / *callbacks);
 }
 
-void UPosControl::removingFrom(Child& c, Element& parent) {
+void PositionControl::removingFrom(Child& c, Element& parent) {
   parent.removeAttr(*callbacks);
   Attribute::removingFrom(c, parent);
 }
 
-UPosControl& UPosControl::setModel(UPos* p) 
+PositionControl& PositionControl::setModel(Position* p) 
 {posAttr = p; return *this;}
 
-UPosControl& UPosControl::changeCursor(bool state) 
+PositionControl& PositionControl::changeCursor(bool state) 
 {change_cursor = state; return *this;}
 
-UPosControl& UPosControl::freezeX(bool state) 
+PositionControl& PositionControl::freezeX(bool state) 
 {freeze_x = state; return *this;}
 
-UPosControl& UPosControl::freezeY(bool state) 
+PositionControl& PositionControl::freezeY(bool state) 
 {freeze_y = state; return *this;}
 
 // POINT IMPORTANT: il faut eviter l'"effet memoire" quand on sort du moving_area:
 // les drags ne doivent pas bouger l'objet quand on en sort d'ou des calculs
 // en absolu entre les x/yev0 et les x/ybox_pos0
 
-void UPosControl::mouseCB(MouseEvent& e) {
+void PositionControl::mouseCB(MouseEvent& e) {
   if (e.getCond() == UOn::mdrag) dragCB(e);
   else if (e.getCond() == UOn::mpress) pressCB(e);
   else if (e.getCond() == UOn::mrelease) releaseCB(e);
 }
 
-void UPosControl::pressCB(MouseEvent& e) {
+void PositionControl::pressCB(MouseEvent& e) {
   // !! NOTE for multitouch: this function should be locked so that several handles
   // !! cannot change the position simultaneously  
   moved_view = null;
@@ -464,12 +464,12 @@ void UPosControl::pressCB(MouseEvent& e) {
   if (change_cursor) e.getFlow()->setCursor(e, &Cursor::move);
 }
 
-void UPosControl::releaseCB(MouseEvent& e) {
+void PositionControl::releaseCB(MouseEvent& e) {
   moved_view = null;
   if (change_cursor) e.getFlow()->setCursor(e, null);
 }
 
-void UPosControl::dragCB(MouseEvent& e) {
+void PositionControl::dragCB(MouseEvent& e) {
   View* paneview = null;
   if (!moved_view || !(paneview = moved_view->getParentView())) return;
 
@@ -533,18 +533,18 @@ void UPosControl::dragCB(MouseEvent& e) {
 }
 
 
-//UMagicLensControl::UMagicLensControl(UPos& _pos, Scrollpane& _pane) 
-//: UPosControl(_pos), pane(_pane) {}
+//MagicLensControl::MagicLensControl(Position& _pos, Scrollpane& _pane) 
+//: PositionControl(_pos), pane(_pane) {}
 
-UMagicLensControl::UMagicLensControl(UPos* p, Scrollpane* spane) 
-: UPosControl(p), pane(spane) {}
+MagicLensControl::MagicLensControl(Position* p, Scrollpane* spane) 
+: PositionControl(p), pane(spane) {}
 
-UMagicLensControl& UMagicLensControl::setModel(UPos* p, Scrollpane* spane) 
+MagicLensControl& MagicLensControl::setModel(Position* p, Scrollpane* spane) 
 {posAttr = p; pane = spane; return *this;}
 
-void UMagicLensControl::dragCB(MouseEvent& e) {
+void MagicLensControl::dragCB(MouseEvent& e) {
   if (!posAttr || !pane) return;
-  UPosControl::dragCB(e);
+  PositionControl::dragCB(e);
   
   View* moved = posAttr->getParentView(e);
   UPaneView* pane_view = (UPaneView*)pane->getFirstViewInside(*moved);
@@ -557,14 +557,14 @@ void UMagicLensControl::dragCB(MouseEvent& e) {
 }
 
 
-USizeControl::USizeControl(USize* s) :
+SizeControl::SizeControl(Size* s) :
 freeze_w(false), freeze_h(false), 
-callbacks(ucall(this, &USizeControl::mouseCB)), 
+callbacks(ucall(this, &SizeControl::mouseCB)), 
 psize(s) {}
 
-USizeControl::~USizeControl() {}
+SizeControl::~SizeControl() {}
 
-void USizeControl::addingTo(Child& c, Element& parent) {
+void SizeControl::addingTo(Child& c, Element& parent) {
   Attribute::addingTo(c, parent);
   //parent.addAttr(UOn::mdrag/callbacks + UOn::mpress/callbacks + UOn::mrelease/callbacks);
   MultiCondition& mcond = *new MultiCondition;
@@ -572,31 +572,31 @@ void USizeControl::addingTo(Child& c, Element& parent) {
   parent.addAttr(mcond / *callbacks);
 }
 
-void USizeControl::removingFrom(Child& c, Element& parent) {
+void SizeControl::removingFrom(Child& c, Element& parent) {
   parent.removeAttr(*callbacks);
   Attribute::removingFrom(c, parent);
 }
 
-USizeControl& USizeControl::setModel(USize* s) 
+SizeControl& SizeControl::setModel(Size* s) 
 {psize = s; return *this;}
 
-USizeControl& USizeControl::freezeWidth(bool state)
+SizeControl& SizeControl::freezeWidth(bool state)
 {freeze_w = state; return *this;}
 
-USizeControl& USizeControl::freezeHeight(bool state) 
+SizeControl& SizeControl::freezeHeight(bool state) 
 {freeze_h = state; return *this;}
 
 // POINT IMPORTANT: il faut eviter l'"effet memoire" quand on sort du moving_area:
 // les drags ne doivent pas bouger l'objet quand on en sort d'ou des calculs
 // en absolu entre les x/yev0 et les x/ybox_pos0
 
-void USizeControl::mouseCB(MouseEvent& e) {
+void SizeControl::mouseCB(MouseEvent& e) {
   if (e.getCond() == UOn::mdrag) dragCB(e);
   else if (e.getCond() == UOn::mpress) pressCB(e);
   else if (e.getCond() == UOn::mrelease) releaseCB(e);
 }
 
-void USizeControl::pressCB(MouseEvent& e) {
+void SizeControl::pressCB(MouseEvent& e) {
   xev0 = e.getScreenPos().x;
   yev0 = e.getScreenPos().y;
   w0 = psize->getWidth().val;
@@ -604,11 +604,11 @@ void USizeControl::pressCB(MouseEvent& e) {
   e.getFlow()->setCursor(e, &Cursor::hresize);
 }
 
-void USizeControl::releaseCB(MouseEvent& e) {
+void SizeControl::releaseCB(MouseEvent& e) {
   e.getFlow()->setCursor(e, null);
 }
 
-void USizeControl::dragCB(MouseEvent& e) {
+void SizeControl::dragCB(MouseEvent& e) {
   float dx = e.getScreenPos().x - xev0;
   float dy = e.getScreenPos().y - yev0;
   
@@ -672,14 +672,14 @@ void Shape::putProp(UpdateContext *props, Element&){
 
 /* Box Width property than can be changed interactively.
  * a handle is added to the parent box that makes it possible to resize it.
- * Note: a box should not contain a UWidthChooser and a UWidth brick simultaneously
+ * Note: a box should not contain a WidthChooser and a UWidth brick simultaneously
  */
-class UWidthChooser: public UWidth {
+class WidthChooser: public UWidth {
 public:
-  UBIT_CLASS(UWidthChooser)
+  UBIT_CLASS(WidthChooser)
   
-  UWidthChooser(Length _width);
-  virtual ~UWidthChooser();
+  WidthChooser(Length _width);
+  virtual ~WidthChooser();
   
   void addingTo(Child&, Element& parent);
   void removingFrom(Child&, Element& parent);
@@ -692,14 +692,14 @@ protected:
 
 /* Box Height property than can be changed interactively.
  * a handle is added to the parent box that makes it possible to resize it.
- * Note: a box should not contain a UHeightChooser and a UHeight brick simultaneously
+ * Note: a box should not contain a HeightChooser and a UHeight brick simultaneously
  */
-class UHeightChooser: public UHeight {
+class HeightChooser: public UHeight {
 public:
-  UBIT_CLASS(UHeightChooser)
+  UBIT_CLASS(HeightChooser)
   
-  UHeightChooser(Length height);
-  virtual ~UHeightChooser();
+  HeightChooser(Length height);
+  virtual ~HeightChooser();
   
   void addingTo(Child&, Element& parent);
   void removingFrom(Child&, Element& parent);
@@ -711,27 +711,27 @@ protected:
 };
 
 
-UWidthChooser::UWidthChooser(Length w) : UWidth(w) {
+WidthChooser::WidthChooser(Length w) : UWidth(w) {
   phandle = ubox(uwidth(3) + Border::shadowIn + Cursor::hresize);
-  phandle->addAttr(UOn::mdrag / ucall(this, &UWidthChooser::drag));
-  phandle->addAttr(UOn::mpress / ucall(this, &UWidthChooser::press));
+  phandle->addAttr(UOn::mdrag / ucall(this, &WidthChooser::drag));
+  phandle->addAttr(UOn::mpress / ucall(this, &WidthChooser::press));
 }
 
 // removingFrom() requires a destructor 
-UWidthChooser::~UWidthChooser() {destructs();}
+WidthChooser::~WidthChooser() {destructs();}
 
-void UWidthChooser::addingTo(Child& c, Element& parent) {
+void WidthChooser::addingTo(Child& c, Element& parent) {
   Attribute::addingTo(c, parent);
   Box* box = parent.toBox();
   if (!box) {
-    Application::warning("UWidthChooser::addingTo","parent should be a Box");
+    Application::warning("WidthChooser::addingTo","parent should be a Box");
     return;
   }
   Border* border = box->getBorder(true);
   border->add(uvcenter() + uright() + *phandle);
 }
 
-void UWidthChooser::removingFrom(Child& c, Element& p) {
+void WidthChooser::removingFrom(Child& c, Element& p) {
   //Box* box = parent->boxCast();
   //if (box) {                               // completement faux !!!!
   //  Border* border = box->getBorder();
@@ -740,7 +740,7 @@ void UWidthChooser::removingFrom(Child& c, Element& p) {
   Attribute::removingFrom(c, p);
 }
 
-void UWidthChooser::press(MouseEvent& e) {
+void WidthChooser::press(MouseEvent& e) {
   View *v, *parv;
   if ((v = e.getView()) && (parv = e.getView()->getParentView())) {
     //curpos = e.getWinX();
@@ -751,7 +751,7 @@ void UWidthChooser::press(MouseEvent& e) {
   }
 }
 
-void UWidthChooser::drag(MouseEvent& e) {
+void WidthChooser::drag(MouseEvent& e) {
   View *v, *parv;
   if ((v = e.getView()) && (parv = e.getView()->getParentView())) {
     float new_w = width.val + (e.getScreenPos().x - curpos);
@@ -764,32 +764,32 @@ void UWidthChooser::drag(MouseEvent& e) {
 }
 
 
-UHeightChooser::UHeightChooser(Length h) : UHeight(h) {
+HeightChooser::HeightChooser(Length h) : UHeight(h) {
   phandle = ubox(uwidth(3) + Border::shadowIn + Cursor::vresize);
-  phandle->addAttr(UOn::mdrag / ucall(this, &UHeightChooser::drag));
-  phandle->addAttr(UOn::mpress / ucall(this, &UHeightChooser::press));
+  phandle->addAttr(UOn::mdrag / ucall(this, &HeightChooser::drag));
+  phandle->addAttr(UOn::mpress / ucall(this, &HeightChooser::press));
 }
 
 // removingFrom() requires a destructor 
-UHeightChooser::~UHeightChooser() {destructs();}
+HeightChooser::~HeightChooser() {destructs();}
 
-void UHeightChooser::addingTo(Child&c, Element& parent) {
+void HeightChooser::addingTo(Child&c, Element& parent) {
   Attribute::addingTo(c, parent);
   Box* box = parent.toBox();
   if (!box) {
-    Application::warning("UHeightChooser::addingTo","parent should be a Box");
+    Application::warning("HeightChooser::addingTo","parent should be a Box");
     return;
   }
   Border* border = box->getBorder(true);
   border->add(uhcenter() + ubottom() + *phandle);
 }
 
-void UHeightChooser::removingFrom(Child& c, Element& p) {
+void HeightChooser::removingFrom(Child& c, Element& p) {
   // ....
   Attribute::removingFrom(c, p);
 }
 
-void UHeightChooser::press(MouseEvent& e) {
+void HeightChooser::press(MouseEvent& e) {
   View *v, *parv;
   if ((v = e.getView()) && (parv = e.getView()->getParentView())) {
     //curpos = e.getWinY();
@@ -800,7 +800,7 @@ void UHeightChooser::press(MouseEvent& e) {
   }
 }
 
-void UHeightChooser::drag(MouseEvent& e) {
+void HeightChooser::drag(MouseEvent& e) {
   View *v, *parv;
   if ((v = e.getView()) && (parv = e.getView()->getParentView())) {
     float new_h = height.val + (e.getScreenPos().y - curpos);

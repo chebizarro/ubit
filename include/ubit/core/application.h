@@ -110,7 +110,7 @@ namespace ubit {
      * - 'configuration_file' : an optional configuration file: @see Config for details
      *
      * Exceptions:
-     * - UError exception thrown if the X server can't be opened.
+     * - Error exception thrown if the X server can't be opened.
      *
      * Command line options:
      * - see class Config for details.
@@ -130,7 +130,7 @@ namespace ubit {
     static Application& application();
     /**< returns a reference to the Application instance of the program.
      * There is *only one* Application for a given program.
-     * Throws a UError exception if the Application has not yet been created.
+     * Throws a Error exception if the Application has not yet been created.
      */
     
     static Application* getApplication();
@@ -232,13 +232,13 @@ namespace ubit {
         
     
     static void error(const char* funcname, const char* format, ...);
-    ///< raises an error; shortcut for raiseError(UError::ERROR ...).
+    ///< raises an error; shortcut for raiseError(Error::ERROR ...).
     
     static void warning(const char* funcname, const char* format, ...);
-    ///< raises a warning; shortcut for raiseError(UError::WARNING, ...).
+    ///< raises a warning; shortcut for raiseError(Error::WARNING, ...).
     
     static void fatalError(const char* funcname, const char* format, ...);
-    ///< raises a fatal error; shortcut for raiseError(UError::FATAL_ERROR, ...).
+    ///< raises a fatal error; shortcut for raiseError(Error::FATAL_ERROR, ...).
      
     
     static void raiseError(int errnum, const Object*, 
@@ -246,8 +246,8 @@ namespace ubit {
     /**< raises an error: prints out a message and/or generate an exception.
      * this method:
      * - displays an error message (on std::cerr by default, see below)
-     * - throws a UError exception if 'errnum' is < 0.
-     *   Predefined errnums are UError::WARNING, ERROR, FATAL_ERROR, INTERNAL_ERROR 
+     * - throws a Error exception if 'errnum' is < 0.
+     *   Predefined errnums are Error::WARNING, ERROR, FATAL_ERROR, INTERNAL_ERROR 
      *   but other values may be used if needed.
      * - 'funcname' should be the name of the function where the error occured
      * - 'format'is a printf-like format

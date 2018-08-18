@@ -57,7 +57,7 @@ public:
   struct Options : Element {
     friend class Finder;
     Options();
-    USize  clone_frame_size;
+    Size  clone_frame_size;
     Background default_background;
     Color default_color;
     bool show_icon_images;

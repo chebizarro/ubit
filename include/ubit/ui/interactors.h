@@ -55,14 +55,14 @@ namespace ubit {
    * - font and foreground color inherited from parents (see Font and Color)
    * - transparent backgound (see UBackgound and UAlpha)
    * - automatically resized when children (text, images, and other widgets) are 
-   *   changed or resized. Add a USize attribute to change this behavior or to 
+   *   changed or resized. Add a Size attribute to change this behavior or to 
    *   impose a given size. 
    * - Note that geometry also depend on parents, and, more specifically, on their
    *   uhflex()/uvflex() attributes.
    *
    * As other widgets, a label can contain any combination of text, images and  
    * other widgets and its look can be changed by adding appropriate UAttrs
-   * (for specifying a specific Background, UAlpha, UPadding, Border, etc.)
+   * (for specifying a specific Background, UAlpha, Padding, Border, etc.)
    *   
    *  Example:
    *  <pre>  
@@ -105,13 +105,13 @@ namespace ubit {
    *  - white Background
    *  - NOT resized when children (text, images, other widgets) are changed or resized:
    *    a textfield keeps its initial size (calculated to fit its initial chidren).
-   *    Add a USize attribute to change this behavior or to impose a given size.
+   *    Add a Size attribute to change this behavior or to impose a given size.
    *  - Note that geometry also depend on parents, and, more specifically, on their 
    *    uhflex()/uvflex() attributes.
    *
    * As other widgets, a textfield can contain any combination of text, images and  
    * other widgets and its look can be changed by adding appropriate Attribute(s)
-   * (for specifying a specific Background, UAlpha, UPadding, Border, etc.)
+   * (for specifying a specific Background, UAlpha, Padding, Border, etc.)
    *
    * Example:
    *  <pre>
@@ -223,7 +223,7 @@ namespace ubit {
    *
    * As other widgets, a button can contain any combination of text, images and  
    * other widgets and its look can be changed by adding appropriate Attribute(s)
-   * (for specifying a specific Background, UAlpha, UPadding, Border, etc.)
+   * (for specifying a specific Background, UAlpha, Padding, Border, etc.)
    *
    * CALLBACKS:
    * Any Box callback can be added to a textfield (see UOn and UCall). However,

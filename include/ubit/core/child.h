@@ -50,7 +50,6 @@ public:
 template <class _Iter>
 class _ChildIter : public _Iter {
 public:
-  //_ChildIter() : _Iter(null) {}       // !ATT: peut poser probleme si pas g++ !
   _ChildIter() : _Iter() {}
   _ChildIter(const _Iter& i) : _Iter(i) {}
   _ChildIter(const _ChildIter& i) : _Iter(i) {}

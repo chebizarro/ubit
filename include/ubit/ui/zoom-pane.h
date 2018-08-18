@@ -49,7 +49,7 @@ namespace ubit {
     Box& viewport() {return *pviewport;}
     ///< returns the viewport that is controlled by this zoompane.
     
-    UPos& viewportPos() {return *ppos;}
+    Position& viewportPos() {return *ppos;}
     /**< returns the position attribute of the viewport.
      * example: my_zoombox.viewportPos().set(25, 100);
      */
@@ -70,7 +70,7 @@ namespace ubit {
    private:
     unique_ptr<Box> pviewport;
     unique_ptr<ZoomMenu> pmenu;
-    unique_ptr<UPos> ppos;
+    unique_ptr<Position> ppos;
     unique_ptr<Scale> pscale;
   };
   

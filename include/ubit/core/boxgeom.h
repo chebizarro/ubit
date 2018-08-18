@@ -79,13 +79,13 @@ namespace ubit {
   
   /**
    * Widget position.
-   * The UPos Attribute specifies the position of a widget (Box subclasses) relatively
-   * to its parent widget (note that, currently, UPos don't work with Window widgets)
+   * The Position Attribute specifies the position of a widget (Box subclasses) relatively
+   * to its parent widget (note that, currently, Position don't work with Window widgets)
    *
-   * Most widgets do not need to have a UPos attribute: their position is then 
+   * Most widgets do not need to have a Position attribute: their position is then 
    * calculated automatically by their parent widgets (see Halign, Valign).
    * 
-   * Depending of its x and y Length parameters, a UPos attribute works as follows:
+   * Depending of its x and y Length parameters, a Position attribute works as follows:
    * - it is ignored if either 'x' or 'y' is set to UAUTO or UIGNORE
    * - the widget is floating otherwise and 'x' and 'y' are relative to its parent origin
    *
@@ -96,49 +96,49 @@ namespace ubit {
    * - UPERCENT_CTR (same as UPERCENT except that x,y then correspond to the widget center)
    *
    * Exemple: 
-   * - UPos(100|UPX, 25|UPERCENT) specifies a width of 100 pixels and a height equals
+   * - Position(100|UPX, 25|UPERCENT) specifies a width of 100 pixels and a height equals
    *   to 25% of the parent's height
    */
-  class UPos : public Attribute, public PosSpec {
+  class Position : public Attribute, public PositionSpec {
   public:
-    UCLASS(UPos)
+    UCLASS(Position)
 
     static const Length::Modes TOP, LEFT, RIGHT, BOTTOM;
       
-    UPos() : PosSpec(0,0) {}
+    Position() : PositionSpec(0,0) {}
     ///< creates a new position attribute with x=0 and y=0.
       
-    UPos(Length x, Length y) : PosSpec(x, y) {}
+    Position(Length x, Length y) : PositionSpec(x, y) {}
     ///< creates a new position attribute; see also shortcut upos(Length x, Length y).
            
-    UPos(const Point& p) : PosSpec(p.x, p.y) {}
+    Position(const Point& p) : PositionSpec(p.x, p.y) {}
     ///< creates a new position attribute; see also shortcut upos().
     
-    UPos(const UPos& p) : PosSpec(p.x, p.y) {}
+    Position(const Position& p) : PositionSpec(p.x, p.y) {}
     ///< creates a new position attribute.
     
-    //UPos(const String& xSpec, const String& ySpec);
+    //Position(const String& xSpec, const String& ySpec);
     //creates a new position attribute.
 
-    virtual ~UPos() {destructs();}
+    virtual ~Position() {destructs();}
       
     const Length& getX() const {return x;}
     const Length& getY() const {return y;}
 
-    UPos& setX(const Length& _x) {return set(_x, y);}
-    UPos& setY(const Length& _y) {return set(x, _y);}
+    Position& setX(const Length& _x) {return set(_x, y);}
+    Position& setY(const Length& _y) {return set(x, _y);}
     
-    virtual UPos& set(const Length& x, const Length& y);
-    UPos& operator=(const UPos& p)   {return set(p.x, p.y);}
-    UPos& operator=(const Point& p) {return set(p.x, p.y);}
+    virtual Position& set(const Length& x, const Length& y);
+    Position& operator=(const Position& p)   {return set(p.x, p.y);}
+    Position& operator=(const Point& p) {return set(p.x, p.y);}
 
     virtual bool equals(const Length& x, const Length& y) const;
-    bool operator==(const UPos& p) const {return equals(p.x, p.y);}
+    bool operator==(const Position& p) const {return equals(p.x, p.y);}
     bool operator==(const Point& p) const {return equals(p.x, p.y);}
 
     bool isFloating() const;
-    /**< returns true if this UPos makes the widget to be floating.
-     * this UPos is ignored, and thus, the widget nt floating, if either 'x' or 'y'
+    /**< returns true if this Position makes the widget to be floating.
+     * this Position is ignored, and thus, the widget nt floating, if either 'x' or 'y'
      * has been set to UAUTO or UIGNORE
      */
     
@@ -154,33 +154,33 @@ namespace ubit {
     virtual void putProp(UpdateContext*, Element&);
     virtual void addingTo(Child&, Element& parent);
     virtual void removingFrom(Child&, Element& parent);
-    //NB: removingFrom() requires UPos to have a destructor.    
+    //NB: removingFrom() requires Position to have a destructor.    
   };
     
-  inline UPos& upos(const Length& x, const Length& y) {return *new UPos(x, y);}
-  ///< shortcut that creates a new UPos.
+  inline Position& upos(const Length& x, const Length& y) {return *new Position(x, y);}
+  ///< shortcut that creates a new Position.
   
-  inline UPos& upos(const Point& p) {return *new UPos(p);}
-  ///< shortcut that creates a new UPos.
+  inline Position& upos(const Point& p) {return *new Position(p);}
+  ///< shortcut that creates a new Position.
 
   
   /**
    * Position Control: interactive control of the position of a widget.
    * when dragged interactivelly, a handle widget (typically a button) having  
-   * this attribute changes the UPos of another widget (typically a palette) 
+   * this attribute changes the Position of another widget (typically a palette) 
    * that contains this handle.
    */
-  class UPosControl : public Attribute {
+  class PositionControl : public Attribute {
   public:
-    UCLASS(UPosControl)
+    UCLASS(PositionControl)
     
-    UPosControl(UPos* = null);
-    ~UPosControl();
+    PositionControl(Position* = null);
+    ~PositionControl();
     
-    UPosControl& setModel(UPos*);
-    UPosControl& changeCursor(bool state);
-    UPosControl& freezeX(bool state);
-    UPosControl& freezeY(bool state);
+    PositionControl& setModel(Position*);
+    PositionControl& changeCursor(bool state);
+    PositionControl& freezeX(bool state);
+    PositionControl& freezeY(bool state);
     
   protected:
     static const int MARGIN = 5;
@@ -188,7 +188,7 @@ namespace ubit {
     bool change_cursor, freeze_x, freeze_y;
     View* moved_view;
     unique_ptr<UCall> callbacks;
-    unique_ptr<UPos> posAttr;
+    unique_ptr<Position> posAttr;
     
     virtual void putProp(UpdateContext*, Element&) {}
     virtual void addingTo(Child&, Element& parent);
@@ -202,14 +202,14 @@ namespace ubit {
   };
   
   /**
-   * Makes it possible to change the UPos of a Magic Lens interactively.
+   * Makes it possible to change the Position of a Magic Lens interactively.
    * PBM: aucun effet si on modifie pos directement par programme !!
    */
-  class UMagicLensControl : public UPosControl {
+  class MagicLensControl : public PositionControl {
   public:
-    UCLASS(UMagicLensControl)
-    UMagicLensControl(UPos* = null, Scrollpane* = null);
-    UMagicLensControl& setModel(UPos*, Scrollpane*);
+    UCLASS(MagicLensControl)
+    MagicLensControl(Position* = null, Scrollpane* = null);
+    MagicLensControl& setModel(Position*, Scrollpane*);
   private:
     unique_ptr<Scrollpane> pane;
     virtual void dragCB(MouseEvent&);
@@ -218,13 +218,13 @@ namespace ubit {
   
   /**
    * Widget Size.
-   * The USize attribute specifies the size of a widget (a node deriving from Box).
+   * The Size attribute specifies the size of a widget (a node deriving from Box).
    *
-   * USize specifies the preferred size of the widget and its behavior. The actual
+   * Size specifies the preferred size of the widget and its behavior. The actual
    * widget size may depend on other factors such as its scale (see Scale) and 
    * layout constraints (see uhflex(), uvflex())
    *
-   * The type of the width and the height of the USize is Length, which makes it
+   * The type of the width and the height of the Size is Length, which makes it
    * to specify a unit (length are in pixels if no unit is specified)
    *
    * A length of -1 means that the size of the initial content of the widget
@@ -232,42 +232,42 @@ namespace ubit {
    *
    * UNRESIZABLE prevents uhflex() and uvflex() attributes to resize the widget
    *
-   * Note: A USize object can be shared by several widgets. 
+   * Note: A Size object can be shared by several widgets. 
    */
-  class USize : public Attribute, public SizeSpec {
+  class Size : public Attribute, public SizeSpec {
   public:
-    UCLASS(USize)
+    UCLASS(Size)
     
     static const Length INITIAL;
     static const Length::Modes UNRESIZABLE;
     
-    USize() : SizeSpec(UIGNORE,UIGNORE) {}
+    Size() : SizeSpec(UIGNORE,UIGNORE) {}
     ///< creates a new size attribute with width=UAUTO and height=UAUTO.
     
-    USize(Length width, Length height = UIGNORE) : SizeSpec(width, height) {}
+    Size(Length width, Length height = UIGNORE) : SizeSpec(width, height) {}
     ///< creates a new size attribute, @see also the usize() shortcut.
     
-    USize(const Dimension& d) : SizeSpec(d.width, d.height) {}
+    Size(const Dimension& d) : SizeSpec(d.width, d.height) {}
     ///< creates a new size attribute.
 
-    USize(const USize& s) : SizeSpec(s) {}
+    Size(const Size& s) : SizeSpec(s) {}
     ///< creates a new size attribute.
     
-    //UPos(const String& widthSpec, const String& heightSpec);
+    //Position(const String& widthSpec, const String& heightSpec);
     //creates a new position attribute.
 
     const Length& getWidth()  const {return width;}
     const Length& getHeight() const {return height;}
     
-    USize& setWidth(const Length& _w)  {return set(_w, height);}
-    USize& setHeight(const Length& _h) {return set(width, _h);}
+    Size& setWidth(const Length& _w)  {return set(_w, height);}
+    Size& setHeight(const Length& _h) {return set(width, _h);}
     
-    virtual USize& set(const Length& width, const Length& height);
-    USize& operator=(const USize& s) {return set(s.width, s.height);}
-    USize& operator=(const Dimension& d) {return set(d.width, d.height);}
+    virtual Size& set(const Length& width, const Length& height);
+    Size& operator=(const Size& s) {return set(s.width, s.height);}
+    Size& operator=(const Dimension& d) {return set(d.width, d.height);}
     
     virtual bool equals(const Length& w, const Length& h) const;
-    bool operator==(const USize& s) const {return equals(s.width, s.height);}
+    bool operator==(const Size& s) const {return equals(s.width, s.height);}
     bool operator==(const Dimension& d) const {return equals(d.width, d.height);}
 
     virtual void update();
@@ -277,32 +277,32 @@ namespace ubit {
     friend class UViewLayoutImpl;
   };
   
-  inline USize& usize() {return *new USize();}
-  ///< shortcut function that returns *new USize().
+  inline Size& usize() {return *new Size();}
+  ///< shortcut function that returns *new Size().
 
-  inline USize& usize(const Length& w, const Length& h =UIGNORE) {return *new USize(w,h);}
-  ///< shortcut function that returns *new USize(w, h).
+  inline Size& usize(const Length& w, const Length& h =UIGNORE) {return *new Size(w,h);}
+  ///< shortcut function that returns *new Size(w, h).
   
-  inline USize& usize(const Dimension& d) {return *new USize(d);}
-  ///< shortcut function that returns *new USize(d).
+  inline Size& usize(const Dimension& d) {return *new Size(d);}
+  ///< shortcut function that returns *new Size(d).
   
   
   /**
    * Size Control: interactive control of the size of a widget.
    * when dragged interactivelly, a handle widget (typically a button) having  
-   * this attribute changes the USize of another widget (typically a palette) 
+   * this attribute changes the Size of another widget (typically a palette) 
    * that contains this handle.
    */
-  class USizeControl : public Attribute {
+  class SizeControl : public Attribute {
   public:
-    UCLASS(USizeControl)
+    UCLASS(SizeControl)
     
-    USizeControl(USize* = null);    
-    ~USizeControl();
+    SizeControl(Size* = null);    
+    ~SizeControl();
     
-    USizeControl& setModel(USize*);
-    USizeControl& freezeWidth(bool state);
-    USizeControl& freezeHeight(bool state);
+    SizeControl& setModel(Size*);
+    SizeControl& freezeWidth(bool state);
+    SizeControl& freezeHeight(bool state);
     
     virtual void putProp(UpdateContext*, Element&) {}
     virtual void addingTo(Child&, Element& parent);
@@ -313,7 +313,7 @@ namespace ubit {
     float xev0, yev0;
     bool freeze_w, freeze_h;
     unique_ptr<UCall> callbacks;
-    unique_ptr<USize> psize;
+    unique_ptr<Size> psize;
     virtual void mouseCB(MouseEvent&);
     virtual void pressCB(MouseEvent&);
     virtual void releaseCB(MouseEvent&);
@@ -324,25 +324,25 @@ namespace ubit {
   /**
    * Widget padding.
    */
-  class UPadding : public Attribute {
+  class Padding : public Attribute {
   public:
-    UCLASS(UPadding)
+    UCLASS(Padding)
     
-    UPadding() : val(UIGNORE,UIGNORE) {}
-    UPadding(Length width, Length height) : val(width, height) {}
+    Padding() : val(UIGNORE,UIGNORE) {}
+    Padding(Length width, Length height) : val(width, height) {}
         
-    UPadding& operator=(const UPadding&);
+    Padding& operator=(const Padding&);
     
-    UPadding& setWidth(Length);
+    Padding& setWidth(Length);
     ///< sets top and bottom padding.
     
-    UPadding& setHeight(Length);
+    Padding& setHeight(Length);
     ///< sets left and right padding.
 
-    UPadding& setTop(Length);
-    UPadding& setRight(Length);
-    UPadding& setBottom(Length);
-    UPadding& setLeft(Length);
+    Padding& setTop(Length);
+    Padding& setRight(Length);
+    Padding& setBottom(Length);
+    Padding& setLeft(Length);
     
     Length getTop()   const {return val.top;}
     Length getRight() const {return val.right;}
@@ -356,11 +356,11 @@ namespace ubit {
   };
   
   
-  inline UPadding& upadding() {return *new UPadding();}
-  ///< shortcut function that returns *new UPadding().
+  inline Padding& upadding() {return *new Padding();}
+  ///< shortcut function that returns *new Padding().
   
-  inline UPadding& upadding(Length horiz, Length vert) {return *new UPadding(horiz,vert);}
-  ///< shortcut function that returns *new UPadding(horiz,vert).
+  inline Padding& upadding(Length horiz, Length vert) {return *new Padding(horiz,vert);}
+  ///< shortcut function that returns *new Padding(horiz,vert).
 
   
   /**

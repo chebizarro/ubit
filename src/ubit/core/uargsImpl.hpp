@@ -31,14 +31,14 @@ namespace ubit {
     // implementation of Args (should not be used directly by clients).
 
   class Args;
-  class UArgsImpl;
+  class ArgsImpl;
   class _UAttrArgs;
   
-  const UArgsImpl& operator+(const UArgsImpl&, const char*);
-  const UArgsImpl& operator+(const UArgsImpl&, Node*);
-  const UArgsImpl& operator+(const UArgsImpl&, Node&);
-  const UArgsImpl& operator+(const UArgsImpl&, const Child&);
-  const UArgsImpl& operator+(const UArgsImpl&, const Args&); 
+  const ArgsImpl& operator+(const ArgsImpl&, const char*);
+  const ArgsImpl& operator+(const ArgsImpl&, Node*);
+  const ArgsImpl& operator+(const ArgsImpl&, Node&);
+  const ArgsImpl& operator+(const ArgsImpl&, const Child&);
+  const ArgsImpl& operator+(const ArgsImpl&, const Args&); 
   
   const _UAttrArgs& operator,(const _UAttrArgs&, Attribute*);
   const _UAttrArgs& operator,(const _UAttrArgs&, Attribute&);
@@ -47,30 +47,30 @@ namespace ubit {
   //const _UAttrArgs& operator,(const _UAttrArgs&, const UAttrChild&);
 
 
-  class UArgsImpl {
+  class ArgsImpl {
   public:
-    UArgsImpl();
-    UArgsImpl(Node*);
-    UArgsImpl(Node&);
-    UArgsImpl(const char*);
-    UArgsImpl(const Child&);  
-    UArgsImpl(const Args&);
-    UArgsImpl(const UArgsImpl&);
-    ~UArgsImpl();
+    ArgsImpl();
+    ArgsImpl(Node*);
+    ArgsImpl(Node&);
+    ArgsImpl(const char*);
+    ArgsImpl(const Child&);  
+    ArgsImpl(const Args&);
+    ArgsImpl(const ArgsImpl&);
+    ~ArgsImpl();
 
-    friend const UArgsImpl& operator+(const UArgsImpl&, const char*);
-    friend const UArgsImpl& operator+(const UArgsImpl&, Node*);
-    friend const UArgsImpl& operator+(const UArgsImpl&, Node&);
-    friend const UArgsImpl& operator+(const UArgsImpl&, const Child&);
-    friend const UArgsImpl& operator+(const UArgsImpl&, const Args&);
+    friend const ArgsImpl& operator+(const ArgsImpl&, const char*);
+    friend const ArgsImpl& operator+(const ArgsImpl&, Node*);
+    friend const ArgsImpl& operator+(const ArgsImpl&, Node&);
+    friend const ArgsImpl& operator+(const ArgsImpl&, const Child&);
+    friend const ArgsImpl& operator+(const ArgsImpl&, const Args&);
     
-    friend const UArgsImpl& operator+(const _UAttrArgs&, const UArgsImpl&);  // !!!!!
+    friend const ArgsImpl& operator+(const _UAttrArgs&, const ArgsImpl&);  // !!!!!
 
   private:
-    UArgsImpl& operator=(const UArgsImpl&);  // assigment is forbidden
+    ArgsImpl& operator=(const ArgsImpl&);  // assigment is forbidden
     friend class Element;
     friend class Args;
-    class UArgsChildren* children;
+    class ArgsChildren* children;
   };
   
   
@@ -91,23 +91,23 @@ namespace ubit {
     friend const _UAttrArgs& operator,(const _UAttrArgs&, UCall&);
     //friend const _UAttrArgs& operator,(const _UAttrArgs&, const UAttrChild&);
     
-    friend const UArgsImpl& operator+(const _UAttrArgs&, const UArgsImpl&);  // !!!!!
+    friend const ArgsImpl& operator+(const _UAttrArgs&, const ArgsImpl&);  // !!!!!
 
   private:
     _UAttrArgs& operator=(const _UAttrArgs&);  // assigment is forbidden
     friend class Element;
     friend class Args;
-    class UArgsChildren* children;
+    class ArgsChildren* children;
   };
     
   
-  class UArgsChildren : public Children {
+  class ArgsChildren : public Children {
     friend class Args;
-    friend class UArgsImpl;
+    friend class ArgsImpl;
     friend class _UAttrArgs;
     int refcount;
-    //UArgsChildren(); test for counting creation/deletion balance
-    //~UArgsChildren();
+    //ArgsChildren(); test for counting creation/deletion balance
+    //~ArgsChildren();
   };
   
 }

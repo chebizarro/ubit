@@ -124,7 +124,7 @@ namespace ubit {
    *
    * Requires OpenGL. @see: U3Dcanvas, U3Dwin.
    */
-  class U3Dpos : public UPos {
+  class U3Dpos : public Position {
   public:
     UCLASS(U3Dpos)
     

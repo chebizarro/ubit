@@ -306,13 +306,13 @@ void CssProperties::create_background(XmlDocument* doc, AttributeList* al, const
 void CssProperties::create_width(XmlDocument*, AttributeList* al, const String& v) {
   // EX: UWidth* p = new UWidth(-1);
   // NB: obtainAttr() add attribute to props
-  if (!v.empty()) al->obtainAttr<USize>().setWidth(v);
+  if (!v.empty()) al->obtainAttr<Size>().setWidth(v);
 }
 
 void CssProperties::create_height(XmlDocument*, AttributeList* al, const String& v) {
   // EX: UHeight* p = new UHeight(-1);
   // NB: obtainAttr() add attribute to props
-  if (!v.empty()) al->obtainAttr<USize>().setHeight(v);
+  if (!v.empty()) al->obtainAttr<Size>().setHeight(v);
 }
 
 // egalement: 'line-height'
@@ -320,19 +320,19 @@ void CssProperties::create_height(XmlDocument*, AttributeList* al, const String&
 
 void CssProperties::create_padding_top(XmlDocument*, AttributeList* al, const String& v) {
   // NB: obtainAttr() add attribute to props
-  if (!v.empty()) al->obtainAttr<UPadding>().setTop(v);
+  if (!v.empty()) al->obtainAttr<Padding>().setTop(v);
 }
 
 void CssProperties::create_padding_bottom(XmlDocument*, AttributeList* al, const String& v) {
-  if (!v.empty()) al->obtainAttr<UPadding>().setBottom(v);
+  if (!v.empty()) al->obtainAttr<Padding>().setBottom(v);
  }
 
 void CssProperties::create_padding_left(XmlDocument*, AttributeList* al, const String& v) {
-  if (!v.empty()) al->obtainAttr<UPadding>().setLeft(v);
+  if (!v.empty()) al->obtainAttr<Padding>().setLeft(v);
 }
 
 void CssProperties::create_padding_right(XmlDocument*, AttributeList* al, const String& v) {
-  if (!v.empty()) al->obtainAttr<UPadding>().setRight(v);
+  if (!v.empty()) al->obtainAttr<Padding>().setRight(v);
 }
 
 //CssProperties::create_padding

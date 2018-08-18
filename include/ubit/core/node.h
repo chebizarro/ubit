@@ -28,8 +28,8 @@
 #include <ubit/core/object.hpp>
 
 #include <ubit/udefs.hpp>
-#include <ubit/uchild.hpp>
-#include <ubit/uparent.hpp>
+#include <ubit/core/child.h>
+#include <ubit/core/parent.h>
 
 namespace ubit {
 

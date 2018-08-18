@@ -1,18 +1,25 @@
 /*
  *  win.cpp: ubit windows
- *  Ubit GUI Toolkit - Version 6
- *  (C) 2009 | Eric Lecolinet | ENST Paris | http://www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE :
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION;
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
-
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
+ *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
 #include <ubit/ubit_features.h>
 #include <iostream>
 #include <ubit/uon.hpp>
@@ -175,8 +182,8 @@ void USoftwinImpl::setActualView(View* winview) {
 }
 
 USoftwinImpl::USoftwinImpl(Window& win) {
-  //NOTE: SOFTWIN => FLOATING (fait implicitement via l'ajout d'un UPos aux softwins)
-  ppos = new UPos(0, 0);
+  //NOTE: SOFTWIN => FLOATING (fait implicitement via l'ajout d'un Position aux softwins)
+  ppos = new Position(0, 0);
   win.setAttr(*ppos);
   actual_view = null;
   
@@ -187,7 +194,7 @@ USoftwinImpl::USoftwinImpl(Window& win) {
           + uright()
           + ubutton("X" + ucloseWin())
           );
-    titlebar.addAttr((new UPosControl)->setModel(ppos)
+    titlebar.addAttr((new PositionControl)->setModel(ppos)
                      + Background::navy + ualpha(0.5)
                      + Color::white
                      );

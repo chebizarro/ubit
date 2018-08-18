@@ -586,28 +586,28 @@ void Application::onMessage(const String& name, UCall& c) {
 void Application::error(const char* fun, const char* format, ...){
   va_list ap;
   va_start(ap, format);
-  raiseError(UError::ERROR, null/*object*/, fun, format, ap);
+  raiseError(Error::ERROR, null/*object*/, fun, format, ap);
   va_end(ap);
 }
 
 void Application::warning(const char* fun, const char* format, ...){
   va_list ap;
   va_start(ap, format);
-  raiseError(UError::WARNING, null/*object*/, fun, format, ap);
+  raiseError(Error::WARNING, null/*object*/, fun, format, ap);
   va_end(ap);
 }
 
 void Application::fatalError(const char* fun, const char* format, ...){
   va_list ap;
   va_start(ap, format);
-  raiseError(UError::FATAL_ERROR, null/*object*/, fun, format, ap);
+  raiseError(Error::FATAL_ERROR, null/*object*/, fun, format, ap);
   va_end(ap);
 }
 
 void Application::internalError(const char* fun, const char* format, ...){
   va_list ap;
   va_start(ap, format);
-  raiseError(UError::INTERNAL_ERROR, null/*object*/, fun, format, ap);
+  raiseError(Error::INTERNAL_ERROR, null/*object*/, fun, format, ap);
   va_end(ap);
 }
 
@@ -663,14 +663,14 @@ void UErrorHandler::setOutputBuffer(String* s) {
 void UErrorHandler::warning(const char* fun, const char* format, ...) const {
   va_list ap;
   va_start(ap, format);
-  raiseError(UError::WARNING, null, fun, format, ap);
+  raiseError(Error::WARNING, null, fun, format, ap);
   va_end(ap);
 }
 
 void UErrorHandler::error(const char* fun, const char* format, ...) const {
   va_list ap;
   va_start(ap, format);
-  raiseError(UError::ERROR, null, fun, format, ap);
+  raiseError(Error::ERROR, null, fun, format, ap);
   va_end(ap);
 }
 
@@ -717,7 +717,7 @@ void UErrorHandler::parserError(int errnum, const Char* tbuffer,
 
 void UErrorHandler::raiseError(int errnum, const UObject* obj, const char* funcname, 
                                const char* format, va_list ap) const {
-  UError e(errnum, obj, funcname);
+  Error e(errnum, obj, funcname);
   formatMessage(e, format, ap);
   if (fout && *fout) printOnStream(e);
   if (pbuffer) printOnBuffer(e);
@@ -725,7 +725,7 @@ void UErrorHandler::raiseError(int errnum, const UObject* obj, const char* funcn
 }
 
 void UErrorHandler::raiseError(int errnum, String* msg) const {
-  UError e(errnum, null, null);
+  Error e(errnum, null, null);
     if (msg) {
       strncpy(e.message, msg->c_str(), sizeof(e.message));
       e.message[sizeof(e.message)-1] = 0;
@@ -736,7 +736,7 @@ void UErrorHandler::raiseError(int errnum, String* msg) const {
 }
 
 
-void UErrorHandler::formatMessage(UError& e, const char* format, va_list ap) const {
+void UErrorHandler::formatMessage(Error& e, const char* format, va_list ap) const {
   // ICI traiter les translations !
   //char buf[2000] = "";
   char* p = e.message;
@@ -785,26 +785,26 @@ void UErrorHandler::formatMessage(UError& e, const char* format, va_list ap) con
 
 const char* UErrorHandler::getErrorName(int errnum) const {
   switch (errnum) {
-    case UError::WARNING: 
+    case Error::WARNING: 
       return "Warning";
-    case UError::ERROR: 
+    case Error::ERROR: 
       return "Error"; 
-    case UError::FATAL_ERROR: 
+    case Error::FATAL_ERROR: 
       return "Fatal Error";
-    case UError::INTERNAL_ERROR: 
+    case Error::INTERNAL_ERROR: 
       return "Internal Error"; 
-    case UError::STYLE_ERROR: 
+    case Error::STYLE_ERROR: 
       return "Style Error"; 
-    case UError::CSS_ERROR: 
+    case Error::CSS_ERROR: 
       return "CSS Error"; 
-    case UError::XML_ERROR: 
+    case Error::XML_ERROR: 
       return "XML Error"; 
     default:
       return null;
   }
 }
 
-void UErrorHandler::printOnStream(const UError& e) const {
+void UErrorHandler::printOnStream(const Error& e) const {
   if (!fout) {
     cerr <<  "UErrorHandler::printOnStream: can't print error because output stream is null! " << endl;
   }
@@ -813,7 +813,7 @@ void UErrorHandler::printOnStream(const UError& e) const {
   } 
 }
 
-void UErrorHandler::printOnBuffer(const UError& e) const {
+void UErrorHandler::printOnBuffer(const Error& e) const {
   if (!pbuffer) {
     cerr <<  "UErrorHandler::printOnBuffer: can't print error because output buffer is null! " << endl;
   }

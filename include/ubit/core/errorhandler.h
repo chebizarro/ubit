@@ -51,14 +51,14 @@ namespace ubit {
     ///< returns the label property of this ErrorHandler.
     
     virtual void warning(const char* funcname, const char* format, ...) const;
-    ///< raises a warning; shortcut for raiseError(UError::WARNING, null, ...).
+    ///< raises a warning; shortcut for raiseError(Error::WARNING, null, ...).
     
     virtual void error(const char* funcname, const char* format, ...) const;
-    ///< raises an error; shortcut for raiseError(UError::ERROR, null, ...).
+    ///< raises an error; shortcut for raiseError(Error::ERROR, null, ...).
     
     virtual void error(int errnum, const Object*, const char* funcname, 
                        const char* format, ...) const;
-    ///< raises an error; shortcut for raiseError(UError::ERROR, ...).
+    ///< raises an error; shortcut for raiseError(Error::ERROR, ...).
     
     virtual void parserError(int errnum, const Char* text_buffer,
                                   const char* msg_start, const String& name,
@@ -70,8 +70,8 @@ namespace ubit {
     /**< raises an error: prints out a message and/or generate an exception.
      * this method:
      * - displays an error message (on std::cerr by default, see below)
-     * - throws a UError exception if 'errnum' is < 0.
-     *   Predefined errnums are UError::WARNING, ERROR, FATAL_ERROR, INTERNAL_ERROR 
+     * - throws a Error exception if 'errnum' is < 0.
+     *   Predefined errnums are Error::WARNING, ERROR, FATAL_ERROR, INTERNAL_ERROR 
      *   but other values may be used if needed.
      * - 'funcname' should be the name of the function where the error occured
      * - 'format'is a printf-like format
@@ -81,9 +81,9 @@ namespace ubit {
     virtual void raiseError(int errnum, String* msg) const;
 
     virtual const char* getErrorName(int errnum) const;
-    virtual void formatMessage(UError&, const char* format, va_list) const;
-    virtual void printOnStream(const UError&) const;
-    virtual void printOnBuffer(const UError&) const;
+    virtual void formatMessage(Error&, const char* format, va_list) const;
+    virtual void printOnStream(const Error&) const;
+    virtual void printOnBuffer(const Error&) const;
     
   protected:
     unique_ptr<String> plabel;

@@ -83,7 +83,7 @@ void ControlAction::addingTo(Child& child, Element& parent) {
 ZoomAction::ZoomAction(Box& zoomed_box, float _gain) : 
 ControlAction(_gain), 
 zbox(zoomed_box),
-posAttr(zoomed_box.obtainAttr<UPos>()),
+posAttr(zoomed_box.obtainAttr<Position>()),
 scaleAttr(zoomed_box.obtainAttr<Scale>()) {
 }
 
@@ -141,7 +141,7 @@ void ZoomAction::mdrag(MouseEvent& e, ControlMenu& m) {
 PanAction::PanAction(Box& panned_box, float _gain) : 
 ControlAction(_gain), 
 box(panned_box),
-posAttr(panned_box.obtainAttr<UPos>()) {
+posAttr(panned_box.obtainAttr<Position>()) {
 }
 
 void PanAction::mdrag(MouseEvent& e, ControlMenu& m) {

@@ -1,18 +1,25 @@
 /*
  *  viewupdate.cpp
- *  Ubit GUI Toolkit - Version 6.0
- *  (C) 2009 | Eric Lecolinet | ENST Paris | www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE :
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION;
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
-
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
+ *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
 #include <ubit/ubit_features.h>
 #include <iostream>
 #include <ubit/uon.hpp>
@@ -349,7 +356,7 @@ void View::doUpdate(UpdateContext& parctx, Rectangle r, Rectangle clip, UViewUpd
 bool View::updatePos(UViewUpdateImpl& vd, Element& grp, UpdateContext& ctx,
                       Rectangle& r, Rectangle& clip, UViewUpdate& vup) 
 {
-  UPos* pos = ctx.pos;
+  Position* pos = ctx.pos;
     
   // U3Dpos is a special case: just check we are in 3D mode and return
   if (pos && pos->is3Dpos()) {
@@ -359,13 +366,13 @@ bool View::updatePos(UViewUpdateImpl& vd, Element& grp, UpdateContext& ctx,
     return true;
   }
     
-  // rajouter d'eventuelles coords relatives ajoutees par UPos
-  // (cas UPos, mais PAS en mode search!)
+  // rajouter d'eventuelles coords relatives ajoutees par Position
+  // (cas Position, mais PAS en mode search!)
 
   if (vup.mode < UViewUpdate::FIND_DATA_POS) {
  
     if (!ctx.parent_ctx || !ctx.parent_ctx->view_impl) {
-      Application::error("View::updatePos","UPos ignored because this widget has no parent");
+      Application::error("View::updatePos","Position ignored because this widget has no parent");
       return false;
     }
     
@@ -671,7 +678,7 @@ void View::doUpdate2(UViewUpdateImpl& vd, Element& grp, UpdateContext& ctx,
           )
          ) {
           
-        // 1) floating boxes (boxes that have an UPos)
+        // 1) floating boxes (boxes that have an Position)
         //if (chview->hasVMode(View::FORCE_POS)) {
         if (chbox->isFloating()) {
           // fl_chr pour ne pas abimer vd.chr qui est cumulatif en x ou en y

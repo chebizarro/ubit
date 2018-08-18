@@ -1,18 +1,25 @@
 /*
  *  palette.cpp: movable palette box (internal frame)
- *  Ubit GUI Toolkit - Version 6.0
- *  (C) 2009 | Eric Lecolinet | ENST Paris | www.enst.fr/~elc/ubit
- *
- * ***********************************************************************
- * COPYRIGHT NOTICE :
- * THIS PROGRAM IS DISTRIBUTED WITHOUT ANY WARRANTY AND WITHOUT EVEN THE
- * IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
- * YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU
- * GENERAL PUBLIC LICENSE AS PUBLISHED BY THE FREE SOFTWARE FOUNDATION;
- * EITHER VERSION 2 OF THE LICENSE, OR (AT YOUR OPTION) ANY LATER VERSION.
- * SEE FILES 'COPYRIGHT' AND 'COPYING' FOR MORE DETAILS.
- * ***********************************************************************/
-
+ *  Ubit GUI Toolkit - Version 8
+ *  (C) 2018 Chris Daley
+ *  (C) 2009 | Eric Lecolinet | TELECOM ParisTech | http://www.enst.fr/~elc/ubit
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
 #include <ubit/ubit_features.h>
 #include <iostream>
 #include <ubit/uboxgeom.hpp>
@@ -33,10 +40,10 @@ namespace ubit {
 
 
 UPalette::UPalette(Args a) :
-ppos(new UPos),
-ppos_ctrl((new UPosControl)->setModel(ppos)),
-psize(new USize),
-psize_ctrl((new USizeControl)->setModel(psize)),
+ppos(new Position),
+ppos_ctrl((new PositionControl)->setModel(ppos)),
+psize(new Size),
+psize_ctrl((new SizeControl)->setModel(psize)),
 pcontent_scale(new Scale),
 pcontent(new Box(a)),
 ptitle(new Element),
@@ -56,7 +63,7 @@ presize_btn(new Box)
  
   presize_btn->addAttr(*psize_ctrl //+ Background::metal
                        + uhcenter() + uvcenter()
-                       + upos(Length(0,UPX,UPos::RIGHT), Length(0,UPX,UPos::BOTTOM)));
+                       + upos(Length(0,UPX,Position::RIGHT), Length(0,UPX,Position::BOTTOM)));
   presize_btn->add(Symbol::circle); //square
   presize_btn->show(false);
   
@@ -92,7 +99,7 @@ void UPalette::resizeCB(MouseEvent&) {
 }
 */
 
-void UPalette::setPosModel(UPos* p) {
+void UPalette::setPosModel(Position* p) {
   if (ppos == p) return;
   if (ppos) removeAttr(*ppos);
   if (p) addAttr(p);
@@ -100,7 +107,7 @@ void UPalette::setPosModel(UPos* p) {
   if (ppos && ppos_ctrl) ppos_ctrl->setModel(ppos);
 }
 
-void UPalette::setPosControlModel(UPosControl* pc) {
+void UPalette::setPosControlModel(PositionControl* pc) {
   if (ppos_ctrl == pc) return;
   if (ppos_ctrl) ptitle_bar->removeAttr(*ppos_ctrl);
   if (pc) ptitle_bar->addAttr(pc);

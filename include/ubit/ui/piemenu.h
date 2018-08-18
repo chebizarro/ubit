@@ -216,7 +216,7 @@ protected:
   int curitem;
   unsigned long show_delay;
   Point armpos, mousepos;
-  USize pie_size;
+  Size pie_size;
   unique_ptr<Timer> ptimer;
   //unique_ptr<Box> parmed; plantage: parmed n'appartient pas au menu!
   Box* parmed;

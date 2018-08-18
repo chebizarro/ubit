@@ -33,7 +33,8 @@ namespace ubit {
   
   class UDataContext;
   
-  /** Ubit Event class.
+  /**
+   * Ubit Event class.
    * note that this class inherits from class Modifier that defines modifier masks
    * such as LeftButton, RightButton, etc. 
    */

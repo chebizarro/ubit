@@ -627,7 +627,7 @@ void XmlParser::error(const char* msg, const Char* line) {
 
 void XmlParser::error(const char* msg1, const String& name,
                        const char* msg2, const Char* line) {
-  perrhandler->parserError(UError::XML_ERROR, text_buffer, msg1, name, msg2, line);
+  perrhandler->parserError(Error::XML_ERROR, text_buffer, msg1, name, msg2, line);
 }
 
 void XmlParser::unexpected(const char* msg, const Char* line) {
@@ -722,26 +722,26 @@ XmlDocument* XmlParser::parse(const String& _name, const String& _buffer) {
 
   catch (ParseError) {
     const char* msg = "XML Parser: Syntax error, parsing aborted";
-    perrhandler->error(UError::XML_ERROR, null/*object*/, null/*funcname*/, msg);
+    perrhandler->error(Error::XML_ERROR, null/*object*/, null/*funcname*/, msg);
     //if (sout) sout->append(msg);
     //if (fout) *fout << msg;
   }
   /*
   catch (std::out_of_range) {
     const char* msg = "XML Parser: Out of range error, parsing aborted";
-    perrhandler->error(UError::XML_ERROR, null, null, msg);
+    perrhandler->error(Error::XML_ERROR, null, null, msg);
     //if (sout) sout->append(msg);
     //if (fout) *fout  << msg;
   }
   catch (std::bad_alloc) {
     const char* msg = "XML Parser: Out of memory error, parsing aborted";
-    perrhandler->error(UError::XML_ERROR, null, null, msg);
+    perrhandler->error(Error::XML_ERROR, null, null, msg);
     //if (sout) sout->append(msg);
     //if (fout) *fout << msg;
   }
   catch (...) {
     const char* msg = "XML Parser: unknown error, parsing aborted";
-    perrhandler->error(UError::XML_ERROR, null, null, msg);
+    perrhandler->error(Error::XML_ERROR, null, null, msg);
     //if (sout) sout->append(msg);
     //if (fout) *fout << msg;
   }

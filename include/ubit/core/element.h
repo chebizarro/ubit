@@ -506,7 +506,7 @@ namespace ubit {
       unsigned IS_TEXT_EDITABLE:1; ///< can edit included text (ie. the group contains a TextEdit brick)
       unsigned IS_WIDTH_UNRESIZABLE:1;
       unsigned IS_HEIGHT_UNRESIZABLE:1;
-      unsigned IS_FLOATING:1;       ///< has a UPos attr in floating mode.
+      unsigned IS_FLOATING:1;       ///< has a Position attr in floating mode.
       unsigned IS_VERTICAL:1;       ///< has a vertical orientation (see HAS_ORIENT).
       unsigned HAS_ORIENT:1;        // A REVOIR @@@@ !!!!.
       unsigned HAS_CURSOR:1;        ///< has a cursor attr.

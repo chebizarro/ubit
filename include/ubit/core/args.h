@@ -28,12 +28,12 @@
 
 namespace ubit {
   
-  class UArgsImpl;
-    
-  /**< Argument list (for passing arguments to constructor or add functions).
+  class ArgsImpl;
+  /**
+   * Argument list (for passing arguments to constructor or add functions).
    * Args makes it possible to create "additive" argument lists by using the + operator.
    *
-   * A UArg object may either hold a single object pointer or reference, or a list 
+   * A ubit::Args object may either hold a single object pointer or reference, or a list 
    * of object pointers or references separated by + operators, example:
    * <pre>
    *   class Button : public Box {
@@ -51,8 +51,8 @@ namespace ubit {
    */
   class Args {
   public:
+    /// the empty arglist.
     static const Args none;
-    ///< the empty arglist.
     
     ~Args();
     Args();
@@ -61,7 +61,7 @@ namespace ubit {
     Args(const char*);
     Args(const Child&);
     Args(const Args&);
-    Args(const UArgsImpl&);
+    Args(const ArgsImpl&);
       
     bool operator !() const;
     ///< returns true is this arglist is empty.
@@ -72,16 +72,16 @@ namespace ubit {
     Args& operator+=(const Args& arglist2);
     ///< adds the children contained in 'arglist2' to this arglist.
     
-    friend const UArgsImpl& operator+(const UArgsImpl&, const char* c_string);
+    friend const ArgsImpl& operator+(const ArgsImpl&, const char* c_string);
     ///< adds a C String to this arglist (note that the string content is duplicated).
     
-    friend const UArgsImpl& operator+(const UArgsImpl&, Node*);
+    friend const ArgsImpl& operator+(const ArgsImpl&, Node*);
     ///< adds a Node to this arglist (Node is the base class for objects that can be part of the scene graph).
     
-    friend const UArgsImpl& operator+(const UArgsImpl&, Node&);
+    friend const ArgsImpl& operator+(const ArgsImpl&, Node&);
     ///< adds a Node to this arglist (Node is the base class for objects that can be part of the scene graph).
     
-    friend const UArgsImpl& operator+(const UArgsImpl&, const Child&);
+    friend const ArgsImpl& operator+(const ArgsImpl&, const Child&);
     /**< adds a Child to this arglist.
      * a Child holds a Node (Node is the base class for objects that can be part
      * of the scene graph) and, possibly, a Condition (a condition that specifies if
@@ -96,7 +96,7 @@ namespace ubit {
      * corresponding object is always active.
      */
     
-    friend const UArgsImpl& operator+(const UArgsImpl&, const Args&);
+    friend const ArgsImpl& operator+(const ArgsImpl&, const Args&);
     ///< adds the children contained in 'arglist2' to this arglist.
     
   private:  
@@ -104,8 +104,8 @@ namespace ubit {
     ///< assigment is forbidden.
     
     friend class Element;
-    friend class UArgsImpl;
-    class UArgsChildren* children;
+    friend class ArgsImpl;
+    class ArgsChildren* children;
   };
   
 }
