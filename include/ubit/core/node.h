@@ -25,7 +25,7 @@
 #ifndef UBIT_CORE_NODE_H_
 #define	UBIT_CORE_NODE_H_
 
-#include <ubit/core/object.hpp>
+#include <ubit/core/object.h>
 
 #include <ubit/udefs.hpp>
 #include <ubit/core/child.h>
