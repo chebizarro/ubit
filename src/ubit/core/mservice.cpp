@@ -18,12 +18,12 @@
 #include <iostream>
 #include <cstdlib>
 #include <unistd.h>
-#include <ubit/ucall.hpp>
+#include <ubit/core/call.h>
 #include <ubit/core/application.h>
 #include <ubit/core/appimpl.h>
 #include <ubit/net/source.h>
 #include <ubit/net/socket.h>
-#include <ubit/umessage.hpp>
+#include <ubit/core/message.h>
 #include <ubit/umservice.hpp>
 #include <ubit/umsproto.hpp>
 #include <ubit/core/event.h>

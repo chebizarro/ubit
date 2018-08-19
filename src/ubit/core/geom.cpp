@@ -64,7 +64,7 @@
 #include <cfloat>
 #include <cmath>
 #include <ubit/ubit_features.h>
-#include <ubit/ugeom.hpp>
+#include <ubit/core/geometry.h>
 #include <ubit/draw/graph.h>
 using namespace std;
 

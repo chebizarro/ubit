@@ -24,14 +24,14 @@
 
 #include <ubit/ubit_features.h>
 #include <iostream>
-#include <ubit/uon.hpp>
-#include <ubit/uboxgeom.hpp>
+#include <ubit/core/on.h>
+#include <ubit/core/boxgeom.h>
 #include <ubit/ui/background.h>
-#include <ubit/uboxes.hpp>
+#include <ubit/ui/boxes.h>
 #include <ubit/draw/color.h>  
-#include <ubit/upix.hpp>
-#include <ubit/ucall.hpp>
-#include <ubit/ui/uborder.h>
+#include <ubit/draw/pix.h>
+#include <ubit/core/call.h>
+#include <ubit/ui/border.h>
 #include <ubit/ui/interactors.h>
 #include <ubit/ui/listbox.h>
 #include <ubit/ui/scrollpane.h>

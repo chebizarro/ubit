@@ -25,7 +25,7 @@
 #include <vector>
 #include <iostream>
 #include <cmath>
-#include <ubit/ubit.hpp>
+#include <ubit/ubit.h>
 #include <ubit/ui/zoom-pane.h>
 #include <ubit/ui/control-menu.h>
 //#include <ubit/ueventImpl.hpp>  // TST

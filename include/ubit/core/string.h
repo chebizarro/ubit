@@ -24,7 +24,7 @@
 #ifndef UBIT_CORE_STRING_H_
 #define	UBIT_CORE_STRING_H_
 
-#include <ubit/core/data.h>
+#include <ubit/ubit.h>
 
 namespace ubit {
   

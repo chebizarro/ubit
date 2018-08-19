@@ -24,14 +24,14 @@
 #include <ubit/ubit_features.h>
 #include <iostream>
 #include <algorithm>
-#include <ubit/ucall.hpp>
-#include <ubit/usubwin.hpp>
+#include <ubit/core/call.h>
+#include <ubit/ui/subwin.h>
 #include <ubit/ui/uwinImpl.hpp>
 #include <ubit/ui/view.h>
 #include <ubit/draw/style.h>
 #include <ubit/core/application.h>
 #include <ubit/core/appimpl.h>
-#include <ubit/uon.hpp>
+#include <ubit/core/on.h>
 #include <ubit/draw/color.h>
 
 #include <ubit/udispX11.hpp>  // !!!@@@

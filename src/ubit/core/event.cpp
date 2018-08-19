@@ -23,11 +23,11 @@
 #include <ubit/ubit_features.h>
 #include <iostream>
 #include <ubit/ugl.hpp>
-#include <ubit/ucall.hpp>
-#include <ubit/uon.hpp>
+#include <ubit/core/call.h>
+#include <ubit/core/on.h>
 #include <ubit/ui/box.h>
 #include <ubit/core/string.h>
-#include <ubit/ukey.hpp>
+#include <ubit/draw/key.h>
 #include <ubit/ui/updatecontext.h>
 #include <ubit/ui/uviewImpl.hpp>
 #include <ubit/ui/uwinImpl.hpp>
@@ -36,8 +36,8 @@
 #include <ubit/core/appimpl.h>
 #include <ubit/ui/eventflow.h>
 #include <ubit/umsproto.hpp>
-#include <ubit/umessage.hpp>
-#include <ubit/uflag.hpp>
+#include <ubit/core/message.h>
+#include <ubit/core/flag.h>
 using namespace std;
 namespace ubit {
 

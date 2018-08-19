@@ -27,7 +27,7 @@
 #include <list>
 #include <ubit/core/element.h>
 #include <ubit/core/event.h>
-#include <ubit/ugeom.hpp>
+#include <ubit/core/geometry.h>
 
 namespace ubit {
   

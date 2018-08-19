@@ -27,7 +27,7 @@
 #include <iostream>
 #include <cstring>
 #include <ubit/core/file.h>
-#include <ubit/ucall.hpp>
+#include <ubit/core/call.h>
 #include <ubit/ui/updatecontext.h>
 #include <ubit/draw/graph.h>
 #include <ubit/ui/window.h>
@@ -35,7 +35,7 @@
 #include <ubit/draw/color.h>
 #include <ubit/core/string.h>
 #include <ubit/draw/image.h>
-#include <ubit/upix.hpp>
+#include <ubit/draw/pix.h>
 #include <ubit/core/event.h>
 #include <ubit/core/application.h>
 #include <ubit/ui/box.h>

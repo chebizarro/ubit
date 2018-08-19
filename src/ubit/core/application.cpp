@@ -31,15 +31,15 @@
 #include <unistd.h>       // darwin
 #include <sys/stat.h>
 
-#include <ubit/uon.hpp>
-#include <ubit/ucall.hpp>
-#include <ubit/udialogs.hpp>
+#include <ubit/core/on.h>
+#include <ubit/core/call.h>
+#include <ubit/ui/dialog.h>
 #include <ubit/ui/umenuImpl.hpp>
 #include <ubit/ui/uwinImpl.hpp>
 #include <ubit/core/appimpl.h>
 #include <ubit/ui/eventflow.h>
 #include <ubit/ui/update.h>
-#include <ubit/Selection.hpp>
+#include <ubit/ui/selection.h>
 #include <ubit/core/config.h>
 #include <ubit/core/string.h>
 #include <ubit/net/source.h>

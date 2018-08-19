@@ -23,11 +23,11 @@
 #include <ubit/ubit_features.h>
 #include <iostream>
 #include <ubit/draw/color.h>
-#include <ubit/uboxgeom.hpp>
+#include <ubit/core/boxgeom.h>
 #include <ubit/ui/box.h>
 #include <ubit/ui/updatecontext.h>
 #include <ubit/core/application.h>
-#include <ubit/uflag.hpp>
+#include <ubit/core/flag.h>
 using namespace std;
 namespace ubit {
 

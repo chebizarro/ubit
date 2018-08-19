@@ -29,8 +29,8 @@
 #include <ubit/core/node.h>
 #include <ubit/core/config.h>
 #include <ubit/draw/color.h>
-#include <ubit/upix.hpp>
-#include <ubit/ustyleparser.hpp>
+#include <ubit/draw/pix.h>
+#include <ubit/draw/styleparser.h>
 #include <ubit/core/application.h>
 #include <ubit/core/uclassImpl.hpp>  // for StyleSheet (bizarrement)
 #include <ubit/core/event.h>

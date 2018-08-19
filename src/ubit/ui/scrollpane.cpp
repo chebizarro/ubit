@@ -22,9 +22,9 @@
  */
 #include <ubit/ubit_features.h>
 #include <iostream>
-#include <ubit/uon.hpp>
-#include <ubit/ucall.hpp>
-#include <ubit/uboxgeom.hpp>
+#include <ubit/core/on.h>
+#include <ubit/core/call.h>
+#include <ubit/core/boxgeom.h>
 #include <ubit/ui/box.h>
 #include <ubit/ui/scrollbar.h>
 #include <ubit/ui/scrollpane.h>

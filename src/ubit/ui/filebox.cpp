@@ -30,7 +30,7 @@
 #include <unistd.h>  
 #include <dirent.h>
 #include <ctime>
-#include <ubit/ubit.hpp>
+#include <ubit/ubit.h>
 #include <ubit/core/file.h>
 #include <ubit/core/appimpl.h>
 using namespace std;

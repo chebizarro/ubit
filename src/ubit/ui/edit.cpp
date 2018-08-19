@@ -25,8 +25,8 @@
 #include <ctype.h>
 #include <iostream>
 #include <ubit/core/string.h>
-#include <ubit/ucall.hpp>
-#include <ubit/uon.hpp>
+#include <ubit/core/call.h>
+#include <ubit/core/on.h>
 #include <ubit/ui/box.h>
 #include <ubit/ui/updatecontext.h>
 #include <ubit/draw/graph.h>
@@ -36,7 +36,7 @@
 #include <ubit/ui/scrollpane.h>
 #include <ubit/ui/scrollbar.h>
 #include <ubit/Selection.hpp>
-#include <ubit/ukey.hpp>
+#include <ubit/draw/key.h>
 #include <ubit/core/application.h>
 using namespace std;
 

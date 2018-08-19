@@ -24,7 +24,7 @@
 #if UBIT_WITH_GLUT
 
 #include <ubit/ugl.hpp>
-#include <ubit/ukey.hpp>
+#include <ubit/draw/key.h>
 
 namespace ubit {
 

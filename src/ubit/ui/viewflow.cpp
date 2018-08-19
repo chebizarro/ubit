@@ -23,16 +23,16 @@
 #include <ubit/ubit_features.h>
 #include <iostream>
 #include <ubit/udefs.hpp>
-#include <ubit/ucond.hpp>
+#include <ubit/core/condition.h>
 #include <ubit/ui/textedit.h>
-#include <ubit/uboxgeom.hpp>
+#include <ubit/core/boxgeom.h>
 #include <ubit/ui/window.h>
 #include <ubit/ui/view.h>
 #include <ubit/ui/uviewImpl.hpp>
 #include <ubit/draw/graph.h>
 #include <ubit/ui/fontmetrics.h>
 #include <ubit/core/application.h>
-#include <ubit/uon.hpp>
+#include <ubit/core/on.h>
 using namespace std;
 namespace ubit {
 

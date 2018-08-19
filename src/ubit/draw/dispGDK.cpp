@@ -29,7 +29,7 @@
 #include <ubit/core/application.h>
 #include <ubit/uappliImpl.hpp>
 #include <ubit/ui/eventflow.h>
-#include <ubit/uon.hpp>
+#include <ubit/core/on.h>
 #include <ubit/ui/window.h>
 #include <ubit/ui/cursor.h>
 #include <ubit/umsproto.hpp>

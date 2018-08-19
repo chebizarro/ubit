@@ -27,7 +27,7 @@
 #include <cstdio>
 #include <cstdarg>
 
-#include <ubit/ui/display.h>
+#include <ubit/draw/display.h>
 #include <ubit/core/config.h>
 
 namespace ubit {

@@ -25,7 +25,7 @@
 #ifndef UBIT_UHARDIMA_HPP_
 #define	UBIT_UHARDIMA_HPP_
 #include <ubit/ubit_features.h>
-#include <ubit/ui/display.h>
+#include <ubit/draw/display.h>
 #if UBIT_WITH_GL
 #  include <ubit/ugl.hpp>
 #endif

@@ -29,7 +29,7 @@
 #include <vector>
 #include <ubit/udefs.hpp>
 #include <ubit/draw/color.h>
-#include <ubit/ugeom.hpp>
+#include <ubit/core/geometry.h>
 
 namespace ubit {
   

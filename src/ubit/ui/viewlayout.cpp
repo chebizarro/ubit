@@ -22,10 +22,10 @@
  */
 #include <ubit/ubit_features.h>
 #include <iostream>
-#include <ubit/ucond.hpp>
+#include <ubit/core/condition.h>
 #include <ubit/ui/updatecontext.h>
 #include <ubit/ui/box.h>
-#include <ubit/uboxgeom.hpp>
+#include <ubit/core/boxgeom.h>
 #include <ubit/ui/view.h>
 #include <ubit/ui/uviewImpl.hpp>
 #include <ubit/core/application.h>

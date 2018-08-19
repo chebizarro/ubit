@@ -24,7 +24,7 @@
 #include <ubit/ubit_features.h>
 #include <iostream>
 #include <ubit/core/string.h>
-#include <ubit/uclass.hpp>
+#include <ubit/core/class.h>
 #include <ubit/core/uclassImpl.hpp>
 #include <ubit/core/application.h>
 #include <ubit/core/appimpl.h>

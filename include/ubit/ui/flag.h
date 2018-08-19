@@ -26,7 +26,7 @@
 #define	_uflag_hpp_ 1
 
 #include <ubit/core/attribute.h>
-#include <ubit/ucond.hpp>
+#include <ubit/core/condition.h>
 
 namespace ubit {
   

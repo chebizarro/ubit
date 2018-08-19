@@ -24,8 +24,8 @@
 #include <ubit/ubit_features.h>
 #include <iostream>
 #include <cmath>
-#include <ubit/uon.hpp>
-#include <ubit/uboxgeom.hpp>
+#include <ubit/core/on.h>
+#include <ubit/core/boxgeom.h>
 #include <ubit/ui/uviewImpl.hpp>
 #include <ubit/ui/updatecontext.h>
 #include <ubit/core/application.h>

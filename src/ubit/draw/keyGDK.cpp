@@ -25,7 +25,7 @@
 
 #include <X11/keysym.h>  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 #include <ubit/nat/udispX11.hpp>
-#include <ubit/ukey.hpp>
+#include <ubit/draw/key.h>
 
 namespace ubit {
 

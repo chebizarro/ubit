@@ -22,7 +22,7 @@
  */
 #include <ubit/ubit_features.h>
 #include <iostream>
-#include <ubit/ubit.hpp>
+#include <ubit/ubit.h>
 using namespace std;
 
 namespace ubit {

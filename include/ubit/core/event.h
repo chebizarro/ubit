@@ -26,8 +26,8 @@
 #define	UBIT_CORE_EVENT_H_
 
 #include <ubit/ui/box.h>
-#include <ubit/ugeom.hpp>
-#include <ubit/ukey.hpp>
+#include <ubit/core/geometry.h>
+#include <ubit/draw/key.h>
 
 namespace ubit {
   

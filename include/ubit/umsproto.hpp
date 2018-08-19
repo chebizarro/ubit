@@ -17,7 +17,7 @@
 #ifndef _umsproto_hpp_
 #define	_umsproto_hpp_
 #include <ubit/udefs.hpp>
-#include <ubit/usocket.hpp>
+#include <ubit/net/socket.h>
 namespace ubit {
 
 /** Ubit Protocol for the UMS (Ubit Mouse/Message Server)

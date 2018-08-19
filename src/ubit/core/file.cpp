@@ -29,7 +29,7 @@
 #include <ubit/udefs.hpp>
 #include <ubit/core/file.h>
 #include <ubit/core/string.h>
-#include <ubit/upix.hpp>
+#include <ubit/draw/pix.h>
 #include <ubit/core/application.h>
 using namespace std;
 namespace ubit {

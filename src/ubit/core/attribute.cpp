@@ -26,8 +26,8 @@
 #include <ubit/udefs.hpp>
 #include <ubit/core/attribute.h>
 #include <ubit/ui/window.h>
-#include <ubit/uon.hpp>
-#include <ubit/ucall.hpp>
+#include <ubit/core/on.h>
+#include <ubit/core/call.h>
 #include <ubit/ui/updatecontext.h>
 #include <ubit/core/application.h>
 using namespace std;

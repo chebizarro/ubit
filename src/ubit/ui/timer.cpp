@@ -31,10 +31,10 @@
 #include <sys/stat.h>
 #include <ubit/core/application.h>
 #include <ubit/core/appimpl.h>
-#include <ubit/uon.hpp>
+#include <ubit/core/on.h>
 #include <ubit/ui/timer.h>
 #include <ubit/ugl.hpp>
-#include <ubit/ucall.hpp>
+#include <ubit/core/call.h>
 using namespace std;
 namespace ubit {
 

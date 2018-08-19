@@ -24,7 +24,7 @@
 #ifndef _upiemenu_hpp_
 #define _upiemenu_hpp_ 1
 
-#include <ubit/uboxgeom.hpp>
+#include <ubit/core/boxgeom.h>
 #include <ubit/ui/menu.h>
 
 namespace ubit {

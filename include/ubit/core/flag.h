@@ -26,7 +26,7 @@
 #define	UBIT_CORE_FLAG_H_
 
 #include <ubit/core/attribute.h>
-#include <ubit/ucond.hpp>
+#include <ubit/core/condition.h>
 
 namespace ubit {
   

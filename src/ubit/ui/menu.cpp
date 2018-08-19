@@ -25,9 +25,9 @@
 #include <iostream>
 #include <ubit/ui/menu.h>
 #include <ubit/ui/uwinImpl.hpp>
-#include <ubit/ucall.hpp>
+#include <ubit/core/call.h>
 #include <ubit/core/string.h>
-#include <ubit/uon.hpp>
+#include <ubit/core/on.h>
 #include <ubit/ui/box.h>
 #include <ubit/ui/window.h>
 #include <ubit/ui/view.h>
@@ -35,10 +35,10 @@
 #include <ubit/core/event.h>
 #include <ubit/draw/style.h>
 #include <ubit/draw/color.h>
-#include <ubit/ui/uborder.h>
+#include <ubit/ui/border.h>
 #include <ubit/draw/graph.h>
 #include <ubit/core/application.h>
-#include <ubit/uboxgeom.hpp>
+#include <ubit/core/boxgeom.h>
 #include <ubit/ui/eventflow.h>
 #include <ubit/ui/umenuImpl.hpp>
 #include <ubit/core/config.h>

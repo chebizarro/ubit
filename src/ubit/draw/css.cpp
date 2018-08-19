@@ -23,7 +23,7 @@
 
 #include <iostream>
 #include <ubit/ubit_features.h>
-#include <ubit/ubit.hpp>
+#include <ubit/ubit.h>
 #include <ubit/ui/updatecontext.h>
 #include <ubit/ucss.hpp>
 #include <ubit/core/dom.h>

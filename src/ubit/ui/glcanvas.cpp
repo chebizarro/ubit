@@ -26,14 +26,14 @@
 #include <iostream>
 #include <algorithm>
 #include <ubit/ugl.hpp>
-#include <ubit/ucall.hpp>
+#include <ubit/core/call.h>
 #include <ubit/ui/window.h>
 #include <ubit/ui/view.h>
 #include <ubit/core/event.h>
 #include <ubit/draw/style.h>
 #include <ubit/ui/timer.h>
 #include <ubit/core/application.h>
-#include <ubit/uon.hpp>
+#include <ubit/core/on.h>
 #include <ubit/draw/graph.h>
 #include <ubit/uglcontext.hpp>
 #include <ubit/ui/glcanvas.h>

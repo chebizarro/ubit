@@ -23,8 +23,8 @@
 
 #include <ubit/ubit_features.h>
 #include <iostream>
-#include <ubit/ucall.hpp>
-#include <ubit/ucond.hpp>
+#include <ubit/core/call.h>
+#include <ubit/core/condition.h>
 #include <ubit/core/element.h>
 #include <ubit/ui/updatecontext.h>
 #include <ubit/core/event.h>

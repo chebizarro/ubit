@@ -26,8 +26,8 @@
 #include <iostream>
 #include <cstdio>
 #include <ubit/core/application.h>
-#include <ubit/ucall.hpp>
-#include <ubit/uon.hpp>
+#include <ubit/core/call.h>
+#include <ubit/core/on.h>
 #include <ubit/core/string.h>
 #include <ubit/ui/cursor.h>
 #include <ubit/ui/window.h>

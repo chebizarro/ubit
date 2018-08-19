@@ -16,14 +16,14 @@
 
 #include <ubit/ubit_features.h>
 #include <iostream>
-#include <ubit/uon.hpp>
-#include <ubit/uboxgeom.hpp>
+#include <ubit/core/on.h>
+#include <ubit/core/boxgeom.h>
 #include <ubit/ui/cursor.h>
 #include <ubit/ui/updatecontext.h>
 #include <ubit/ui/window.h>
 #include <ubit/ui/scrollpane.h>
 #include <ubit/core/application.h>
-#include <ubit/ucall.hpp>
+#include <ubit/core/call.h>
 #include <ubit/ui/eventflow.h>
 #include <ubit/ui/cursor.h>
 using namespace std;

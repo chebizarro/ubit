@@ -31,7 +31,7 @@
 #include <ubit/ui/window.h>
 #include <ubit/ui/update.h>
 #include <ubit/draw/style.h>
-#include <ubit/umessage.hpp>
+#include <ubit/core/message.h>
 #include <ubit/ui/timer.h>
 
 namespace ubit {

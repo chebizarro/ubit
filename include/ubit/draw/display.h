@@ -30,7 +30,7 @@
 #include <ubit/udefs.hpp>
 #include <ubit/core/string.h>
 #include <ubit/core/element.h>
-#include <ubit/ugeom.hpp>
+#include <ubit/core/geometry.h>
 
 namespace ubit {
   

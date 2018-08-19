@@ -27,7 +27,7 @@ possible, and they will totally occypy
 
 #include <ubit/ubit_features.h>
 #include <ubit/uxpm.hpp>
-#include <ubit/upix.hpp>
+#include <ubit/draw/pix.h>
 
 namespace ubit {
 

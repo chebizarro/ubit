@@ -24,8 +24,8 @@
 #include <ubit/ubit_features.h>
 #include <ubit/udefs.hpp>
 #include <ubit/core/node.h>
-#include <ubit/ucall.hpp>
-#include <ubit/uargs.hpp>
+#include <ubit/core/call.h>
+#include <ubit/core/args.h>
 #include <ubit/core/string.h>
 #include <ubit/core/application.h>
 using namespace std;

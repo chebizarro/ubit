@@ -28,7 +28,7 @@
 #include <cstdio>
 #include <cmath>
 #include <ubit/udefs.hpp>
-#include <ubit/uon.hpp>
+#include <ubit/core/on.h>
 #include <ubit/draw/font.h>
 #include <ubit/ui/fontmetrics.h>
 #include <ubit/draw/image.h>

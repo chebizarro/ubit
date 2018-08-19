@@ -31,7 +31,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <ubit/udefs.hpp>
-#include <ubit/uon.hpp>
+#include <ubit/core/on.h>
 #include <ubit/core/file.h>
 #include <ubit/ui/updatecontext.h>
 #include <ubit/draw/graph.h>

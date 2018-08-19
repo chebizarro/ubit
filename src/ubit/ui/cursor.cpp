@@ -22,8 +22,8 @@
  */
 
 #include <ubit/ubit_features.h>
-#include <ubit/ucall.hpp>
-#include <ubit/uon.hpp>
+#include <ubit/core/call.h>
+#include <ubit/core/on.h>
 #include <ubit/ui/box.h>
 #include <ubit/draw/color.h>
 #include <ubit/ui/view.h>

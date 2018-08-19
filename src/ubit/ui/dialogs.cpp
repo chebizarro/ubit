@@ -23,14 +23,14 @@
 
 #include <iostream>
 #include <ubit/ubit_features.h>
-#include <ubit/ucall.hpp>
-#include <ubit/udialogs.hpp>
+#include <ubit/core/call.h>
+#include <ubit/ui/dialog.h>
 #include <ubit/ui/uwinImpl.hpp>
 #include <ubit/draw/style.h>
-#include <ubit/uboxgeom.hpp>
-#include <ubit/uboxes.hpp>
+#include <ubit/core/boxgeom.h>
+#include <ubit/ui/boxes.h>
 #include <ubit/ui/interactors.h>
-#include <ubit/upix.hpp>
+#include <ubit/draw/pix.h>
 #include <ubit/draw/color.h>
 using namespace std;
 namespace ubit {

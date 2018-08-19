@@ -23,10 +23,10 @@
 #include <iostream>
 #include <ubit/ubit_features.h>
 #include <ubit/ui/zoom-pane.h>
-#include <ubit/uboxgeom.hpp>
+#include <ubit/core/boxgeom.h>
 #include <ubit/ui/updatecontext.h>
 #include <ubit/draw/color.h>
-#include <ubit/upix.hpp>
+#include <ubit/draw/pix.h>
 
 using namespace std;
 

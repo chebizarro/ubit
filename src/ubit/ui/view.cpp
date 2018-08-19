@@ -23,7 +23,7 @@
 
 #include <ubit/ubit_features.h>
 #include <iostream>
-#include <ubit/ucond.hpp>
+#include <ubit/core/condition.h>
 #include <ubit/ui/box.h>
 #include <ubit/ui/view.h>
 #include <ubit/ui/uviewImpl.hpp>
@@ -33,7 +33,7 @@
 #include <ubit/core/appimpl.h>
 #include <ubit/draw/graph.h>
 #include <ubit/ui/fontmetrics.h>
-#include <ubit/uon.hpp>
+#include <ubit/core/on.h>
 #include <ubit/core/event.h>
 using namespace std;
 namespace ubit {

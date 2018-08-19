@@ -24,7 +24,7 @@
 #ifndef _uzoom_hpp_
 #define	_uzoom_hpp_ 1
 
-#include <ubit/ucond.hpp>
+#include <ubit/core/condition.h>
 #include <ubit/ui/box.h>
 #include <ubit/ui/control-menu.h>
 

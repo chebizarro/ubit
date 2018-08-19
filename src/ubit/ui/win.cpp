@@ -22,18 +22,18 @@
  */
 #include <ubit/ubit_features.h>
 #include <iostream>
-#include <ubit/uon.hpp>
-#include <ubit/uboxgeom.hpp>
+#include <ubit/core/on.h>
+#include <ubit/core/boxgeom.h>
 #include <ubit/ui/window.h>
-#include <ubit/uboxes.hpp>
-#include <ubit/udialogs.hpp>
+#include <ubit/ui/boxes.h>
+#include <ubit/ui/dialog.h>
 #include <ubit/ui/uwinImpl.hpp>
 #include <ubit/core/application.h>
 #include <ubit/core/appimpl.h>
 #include <ubit/ui/interactors.h>
 #include <ubit/ui/background.h>
 #include <ubit/draw/color.h>
-#include <ubit/ucall.hpp>
+#include <ubit/core/call.h>
 using namespace std;
 namespace ubit {
 

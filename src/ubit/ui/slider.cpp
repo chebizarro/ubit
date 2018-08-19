@@ -27,11 +27,11 @@
 #include <ubit/draw/style.h>
 #include <ubit/ui/update.h>
 #include <ubit/ui/updatecontext.h>
-#include <ubit/upix.hpp>
-#include <ubit/uon.hpp>
-#include <ubit/ucall.hpp>
+#include <ubit/draw/pix.h>
+#include <ubit/core/on.h>
+#include <ubit/core/call.h>
 #include <ubit/core/application.h>
-#include <ubit/uboxgeom.hpp>
+#include <ubit/core/boxgeom.h>
 using namespace std;
 
 namespace ubit {

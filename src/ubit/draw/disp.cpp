@@ -24,7 +24,7 @@
 #include <iostream>
 #include <algorithm>
 #include <ubit/ubit_features.h>
-#include <ubit/ucall.hpp>
+#include <ubit/core/call.h>
 #include <ubit/ui/window.h>
 #include <ubit/ui/eventflow.h>
 #include <ubit/ui/scrollbar.h>
@@ -35,7 +35,7 @@
 #include <ubit/ui/cursor.h>
 #include <ubit/draw/font.h>
 #include <ubit/draw/ufontImpl.hpp>
-#include <ubit/uon.hpp>
+#include <ubit/core/on.h>
 #include <ubit/ui/timer.h>
 #include <ubit/umsproto.hpp>
 #include <ubit/udispX11.hpp>

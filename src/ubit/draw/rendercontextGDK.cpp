@@ -28,7 +28,7 @@
 #include <ubit/udefs.hpp>
 #include <ubit/draw/color.h>
 #include <ubit/draw/image.h>
-#include <ubit/upix.hpp>
+#include <ubit/draw/pix.h>
 #include <ubit/nat/udispGDK.hpp>
 #include <ubit/nat/uhardima.hpp>
 #include <ubit/draw/graph.h>

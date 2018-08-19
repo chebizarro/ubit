@@ -25,7 +25,7 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
-#include <ubit/ubit.hpp>
+#include <ubit/ubit.h>
 #include <ubit/ugl.hpp>
 #include <ubit/core/event.h>
 #include <ubit/ui/update.h>

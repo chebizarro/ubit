@@ -26,7 +26,7 @@
 #include <clocale>
 #include <ctype.h>
 #include <string.h>
-#include <ubit/ustyleparser.hpp>
+#include <ubit/draw/styleparser.h>
 #include <ubit/core/string.h>
 #include <ubit/core/application.h>
 using namespace std;

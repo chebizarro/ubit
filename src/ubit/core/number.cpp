@@ -23,8 +23,8 @@
 #include <ubit/ubit_features.h>
 #include <cstdlib>
 #include <cstdio>
-#include <ubit/ucall.hpp>
-#include <ubit/uon.hpp>
+#include <ubit/core/call.h>
+#include <ubit/core/on.h>
 #include <ubit/core/string.h>
 #include <ubit/core/event.h>
 #include <ubit/core/number.h>

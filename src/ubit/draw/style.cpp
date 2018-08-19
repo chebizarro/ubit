@@ -23,17 +23,17 @@
 
 #include <iostream>
 #include <ubit/ubit_features.h>
-#include <ubit/ucall.hpp>
+#include <ubit/core/call.h>
 #include <ubit/ui/box.h>
-#include <ubit/uboxgeom.hpp>
+#include <ubit/core/boxgeom.h>
 #include <ubit/draw/font.h>
 #include <ubit/draw/color.h>
-#include <ubit/ui/uborder.h>
+#include <ubit/ui/border.h>
 #include <ubit/draw/style.h>
 #include <ubit/ui/view.h>
 #include <ubit/core/application.h>
 #include <ubit/core/appimpl.h>
-#include <ubit/uon.hpp>
+#include <ubit/core/on.h>
 using namespace std;
 namespace ubit {
 

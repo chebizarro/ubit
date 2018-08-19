@@ -31,32 +31,32 @@
 #include <ubit/core/object.h>
 #include <ubit/core/node.h>
 #include <ubit/core/length.h>
-#include <ubit/ugeom.hpp>
+#include <ubit/core/geometry.h>
 #include <ubit/core/number.h>
 
 #include <ubit/core/attribute.h>
-#include <ubit/uboxgeom.hpp>
-#include <ubit/ui/uborder.h>
+#include <ubit/core/boxgeom.h>
+#include <ubit/ui/border.h>
 #include <ubit/ui/background.h>
 #include <ubit/draw/color.h>
 #include <ubit/ui/cursor.h>
 #include <ubit/ui/textedit.h>
 #include <ubit/draw/font.h>
 
-#include <ubit/uon.hpp>
-#include <ubit/ucall.hpp>
+#include <ubit/core/on.h>
+#include <ubit/core/call.h>
 
 #include <ubit/core/data.h>
 #include <ubit/core/string.h>
-#include <ubit/usymbol.hpp>
+#include <ubit/ui/symbol.h>
 #include <ubit/draw/image.h>
-#include <ubit/upix.hpp>
+#include <ubit/draw/pix.h>
 
 #include <ubit/core/element.h>
 #include <ubit/ui/box.h>
-#include <ubit/uboxes.hpp>
+#include <ubit/ui/boxes.h>
 #include <ubit/ui/window.h>
-#include <ubit/udialogs.hpp>
+#include <ubit/ui/dialog.h>
 #include <ubit/ui/menu.h>
 #include <ubit/ui/control-menu.h>
 #include <ubit/ui/interactors.h>
@@ -75,11 +75,11 @@
 #include <ubit/ui/3d.h>
 
 #include <ubit/core/application.h>
-#include <ubit/ui/display.h>
+#include <ubit/draw/display.h>
 #include <ubit/core/event.h>
-#include <ubit/ukey.hpp>
+#include <ubit/draw/key.h>
 #include <ubit/ui/view.h>
-#include <ubit/ui/fontmetrics.h>
+#include <ubit/draw/fontmetrics.h>
 #include <ubit/ui/update.h>
 #include <ubit/ui/updatecontext.h>
 #include <ubit/draw/graph.h>

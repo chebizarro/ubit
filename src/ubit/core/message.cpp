@@ -25,13 +25,13 @@
 #include <algorithm>
 #include <cstdlib>
 #include <cstdio>
-#include <ubit/uon.hpp>
-#include <ubit/ucall.hpp>
+#include <ubit/core/on.h>
+#include <ubit/core/call.h>
 #include <ubit/ui/box.h>
 #include <ubit/core/event.h>
 #include <ubit/core/application.h>
 #include <ubit/core/appimpl.h>
-#include <ubit/umessage.hpp>
+#include <ubit/core/message.h>
 #include <ubit/umservice.hpp>
 #include <ubit/umsproto.hpp>
 #include <ubit/udispX11.hpp>

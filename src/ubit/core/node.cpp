@@ -23,8 +23,8 @@
 #include <ubit/ubit_features.h>
 #include <iostream>
 #include <ubit/core/node.h>
-#include <ubit/uon.hpp>
-#include <ubit/ucall.hpp>
+#include <ubit/core/on.h>
+#include <ubit/core/call.h>
 #include <ubit/core/string.h>
 #include <ubit/ui/box.h>
 #include <ubit/ui/view.h>

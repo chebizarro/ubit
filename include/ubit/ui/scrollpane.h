@@ -24,7 +24,7 @@
 #ifndef _uscrollpane_hpp_
 #define	_uscrollpane_hpp_ 1
 
-#include <ubit/ui/uborder.h>
+#include <ubit/ui/border.h>
 #include <ubit/ui/view.h>
 
 namespace ubit {

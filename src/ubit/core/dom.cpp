@@ -25,7 +25,7 @@
 #include <cstdio>
 
 #include <ubit/ubit_features.h>
-#include <ubit/ubit.hpp>
+#include <ubit/ubit.h>
 #include <ubit/core/dom.h>
 #include <ubit/core/xmlgrammar.h>
 #include <ubit/core/xmlparser.h>

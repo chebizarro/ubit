@@ -24,8 +24,8 @@
 #ifndef _uctlmenu_hpp_
 #define _uctlmenu_hpp_ 1
 
-#include <ubit/upiemenu.hpp>
-#include <ubit/ucall.hpp>
+#include <ubit/ui/piemenu.h>
+#include <ubit/core/call.h>
 
 namespace ubit {
   

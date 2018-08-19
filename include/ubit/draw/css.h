@@ -27,7 +27,7 @@
 #include <map>
 #include <ubit/udefs.hpp>
 #include <ubit/draw/style.h>
-#include <ubit/ustyleparser.hpp>
+#include <ubit/draw/styleparser.h>
 #include <ubit/core/dom.h>
 
 namespace ubit {

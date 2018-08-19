@@ -24,14 +24,14 @@
 #include <ubit/ubit_features.h>
 #include <iostream>
 #include <ubit/ui/box.h>
-#include <ubit/ucall.hpp>
-#include <ubit/uon.hpp>
+#include <ubit/core/call.h>
+#include <ubit/core/on.h>
 #include <ubit/ui/box.h>
 #include <ubit/core/event.h>
 #include <ubit/ui/choice.h>
 #include <ubit/ui/update.h>
 #include <ubit/ui/eventflow.h>
-#include <ubit/ucall.hpp>
+#include <ubit/core/call.h>
 using namespace std;
 
 namespace ubit {

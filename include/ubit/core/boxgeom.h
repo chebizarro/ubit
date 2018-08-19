@@ -27,7 +27,7 @@
 #include <ubit/core/attribute.h>
 #include <ubit/core/length.h>
 
-#include <ubit/ugeom.hpp>
+#include <ubit/core/geometry.h>
 
 namespace ubit {
   

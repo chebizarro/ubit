@@ -23,13 +23,13 @@
 
 #include <iostream>
 #include <ubit/ubit_features.h>
-#include <ubit/usymbol.hpp>
+#include <ubit/ui/symbol.h>
 #include <ubit/ui/fontmetrics.h>
 #include <ubit/ui/updatecontext.h>
 #include <ubit/draw/graph.h>
 #include <ubit/ui/view.h>
 #include <ubit/ui/window.h>
-#include <ubit/uon.hpp>
+#include <ubit/core/on.h>
 using namespace std;
 
 namespace ubit {

@@ -26,9 +26,9 @@
 
 #include <map>
 #include <ubit/core/attribute.h>
-#include <ubit/uelem.hpp>
+#include <ubit/core/element.h>
 #include <ubit/ui/box.h>
-#include <ubit/uclass.hpp>
+#include <ubit/core/class.h>
 
 namespace ubit {
   

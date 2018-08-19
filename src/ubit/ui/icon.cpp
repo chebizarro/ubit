@@ -23,7 +23,7 @@
 #include <ubit/ubit_features.h>
 #include <iostream>
 #include <sys/stat.h>
-#include <ubit/ubit.hpp>
+#include <ubit/ubit.h>
 #include <ubit/core/file.h>
 #include <ubit/uicon.hpp>
 using namespace std;

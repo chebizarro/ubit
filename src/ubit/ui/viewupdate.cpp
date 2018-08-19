@@ -22,9 +22,9 @@
  */
 #include <ubit/ubit_features.h>
 #include <iostream>
-#include <ubit/uon.hpp>
+#include <ubit/core/on.h>
 #include <ubit/ui/updatecontext.h>
-#include <ubit/uboxgeom.hpp>
+#include <ubit/core/boxgeom.h>
 #include <ubit/ui/background.h>
 #include <ubit/ui/textedit.h>
 #include <ubit/draw/image.h>
@@ -34,7 +34,7 @@
 #include <ubit/ui/table.h>
 #include <ubit/ui/scrollpane.h>
 #include <ubit/core/application.h>
-#include <ubit/ui/uborder.h>
+#include <ubit/ui/border.h>
 using namespace std;
 namespace ubit {
 

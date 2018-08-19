@@ -16,6 +16,8 @@
 #ifndef UBIT_CORE_CHILD_H_
 #define	UBIT_CORE_CHILD_H_
 
+#include <ubit/ubit.h>
+
 namespace ubit {
 
 /**

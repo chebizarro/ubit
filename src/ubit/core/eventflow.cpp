@@ -23,7 +23,7 @@
 
 #include <ubit/ubit_features.h>
 #include <algorithm>
-#include <ubit/uboxgeom.hpp>
+#include <ubit/core/boxgeom.h>
 #include <ubit/ui/window.h>
 #include <ubit/ui/menu.h>
 #include <ubit/ui/umenuImpl.hpp>
@@ -33,8 +33,8 @@
 #include <ubit/core/event.h>
 #include <ubit/ui/eventflow.h>
 #include <ubit/Selection.hpp>
-#include <ubit/upix.hpp>
-#include <ubit/uon.hpp>
+#include <ubit/draw/pix.h>
+#include <ubit/core/on.h>
 #include <ubit/ui/timer.h>
 #include <ubit/draw/color.h>
 #include <ubit/ui/background.h>

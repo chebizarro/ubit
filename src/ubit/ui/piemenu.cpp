@@ -25,7 +25,7 @@
 #include <vector>
 #include <iostream>
 #include <cmath>
-#include <ubit/ubit.hpp>
+#include <ubit/ubit.h>
 using namespace std;
 
 namespace ubit {

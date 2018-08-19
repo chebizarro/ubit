@@ -26,7 +26,7 @@
 
 #include <vector>
 #include <ubit/ui/box.h>
-#include <ubit/uboxes.hpp>
+#include <ubit/ui/boxes.h>
 
 namespace ubit {
   

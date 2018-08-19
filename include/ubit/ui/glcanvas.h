@@ -27,7 +27,7 @@
 #include <ubit/udefs.hpp>
 #if UBIT_WITH_GL
 
-# include <ubit/usubwin.hpp>
+# include <ubit/ui/subwin.h>
 # include <ubit/ugl.hpp>
 
 namespace ubit {

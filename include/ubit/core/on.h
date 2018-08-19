@@ -24,7 +24,7 @@
 #ifndef _uon_hpp_
 #define	_uon_hpp_ 1
 
-#include <ubit/ucond.hpp>
+#include <ubit/core/condition.h>
 
 namespace ubit {
   

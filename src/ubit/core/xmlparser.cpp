@@ -23,7 +23,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <ubit/core/application.h>
-#include <ubit/ustyleparser.hpp>
+#include <ubit/draw/styleparser.h>
 #include <ubit/core/dom.h>
 #include <ubit/core/xmlparser.h>
 #include <ubit/core/xmlgrammar.h>

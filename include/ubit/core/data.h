@@ -25,7 +25,7 @@
 #ifndef UBIT_CORE_DATA_H_
 #define	UBIT_CORE_DATA_H_
 
-#include <ubit/core/node.h>
+#include <ubit/ubit.h>
 
 namespace ubit {
 

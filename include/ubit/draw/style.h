@@ -25,10 +25,10 @@
 #define	UBIT_DRAW_STYLE_H_
 
 #include <ubit/udefs.hpp>
-#include <ubit/ui/uborder.h>
+#include <ubit/ui/border.h>
 #include <ubit/draw/font.h>
-#include <ubit/ugeom.hpp>
-#include <ubit/uon.hpp>
+#include <ubit/core/geometry.h>
+#include <ubit/core/on.h>
 
 namespace ubit {
   

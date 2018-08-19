@@ -22,16 +22,16 @@
  */
 #include <ubit/ubit_features.h>
 #include <iostream>
-#include <ubit/uboxgeom.hpp>
+#include <ubit/core/boxgeom.h>
 #include <ubit/ui/interactors.h>
 #include <ubit/ui/palette.h>
 #include <ubit/draw/color.h>
 #include <ubit/draw/font.h>
-#include <ubit/uon.hpp>
-#include <ubit/ucall.hpp>
+#include <ubit/core/on.h>
+#include <ubit/core/call.h>
 #include <ubit/core/event.h>
-#include <ubit/ui/uborder.h>
-#include <ubit/usymbol.hpp>
+#include <ubit/ui/border.h>
+#include <ubit/ui/symbol.h>
 #include <ubit/draw/style.h>
 #include <ubit/ui/background.h>
 using namespace std;

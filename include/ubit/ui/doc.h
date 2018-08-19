@@ -28,7 +28,7 @@
 #include <map>
 #include <ubit/udefs.hpp>
 #include <ubit/core/string.h>
-#include <ubit/uboxes.hpp>
+#include <ubit/ui/boxes.h>
 
 namespace ubit {
   

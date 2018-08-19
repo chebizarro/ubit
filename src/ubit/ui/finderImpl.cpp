@@ -29,23 +29,23 @@
 #include <sys/stat.h>
 #include <ubit/udefs.hpp>
 #include <ubit/core/file.h>
-#include <ubit/uon.hpp>
-#include <ubit/upix.hpp>
-#include <ubit/usymbol.hpp>
-#include <ubit/ui/uborder.h>
+#include <ubit/core/on.h>
+#include <ubit/draw/pix.h>
+#include <ubit/ui/symbol.h>
+#include <ubit/ui/border.h>
 #include <ubit/ui/box.h>
-#include <ubit/uboxgeom.hpp>
+#include <ubit/core/boxgeom.h>
 #include <ubit/ui/timer.h>
 #include <ubit/ui/listbox.h>
 #include <ubit/ui/scrollpane.h>
 #include <ubit/core/application.h>
 #include <ubit/umservice.hpp>
 #include <ubit/umsproto.hpp>
-#include <ubit/umessage.hpp>
-#include <ubit/udialogs.hpp>
+#include <ubit/core/message.h>
+#include <ubit/ui/dialog.h>
 #include <ubit/ufinder.hpp>
 #include <ubit/ui/ufinderImpl.hpp>
-#include <ubit/ucall.hpp>
+#include <ubit/core/call.h>
 using namespace std;
 namespace ubit {
 

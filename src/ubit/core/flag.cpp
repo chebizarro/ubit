@@ -15,7 +15,7 @@
 
 #include <ubit/ubit_features.h>
 #include <iostream>
-#include <ubit/uflag.hpp>
+#include <ubit/core/flag.h>
 #include <ubit/ui/updatecontext.h>
 using namespace std;
 

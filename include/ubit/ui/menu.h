@@ -24,7 +24,7 @@
 #ifndef _umenu_hpp_
 #define	_umenu_hpp_ 1
 
-#include <ubit/uboxes.hpp>
+#include <ubit/ui/boxes.h>
 #include <ubit/ui/window.h>
 
 namespace ubit {
