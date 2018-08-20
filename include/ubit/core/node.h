@@ -110,11 +110,11 @@ public:
   
   ParentIter pbegin() const {return parents().begin();}
   /**< returns an iterator to the beginning of the list of direct parents.
-    * UParentIter is a parent iterator. It is compatible with standard STL algorithms. 
+    * ParentIter is a parent iterator. It is compatible with standard STL algorithms. 
     * This example prints the class name of the direct parents of an object :
     * <pre>
     *    Node* obj = ...;
-    *    for (UParentIter p = obj->pbegin(); p != obj->pend(); ++p)
+    *    for (ParentIter p = obj->pbegin(); p != obj->pend(); ++p)
     *        cout << (*p)->getClassName() << endl;
     * </pre>
     * @see also: parents(), abegin(), aend().
@@ -143,7 +143,7 @@ public:
   
   template <class CC>
     CC* findParent() const {
-      for (UParentIter p = pbegin(); p != pend(); ++p) {
+      for (ParentIter p = pbegin(); p != pend(); ++p) {
         if (dynamic_cast<CC*>(*p)) {return (CC*)*p;}
         else return ((Node*)(*p))->findParent<CC>();
       }

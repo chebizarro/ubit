@@ -1373,26 +1373,26 @@ const char *UXpm::bigQuestion[] = {
  };
  */
 
-UPix UPix::bigFolder(UXpm::bigFolder,  UObject::UCONST);
-UPix UPix::bigDoc(UXpm::bigDoc,  UObject::UCONST);
-UPix UPix::bigText(UXpm::bigText,  UObject::UCONST);
-UPix UPix::bigIma(UXpm::bigIma,  UObject::UCONST);
-UPix UPix::bigUp(UXpm::bigUp,  UObject::UCONST);
-UPix UPix::bigDown(UXpm::bigDown,  UObject::UCONST);
-UPix UPix::bigLeft(UXpm::bigLeft,  UObject::UCONST);
-UPix UPix::bigRight(UXpm::bigRight,  UObject::UCONST);
+UPix UPix::bigFolder(UXpm::bigFolder,  Object::UCONST);
+UPix UPix::bigDoc(UXpm::bigDoc,  Object::UCONST);
+UPix UPix::bigText(UXpm::bigText,  Object::UCONST);
+UPix UPix::bigIma(UXpm::bigIma,  Object::UCONST);
+UPix UPix::bigUp(UXpm::bigUp,  Object::UCONST);
+UPix UPix::bigDown(UXpm::bigDown,  Object::UCONST);
+UPix UPix::bigLeft(UXpm::bigLeft,  Object::UCONST);
+UPix UPix::bigRight(UXpm::bigRight,  Object::UCONST);
 
-//UPix UPix::edit(UXpm::edit,  UObject::UCONST);
-//UPix UPix::colors(UXpm::colors,  UObject::UCONST);
-//UPix UPix::windows(UXpm::windows,  UObject::UCONST);
+//UPix UPix::edit(UXpm::edit,  Object::UCONST);
+//UPix UPix::colors(UXpm::colors,  Object::UCONST);
+//UPix UPix::windows(UXpm::windows,  Object::UCONST);
 //UPix UPix::clock(UXpm::clock, UMode::UCONST);
 //UPix UPix::bomb(UXpm::bomb, UMode::UCONST);
-//UPix UPix::book(UXpm::book, UObject::UCONST);  
-//UPix UPix::eyes(UXpm::eyes,  UObject::UCONST);
-//UPix UPix::leftarrow(UXpm::leftarrow,  UObject::UCONST);
-//UPix UPix::rightarrow(UXpm::rightarrow,  UObject::UCONST);
-//UPix UPix::uparrow(UXpm::uparrow,  UObject::UCONST);
-//UPix UPix::downarrow(UXpm::downarrow,  UObject::UCONST);
+//UPix UPix::book(UXpm::book, Object::UCONST);  
+//UPix UPix::eyes(UXpm::eyes,  Object::UCONST);
+//UPix UPix::leftarrow(UXpm::leftarrow,  Object::UCONST);
+//UPix UPix::rightarrow(UXpm::rightarrow,  Object::UCONST);
+//UPix UPix::uparrow(UXpm::uparrow,  Object::UCONST);
+//UPix UPix::downarrow(UXpm::downarrow,  Object::UCONST);
 /*
  UPix UPix::ellipsis(UXpm::ellipsis,  UCONST);
  UPix UPix::cross(UXpm::cross,  UCONST);

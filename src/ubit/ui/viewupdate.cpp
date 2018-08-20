@@ -796,7 +796,7 @@ void View::initLayoutH(UViewUpdateImpl& vd, const UpdateContext& ctx, const Rect
   }
   
   else switch (ctx.halign) {
-  case Halign::LEFT:
+  case HAlign::LEFT:
   default:   // cas d'erreur: comme LEFT
     // NB: default se produit en particulier qd il y a une deconnade entre
     //  doLayout et doUpdate et que flexCount==0 avec View::HFLEX
@@ -805,16 +805,16 @@ void View::initLayoutH(UViewUpdateImpl& vd, const UpdateContext& ctx, const Rect
     vd.chr.x = vd.x + vd.view->edit_shift;  // edit_shift scrolle le texte edite
     break;
     
-  case Halign::CENTER:
+  case HAlign::CENTER:
     // ajouter espace restant a vd.x
     vd.chr.x = vd.x + (vd.width-vd.view->chwidth)/2 + vd.view->edit_shift;
 
-    // si trop grand alors mettre en Halign::LEFT pour que le debut
+    // si trop grand alors mettre en HAlign::LEFT pour que le debut
     // apparaisse et ne soit pas clipe (en part quand il y a du texte)
     if (vd.chr.x < vd.x && vd.view->edit_shift == 0) vd.chr.x = vd.x;
     break;
 
-  case Halign::RIGHT:     
+  case HAlign::RIGHT:     
     // ajouter espace restant a vd.x
     // reste centre (et clipe) si trop grand (peut deborder!)
     // a revoir: cf CENTER !!!
@@ -838,21 +838,21 @@ void View::initLayoutV(UViewUpdateImpl& vd, const UpdateContext& ctx, const Rect
   }
   
   else switch (ctx.valign) {
-  case Valign::TOP:
+  case VAlign::TOP:
   default:  // cas d'erreur: comme TOP
     vd.chr.y = vd.y;
     break;
 	
-  case Valign::CENTER:
+  case VAlign::CENTER:
     // ajouter espace restant a vd.y
     vd.chr.y = vd.y + (vd.height-vd.view->chheight)/2;
     
-    // si trop grand alors mettre en Halign::TOP pour que le haut
+    // si trop grand alors mettre en HAlign::TOP pour que le haut
     // apparaisse et ne soit pas clipe (en part quand il y a du texte)
     if (vd.chr.y < vd.y) vd.chr.y = vd.y;
     break;
 
-  case Valign::BOTTOM:
+  case VAlign::BOTTOM:
     // ajouter espace restant a vd.y
     // reste centre (et clipe) si trop grand (peut deborder!)
     // a revoir: cf CENTER !!!
@@ -875,33 +875,33 @@ void View::initLayoutViewport(UViewUpdateImpl& vd, const UpdateContext& ctx, con
 void View::layoutH(UViewUpdateImpl& vd, const UpdateContext& ctx, ChildIter link,
                     const Dimension& dim, Element* chgrp, View* chview) {
   char valign = ctx.valign;
-  if (valign == Valign::FLEX) {
+  if (valign == VAlign::FLEX) {
     // pour les Datas FLEX est identique a CENTER
-    if (!chview) valign = Valign::CENTER;
+    if (!chview) valign = VAlign::CENTER;
     // pour les CANT_RESIZE_HEIGHT, FLEX est identique a TOP
-    else if (!chgrp->isHeightResizable()) valign = Valign::TOP;
+    else if (!chgrp->isHeightResizable()) valign = VAlign::TOP;
   }
   
   switch (valign) {
-  case Valign::TOP:
+  case VAlign::TOP:
     vd.chr.y = vd.y;
     vd.chr.height = dim.height;
     break;
 
-  case Valign::FLEX:
+  case VAlign::FLEX:
     vd.chr.y = vd.y;
     vd.chr.height = vd.height;
     break;
     
-  case Valign::CENTER:
+  case VAlign::CENTER:
     vd.chr.y = vd.y + (vd.height-dim.height)/2;    // ajouter moitie espace restant a vd.y
     vd.chr.height = dim.height;
-    // si trop grand alors faire comme Halign::TOP pour que le haut
+    // si trop grand alors faire comme HAlign::TOP pour que le haut
     // apparaisse et ne soit pas clipe (en part quand il y a du texte)
     if (vd.chr.y < vd.y) vd.chr.y = vd.y;
     break;
 
-  case Valign::BOTTOM:
+  case VAlign::BOTTOM:
     vd.chr.y = vd.y + (vd.height-dim.height);    // ajouter espace restant a vd.y
     vd.chr.height = dim.height;
     break;
@@ -909,7 +909,7 @@ void View::layoutH(UViewUpdateImpl& vd, const UpdateContext& ctx, ChildIter link
   
   // flexible horizontal object  ==>  add flexible width space
   // !!==> sauf pour les Datas qui sont jamais flexibles
-  if (chview && ctx.halign == Halign::FLEX && chgrp->isWidthResizable())
+  if (chview && ctx.halign == HAlign::FLEX && chgrp->isWidthResizable())
     vd.chr.width = dim.width + vd.hflex_space;
   else vd.chr.width = dim.width;
 }
@@ -918,33 +918,33 @@ void View::layoutH(UViewUpdateImpl& vd, const UpdateContext& ctx, ChildIter link
 void View::layoutV(UViewUpdateImpl& vd, const UpdateContext& ctx, ChildIter link,
                     const Dimension& dim, Element* chgrp, View* chview) {
   char halign = ctx.halign;
-  if (halign == Halign::FLEX) {
+  if (halign == HAlign::FLEX) {
     // pour les Datas, FLEX est identique a CENTER
-    if (!chview) halign = Halign::CENTER;
+    if (!chview) halign = HAlign::CENTER;
     // pour CANT_RESIZE_WIDTH, FLEX est identique a LEFT (pas CENTER, incohrent ds qq cas)
-    else if (!chgrp->isWidthResizable()) halign = Halign::LEFT;
+    else if (!chgrp->isWidthResizable()) halign = HAlign::LEFT;
   }
 
   switch (halign) {
-  case Halign::LEFT:
+  case HAlign::LEFT:
     vd.chr.x = vd.x + vd.view->edit_shift;
     vd.chr.width = dim.width;
     break;
     
-  case Halign::FLEX:
+  case HAlign::FLEX:
     vd.chr.x = vd.x;
     vd.chr.width = vd.width;
     break;
     
-  case Halign::CENTER:
+  case HAlign::CENTER:
     vd.chr.x = vd.x + (vd.width-dim.width)/2;    // ajouter moitie espace restant a vd.x
     vd.chr.width = dim.width;
-    // si trop grand alors faire comme Halign::LEFT pour que le debut
+    // si trop grand alors faire comme HAlign::LEFT pour que le debut
     // apparaisse et ne soit pas clipe (en part quand il y a du texte)
     if (vd.chr.x < vd.x && vd.view->edit_shift == 0) vd.chr.x = vd.x;
     break;
     
-  case Halign::RIGHT:
+  case HAlign::RIGHT:
     vd.chr.x = vd.x + (vd.width-dim.width);    // ajouter espace restant a vd.x
     vd.chr.width = dim.width;
     break; 
@@ -952,7 +952,7 @@ void View::layoutV(UViewUpdateImpl& vd, const UpdateContext& ctx, ChildIter link
   
   // flexible vertical object  ==>  add flexible height space
   // !!==> sauf pour les Datas qui sont jamais flexibles
-  if (chview && ctx.valign == Valign::FLEX && chgrp->isHeightResizable()) 
+  if (chview && ctx.valign == VAlign::FLEX && chgrp->isHeightResizable()) 
     vd.chr.height = dim.height + vd.vflex_space;
   else vd.chr.height = dim.height;
 }
@@ -970,10 +970,10 @@ void View::layoutViewport(UViewUpdateImpl& vd, const UpdateContext& ctx,
     Application::internalError("View::doUpdate","null UPaneView"); //fatal
     return;
   }
-  Scrollpane* pane = null;
-  UCardbox* card = null;
-  if (!(pane = dynamic_cast<Scrollpane*>(ctx.obj))
-      && !(card =  dynamic_cast<UCardbox*>(ctx.obj))) {
+  ScrollPane* pane = null;
+  CardBox* card = null;
+  if (!(pane = dynamic_cast<ScrollPane*>(ctx.obj))
+      && !(card =  dynamic_cast<CardBox*>(ctx.obj))) {
     Application::internalError("View::doUpdate","null UPane"); //fatal
     return;
   }
@@ -1017,18 +1017,18 @@ static void layoutBorder(UViewUpdateImpl& vd, const UpdateContext& ctx,
   // !!!!!!  A COMPLETER !!! prendre en compte les Units du padding !!!!!!!
 
   switch (ctx.valign) {
-  case Valign::TOP:
+  case VAlign::TOP:
     vd.chr.y = vd.y;
     vd.chr.height = frame.top.val;
     break;
 	    
-  case Valign::BOTTOM:
+  case VAlign::BOTTOM:
     vd.chr.y = vd.y + vd.height - frame.bottom.val;
     vd.chr.height = frame.bottom.val;
     break;
 	    
-  case Valign::CENTER: // ne s'adapte PAS a la taille du Pane
-  case Valign::FLEX: // Middle adaptatif: s'adapte a la taille du Pane
+  case VAlign::CENTER: // ne s'adapte PAS a la taille du Pane
+  case VAlign::FLEX: // Middle adaptatif: s'adapte a la taille du Pane
     vd.chr.y = vd.y + frame.top.val;
 	    
 #if EXX
@@ -1045,18 +1045,18 @@ static void layoutBorder(UViewUpdateImpl& vd, const UpdateContext& ctx,
   }
 	  
   switch(ctx.halign) {
-  case Halign::LEFT:
+  case HAlign::LEFT:
     vd.chr.x = vd.x;
     vd.chr.width = frame.left.val;
     break;
     
-  case Halign::RIGHT:
+  case HAlign::RIGHT:
     vd.chr.x = vd.x + vd.width - frame.right.val;
     vd.chr.width = frame.right.val;
     break;
 	    
-  case Halign::CENTER: // ne s'adapte PAS a la taille du Pane
-  case Halign::FLEX: // Center adaptatif: s'adapte a la taille du Pane
+  case HAlign::CENTER: // ne s'adapte PAS a la taille du Pane
+  case HAlign::FLEX: // Center adaptatif: s'adapte a la taille du Pane
     vd.chr.x = vd.x + frame.left.val;
 
 #if EXX

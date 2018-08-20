@@ -25,6 +25,8 @@
 #define	_uclassImpl_hpp_ 1
 
 #include <map>
+#include <memory>
+
 #include <ubit/core/attribute.h>
 #include <ubit/core/element.h>
 #include <ubit/ui/box.h>
@@ -38,7 +40,7 @@ namespace ubit {
     struct MetaClass : public Class {
       MetaClass(const String& classname) : Class(classname) {}
       
-      virtual bool isInstance(UObject& obj) const {
+      virtual bool isInstance(Object& obj) const {
         return dynamic_cast<UDefaultAttribute*>(&obj);  // && test name ?
       }
       virtual UDefaultAttribute* newInstance() const {
@@ -54,7 +56,7 @@ namespace ubit {
     virtual const Class& getClass() const {return cid;} 
     
   private:
-    const Class& cid;  // !!ATT aux destructions, un unique_ptr<> serait preferable !!
+    const Class& cid;  // !!ATT aux destructions, un std::unique_ptr<> serait preferable !!
   };
   
     
@@ -63,7 +65,7 @@ namespace ubit {
     struct MetaClass : public Class {
       MetaClass(const String& classname) : Class(classname) {}
       
-      virtual bool isInstance(UObject& obj) const {
+      virtual bool isInstance(Object& obj) const {
         return dynamic_cast<UDefaultInlineElement*>(&obj);  // && test name ?
       }
       virtual UDefaultInlineElement* newInstance() const {
@@ -80,7 +82,7 @@ namespace ubit {
     virtual const Class& getClass() const {return cid;} 
     
   private:
-    const Class& cid;  // !!ATT aux destructions, un unique_ptr<> serait preferable !!
+    const Class& cid;  // !!ATT aux destructions, un std::unique_ptr<> serait preferable !!
   };
   
     
@@ -89,7 +91,7 @@ namespace ubit {
     struct MetaClass : public Class {
       MetaClass(const String& classname) : Class(classname) {}
       
-      virtual bool isInstance(UObject& obj) const {
+      virtual bool isInstance(Object& obj) const {
         return dynamic_cast<UDefaultBlockElement*>(&obj);  // && test name ?
       }
       virtual UDefaultBlockElement* newInstance() const {
@@ -106,7 +108,7 @@ namespace ubit {
     virtual const Class& getClass() const {return cid;}
     
   private:
-    const Class& cid;  // !!ATT aux destructions, un unique_ptr<> serait preferable !!
+    const Class& cid;  // !!ATT aux destructions, un std::unique_ptr<> serait preferable !!
   };
   
     

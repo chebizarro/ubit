@@ -94,7 +94,7 @@ FileChooser::FileChooser(const Args& args) :
   Box& controls = 
   uhbox(upadding(0, 5)
         + uleft()
-        + uvbox(Valign::center + Font::bold
+        + uvbox(VAlign::center + Font::bold
                 + ulabel("File Name") + ulabel("Filters"))
         + " " 
         + uhflex()
@@ -318,8 +318,8 @@ void FileChooser::rescan() {
     } //endfor(int k)
   } //endelse(want_attributes)    
   
-  Scrollpane* scrollpane = 
-  want_file_attributes ? new Scrollpane(true,false) : new Scrollpane(false,true);
+  ScrollPane* scrollpane = 
+  want_file_attributes ? new ScrollPane(true,false) : new ScrollPane(false,true);
  
   scrollpane->addAttr(usize(Application::conf.filebox_width, Application::conf.filebox_height)
                       + Background::white);

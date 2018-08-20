@@ -22,6 +22,8 @@
  */
 
 #include <iostream>
+#include <memory>
+
 #include <ubit/ubit_features.h>
 #include <ubit/udefs.hpp>
 #include <ubit/core/attribute.h>
@@ -30,6 +32,7 @@
 #include <ubit/core/call.h>
 #include <ubit/ui/updatecontext.h>
 #include <ubit/core/application.h>
+
 using namespace std;
 
 namespace ubit {
@@ -37,7 +40,7 @@ namespace ubit {
 
 //bool Attribute::isSpecified() const {return getClass().isSpecified();}
 
-// defini dans impl sinon pbms compil (a cause du unique_ptr<>) avce gcc2
+// defini dans impl sinon pbms compil (a cause du std::unique_ptr<>) avce gcc2
 Attribute::Attribute() {}
 Attribute::Attribute(UConst) {omodes.IS_CONST = true;}
 
@@ -79,7 +82,7 @@ struct UNamedValue: public Attribute {
   virtual const String& getName() const {return *pname;}   //attention herite!!!
   virtual bool getValue(String& val) const {val = *pvalue; return true;}  //attention herite!!!  
   
-  unique_ptr<String> pname, pvalue;
+  std::unique_ptr<String> pname, pvalue;
 };
 
 
@@ -118,31 +121,31 @@ void AttributeList::putProp(UpdateContext *props, Element& par) {
 }
 
 
-UTip::UTip(const char* label) {set(label);}
-UTip::UTip(const Args& a) {set(a);}
+Tip::Tip(const char* label) {set(label);}
+Tip::Tip(const Args& a) {set(a);}
 
-UTip::~UTip() {destructs();}  // removingFrom() impose un destructeur
+Tip::~Tip() {destructs();}  // removingFrom() impose un destructeur
 
-UTip& UTip::set(const char* label) {
+Tip& Tip::set(const char* label) {
   content = label ? new String(label) : null;
   return *this;
 }
 
-UTip& UTip::set(const Args& a) {
+Tip& Tip::set(const Args& a) {
   content = new Element(a);
   return *this;
 }
 
-void UTip::addingTo(Child& c, Element& parent) {
+void Tip::addingTo(Child& c, Element& parent) {
   Attribute::addingTo(c, parent);
   //if (parent.emodes.HAS_TIP) {
-  //  warning("UTip::addingTo","This UTip has a parent (%s %p) that contains another UTip object", this, &parent.getClassName(), &parent);
+  //  warning("Tip::addingTo","This Tip has a parent (%s %p) that contains another Tip object", this, &parent.getClassName(), &parent);
   //}
   // rendre parent sensitif aux events ad hoc
   parent.emodes.HAS_TIP = true;
 }
 
-void UTip::removingFrom(Child& c, Element& parent) {
+void Tip::removingFrom(Child& c, Element& parent) {
   parent.emodes.HAS_TIP = false;
   Attribute::removingFrom(c, parent);
 }
@@ -160,7 +163,7 @@ Title::Title(const String& _s) {
 }
 
 void Title::update() {
-  for (UParentIter p = pbegin(); p != pend(); ++p) {
+  for (ParentIter p = pbegin(); p != pend(); ++p) {
     Element* grp = *p;
     Window* win = grp ? grp->toWin() : null;
     if (win) win->setTitle(*pstring);     // EX: pvalue!!!

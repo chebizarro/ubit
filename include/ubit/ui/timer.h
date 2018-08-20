@@ -29,6 +29,8 @@ extern "C" {
   struct timeval;
 }
 
+#include <memory>
+
 #include <ubit/core/object.h>
 
 namespace ubit {
@@ -40,7 +42,7 @@ namespace ubit {
    *
    * Exemple:
    * <pre>
-   *    unique_ptr<Timer> t = new Timer();
+   *    std::unique_ptr<Timer> t = new Timer();
    *    t->onAction( ucall(x, y, printArgs) );
    *    t->onAction( ucall(obj, val, &Demo::doIt) );
    *    t->start(1000);
@@ -69,7 +71,7 @@ namespace ubit {
      *   the specified 'delay'). If ntimes = -1 the callbacks are fired repeatedly
      *   until stop() is called or the timer is destroyed.
      * - if 'auto_delete' is true, the timer is automatically deleted on completion
-     *   if was created in the heap and is not pointed by a unique_ptr<> (@see UPtr).
+     *   if was created in the heap and is not pointed by a std::unique_ptr<> (@see UPtr).
      *   This feature avoids memory leaks and is especially useful if the timer
      *   is only used once
      */
@@ -79,7 +81,7 @@ namespace ubit {
     virtual void onAction(UCall& callback);
     /**< adds a callback that is fired when the time is up.
      * 'callback' is a ucall<> expression (see UCall). It is destroyed when the timer
-     *  is destroyed except if it is referenced by a unique_ptr<> or another node (see Node).
+     *  is destroyed except if it is referenced by a std::unique_ptr<> or another node (see Node).
      */  
     
     virtual void onTimeout(UCall& callback) {onAction(callback);}

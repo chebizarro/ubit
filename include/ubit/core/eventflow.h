@@ -24,6 +24,8 @@
 #ifndef UBIT_CORE_EVENTFLOW_H_
 #define	UBIT_CORE_EVENTFLOW_H_
 
+#include <memory>
+
 #include <ubit/core/application.h>
 #include <ubit/core/event.h>
 #include <ubit/ui/uviewImpl.hpp>
@@ -81,10 +83,10 @@ namespace ubit {
     
     MenuManager& getMenuManager() const {return menu_man;}
     
-    UObject* getUserData() {return user_data;}
+    Object* getUserData() {return user_data;}
     ///< gets a handle to user data.  
     
-    void setUserData(UObject* obj) {user_data = obj;}
+    void setUserData(Object* obj) {user_data = obj;}
     ///< sets a handle to user data.
     
     void closeAllMenus();
@@ -150,13 +152,13 @@ namespace ubit {
     int    click_count;
     unsigned long click_time;
     const class Cursor* lastCursor;    // cursor being currently shown
-    unique_ptr<Timer> auto_repeat_timer;     // timer fo auto_repeat actions
-    unique_ptr<Timer> tip_timer;             // timer for tool tips
+    std::unique_ptr<Timer> auto_repeat_timer;     // timer fo auto_repeat actions
+    std::unique_ptr<Timer> tip_timer;             // timer for tool tips
     Window& tip_win;                      // window for tool tips
     MenuManager& menu_man;             // menubars & pulldown menus manager
     Selection& selection;              // text selection management
     std::vector<class Window*> tele_pointers;  // remote pointers
-    UObject* user_data;
+    Object* user_data;
   };
   
 }

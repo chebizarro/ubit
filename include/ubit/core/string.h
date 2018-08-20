@@ -24,7 +24,7 @@
 #ifndef UBIT_CORE_STRING_H_
 #define	UBIT_CORE_STRING_H_
 
-#include <ubit/ubit.h>
+#include <ubit/core/data.h>
 
 namespace ubit {
   
@@ -394,7 +394,7 @@ namespace ubit {
     
     
     String(const char*, UConst);
-    ///< creates a new CONSTANT string; @see UObject::UCONST.
+    ///< creates a new CONSTANT string; @see Object::UCONST.
     
     virtual void syncVals(char*,int);
     

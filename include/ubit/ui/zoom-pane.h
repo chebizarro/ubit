@@ -24,6 +24,8 @@
 #ifndef _uzoom_hpp_
 #define	_uzoom_hpp_ 1
 
+#include <memory>
+
 #include <ubit/core/condition.h>
 #include <ubit/ui/box.h>
 #include <ubit/ui/control-menu.h>
@@ -68,10 +70,10 @@ namespace ubit {
     void openMenuOn(int event_mask);
     
    private:
-    unique_ptr<Box> pviewport;
-    unique_ptr<ZoomMenu> pmenu;
-    unique_ptr<Position> ppos;
-    unique_ptr<Scale> pscale;
+    std::unique_ptr<Box> pviewport;
+    std::unique_ptr<ZoomMenu> pmenu;
+    std::unique_ptr<Position> ppos;
+    std::unique_ptr<Scale> pscale;
   };
   
   inline ZoomPane& uzoompane(Args arglist = Args::none) {return *new ZoomPane(arglist);}
@@ -87,16 +89,16 @@ namespace ubit {
     
     ZoomMenu(Box& zoomed_box, Box& panned_box);
     /**< a Control menu that will zoom and pan a widget.
-     * zoomed_box and panned_box may differ as one may pan a widget (e.g. a UPalette)
-     * but only zoom its content (e.g. UPalette::content())
+     * zoomed_box and panned_box may differ as one may pan a widget (e.g. a Palette)
+     * but only zoom its content (e.g. Palette::content())
      */
     
     void openMenuOn(int event_mask);
     virtual void openMenuCB(MouseEvent&);
 
   protected:
-    unique_ptr<ZoomAction> pzoom_action; 
-    unique_ptr<PanAction> ppan_action;
+    std::unique_ptr<ZoomAction> pzoom_action; 
+    std::unique_ptr<PanAction> ppan_action;
     int event_mask;
   };
   

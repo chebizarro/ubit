@@ -44,8 +44,8 @@ const Style& SeparatorStyle::getStyle(UpdateContext* ctx) const {
 
 SeparatorStyle::SeparatorStyle() {
   orient = Orientation::HORIZONTAL;
-  halign = Halign::FLEX;
-  valign = Valign::CENTER;
+  halign = HAlign::FLEX;
+  valign = VAlign::CENTER;
   local.padding.set(0, 0);
   local.border = &Border::shadowIn;
   // len = -1 means "keep initial size"
@@ -53,8 +53,8 @@ SeparatorStyle::SeparatorStyle() {
   local.size.width = Length(-1, UPX, Size::UNRESIZABLE);
 
   vstyle.orient = Orientation::VERTICAL;
-  vstyle.halign = Halign::CENTER;
-  vstyle.valign = Valign::FLEX;
+  vstyle.halign = HAlign::CENTER;
+  vstyle.valign = VAlign::FLEX;
   vstyle.local.padding.set(0, 0);
   vstyle.local.border = &Border::shadowIn;
   // len = -1 means "keep initial size"
@@ -74,8 +74,8 @@ Separator::Separator() : Box() {
 Style* Label::createStyle() {
   Style* style = new Style();
   style->orient = Orientation::HORIZONTAL;
-  style->halign = Halign::LEFT;
-  style->valign = Valign::CENTER;
+  style->halign = HAlign::LEFT;
+  style->valign = VAlign::CENTER;
   style->hspacing = 1;
   style->vspacing = 1;
   style->setPadding(2, 2);
@@ -95,8 +95,8 @@ Style* TextField::createStyle() {
   s.setColor(UOn::DISABLED, Color::disabled);
   s.setBgcolor(UOn::DROP_ENTERED,Color::blue);
   s.orient = Orientation::HORIZONTAL;
-  s.halign = Halign::LEFT;
-  s.valign = Valign::CENTER;
+  s.halign = HAlign::LEFT;
+  s.valign = VAlign::CENTER;
   s.hspacing = 0;
   s.vspacing = 3;
   s.setPadding(3,2); 
@@ -143,8 +143,8 @@ Style* TextArea::createStyle() {
   s.viewStyle = &FlowView::style;
   s.textSeparator = new String("\n");
   s.orient = Orientation::HORIZONTAL;
-  s.halign = Halign::FLEX;
-  s.valign = Valign::CENTER;
+  s.halign = HAlign::FLEX;
+  s.valign = VAlign::CENTER;
   
   s.setColors(Color::inherit, Color::white);
   s.setBgcolors(Color::white, Color::blue);
@@ -174,8 +174,8 @@ public:
 
 ButtonStyle::ButtonStyle() {
   orient = Orientation::HORIZONTAL;
-  halign = Halign::LEFT;
-  valign = Valign::CENTER;
+  halign = HAlign::LEFT;
+  valign = VAlign::CENTER;
   hspacing = 2;
   vspacing = 2;
   setPadding(2, 2);
@@ -191,8 +191,8 @@ ButtonStyle::ButtonStyle() {
   setBgcolor(UOn::DROP_ENTERED, Color::grey);
 
   tab = *this;
-  tab.halign = Halign::CENTER;
-  tab.valign = Valign::CENTER;
+  tab.halign = HAlign::CENTER;
+  tab.valign = VAlign::CENTER;
   tab.setPadding(2, 4);
   tab.setColors(Color::black, Color::white);
   tab.setBgcolors(Color::none, Color::blue);
@@ -209,8 +209,8 @@ ButtonStyle::ButtonStyle() {
   
   bar = *this;
   bar.orient = Orientation::VERTICAL;
-  bar.halign = Halign::CENTER;
-  bar.valign = Valign::CENTER;
+  bar.halign = HAlign::CENTER;
+  bar.valign = VAlign::CENTER;
   bar.setPadding(5,3);
   bar.local.border = null;
   bar.setBgcolors(Color::none, Color::grey);
@@ -276,7 +276,7 @@ Button& utabbutton(Args a) {
   return *new Button(Button::TAB, a);
 }
 
-/* Tab Button widget (for tabbed panes, @see UCardbox).
+/* Tab Button widget (for tabbed panes, @see CardBox).
 class UTabbutton: public Button {
 public:
   UCLASS("utabbutton", UTabbutton, new UTabbutton)
@@ -300,8 +300,8 @@ public:
 Style* Item::createStyle() {
   Style& s = *new Style();
   s.orient = Orientation::HORIZONTAL;
-  s.halign = Halign::LEFT;
-  s.valign = Valign::FLEX;
+  s.halign = HAlign::LEFT;
+  s.valign = VAlign::FLEX;
   s.hspacing = 2;
   s.hspacing = 2;
   s.setPadding(1, 1);
@@ -333,8 +333,8 @@ Item::Item(Args a): Box() {
 Style* LinkButton::createStyle() {
   Style& s = *new Style;
   s.orient = Orientation::HORIZONTAL;
-  s.halign = Halign::LEFT;
-  s.valign = Valign::CENTER;
+  s.halign = HAlign::LEFT;
+  s.valign = VAlign::CENTER;
   s.hspacing = 1;
   s.vspacing = 1;
   s.local.padding.set(1, 1);

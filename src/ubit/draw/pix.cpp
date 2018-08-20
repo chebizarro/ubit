@@ -976,10 +976,10 @@ UPix UPix::minus(UXpm::minus, UCONST);
 UPix UPix::zoom(UXpm::zoom, UCONST);
 UPix UPix::undo(UXpm::undo, UCONST);
 
-UPix UPix::stop(UXpm::stop, UObject::UCONST);
-UPix UPix::link(UXpm::link, UObject::UCONST);
-UPix UPix::ray(UXpm::ray, UObject::UCONST);
-UPix UPix::question(UXpm::question, UObject::UCONST);
+UPix UPix::stop(UXpm::stop, Object::UCONST);
+UPix UPix::link(UXpm::link, Object::UCONST);
+UPix UPix::ray(UXpm::ray, Object::UCONST);
+UPix UPix::question(UXpm::question, Object::UCONST);
 
 UPix UPix::hslider(UXpm::hslider, UCONST);
 UPix UPix::vslider(UXpm::vslider, UCONST);

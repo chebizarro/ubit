@@ -24,6 +24,8 @@
 #ifndef _uinteractors_hpp_
 #define	_uinteractors_hpp_ 1
 
+#include <memory>
+
 #include <ubit/core/string.h>
 #include <ubit/ui/textedit.h>
 #include <ubit/ui/box.h>
@@ -53,7 +55,7 @@ namespace ubit {
    * Default look and feel (can be changed by adding appropriate Attribute(s)):
    * - horizontal layout (see attribute Orientation)
    * - font and foreground color inherited from parents (see Font and Color)
-   * - transparent backgound (see UBackgound and UAlpha)
+   * - transparent backgound (see UBackgound and Alpha)
    * - automatically resized when children (text, images, and other widgets) are 
    *   changed or resized. Add a Size attribute to change this behavior or to 
    *   impose a given size. 
@@ -62,7 +64,7 @@ namespace ubit {
    *
    * As other widgets, a label can contain any combination of text, images and  
    * other widgets and its look can be changed by adding appropriate UAttrs
-   * (for specifying a specific Background, UAlpha, Padding, Border, etc.)
+   * (for specifying a specific Background, Alpha, Padding, Border, etc.)
    *   
    *  Example:
    *  <pre>  
@@ -111,7 +113,7 @@ namespace ubit {
    *
    * As other widgets, a textfield can contain any combination of text, images and  
    * other widgets and its look can be changed by adding appropriate Attribute(s)
-   * (for specifying a specific Background, UAlpha, Padding, Border, etc.)
+   * (for specifying a specific Background, Alpha, Padding, Border, etc.)
    *
    * Example:
    *  <pre>
@@ -223,7 +225,7 @@ namespace ubit {
    *
    * As other widgets, a button can contain any combination of text, images and  
    * other widgets and its look can be changed by adding appropriate Attribute(s)
-   * (for specifying a specific Background, UAlpha, Padding, Border, etc.)
+   * (for specifying a specific Background, Alpha, Padding, Border, etc.)
    *
    * CALLBACKS:
    * Any Box callback can be added to a textfield (see UOn and UCall). However,
@@ -291,7 +293,7 @@ namespace ubit {
   ///< creates a "flat" button with a thin line border.
   
   Button& utabbutton(Args arglist = Args::none);
-  ///< creates a "tab" button (for tabbed panes, @see UCardbox).
+  ///< creates a "tab" button (for tabbed panes, @see CardBox).
 
      
   /** Item Button widget (a kind of button that is used in ListBox(es)).
@@ -435,9 +437,9 @@ namespace ubit {
     virtual void changed();
     
   private:
-    unique_ptr<Int> pvalue;
-    unique_ptr<String> pstr;
-    unique_ptr<TextField> ptextfield;
+    std::unique_ptr<Int> pvalue;
+    std::unique_ptr<String> pstr;
+    std::unique_ptr<TextField> ptextfield;
     int increment;
   };
   

@@ -32,7 +32,7 @@
 #include <ubit/core/appimpl.h>
 #include <ubit/core/event.h>
 #include <ubit/ui/eventflow.h>
-#include <ubit/Selection.hpp>
+#include <ubit/ui/selection.h>
 #include <ubit/draw/pix.h>
 #include <ubit/core/on.h>
 #include <ubit/ui/timer.h>
@@ -475,7 +475,7 @@ void EventFlow::keyPress(View* winview, unsigned long time, int state,
 
   //if (mustCloseMenus(source_view)) return;
   
-  UKeyEvent e(UOn::kpress, currentFocus, this, time, state, keycode, keychar);
+  KeyEvent e(UOn::kpress, currentFocus, this, time, state, keycode, keychar);
   Box* box = currentFocus->getBox();  
   //box->keyPressBehavior(e, UBehavior::KEY);
   box->keyPressBehavior(e);
@@ -501,7 +501,7 @@ void EventFlow::keyRelease(View* winview, unsigned long time, int state,
 
   //if (mustCloseMenus(source_view)) return;
 
-  UKeyEvent e(UOn::krelease, currentFocus, this, time, state, keycode, keychar);
+  KeyEvent e(UOn::krelease, currentFocus, this, time, state, keycode, keychar);
   Box* box = currentFocus->getBox();
   //box->keyReleaseBehavior(e, UBehavior::KEY);
   box->keyReleaseBehavior(e);
@@ -586,7 +586,7 @@ void EventFlow::closeTipRequest(Event& e) {
 void EventFlow::openTipCB(TimerEvent& e) {
   if (lastEntered) {
     Box* box = lastEntered->getBox();
-    UTip* tip = null;
+    Tip* tip = null;
     box->attributes().findClass(tip);
     if (!tip) box->children().findClass(tip);
     

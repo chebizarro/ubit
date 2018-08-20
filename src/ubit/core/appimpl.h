@@ -25,7 +25,9 @@
 #define	_uappliImpl_hpp_ 1
 
 #include <vector>
-#include <sys/time.h>  // fd_set
+#include <sys/time.h>
+#include <memory>
+
 #include <ubit/core/application.h>
 #include <ubit/core/uclassImpl.hpp>
 #include <ubit/ui/window.h>
@@ -57,7 +59,7 @@ namespace ubit {
     void processPendingRequests();
     ///< process all requests (process update then delete then paint requests).
     
-    void addDeleteRequest(UObject*);
+    void addDeleteRequest(Object*);
     void addDeleteRequest(View*);
     void processDeleteRequests();
     
@@ -86,19 +88,19 @@ namespace ubit {
     friend class MessageService;
     
     typedef std::vector<UpdateRequest> UpdateRequests;
-    typedef std::vector<UObject*> DeletedObjects;
+    typedef std::vector<Object*> DeletedObjects;
     typedef std::vector<View*> DeletedViews;
     
     Application* appli;        // only ONE Application object should be created
     Display* disp;
     String *app_name;
     bool is_terminated;   // true if the Application has been terminated
-    unique_ptr<UErrorHandler> error_handler;
+    std::unique_ptr<ErrorHandler> error_handler;
     Frame* main_frame;   // the main frame of the Application
     // Note: the display list must be static to avoid seg faults if the Application
     // is distroyed before the widgets by the client program 
-    UDispList displist;
-    UFlowList flowlist;    // list of event flows
+    DisplayList displist;
+    FlowList flowlist;    // list of event flows
     StyleSheet stylesheet;
     String imapath;
     Element* sources;

@@ -39,7 +39,7 @@ using namespace std;
 namespace ubit {
 
 
-UPalette::UPalette(Args a) :
+Palette::Palette(Args a) :
 ppos(new Position),
 ppos_ctrl((new PositionControl)->setModel(ppos)),
 psize(new Size),
@@ -54,9 +54,9 @@ presize_btn(new Box)
 {
   /*
   pminmaxbtn->addAttr(Color::navy + Font::bold 
-                     + ucall(this, &UPalette::minmaxCB));
+                     + ucall(this, &Palette::minmaxCB));
   pminmaxbtn->add(UOn::select / ustr(" - ") + UOn::deselect / ustr(" + "));
-  + UOn::doubleClick / ucall(this, &UPalette::minmaxCB));
+  + UOn::doubleClick / ucall(this, &Palette::minmaxCB));
    */
   
   ptitle->ignoreEvents();
@@ -83,7 +83,7 @@ presize_btn(new Box)
 }
 
 
-Style* UPalette::createStyle() {
+Style* Palette::createStyle() {
   Style* s = Box::createStyle();
   static Border* b = new RoundBorder(Border::LINE,Color::navy,Color::white,2,2,15,15);
   s->local.border = b;
@@ -91,15 +91,15 @@ Style* UPalette::createStyle() {
 }
 
 /*
-void UPalette::minmaxCB(MouseEvent&) {
+void Palette::minmaxCB(MouseEvent&) {
   pcontent->show(! pcontent->isShown());
 }
-void UPalette::resizeCB(MouseEvent&) {
+void Palette::resizeCB(MouseEvent&) {
   pcontent->show(! pcontent->isShown());
 }
 */
 
-void UPalette::setPosModel(Position* p) {
+void Palette::setPosModel(Position* p) {
   if (ppos == p) return;
   if (ppos) removeAttr(*ppos);
   if (p) addAttr(p);
@@ -107,7 +107,7 @@ void UPalette::setPosModel(Position* p) {
   if (ppos && ppos_ctrl) ppos_ctrl->setModel(ppos);
 }
 
-void UPalette::setPosControlModel(PositionControl* pc) {
+void Palette::setPosControlModel(PositionControl* pc) {
   if (ppos_ctrl == pc) return;
   if (ppos_ctrl) ptitle_bar->removeAttr(*ppos_ctrl);
   if (pc) ptitle_bar->addAttr(pc);

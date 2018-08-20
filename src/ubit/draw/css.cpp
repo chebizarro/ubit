@@ -340,19 +340,19 @@ void CssProperties::create_padding_right(XmlDocument*, AttributeList* al, const 
 /*  align n'existe pas, text-align joue son role ?
  void create_align(XmlDocument*, const String& v) {
  ?? trim()
- if (isEq(UXmlAttr::value,"left")) set(Halign::left);
- else if (isEq(UXmlAttr::value,"center")) set(Halign::center);
- else if (isEq(UXmlAttr::value,"right"))  set(Halign::right);
+ if (isEq(UXmlAttr::value,"left")) set(HAlign::left);
+ else if (isEq(UXmlAttr::value,"center")) set(HAlign::center);
+ else if (isEq(UXmlAttr::value,"right"))  set(HAlign::right);
  props->addAttr(*p);
  }
  */
 
 void CssProperties::create_text_align(XmlDocument*, AttributeList* al, const String& v) {
-  Halign* p = new Halign();
+  HAlign* p = new HAlign();
   //trim ??
-  if (v.equals("left",true)) *p = Halign::left;
-  else if (v.equals("center",true)) *p = Halign::center;
-  else if (v.equals("right",true))  *p = Halign::right;
+  if (v.equals("left",true)) *p = HAlign::left;
+  else if (v.equals("center",true)) *p = HAlign::center;
+  else if (v.equals("right",true))  *p = HAlign::right;
   // A COMPLETR:   justify, etc...
   al->addAttr(*p);
 }
@@ -360,11 +360,11 @@ void CssProperties::create_text_align(XmlDocument*, AttributeList* al, const Str
 // valign existe pas: vertical_align joue son role ?
 //
 void CssProperties::create_vertical_align(XmlDocument*, AttributeList* al, const String& v) {
-  Valign* p = new Valign();
+  VAlign* p = new VAlign();
   //trim ??
-  if (v.equals("top",true)) *p = Valign::top;
-  else if (v.equals("middle",true)) *p = Valign::center;
-  else if (v.equals("bottom",true)) *p = Valign::bottom;
+  if (v.equals("top",true)) *p = VAlign::top;
+  else if (v.equals("middle",true)) *p = VAlign::center;
+  else if (v.equals("bottom",true)) *p = VAlign::bottom;
   // baseline et bien d'autres.....
   al->addAttr(*p);
 }
@@ -408,34 +408,34 @@ Style* CssStyles::create_body_style() {
 }
 
 Style* CssStyles::create_div_style() {
-  Style* style = UFlowbox::createStyle();
+  Style* style = FlowBox::createStyle();
   style->local.padding.set(6,1);
   return style;
 }
 
 Style* CssStyles::create_p_style() {
-  Style* style = UFlowbox::createStyle();
+  Style* style = FlowBox::createStyle();
   style->local.padding.set(6,1);
   return style;
 }
 
 
 Style* CssStyles::create_ul_style() {
-  Style* style = UFlowbox::createStyle();
+  Style* style = FlowBox::createStyle();
   style->setHorizPadding(30, 0);
   style->setVertPadding(1, 0);
   return style;
 }
 
 Style* CssStyles::create_ol_style() {
-  Style* style = UFlowbox::createStyle();
+  Style* style = FlowBox::createStyle();
   style->setHorizPadding(30, 1);
   style->setVertPadding(1, 0);
   return style;
 }
 
 Style* CssStyles::create_li_style() {
-  Style* style = UFlowbox::createStyle();
+  Style* style = FlowBox::createStyle();
   style->local.padding.set(1, 1);
   //style->local.content = new Element(UPix::rball);
   style->local.content = new Element(" - ");
@@ -444,7 +444,7 @@ Style* CssStyles::create_li_style() {
 
 
 Style* CssStyles::create_pre_style() {
-  Style* style = UFlowbox::createStyle();
+  Style* style = FlowBox::createStyle();
   style->setHorizPadding(80,0);
   style->setVertPadding(5,5);
   style->setFont(&Font::monospace);
@@ -452,56 +452,56 @@ Style* CssStyles::create_pre_style() {
 }
 
 Style* CssStyles::create_blockquote_style() {
-  Style* style = UFlowbox::createStyle();
+  Style* style = FlowBox::createStyle();
   style->local.padding.set(20, 8);
   return style;
 }
 
 Style* CssStyles::create_center_style() {
-  Style* style = UFlowbox::createStyle();
+  Style* style = FlowBox::createStyle();
   style->local.padding.set(1, 1);
-  style->halign = Valign::CENTER;
+  style->halign = VAlign::CENTER;
   return style;
 }
 
 
 Style* CssStyles::create_h1_style() {
-  Style* style = UFlowbox::createStyle();
+  Style* style = FlowBox::createStyle();
   style->setVertPadding(14,14);
   Font* f = new Font(Font::bold); f->setPointSize(32); style->setFont(f);
   return style;
 }
 
 Style* CssStyles::create_h2_style() {
-  Style* style = UFlowbox::createStyle();
+  Style* style = FlowBox::createStyle();
   style->setVertPadding(12,12);
   Font* f = new Font(Font::bold); f->setPointSize(18); style->setFont(f);
   return style;
 }
 
 Style* CssStyles::create_h3_style() {
-  Style* style = UFlowbox::createStyle();
+  Style* style = FlowBox::createStyle();
   style->setVertPadding(10,10);
   Font* f = new Font(Font::bold); f->setPointSize(14); style->setFont(f);
   return style;
 }
 
 Style* CssStyles::create_h4_style() {
-  Style* style = UFlowbox::createStyle();
+  Style* style = FlowBox::createStyle();
   style->setVertPadding(8,8);
   Font* f = new Font(Font::bold); f->setPointSize(12); style->setFont(f);
   return style;
 }
 
 Style* CssStyles::create_h5_style() {
-  Style* style = UFlowbox::createStyle();
+  Style* style = FlowBox::createStyle();
   style->setVertPadding(7,7);
   Font* f = new Font(Font::bold); f->setPointSize(10); style->setFont(f);
   return style;
 }
 
 Style* CssStyles::create_h6_style() {
-  Style* style = UFlowbox::createStyle();
+  Style* style = FlowBox::createStyle();
   style->setVertPadding(6,6);
   Font* f = new Font(Font::bold); f->setPointSize(8); style->setFont(f);
   return style;
@@ -510,23 +510,23 @@ Style* CssStyles::create_h6_style() {
 
 Style* CssStyles::create_table_style() {
   Style* style = Table::createStyle();
-  style->valign = Valign::BOTTOM;
-  style->halign = Halign::LEFT;
+  style->valign = VAlign::BOTTOM;
+  style->halign = HAlign::LEFT;
   return style;
 }
 
 Style* CssStyles::create_tr_style() {
   Style* style = UTrow::createStyle();
   style->hspacing = 0;
-  style->valign = Valign::BOTTOM;
-  style->halign = Halign::LEFT;
+  style->valign = VAlign::BOTTOM;
+  style->halign = HAlign::LEFT;
   return style;
 }
 
 Style* CssStyles::create_td_style() {
   Style* style = UTcell::createStyle();
-  style->valign = Valign::BOTTOM;
-  style->halign = Halign::LEFT;
+  style->valign = VAlign::BOTTOM;
+  style->halign = HAlign::LEFT;
   return style;
 }
 

@@ -84,8 +84,8 @@ struct UListStyle : public Style {
 
 UListStyle::UListStyle() {
   transp_style.orient = Orientation::VERTICAL;
-  transp_style.halign = Halign::FLEX;
-  transp_style.valign = Valign::TOP;
+  transp_style.halign = HAlign::FLEX;
+  transp_style.valign = VAlign::TOP;
   transp_style.hspacing = 1;
   transp_style.vspacing = 1;
   
@@ -93,8 +93,8 @@ UListStyle::UListStyle() {
   setColor(UOn::DISABLED, Color::disabled);
   setBgcolors(Color::white, Color::black);
   orient = Orientation::VERTICAL;
-  halign = Halign::FLEX;
-  valign = Valign::TOP;
+  halign = HAlign::FLEX;
+  valign = VAlign::TOP;
   hspacing = 1;
   vspacing = 1;
   // il faut de l'espace autour des listes pour le scroll
@@ -187,7 +187,7 @@ void ComboBox::constructs(const Args& _a) {
   pmenu = upopmenu(*plist);
   
   setAttr(*new UCompositeBorder
-          (Valign::flex + Halign::right
+          (VAlign::flex + HAlign::right
            + uitem(Symbol::down + UOn::action /ucall(this, &ComboBox::openMenuCB))
            + *pmenu
            ));

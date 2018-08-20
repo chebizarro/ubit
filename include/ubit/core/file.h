@@ -25,6 +25,8 @@
 #define	UBIT_CORE_FILE_H_
 
 #include <vector>
+#include <memory>
+
 #include <ubit/core/node.h>
 
 namespace ubit {
@@ -111,7 +113,7 @@ namespace ubit {
     friend class FileChooser;
     unsigned long size;
     unsigned long modtime;
-    unique_ptr<String> pname;
+    std::unique_ptr<String> pname;
     void stat(const char* path);
   };
   

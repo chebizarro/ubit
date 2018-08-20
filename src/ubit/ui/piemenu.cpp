@@ -61,13 +61,13 @@ item_radius(7)
 {
   // A REVOIR AVEC STYLES ET Background avance !!!!!@@@@@@
   // de plus c'est le backround et le alpha du Piemenu qui devraient etre utilise !
-  static unique_ptr<Color> default_pie_color = new Color(Color::black, 100u);
-  static unique_ptr<Color> default_pie_border_color = new Color(Color::black, 100u);
-  //static unique_ptr<Color> default_slice_color = new Color(Color::black, 75u);  
-  static unique_ptr<Color> default_slice_color = new Color(Color::blue);  
-  //static unique_ptr<Color> default_center_color = new Color(Color::white, 255u);
-  static unique_ptr<Color> default_center_color = new Color(Color::white);
-  static unique_ptr<Color> default_center_border_color = new Color(Color::red, 255u);
+  static std::unique_ptr<Color> default_pie_color = new Color(Color::black, 100u);
+  static std::unique_ptr<Color> default_pie_border_color = new Color(Color::black, 100u);
+  //static std::unique_ptr<Color> default_slice_color = new Color(Color::black, 75u);  
+  static std::unique_ptr<Color> default_slice_color = new Color(Color::blue);  
+  //static std::unique_ptr<Color> default_center_color = new Color(Color::white, 255u);
+  static std::unique_ptr<Color> default_center_color = new Color(Color::white);
+  static std::unique_ptr<Color> default_center_border_color = new Color(Color::red, 255u);
   
   ppie_color = default_pie_color; 
   ppie_border_color = default_pie_border_color;

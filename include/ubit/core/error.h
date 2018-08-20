@@ -37,14 +37,14 @@ namespace ubit {
       FATAL_ERROR = -1, WARNING, ERROR, INTERNAL_ERROR, STYLE_ERROR, CSS_ERROR, XML_ERROR
     };
     
-    Error(int errnum, const UObject*, const char* funcname);
+    Error(int errnum, const Object*, const char* funcname);
     virtual ~Error() throw ();
     
     virtual const char* what() const throw();
 
     static const int message_capacity = 2000;
     int errnum;
-    const UObject* object;
+    const Object* object;
     const char* function_name;
     char message[message_capacity];
   };
@@ -55,7 +55,7 @@ namespace ubit {
    * - 'function_name' = the name of the function where the error occured
    * - 'format' = a printf-like format
    * - '...'    = a variadic list of arguments that correspond to 'format'.
-   * @see also: uwarning() and UAppli::error().
+   * @see also: uwarning() and Application::error().
    */
   void uerror(const char* function_name, const char* format, ...);
   

@@ -58,8 +58,8 @@ const Style& USliderbuttonStyle::getStyle(UpdateContext* ctx) const {
 
 USliderbuttonStyle::USliderbuttonStyle() {
   orient = Orientation::HORIZONTAL;
-  halign = Halign::LEFT;
-  valign = Valign::CENTER; //TOP;
+  halign = HAlign::LEFT;
+  valign = VAlign::CENTER; //TOP;
   hspacing = 0;
   vspacing = 0;  
   //local.size.set(36,UPX, 15,UPX);
@@ -73,8 +73,8 @@ USliderbuttonStyle::USliderbuttonStyle() {
   }
 
   vstyle.orient = Orientation::VERTICAL;
-  vstyle.halign = Halign::CENTER; //LEFT;
-  vstyle.valign = Valign::TOP;
+  vstyle.halign = HAlign::CENTER; //LEFT;
+  vstyle.valign = VAlign::TOP;
   vstyle.hspacing = 0;
   vstyle.vspacing = 0;
   //vstyle.local.size.set(15,UPX, 36,UPX);
@@ -116,8 +116,8 @@ const Style& UScrollbuttonStyle::getStyle(UpdateContext* ctx) const {
 
 UScrollbuttonStyle::UScrollbuttonStyle() {
   orient = Orientation::INHERIT;
-  halign = Halign::CENTER;
-  valign = Valign::CENTER;
+  halign = HAlign::CENTER;
+  valign = VAlign::CENTER;
   setBgcolor(UOn::ENTERED, Color::lightblue);
   local.padding.set(0,0);
 }
@@ -130,7 +130,7 @@ public:
 };
 
 
-Box* UScrollbar::createLessButton(bool vertical) {
+Box* ScrollBar::createLessButton(bool vertical) {
   Box* scroller;
   if (vertical) scroller = new UScrollbutton(Symbol::up);  
   else scroller = new UScrollbutton(Symbol::left);
@@ -139,7 +139,7 @@ Box* UScrollbar::createLessButton(bool vertical) {
   return scroller;
 }
 
-Box* UScrollbar::createMoreButton(bool vertical) {
+Box* ScrollBar::createMoreButton(bool vertical) {
   Box* scroller;
   if (vertical) scroller = new UScrollbutton(Symbol::down);
   else scroller = new UScrollbutton(Symbol::right);
@@ -148,7 +148,7 @@ Box* UScrollbar::createMoreButton(bool vertical) {
   return scroller;
 }
 
-Box* UScrollbar::createRail(bool vertical) {
+Box* ScrollBar::createRail(bool vertical) {
   Box* rail = new Box(Border::shadowIn);
   rail->setAutoRepeat(true);
   rail->disableMenuClosing();
@@ -156,7 +156,7 @@ Box* UScrollbar::createRail(bool vertical) {
   return rail;
 }
 
-Box* UScrollbar::createKnob(bool vertical) {
+Box* ScrollBar::createKnob(bool vertical) {
   Box* slider = new USliderbutton();
   slider->setArmable(false);
   slider->setCrossable(false);
@@ -173,14 +173,14 @@ struct USbStyle : public Style {
 
 struct UScrollbarStyle : public Style {
   UScrollbarStyle();
-  virtual const USbStyle& getStyle(UScrollbar*) const;
+  virtual const USbStyle& getStyle(ScrollBar*) const;
   virtual const Style& getStyle(UpdateContext*) const;
 private:
   USbStyle ovstyle, ohstyle, tvstyle, thstyle;
 };
 
 
-const USbStyle& UScrollbarStyle::getStyle(UScrollbar* sb) const {    
+const USbStyle& UScrollbarStyle::getStyle(ScrollBar* sb) const {    
   if (sb && !sb->isVertical())
     return (sb && sb->isTransparent()) ? thstyle : ohstyle;
   else
@@ -189,7 +189,7 @@ const USbStyle& UScrollbarStyle::getStyle(UScrollbar* sb) const {
 
 const Style& UScrollbarStyle::getStyle(UpdateContext* ctx) const {
   Element* obj = (ctx && ctx->obj) ? ctx->obj : null;
-  UScrollbar* sb = obj ? dynamic_cast<UScrollbar*>(obj) : null;
+  ScrollBar* sb = obj ? dynamic_cast<ScrollBar*>(obj) : null;
   return getStyle(sb);
 }
 
@@ -216,8 +216,8 @@ static void setVertical(USbStyle& style) {
   style.hspacing = 0;
   style.vspacing = 0;  
   style.orient = Orientation::VERTICAL;
-  style.halign = Halign::CENTER;  // FLEX;
-  style.valign = Valign::TOP;
+  style.halign = HAlign::CENTER;  // FLEX;
+  style.valign = VAlign::TOP;
   // DEVRAIT ETRE SUR rail_box pas sur SCROLL !
   style.local.padding.left = 1; //sinon impression rail decentre
 }
@@ -230,8 +230,8 @@ static void setHorizontal(USbStyle& style) {
   style.hspacing = 0;
   style.vspacing = 0;  
   style.orient = Orientation::HORIZONTAL;
-  style.halign = Halign::LEFT;
-  style.valign = Valign::CENTER;  //FLEX;
+  style.halign = HAlign::LEFT;
+  style.valign = VAlign::CENTER;  //FLEX;
   style.local.padding.top = 1;
 }
 
@@ -250,23 +250,23 @@ UScrollbarStyle::UScrollbarStyle() {
 }
 
 
-UScrollbar::UScrollbar(const Args& a) : pvalue(new Float) {
+ScrollBar::ScrollBar(const Args& a) : pvalue(new Float) {
   // !! HACK: on specifie VERTICAL par defaut puis on ecrase par arglist !!
   emodes.IS_VERTICAL = 1;
   add(a);
   constructs(); 
 }
 
-UScrollbar::UScrollbar(Float& _value, const Args& a) : pvalue(_value) {
+ScrollBar::ScrollBar(Float& _value, const Args& a) : pvalue(_value) {
   emodes.IS_VERTICAL = 1;
   add(a);
   constructs();
 }
 
-//UScrollbar& uscrollbar(Float& v, const Args& a) {return *new UScrollbar(v, a);}
-UScrollbar& uhscrollbar(const Args& a) {return *new UScrollbar(Orientation::horizontal + a);}
+//ScrollBar& uscrollbar(Float& v, const Args& a) {return *new ScrollBar(v, a);}
+ScrollBar& uhscrollbar(const Args& a) {return *new ScrollBar(Orientation::horizontal + a);}
 
-UScrollbar::~UScrollbar() {
+ScrollBar::~ScrollBar() {
   if (ppane) {
     if (this == ppane->getVScrollbar()) ppane->unsetVScrollbar();
     if (this == ppane->getHScrollbar()) ppane->unsetHScrollbar();
@@ -274,12 +274,12 @@ UScrollbar::~UScrollbar() {
   }
 }
 
-Style* UScrollbar::createStyle() {
+Style* ScrollBar::createStyle() {
   return new UScrollbarStyle();
 }
 
 
-void UScrollbar::constructs() {
+void ScrollBar::constructs() {
   unit_increment  = 15;
   block_increment = 75;
   press_rail_goto_pos = false;
@@ -298,16 +298,16 @@ void UScrollbar::constructs() {
   USbStyle& style = const_cast<USbStyle&>(scrollbar_style.getStyle(this));
 
   pknob->add
-    (UOn::mdrag / ucall(this, &UScrollbar::dragKnob)
-     + UOn::mpress / ucall(this, &UScrollbar::pressKnob)
-     + UOn::mrelease / ucall(this, &UScrollbar::releaseKnob)
+    (UOn::mdrag / ucall(this, &ScrollBar::dragKnob)
+     + UOn::mpress / ucall(this, &ScrollBar::pressKnob)
+     + UOn::mrelease / ucall(this, &ScrollBar::releaseKnob)
      + *pknob_pos
      );
   
   if (pless_btn)
-    pless_btn->addAttr(UOn::mpress / ucall(this,-1, &UScrollbar::pressScrollButton));
+    pless_btn->addAttr(UOn::mpress / ucall(this,-1, &ScrollBar::pressScrollButton));
   if (pmore_btn)
-    pmore_btn->addAttr(UOn::mpress / ucall(this,+1, &UScrollbar::pressScrollButton));
+    pmore_btn->addAttr(UOn::mpress / ucall(this,+1, &ScrollBar::pressScrollButton));
 
   Box* rail = null;
   if (show_rail && (rail = createRail(true))) {
@@ -331,8 +331,8 @@ void UScrollbar::constructs() {
   prail->disableMenuClosing();
 
   prail->add
-    (UOn::mpress  / ucall(this, &UScrollbar::pressRail)
-     + UOn::mrelease / ucall(this, &UScrollbar::releaseRail)
+    (UOn::mpress  / ucall(this, &ScrollBar::pressRail)
+     + UOn::mrelease / ucall(this, &ScrollBar::releaseRail)
      + *pknob
      );
 
@@ -344,30 +344,30 @@ void UScrollbar::constructs() {
 }
 
 
-//bool UScrollbar::isVertical() const {return hasBMode(UMode::IS_VERTICAL);}
-//bool UScrollbar::isHorizontal() const {return !hasBMode(UMode::IS_VERTICAL);}
+//bool ScrollBar::isVertical() const {return hasBMode(UMode::IS_VERTICAL);}
+//bool ScrollBar::isHorizontal() const {return !hasBMode(UMode::IS_VERTICAL);}
 
-void UScrollbar::setPane(Scrollpane* p) {ppane = p;}
+void ScrollBar::setPane(ScrollPane* p) {ppane = p;}
 
-bool UScrollbar::isTracking() const {return tracking_mode;}
-UScrollbar& UScrollbar::setTracking(bool state) 
+bool ScrollBar::isTracking() const {return tracking_mode;}
+ScrollBar& ScrollBar::setTracking(bool state) 
 {tracking_mode = state; return *this;}
 
-bool UScrollbar::isTransparent() const {return is_transparent;}
-UScrollbar& UScrollbar::setTransparent(bool state) 
+bool ScrollBar::isTransparent() const {return is_transparent;}
+ScrollBar& ScrollBar::setTransparent(bool state) 
 {is_transparent = state; return *this;}
 
-float UScrollbar::getUnitIncrement() const {return unit_increment;}
-UScrollbar& UScrollbar::setUnitIncrement(float val) 
+float ScrollBar::getUnitIncrement() const {return unit_increment;}
+ScrollBar& ScrollBar::setUnitIncrement(float val) 
 {unit_increment = val; return *this;}
 
-float UScrollbar::getBlockIncrement() const {return block_increment;}
-UScrollbar& UScrollbar::setBlockIncrement(float val) 
+float ScrollBar::getBlockIncrement() const {return block_increment;}
+ScrollBar& ScrollBar::setBlockIncrement(float val) 
 {block_increment = val; return *this;}
 
-float UScrollbar::getValue() const {return pvalue->floatValue();}
+float ScrollBar::getValue() const {return pvalue->floatValue();}
 
-UScrollbar& UScrollbar::setValue(float _val) {
+ScrollBar& ScrollBar::setValue(float _val) {
   if (ppane) {
     // if a pane is attached to this scrollbar, recompute xscroll, yscroll
     // before moving the scrollbar
@@ -383,7 +383,7 @@ UScrollbar& UScrollbar::setValue(float _val) {
 }
 
 //cette fonction fait n'importe quoi
-void UScrollbar::setValueImpl(float _val, bool upd_pane) {
+void ScrollBar::setValueImpl(float _val, bool upd_pane) {
   if (_val < 0) _val = 0; else if (_val > 100) _val = 100.0;
   
   //if (_val == value) return;   // !faux: marche pas quand ajout
@@ -401,7 +401,7 @@ void UScrollbar::setValueImpl(float _val, bool upd_pane) {
 }
 
 
-float UScrollbar::getPercent(MouseEvent& e, View *slider_view, View *rail_view,
+float ScrollBar::getPercent(MouseEvent& e, View *slider_view, View *rail_view,
                              float delta_mouse) {
   Point ipos = e.getPosIn(*rail_view);
   if (isVertical()) {
@@ -414,7 +414,7 @@ float UScrollbar::getPercent(MouseEvent& e, View *slider_view, View *rail_view,
   }
 }
 
-float UScrollbar::getIncrementPercent(MouseEvent& e, float increment) {
+float ScrollBar::getIncrementPercent(MouseEvent& e, float increment) {
   View* v = null;
   if (ppane) v = ppane->getScrolledView(ppane->getView(e));
   else v = getView(e);
@@ -428,13 +428,13 @@ float UScrollbar::getIncrementPercent(MouseEvent& e, float increment) {
 }
   
 
-void UScrollbar::pressKnob(MouseEvent& e) {
+void ScrollBar::pressKnob(MouseEvent& e) {
   // delta_mouse : decalage pointe par rapport a slider
   if (isVertical()) delta_mouse = e.getY();
   else delta_mouse = e.getX();
 }
 
-void UScrollbar::dragKnob(MouseEvent& e) {  
+void ScrollBar::dragKnob(MouseEvent& e) {  
   View *slider_view = e.getView();
   View *rail_view = slider_view->getParentView();
   float _val = getPercent(e, slider_view, rail_view, delta_mouse);
@@ -446,7 +446,7 @@ void UScrollbar::dragKnob(MouseEvent& e) {
   else setValueImpl(_val, true);  // devrait etre false ???
 }
 
-void UScrollbar::releaseKnob(MouseEvent& e) {
+void ScrollBar::releaseKnob(MouseEvent& e) {
   // dragSlider(e); plutot penible car bouge le slider qunad on clique
   // dessus sans modifier sa position (a cause de la maniere dont sont
   // calculees les positions)
@@ -465,7 +465,7 @@ void UScrollbar::releaseKnob(MouseEvent& e) {
 }
 
 
-void UScrollbar::pressRail(MouseEvent& e) {
+void ScrollBar::pressRail(MouseEvent& e) {
   View *rail_view = e.getView();
   View *slider_view = pknob->getViewInImpl(rail_view /*,null*/);
   float value = pvalue->floatValue();
@@ -490,10 +490,10 @@ void UScrollbar::pressRail(MouseEvent& e) {
   }
 }
 
-void UScrollbar::releaseRail(MouseEvent& e) {}
+void ScrollBar::releaseRail(MouseEvent& e) {}
 
 
-void UScrollbar::pressScrollButton(MouseEvent& e, int dir) {  
+void ScrollBar::pressScrollButton(MouseEvent& e, int dir) {  
   float incr = getIncrementPercent(e, unit_increment);
 
   // faire en sorte qu'on arrive toujours au bords en cliquant sur les
@@ -558,7 +558,7 @@ void UScrollbarView::doUpdate(UpdateContext& parctx, Rectangle r, Rectangle clip
   // l'intersection de clip et de r est affectee dans clip
   if (clip.doIntersection(r) == 0) return;
   
-  UScrollbar* sb = (UScrollbar*)getBox();
+  ScrollBar* sb = (ScrollBar*)getBox();
   
   // il faut appeler DEUX fois doUpdate:
   // - la premiere pour calculer correctement la taille du UScrollbarView

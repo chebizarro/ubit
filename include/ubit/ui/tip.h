@@ -24,6 +24,9 @@
 #ifndef UBIT_UI_TIP_H_
 #define	UBIT_UI_TIP_H_
 
+#include <memory>
+
+
 namespace ubit {
   /**
    * Box tool tip.
@@ -60,7 +63,7 @@ namespace ubit {
     virtual void addingTo(Child&, Element& parent);
     virtual void removingFrom(Child&, Element& parent);
     //NB: removingFrom() impose un destructeur
-    unique_ptr<Node> content;
+    std::unique_ptr<Node> content;
   };
   
   inline Tip& utip(const char* label = null) {return *new Tip(label);}

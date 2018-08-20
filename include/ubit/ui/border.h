@@ -25,6 +25,8 @@
 #ifndef _uborder_hpp_
 #define	_uborder_hpp_ 1
 
+#include <memory>
+
 #include <ubit/core/attribute.h>
 #include <ubit/core/length.h>
 
@@ -102,7 +104,7 @@ namespace ubit {
     short decoration;
     bool is_overlaid, is_rounded;
     PaddingSpec padding;
-    unique_ptr<const Color> pcolor, pbgcolor;
+    std::unique_ptr<const Color> pcolor, pbgcolor;
     
     Border(int decoration, const Color& color, const Color& bgcolor,
             float width, float height, UConst);    
@@ -151,7 +153,7 @@ class UCompositeBorder : public Border {
     virtual void putProp(UpdateContext*, Element&);
 
 protected:    
-    unique_ptr<Element> pchildren;
+    std::unique_ptr<Element> pchildren;
   };
   
 }

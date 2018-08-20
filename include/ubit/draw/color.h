@@ -169,10 +169,10 @@ namespace ubit {
     unsigned long getPixel(Display*) const;
 #endif
     Color(unsigned int r, unsigned int g, unsigned int b, unsigned int a, UConst);
-    //[Impl] creates a new CONSTANT color with a RGB value; @see UObject::UCONST.
+    //[Impl] creates a new CONSTANT color with a RGB value; @see Object::UCONST.
     
     Color(unsigned char special, UConst);
-    //[Impl] creates a new CONSTANT color with a special value; @see UObject::UCONST.
+    //[Impl] creates a new CONSTANT color with a special value; @see Object::UCONST.
   };
   
   

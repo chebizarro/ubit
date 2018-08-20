@@ -315,11 +315,11 @@ namespace ubit {
     
     // Horizontal placement. 
     // -- Explicit if &uleft() or &uright()
-    // -- Default placement if null or other Halign values.
-    Halign* halign;
+    // -- Default placement if null or other HAlign values.
+    HAlign* halign;
     
     // vertical placement. Explicit if &utop() or &ubottom()
-    Valign* valign;
+    VAlign* valign;
     
     // Relative location from reference object:
     //
@@ -334,7 +334,7 @@ namespace ubit {
     //    same borders are used for both objects (eg. both left
     //    sides are aligned together)
     //    --> this implies that 'this' object will be located INSIDE
-    //    the ref. object (in the same way as for usual UH/Valign rules)
+    //    the ref. object (in the same way as for usual UH/VAlign rules)
     
     bool hoppositeBorder, voppositeBorder;
     

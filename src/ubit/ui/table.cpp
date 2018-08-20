@@ -40,8 +40,8 @@ Style* Table::createStyle() {
   style->viewStyle = &UTableView::style;
   style->textSeparator = &ustr("\n");
   style->orient   = Orientation::HORIZONTAL;
-  style->halign   = Halign::LEFT;
-  style->valign   = Valign::TOP;
+  style->halign   = HAlign::LEFT;
+  style->valign   = VAlign::TOP;
   style->hspacing = 0; //EX 1;
   style->vspacing = 1;
   style->local.padding.set(1, 1);
@@ -55,12 +55,12 @@ Style* UTrow::createStyle() {
   style->orient = Orientation::HORIZONTAL;
 
   // il faut left car hflex a un resultat imprevu (bug?)
-  style->halign = Halign::LEFT;
+  style->halign = HAlign::LEFT;
 
   // il faut vflex pour etre conforme a HTML (une utcell
   // devra occuper toute la hauteur d'un utrow (nb: bug corrige
   // dans uview.cc qui permet d'utilser cette option)
-  style->valign = Valign::FLEX;
+  style->valign = VAlign::FLEX;
   
   style->hspacing = 1;
   style->vspacing = 0;  //EX 1
@@ -73,8 +73,8 @@ Style* UTcell::createStyle() {
   Style* style = new Style();
   style->viewStyle = &FlowView::style;
   style->orient = Orientation::HORIZONTAL;
-  style->halign = Halign::FLEX;
-  style->valign = Valign::FLEX;
+  style->halign = HAlign::FLEX;
+  style->valign = VAlign::FLEX;
   style->hspacing = 0;
   style->vspacing = 0;
   style->local.padding.set(0,0);
@@ -93,17 +93,17 @@ static void augmentCells(vector<UViewCell>& tab, unsigned int new_size) {
 }
 
 
-UTcell::UTcell(Args a): UFlowbox(a) {
+UTcell::UTcell(Args a): FlowBox(a) {
   colspan = 1;
   rowspan = 1;
 }
 
-UTcell::UTcell(short _colspan, Args a) : UFlowbox(a) {
+UTcell::UTcell(short _colspan, Args a) : FlowBox(a) {
   colspan = _colspan;
   rowspan = 1;
 }
 
-UTcell::UTcell(short _colspan, short _rowspan, Args a) : UFlowbox(a) {
+UTcell::UTcell(short _colspan, short _rowspan, Args a) : FlowBox(a) {
   colspan = _colspan;
   rowspan = _rowspan;
 }

@@ -131,7 +131,7 @@ void Finder::removeIconbox(UFinderDir* de, bool upd) {
     //iconbox_panel->setAutoUpdate(upd);
     mainbox.remove(*de->iconbox);
     //iconbox_panel->setAutoUpdate(true);
-    de->iconbox = null;    // unique_ptr : automatic deletion
+    de->iconbox = null;    // std::unique_ptr : automatic deletion
     de->emph(false);
   }
 }
@@ -434,7 +434,7 @@ void Finder::iconActionCB(IconBox* ibox) {
   if (piconbox && piconbox != ibox) {
     piconbox->selectIcon(null);
     // must be reloaded
-    //selected_ima = null;  // unique_ptr : automatic deletion
+    //selected_ima = null;  // std::unique_ptr : automatic deletion
   }
   openEntry();
 }
@@ -444,7 +444,7 @@ void Finder::iconSelectCB(IconBox* ibox) {
   if (piconbox && piconbox != ibox) {
     piconbox->selectIcon(null);
     // must be reloaded
-    //selected_ima = null;  // unique_ptr : automatic deletion
+    //selected_ima = null;  // std::unique_ptr : automatic deletion
   }
 
   piconbox = ibox;  

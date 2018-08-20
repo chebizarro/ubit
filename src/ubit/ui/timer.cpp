@@ -43,7 +43,7 @@ namespace ubit {
   
 namespace impl {
 
-#if UBIT_WITH_GLUT          // !!! bug si unique_ptr<Timer> et ptr mis a null
+#if UBIT_WITH_GLUT          // !!! bug si std::unique_ptr<Timer> et ptr mis a null
 
 static void _timerCB(int timer_no) {
   UTimerImpl::Timers& timers = Application::impl.timer_impl.timers;

@@ -337,7 +337,7 @@ View* View::findInChildren(Element* grp, const Point& winpos,
   if (!grp->isShowable() || grp->isIgnoringEvents()) return null;
   bool in_softwin_list = grp->getDisplayType() == Element::WINLIST;
 
-  for (UChildReverseIter ch = grp->crbegin(); ch != grp->crend(); ++ch) {
+  for (ChildReverseIter ch = grp->crbegin(); ch != grp->crend(); ++ch) {
     if (!ch.getCond() || ch.getCond()->verifies(ctx, *grp)) {
       
       Element* chgrp = (*ch)->toElem();
@@ -586,7 +586,7 @@ static bool findView(UViewLink* l, UViewContext& vc) {
 }  //endof namespace impl
 
 bool View::findContext(UViewContext& vc, FindMode fmode) {
-  delete vc.upd_context; vc.upd_context = null; // faudrait un unique_ptr<> !!!
+  delete vc.upd_context; vc.upd_context = null; // faudrait un std::unique_ptr<> !!!
   vc.find_mode = fmode;
   vc.is_clip_set = false;
   vc.layout_view = null;

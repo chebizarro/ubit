@@ -24,18 +24,20 @@
 #ifndef _upalette_hpp_
 #define	_upalette_hpp_ 1
 
+#include <memory>
+
 #include <ubit/ui/box.h>
 
 namespace ubit {
   
   /** movable palette box (internal frame).
    */
-  class UPalette : public Box {
+  class Palette : public Box {
   public:
-    UCLASS(UPalette)
+    UCLASS(Palette)
     static Style* createStyle();
 
-    UPalette(Args content_args = Args::none);
+    Palette(Args content_args = Args::none);
 
     Box& content()  {return *pcontent;}
     ///< returns the content (the working area of the palette).
@@ -60,20 +62,20 @@ namespace ubit {
     void setPosControlModel(PositionControl*);
 
   protected:
-    unique_ptr<Position> ppos;
-    unique_ptr<PositionControl> ppos_ctrl;
-    unique_ptr<Size> psize;
-    unique_ptr<SizeControl> psize_ctrl;
-    unique_ptr<Scale> pcontent_scale;
-    unique_ptr<Box> pcontent;
-    unique_ptr<Element> ptitle;
-    unique_ptr<Element> pcontrols;
-    unique_ptr<Box> ptitle_bar;
-    unique_ptr<Box> presize_btn;
+    std::unique_ptr<Position> ppos;
+    std::unique_ptr<PositionControl> ppos_ctrl;
+    std::unique_ptr<Size> psize;
+    std::unique_ptr<SizeControl> psize_ctrl;
+    std::unique_ptr<Scale> pcontent_scale;
+    std::unique_ptr<Box> pcontent;
+    std::unique_ptr<Element> ptitle;
+    std::unique_ptr<Element> pcontrols;
+    std::unique_ptr<Box> ptitle_bar;
+    std::unique_ptr<Box> presize_btn;
   };
   
-  inline UPalette& upalette(Args content = Args::none) {return *new UPalette(content);}
-  ///< shortcut function that returns *new UPalette(content).
+  inline Palette& upalette(Args content = Args::none) {return *new Palette(content);}
+  ///< shortcut function that returns *new Palette(content).
 
 }
 #endif

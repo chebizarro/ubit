@@ -32,21 +32,20 @@ namespace ubit {
 #define UCLASSDEF(NAME,C,CREATOR) \
 struct MetaClass : public Class { \
 MetaClass(): Class(NAME) {} \
-virtual bool isInstance(UObject& obj) const {return dynamic_cast<C*>(&obj);} \
-virtual bool isInstance(UObject* obj) const {return dynamic_cast<C*>(obj);} \
+virtual bool isInstance(Object& obj) const {return dynamic_cast<C*>(&obj);} \
+virtual bool isInstance(Object* obj) const {return dynamic_cast<C*>(obj);} \
 virtual C* newInstance() const {return CREATOR;} \
 virtual Style* newStyle() const {return C::createStyle();} \
 }; \
-static  const Class& Class() {static MetaClass& c = *new MetaClass; return c;} \
-virtual const Class& getClass() const {return Class();}
+virtual const Class& getClass() const {static MetaClass& c = *new MetaClass; return c;}
 
   
-  /** instanciable UObject (and thus, Node) subclasses MUST invoke this macro in their public section
+  /** instanciable Object (and thus, Node) subclasses MUST invoke this macro in their public section
    * @see Class and UABSTRACT_CLASS().
    */
 #define UCLASS(C) UCLASSDEF(#C, C, new C)
   
-  /** abstract UObject (and thus, Node) subclasses MUST invoke this macro in their public section
+  /** abstract Object (and thus, Node) subclasses MUST invoke this macro in their public section
    * @see Class and UCLASS().
    */  
 #define UABSTRACT_CLASS(C) UCLASSDEF(#C, C, null)
@@ -54,12 +53,12 @@ virtual const Class& getClass() const {return Class();}
   
   /** Ubit class.
    *
-   * All classes that derives from UObject can have an associated Class.
+   * All classes that derives from Object can have an associated Class.
    * Class is a metaclass that defines some useful data for the corresponding
    * Ubit class, such as the class name, a unique ID, a static constructor, 
    * a style def, etc.
    *
-   * UObject (and Node) subclasses MUST invoke the UCLASS macro in the public
+   * Object (and Node) subclasses MUST invoke the UCLASS macro in the public
    * section of their declaration as follows:
    *
    * <pre>
@@ -113,12 +112,12 @@ virtual const Class& getClass() const {return Class();}
     virtual int getParseModes() const {return 0;}
     ///< returns an ORed combination of the parse modes (0 if none).
     
-    virtual bool isInstance(UObject& object) const {return false;}
+    virtual bool isInstance(Object& object) const {return false;}
     ///< returns true if this 'object' derives from this class.
     
-    virtual UObject* newInstance() const {return null;}
+    virtual Object* newInstance() const {return null;}
     /**< creates a new instance of the corresponding class (if applicable).
-     * Ubit classes that derive from UObject should have an associated Class that
+     * Ubit classes that derive from Object should have an associated Class that
      * redefines this method.
      */
     

@@ -24,6 +24,8 @@
 #ifndef UBIT_UI_BOX_H_
 #define	UBIT_UI_BOX_H_
 
+#include <memory>
+
 #include <ubit/core/element.h>
 
 namespace ubit {
@@ -40,7 +42,7 @@ namespace ubit {
    *
    * IMPORTANT NOTE ON RECURSIVE DESTRUCTION AND SMART POINTERS:
    * When a Box is destroyed, its direct and indirect children are ALSO destroyed
-   * EXCEPT if they have other parents OR if they are pointed by a unique_ptr<> Smart Pointer.
+   * EXCEPT if they have other parents OR if they are pointed by a std::unique_ptr<> Smart Pointer.
    * @see class Node for details.
    *
    * Multiple parents and multiple views:
@@ -53,7 +55,7 @@ namespace ubit {
    * Transparency:
    *  - boxes (and their subclasses) can be made fully transparent by adding
    *    the Background::none property, or partially transparent by adding a 
-   *    UAlpha property to them.
+   *    Alpha property to them.
    *
    *  Layout:
    *  - ubit::Box, ubit::Hbox, ubit::Bar : horizontal layout by default
@@ -90,7 +92,7 @@ namespace ubit {
     /**
      * recursive destructor.
      * children are automatically destroyed if not pointed elsewhere
-     * (in the instance graph or by a unique_ptr<>). see class Node for details.
+     * (in the instance graph or by a std::unique_ptr<>). see class Node for details.
      */
     virtual ~Box() {destructs();}
     

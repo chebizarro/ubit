@@ -24,6 +24,8 @@
 #ifndef _upiemenu_hpp_
 #define _upiemenu_hpp_ 1
 
+#include <memory>
+
 #include <ubit/core/boxgeom.h>
 #include <ubit/ui/menu.h>
 
@@ -217,13 +219,13 @@ protected:
   unsigned long show_delay;
   Point armpos, mousepos;
   Size pie_size;
-  unique_ptr<Timer> ptimer;
-  //unique_ptr<Box> parmed; plantage: parmed n'appartient pas au menu!
+  std::unique_ptr<Timer> ptimer;
+  //std::unique_ptr<Box> parmed; plantage: parmed n'appartient pas au menu!
   Box* parmed;
   PieMenu *from_menu, *to_menu;
   Element gitems;
   Length pie_radius, center_radius, item_radius;
-  unique_ptr<Color> ppie_color, pcenter_color, pslice_color, ppie_border_color, pcenter_border_color;
+  std::unique_ptr<Color> ppie_color, pcenter_color, pslice_color, ppie_border_color, pcenter_border_color;
 };
 
 inline PieMenu& upiemenu() {return *new PieMenu();}

@@ -328,7 +328,7 @@ StyleParser::StyleParser() :
 }
 
 // une fois pour toutes: 
-// les destr DOIVENT etre definis dans les .ccp qunad il y a des unique_ptr<XXX> 
+// les destr DOIVENT etre definis dans les .ccp qunad il y a des std::unique_ptr<XXX> 
 // pour eviter d'etre oblige d'inclure la def de XXX dans le .hpp
 
 StyleParser::~StyleParser() {}

@@ -23,7 +23,10 @@
 
 #ifndef _ufinderImpl_hpp_
 #define _ufinderImpl_hpp_
+
 #include <pthread.h>
+#include <memory>
+
 #include <ubit/ui/window.h>
 #include <ubit/uicon.hpp>
 #include <ubit/draw/font.h>
@@ -36,7 +39,7 @@ namespace ubit {
   class UFinderDir : public Item {
     friend class Finder;
     String fpath, fname;
-    unique_ptr<IconBox> iconbox;
+    std::unique_ptr<IconBox> iconbox;
     PopupMenu popmenu;
     bool keep_open;
     int path_type;

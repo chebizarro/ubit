@@ -16,8 +16,10 @@
 #ifndef UBIT_CORE_XMLPARSER_H_
 #define UBIT_CORE_XMLPARSER_H_
 
-#include <ubit/core/dom.h>
+#include <memory>
 #include <fstream>
+
+#include <ubit/core/dom.h>
 
 namespace ubit {
     
@@ -61,10 +63,10 @@ namespace ubit {
     int getStatus() {return status;}
     ///< returns the reading/parsing status.
     
-    UErrorHandler* getErrorHandler() {return perrhandler;}
+    ErrorHandler* getErrorHandler() {return perrhandler;}
     ///< returns the current error handler.
  
-    void setErrorHandler(UErrorHandler* eh) {perrhandler = eh;}
+    void setErrorHandler(ErrorHandler* eh) {perrhandler = eh;}
     ///< changes the error handler (Application default handler used if argument is null).
     
     void setPermissive(bool b) {permissive = b;}
@@ -112,7 +114,7 @@ namespace ubit {
     const Char *text_buffer, *p;
     XmlDocument* doc;
     XmlGrammars* parser_grammars;
-    unique_ptr<UErrorHandler> perrhandler;
+    std::unique_ptr<ErrorHandler> perrhandler;
   };
 }
 #endif // UBIT_CORE_XMLPARSER_H_

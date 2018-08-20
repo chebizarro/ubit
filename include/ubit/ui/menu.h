@@ -24,6 +24,8 @@
 #ifndef _umenu_hpp_
 #define	_umenu_hpp_ 1
 
+#include <memory>
+
 #include <ubit/ui/boxes.h>
 #include <ubit/ui/window.h>
 
@@ -100,7 +102,7 @@ namespace ubit {
   private:
     friend class Application;
     friend class MenuManager;
-    unique_ptr<UCall> menu_opener_cb;
+    std::unique_ptr<UCall> menu_opener_cb;
     class WindowPlacement *placement;
   protected:
     virtual void openImpl(MenuManager&, View* opener, bool auto_place, Display*);

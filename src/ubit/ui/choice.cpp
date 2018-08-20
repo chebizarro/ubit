@@ -412,7 +412,7 @@ void RadioSelect::itemChanged(InputEvent& e) {
 Element* RadioSelect::getSelectedItem() const {
   if (pindex->intValue() < 0) return null;
   int k = 0;
-  for (UParentIter p = pbegin(); p != pend(); ++p) {
+  for (ParentIter p = pbegin(); p != pend(); ++p) {
     if (k == pindex->intValue()) return *p;
     k++;
   }
@@ -422,7 +422,7 @@ Element* RadioSelect::getSelectedItem() const {
 
 void RadioSelect::_selectItem(Element* selection) {
   int k = 0;
-   for (UParentIter p = pbegin(); p != pend(); ++p) {
+   for (ParentIter p = pbegin(); p != pend(); ++p) {
     if (*p == selection) {
       *pindex = k;
       return;
@@ -461,7 +461,7 @@ void RadioSelect::setIndexImpl() {
   int k = 0;
   Element* found = null;
 
-  for (UParentIter p = pbegin(); p != pend(); ++p) {
+  for (ParentIter p = pbegin(); p != pend(); ++p) {
     Element* obj = *p;
     if (obj) { 
       if (k == pindex->intValue()) {

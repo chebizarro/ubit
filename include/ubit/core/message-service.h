@@ -24,6 +24,8 @@
 #ifndef UBIT_CORE_MESSAGE_SERVICE_H_
 #define	UBIT_CORE_MESSAGE_SERVICE_H_
 
+#include <memory>
+
 #include <ubit/udefs.hpp>
 #include <ubit/net/socket.h>
 
@@ -97,7 +99,7 @@ namespace ubit {
      * Args:
      * - 'name' : the UMS server name to resolve
      * - 'callback' is fired when the address is resolved and is then 
-     *    automatically destroyed (except if it is pointed by a unique_ptr<>).
+     *    automatically destroyed (except if it is pointed by a std::unique_ptr<>).
      *
      * Exemple:
      <pre><tt>
@@ -187,7 +189,7 @@ namespace ubit {
     ///< [impl].
     
   protected:
-    unique_ptr<UCall> browse_call, neighbor_call; 
+    std::unique_ptr<UCall> browse_call, neighbor_call; 
   };
   
 }

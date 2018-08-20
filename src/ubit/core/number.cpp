@@ -35,7 +35,7 @@ namespace ubit {
 
 
   
-Number& Number::onChange(UCall &c) {   // @@@ devrait heriter de UObject !!!
+Number& Number::onChange(UCall &c) {   // @@@ devrait heriter de Object !!!
   addChangeCall(c);
   return *this;
 }

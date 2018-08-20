@@ -35,7 +35,7 @@
 #include <ubit/ui/cursor.h>
 #include <ubit/ui/scrollpane.h>
 #include <ubit/ui/scrollbar.h>
-#include <ubit/Selection.hpp>
+#include <ubit/ui/selection.h>
 #include <ubit/draw/key.h>
 #include <ubit/core/application.h>
 using namespace std;
@@ -126,11 +126,11 @@ void TextEdit::update() {
 
 /*
 static void scroll(View* view, int dir) {
-  Scrollpane* spane = null;
+  ScrollPane* spane = null;
   view = view->getParentView();
   while (view) {
     Box* par = view->getBox();
-    if (par && (spane = dynamic_cast<Scrollpane*>(par)))
+    if (par && (spane = dynamic_cast<ScrollPane*>(par)))
       break;
     view = view->getParentView();
   }
@@ -619,7 +619,7 @@ void TextEdit::inputCB(InputEvent& e) {
   else if (e.getCond() == UOn::mrelease)
     mreleased((MouseEvent&)e);
   else if (e.getCond() == UOn::kpress)
-    kpressed((UKeyEvent&)e);
+    kpressed((KeyEvent&)e);
 }
 
 
@@ -697,7 +697,7 @@ void TextEdit::deleteSelection(Selection* sel, String& sel_text, Element& contai
   sel->deleteText();
 }
 
-void TextEdit::kpressed(UKeyEvent& e) {
+void TextEdit::kpressed(KeyEvent& e) {
   if (!caret_str) return;
 
   // en fait ca retourne pas un Element mais toujours le Box qui le

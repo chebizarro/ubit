@@ -101,7 +101,7 @@ public:
   enum {
     ADD_REMOVE = 1<<11,
     STR_DATA = 1<<12,  // doit impliquer PAINT
-    //SCROLL = 1<<13,    // appel direct de updateView() par Scrollpane sans update()
+    //SCROLL = 1<<13,    // appel direct de updateView() par ScrollPane sans update()
     MOVE   = 1<<14     // appel en NO_DELAY par Position
   };
   

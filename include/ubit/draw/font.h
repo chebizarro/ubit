@@ -183,7 +183,7 @@ namespace ubit {
   /** A Font Family represents a collection of fonts for all possible sizes and styles.
    * Note that actual fonts are only loaded when necessary
    */
-  class FontFamily : public UObject {
+  class FontFamily : public Object {
   public:
     static FontFamily sans_serif, serif, monospace;
     ///< predefined font families that can be used in Font(s).

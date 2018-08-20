@@ -24,6 +24,8 @@
 #ifndef _uwinImpl_hpp_
 #define	_uwinImpl_hpp_ 1
 
+#include <memory>
+
 #include <ubit/ui/window.h>
 
 namespace ubit {
@@ -78,7 +80,7 @@ namespace ubit {
     void doUpdate(const Update&, Window*, View* winview);
     
   private:
-    unique_ptr<Position> ppos;
+    std::unique_ptr<Position> ppos;
     View* actual_view;  
   };
   

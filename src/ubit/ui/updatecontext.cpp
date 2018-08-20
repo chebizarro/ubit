@@ -50,8 +50,8 @@ graph(parctx.graph)
   obj->emodes.IS_HEIGHT_UNRESIZABLE=(local.size.height.modes.val & Size::UNRESIZABLE.val);
   
   xyscale = parctx.xyscale;
-  boxIsVFlex = (parctx.valign == Valign::FLEX);
-  boxIsHFlex = (parctx.halign == Halign::FLEX);
+  boxIsVFlex = (parctx.valign == VAlign::FLEX);
+  boxIsHFlex = (parctx.halign == HAlign::FLEX);
 
   // si pas de spec de l'orient prendre celle du style par defaut
   /*
@@ -63,8 +63,8 @@ graph(parctx.graph)
   }
    */
   const Style& style = *obj_style;
-  valign = (style.valign == Valign::INHERIT ? parctx.valign : style.valign);
-  halign = (style.halign == Halign::INHERIT ? parctx.halign : style.halign);
+  valign = (style.valign == VAlign::INHERIT ? parctx.valign : style.valign);
+  halign = (style.halign == HAlign::INHERIT ? parctx.halign : style.halign);
 
   // diviser par /xyscale car sera multiplie par UpdateContext::rescale() 
   vspacing = (style.vspacing == VSpacing::INHERIT ? parctx.vspacing/xyscale : style.vspacing);
@@ -138,8 +138,8 @@ graph(null)
    */
   
   const Style& style = *obj_style;
-  valign = (style.valign == Valign::INHERIT ? 0 : style.valign);
-  halign = (style.halign == Halign::INHERIT ? 0 : style.halign);
+  valign = (style.valign == VAlign::INHERIT ? 0 : style.valign);
+  halign = (style.halign == HAlign::INHERIT ? 0 : style.halign);
   vspacing = (style.vspacing == VSpacing::INHERIT ? 0 : style.vspacing);
   hspacing = (style.hspacing == HSpacing::INHERIT ? 0 : style.hspacing);
   cursor = style.cursor;

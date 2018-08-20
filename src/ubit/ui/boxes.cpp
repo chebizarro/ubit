@@ -71,8 +71,8 @@ Style* UHbox::createStyle() {
   Style* style = new Style();
   style->textSeparator  =  &ustr(" ");
   style->orient   = Orientation::HORIZONTAL;
-  style->halign   = Halign::LEFT;
-  style->valign   = Valign::FLEX;
+  style->halign   = HAlign::LEFT;
+  style->valign   = VAlign::FLEX;
   style->hspacing = 1;
   style->vspacing = 1;
   style->local.padding.set(0,0);
@@ -83,8 +83,8 @@ Style* UVbox::createStyle() {
   Style* style = new Style();
   style->textSeparator  = &ustr("\n");
   style->orient   = Orientation::VERTICAL;
-  style->halign   = Halign::FLEX;
-  style->valign   = Valign::TOP;
+  style->halign   = HAlign::FLEX;
+  style->valign   = VAlign::TOP;
   style->hspacing = 1;
   style->vspacing = 1;
   //style->local.vmargin  = 0;  style->local.hmargin  = 0;
@@ -97,8 +97,8 @@ Style* UBar::createStyle() {
   Style* s = new Style;
   s->textSeparator = &ustr("\t");
   s->orient = Orientation::HORIZONTAL;
-  s->halign = Halign::LEFT;
-  s->valign  = Valign::FLEX;
+  s->halign = HAlign::LEFT;
+  s->valign  = VAlign::FLEX;
   s->hspacing = 4;
   s->vspacing = 5;
   s->local.padding.set(5,2);
@@ -110,8 +110,8 @@ Style* UStatusbar::createStyle() {
   Style* s = new Style();
   s->textSeparator  = &ustr("\t");
   s->orient = Orientation::HORIZONTAL;
-  s->halign = Halign::LEFT;
-  s->valign  = Valign::FLEX;
+  s->halign = HAlign::LEFT;
+  s->valign  = VAlign::FLEX;
   s->hspacing = 2;
   s->vspacing = 2;
   s->local.padding.set(6,2); //tb,lr
@@ -120,13 +120,13 @@ Style* UStatusbar::createStyle() {
 }
 
 
-Style* UFlowbox::createStyle() {
+Style* FlowBox::createStyle() {
   Style& s = *new Style();
   s.viewStyle = &FlowView::style;
   s.textSeparator = new String("\n");
   s.orient = Orientation::HORIZONTAL;
-  s.halign = Halign::FLEX;
-  s.valign = Valign::FLEX;
+  s.halign = HAlign::FLEX;
+  s.valign = VAlign::FLEX;
   s.hspacing = 1;
   s.vspacing = 1;
   s.local.padding.set(0,0);
@@ -138,17 +138,17 @@ Style* UFlowbox::createStyle() {
   return &s;
 }
 
-UFlowbox::UFlowbox(Args a): Box(a) {
+FlowBox::FlowBox(Args a): Box(a) {
   emodes.IS_TEXT_SELECTABLE = true;
 }
 
 
-Style* UCardbox::createStyle() {
+Style* CardBox::createStyle() {
   Style& s = *new Style();
   s.viewStyle = &UPaneView::style;
   s.orient = Orientation::HORIZONTAL;
-  s.halign = Halign::FLEX;
-  s.valign = Valign::FLEX;
+  s.halign = HAlign::FLEX;
+  s.valign = VAlign::FLEX;
   s.hspacing = 1;
   s.vspacing = 1;
   s.local.padding.set(0,0);
@@ -159,19 +159,19 @@ Style* UCardbox::createStyle() {
   return &s; 
 }
 
-UCardbox::UCardbox(Args args) : Box(args), ptabs(new ListBox()) 
+CardBox::CardBox(Args args) : Box(args), ptabs(new ListBox()) 
 {
-  ptabs->addAttr(ucall(this, &UCardbox::setSelectedImpl)
+  ptabs->addAttr(ucall(this, &CardBox::setSelectedImpl)
                  + Orientation::horizontal + uhflex() + uvflex()
                  + upadding(0,0) + Background::none + Border::none);
   setAttr(*new UCompositeBorder(utop() + uhcenter() + *ptabs));
 }
 
-UCardbox::~UCardbox() {}
+CardBox::~CardBox() {}
 
-Choice& UCardbox::choice() {return ptabs->choice();}
+Choice& CardBox::choice() {return ptabs->choice();}
 
-void UCardbox::setSelectedImpl() {
+void CardBox::setSelectedImpl() {
   int index = ptabs->choice().getSelectedIndex();
   int ix = 0;
   for (ChildIter i = cbegin(); i != cend(); ++i) {
@@ -184,12 +184,12 @@ void UCardbox::setSelectedImpl() {
   }
 }
 
-UCardbox& UCardbox::addCard(Box& card) {
+CardBox& CardBox::addCard(Box& card) {
   addTab(Args::none, card);
   return *this;
 }
 
-UCardbox& UCardbox::addTab(Args title, Box& card) {
+CardBox& CardBox::addTab(Args title, Box& card) {
   if (&title != &Args::none) ptabs->add(utabbutton(title));
   else ptabs->add(uitem());  
   add(card);
@@ -197,7 +197,7 @@ UCardbox& UCardbox::addTab(Args title, Box& card) {
   return *this;
 }
 
-Box* UCardbox::getCard(int index) const {
+Box* CardBox::getCard(int index) const {
   int ix = 0;
   for (ChildIter i = cbegin(); i != cend(); ++i) {
     Box* c = dynamic_cast<Box*>(*i);
@@ -207,7 +207,7 @@ Box* UCardbox::getCard(int index) const {
   return null;
 }
 
-int UCardbox::getCardIndex(Box& card) const {
+int CardBox::getCardIndex(Box& card) const {
   int ix = 0;
   for (ChildIter i = cbegin(); i != cend(); ++i) {
     Box* c = dynamic_cast<Box*>(*i);
@@ -217,37 +217,37 @@ int UCardbox::getCardIndex(Box& card) const {
   return -1;
 }
 
-Box* UCardbox::getSelectedCard() const {
+Box* CardBox::getSelectedCard() const {
   int index = ptabs->choice().getSelectedIndex();
   if (index >= 0) return getCard(index);
   return null;
 }
 
-void UCardbox::setSelectedCard(Box& card) {
+void CardBox::setSelectedCard(Box& card) {
   int ix = getCardIndex(card);
   if (ix >= 0) setSelectedIndex(ix);
 }
 
-int UCardbox::getSelectedIndex() const {
+int CardBox::getSelectedIndex() const {
   return ptabs->choice().getSelectedIndex();
 }
 
-void UCardbox::setSelectedIndex(int index) {
+void CardBox::setSelectedIndex(int index) {
   ptabs->choice().setSelectedIndex(index);
 }
 
-//Box* UCardbox::getTab(int index) const {
+//Box* CardBox::getTab(int index) const {
 //  return ptabs->choice().getSelectableItem(index);
 //}
-//Box* UCardbox::getSelectedTab() const {
+//Box* CardBox::getSelectedTab() const {
 //  return ptabs->choice().getSelectedItem();
 //}
 
-//void UCardbox::setSelectedTab(Box* tab) {
+//void CardBox::setSelectedTab(Box* tab) {
 //  ptabs->choice().setSelectedItem(tab);
 //}
 /*
- UCardbox& UCardbox::setComboMode(bool cm) {
+ CardBox& CardBox::setComboMode(bool cm) {
  Border* border = getBorder(true); // true => create border if needed
  //cerr <<"border "<<border<<" " <<border->getSubGroup()<<endl;
  

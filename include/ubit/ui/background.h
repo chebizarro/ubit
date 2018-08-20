@@ -24,6 +24,8 @@
 #ifndef UBIT_UI_BACKGROUND_H_
 #define	UBIT_UI_BACKGROUND_H_
 
+#include <memory>
+
 #include <ubit/core/attribute.h>
 
 namespace ubit {
@@ -108,8 +110,8 @@ namespace ubit {
     Background(Color&, UConst);
     Background(Image&, UConst);
   protected:
-    unique_ptr<Color> pcolor;
-    unique_ptr<Image> pima;
+    std::unique_ptr<Color> pcolor;
+    std::unique_ptr<Image> pima;
     float alpha;
     bool tiling;
   };
@@ -127,11 +129,11 @@ namespace ubit {
    * value must be in range [0.0, 1.0]. A value of 1. makes the widget opaque,
    * a value of 0. makes it fully transparent
    */
-  class UAlpha : public Attribute {
+  class Alpha : public Attribute {
   public:
-    UCLASS(UAlpha)
+    UCLASS(Alpha)
     
-    UAlpha(float = 1.0);
+    Alpha(float = 1.0);
     /**< creates an alpha blending property; see also shortcut function ualpha().
      * specifies if the widget (ubit:Box and subclass) that contains this prop
      * is opaque (value = 1.0), fully stransparent (value = 0.0)
@@ -141,15 +143,15 @@ namespace ubit {
     operator float() const {return val;}
     ///< type conversion: returns value  which is in range [0., 1.].
     
-    UAlpha& operator=(float v)         {return set(v);}
-    UAlpha& operator=(const Float& v) {return set(v);}
-    UAlpha& operator=(const UAlpha& v) {return set(v.val);}
-    virtual UAlpha& set(float);  
+    Alpha& operator=(float v)         {return set(v);}
+    Alpha& operator=(const Float& v) {return set(v);}
+    Alpha& operator=(const Alpha& v) {return set(v.val);}
+    virtual Alpha& set(float);  
     ///< changes alpha value. must be in range [0., 1.].
     
     bool operator==(float v)         const {return val == v;}  
     bool operator==(const Float& v) const {return val == v;}  
-    bool operator==(const UAlpha& v) const {return val == v.val;}
+    bool operator==(const Alpha& v) const {return val == v.val;}
     
     virtual void update();
     virtual void putProp(UpdateContext*, Element&);
@@ -158,8 +160,8 @@ namespace ubit {
     float val;
   };
   
-  inline UAlpha& ualpha(float value = 1.0) {return *new UAlpha(value);}
-  ///< shortcut function that returns *new UAlpha(value).
+  inline Alpha& ualpha(float value = 1.0) {return *new Alpha(value);}
+  ///< shortcut function that returns *new Alpha(value).
   
 }
 #endif // UBIT_UI_BACKGROUND_H_

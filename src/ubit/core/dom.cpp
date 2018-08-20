@@ -108,7 +108,7 @@ void XmlDocument::constructs() {
 }
 
 XmlDocument::~XmlDocument() {
-  delete doc_elem;  // faudrait un unique_ptr
+  delete doc_elem;  // faudrait un std::unique_ptr
   
   // NB: detruit le handle, pas les grammaires (pour des raisons de perfs
   // et car sinon les XmlNodes qui pointent dessus pourrainet planter

@@ -48,7 +48,7 @@ namespace ubit {
   /**
    * Key codes.
    * 
-   * key codes are returned by UKeyEvent::getKeyCode()
+   * key codes are returned by KeyEvent::getKeyCode()
    * Note: do not confuse Key::Shift (key code) with UMod::ShiftMod (modifier mask)
    * @see also class UMod for modifier mask.
    */      

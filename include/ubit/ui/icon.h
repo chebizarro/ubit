@@ -23,6 +23,9 @@
 
 #ifndef _uicon_hpp_
 #define _uicon_hpp_
+
+#include <memory>
+
 #include <ubit/core/doc.h>
 
 namespace ubit {
@@ -48,8 +51,8 @@ namespace ubit {
     void setDir(bool state) {is_dir = state;}
     
   protected:
-    unique_ptr<Box> ima_box, text_box;
-    unique_ptr<String> pname;
+    std::unique_ptr<Box> ima_box, text_box;
+    std::unique_ptr<String> pname;
     bool is_dir;
   };
   
@@ -69,7 +72,7 @@ namespace ubit {
     // inherited:
     // virtual Box& titlebar() {return *ptitle_bar;}
     // virtual Box& content()  {return *pcontent;}
-    // virtual Scrollpane& scrollpane()  {return *pspane;}
+    // virtual ScrollPane& scrollpane()  {return *pspane;}
     // virtual Scale& scale()  {return *pscale;}
     
     virtual String& pathname()  {return *ppathname;}
@@ -95,10 +98,10 @@ namespace ubit {
     // - - - impl.  - - - - - - - - - - - - - - - - - - - - - - - - - -
   protected:
     friend class Finder;
-    unique_ptr<String> ppathname, ptitle;
-    unique_ptr<ListBox> picons;
-    unique_ptr<HSpacing> icon_hspacing;
-    unique_ptr<VSpacing> icon_vspacing;
+    std::unique_ptr<String> ppathname, ptitle;
+    std::unique_ptr<ListBox> picons;
+    std::unique_ptr<HSpacing> icon_hspacing;
+    std::unique_ptr<VSpacing> icon_vspacing;
     unsigned long filetime;
     bool show_parent_dir;
     virtual void okBehavior(InputEvent&); 

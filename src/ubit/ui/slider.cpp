@@ -61,8 +61,8 @@ USliderStyle::USliderStyle() {
   vstyle.hspacing = 0;
   vstyle.vspacing = 0;
   vstyle.orient = Orientation::VERTICAL;
-  vstyle.halign = Halign::CENTER;
-  vstyle.valign = Valign::FLEX;
+  vstyle.halign = HAlign::CENTER;
+  vstyle.valign = VAlign::FLEX;
   //vstyle.local.padding.left = 1; //sinon impression rail decentre
   
   //local.size.set(150,UPX, 16,UPX);
@@ -71,8 +71,8 @@ USliderStyle::USliderStyle() {
   hspacing = 0;
   vspacing = 0;
   orient = Orientation::HORIZONTAL;
-  halign = Halign::FLEX;
-  valign = Valign::CENTER;
+  halign = HAlign::FLEX;
+  valign = VAlign::CENTER;
   //local.padding.top = 1;
 }
 
@@ -83,33 +83,33 @@ const Style& USliderStyle::getStyle(UpdateContext* ctx) const {
 }
 
 
-USlider& uslider(const Args& a) {return *new USlider(a);}
+Slider& uslider(const Args& a) {return *new Slider(a);}
 
-USlider& uslider(Float& v, const Args& a) {return *new USlider(v, a);}
+Slider& uslider(Float& v, const Args& a) {return *new Slider(v, a);}
 
-USlider& uhslider(const Args& a) {return *new USlider(a);}
+Slider& uhslider(const Args& a) {return *new Slider(a);}
 
-USlider& uvslider(const Args& a) {
-  return *new USlider(Orientation::vertical + a);
+Slider& uvslider(const Args& a) {
+  return *new Slider(Orientation::vertical + a);
 }
 
-USlider::USlider(const Args& a) : Box(a), pvalue(*new Float) {
+Slider::Slider(const Args& a) : Box(a), pvalue(*new Float) {
   // Box(a) avant constructs() pour que isVertical() soit correct
   constructs();
 }
 
-USlider::USlider(Float& v, const Args& a) : Box(a), pvalue(v) {
+Slider::Slider(Float& v, const Args& a) : Box(a), pvalue(v) {
   constructs();
 }
 
-void USlider::constructs() {
+void Slider::constructs() {
   // action doit etre appele a la fin sur le release
-  pvalue->onChange(ucall(this, &USlider::actionCB));
+  pvalue->onChange(ucall(this, &Slider::actionCB));
 
   // the position is a percent of the parent size
   pknob_pos = new Position(0,0);
   //pknob_pos->setPercentMode(true, true);  // adjusted
-  pknob_pos->onChange(ucall(this, &USlider::changeCB));
+  pknob_pos->onChange(ucall(this, &Slider::changeCB));
 
   pknob_ctrl = (new PositionControl)->setModel(pknob_pos);
   // sinon appel incorrect de changeCB() a cause des setX(), setY() ci-dessous !
@@ -131,15 +131,15 @@ void USlider::constructs() {
   pknob->addAttr(*pknob_pos);
   pknob->addAttr(*pknob_ctrl);
   
-  addAttr(UOn::mpress / ucall(this, &USlider::gotoPosCB));
+  addAttr(UOn::mpress / ucall(this, &Slider::gotoPosCB));
 }
 
 
-Box* USlider::createKnob() {return new USliderKnob();}
-Box* USlider::createRail() {return new USliderRail();}
+Box* Slider::createKnob() {return new USliderKnob();}
+Box* Slider::createRail() {return new USliderRail();}
 
 
-void USlider::gotoPosCB(MouseEvent& e) {
+void Slider::gotoPosCB(MouseEvent& e) {
   View* v = e.getView();
   if (!v) return;
 
@@ -153,7 +153,7 @@ void USlider::gotoPosCB(MouseEvent& e) {
  }
 }
 
-void USlider::actionCB(Event& notused) {  //UNodeEvent
+void Slider::actionCB(Event& notused) {  //UNodeEvent
   // cette verif doit etre dans setCB, pas dans set() car pvalue peut etre
   // modifiee directement si partagee par d'autres objets (via value() etc)
   if (*pvalue < 0.) *pvalue = 0.;
@@ -166,7 +166,7 @@ void USlider::actionCB(Event& notused) {  //UNodeEvent
   fire(e2);
 }
 
-void USlider::changeCB(Event& notused) {  //UNodeEvent
+void Slider::changeCB(Event& notused) {  //UNodeEvent
   if (isVertical()) *pvalue = pknob_pos->getY().val; 
   else *pvalue = pknob_pos->getX().val;
   
@@ -218,15 +218,15 @@ struct USliderKnobStyle : public Style {
 
 USliderKnobStyle::USliderKnobStyle() {
   orient = Orientation::INHERIT;
-  halign = Halign::LEFT;
-  valign = Valign::TOP;
+  halign = HAlign::LEFT;
+  valign = VAlign::TOP;
   hspacing = 0;
   vspacing = 0;
   local.content = new Element(UPix::hslider);
 
   vstyle.orient = Orientation::INHERIT;
-  vstyle.halign = Halign::LEFT;
-  vstyle.valign = Valign::TOP;
+  vstyle.halign = HAlign::LEFT;
+  vstyle.valign = VAlign::TOP;
   vstyle.hspacing = 0;
   vstyle.vspacing = 0;
   vstyle.local.content = new Element(UPix::vslider);
@@ -246,7 +246,7 @@ Style* USliderKnob::createStyle() {
    return c;
  }
 
-class URangeSlider: public USlider {
+class URangeSlider: public Slider {
 public:
   URangeSlider(const Args& = Args::none);
   URangeSlider(const Orientation&, const Args& = Args::none);
@@ -285,8 +285,8 @@ protected:
   virtual void dragSlider2(Event&);
   
 private:
-  unique_ptr<Float> pvalue2; 
-  unique_ptr<Box> pslider2;
+  std::unique_ptr<Float> pvalue2; 
+  std::unique_ptr<Box> pslider2;
   Position slider_pos2;
   int delta_mouse2;
   void constructs2();

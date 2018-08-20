@@ -139,7 +139,7 @@ public:
  }
  */
 
-Event::Event(const Condition& c, UObject* s, UObject* a)
+Event::Event(const Condition& c, Object* s, Object* a)
 : cond(&c), source(s), aux(a) {} 
 
 Event::~Event() {}
@@ -303,12 +303,12 @@ delta(wheel_delta) {
 } 
     
 
-UKeyEvent::UKeyEvent(const Condition& c, View* source, EventFlow* f, unsigned long when, 
+KeyEvent::KeyEvent(const Condition& c, View* source, EventFlow* f, unsigned long when, 
                      int mods, int kcode, short kchar)
 : InputEvent(c, source, f, when, mods), keycode(kcode), keychar(kchar) {}
 
-void UKeyEvent::setKeyChar(short ch) {keychar = ch;}
-void UKeyEvent::setKeyCode(int ks) {keycode = ks;}
+void KeyEvent::setKeyChar(short ch) {keychar = ch;}
+void KeyEvent::setKeyCode(int ks) {keycode = ks;}
 
 
 UViewEvent::UViewEvent(const Condition& c, View* v) : 
@@ -330,7 +330,7 @@ Display* UViewEvent::getDisp() const {
 TimerEvent::TimerEvent(const Condition& c, Timer* t, unsigned long w) 
 : Event(c, t), /*timer(t),*/ when(w) {}
 
-UserEvent::UserEvent(const Condition& c, UObject* s, int t, void* d) 
+UserEvent::UserEvent(const Condition& c, Object* s, int t, void* d) 
 : Event(c, s), /*source(s),*/ type(t), data(d) {}
 
 MessageEvent::MessageEvent(const Condition& c, MessagePort* p) 

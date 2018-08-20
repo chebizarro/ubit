@@ -21,8 +21,10 @@
  * 
  */
 
-#ifndef _uchoice_hpp_
-#define	_uchoice_hpp_ 1
+#ifndef UBIT_UI_CHOICE_H_
+#define	UBIT_UI_CHOICE_H_
+
+#include <memory>
 
 #include <ubit/core/attribute.h>
 
@@ -33,7 +35,7 @@ namespace ubit {
    * This object makes the CHILDREN of a widget selectable. It must be added to
    * the chilsd or attribute list of this widget. Selection is exclusive. 
    * No child is initially selected. 
-   * ListBox, Treebox, ComboBox use an internal Choice
+   * ListBox, TreeBox, ComboBox use an internal Choice
    * @see also: RadioSelect.
    */
   class Choice : public Attribute {
@@ -126,10 +128,10 @@ namespace ubit {
      * SELECT_ON_DISARM, SELECT_ON_ARM, SELECT_ON_DRAG
      */
   protected:
-    unique_ptr<UCall>  callbacks;
-    unique_ptr<Box>   container;
-    unique_ptr<Element> last_browsing_group;
-    unique_ptr<Element> sel_items;
+    std::unique_ptr<UCall>  callbacks;
+    std::unique_ptr<Box>   container;
+    std::unique_ptr<Element> last_browsing_group;
+    std::unique_ptr<Element> sel_items;
     IsSelectable*is_selectable;
     //short sel_mode, sel_style;
     virtual void mouseCB(InputEvent&);
@@ -206,8 +208,8 @@ namespace ubit {
     
   protected:
     bool can_unselect_mode;
-    unique_ptr<Int> pindex;
-    unique_ptr<UCall> pselect_callback;
+    std::unique_ptr<Int> pindex;
+    std::unique_ptr<UCall> pselect_callback;
     void itemChanged(InputEvent&);
     void setIndexImpl();
     void _selectItem(Element*);
@@ -217,4 +219,4 @@ namespace ubit {
   ///< shortcut function that return *new RadioSelect();
   
 }
-#endif
+#endif // UBIT_UI_CHOICE_H_

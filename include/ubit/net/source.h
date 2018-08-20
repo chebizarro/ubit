@@ -17,6 +17,8 @@
 #ifndef UBIT_NET_SOURCE_H_
 #define	UBIT_NET_SOURCE_H_
 
+#include <memory>
+
 #include <ubit/core/object.h>
 
 namespace ubit {
@@ -25,7 +27,7 @@ namespace ubit {
 * Example:
 * <pre>
 *    int source = ...;
-*    unique_ptr<Source> i = new Source(source);
+*    std::unique_ptr<Source> i = new Source(source);
 *    i->onAction( ucall(x, y, printArgs) );
 *    i->onAction( ucall(obj, val, &Demo::doIt) );
 * </pre>
@@ -34,7 +36,7 @@ namespace ubit {
 *
 * See also: Socket (Ubit simple sockets).
 */
-class Source : public Node {    // !!!@@@ devrait deriver de UObject !!!
+class Source : public Node {    // !!!@@@ devrait deriver de Object !!!
 public:
   UCLASS(Source)
     

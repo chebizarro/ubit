@@ -29,7 +29,7 @@
 #include <ubit/core/element.h>
 #include <ubit/ui/update.h>
 #include <ubit/core/event.h>
-#include <ubit/Selection.hpp>
+#include <ubit/ui/selection.h>
 #include <ubit/core/application.h>
 using namespace std;
 namespace ubit {
@@ -320,7 +320,7 @@ bool Selection::complete(MouseEvent& e) {
 }
 
 
-void Selection::keyPress(UKeyEvent& e) {
+void Selection::keyPress(KeyEvent& e) {
   // toute entree clavier qui renvoie un char efface la selection
   // et paste doit virer la selection (ou du moins la remplacer)
   if (e.getKeyChar()) clear();

@@ -71,7 +71,7 @@ namespace ubit {
    *  NOTE: MUST be a child of a UTrow object
    *  - See also: Table, UTrow
    */
-  class UTcell: public UFlowbox {
+  class UTcell: public FlowBox {
   public:
     UCLASS(UTcell)
     

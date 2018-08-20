@@ -24,6 +24,9 @@
 
 #ifndef _Selection_hpp_
 #define	_Selection_hpp_
+
+#include <memory>
+
 #include <ubit/udefs.hpp>
 
 namespace ubit {
@@ -52,7 +55,7 @@ protected:
   void start(MouseEvent&);
   void extend(MouseEvent&);
   bool complete(MouseEvent&);
-  void keyPress(UKeyEvent&);
+  void keyPress(KeyEvent&);
   bool beingSelected() {return being_selected;}
   void perform(String* copy, bool del);
 
@@ -69,9 +72,9 @@ private:
   // reordered in the left to right order
   ChildIter fromLink, toLink, pressLink, endPressLink, oldLink;
   long  fromPos, toPos, pressPos, oldPos;
-  unique_ptr <Color> pcolor;
-  unique_ptr <Color> pbgcolor;
-  unique_ptr <Font>  pfont;
+  std::unique_ptr <Color> pcolor;
+  std::unique_ptr <Color> pbgcolor;
+  std::unique_ptr <Font>  pfont;
 
   void update(UDataContext*);
   void paint(long refreshFromPos, long refreshToPos);

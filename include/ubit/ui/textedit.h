@@ -24,6 +24,8 @@
 #ifndef _uedit_hpp_
 #define	_uedit_hpp_ 1
 
+#include <memory>
+
 #include <ubit/core/attribute.h>
 
 namespace ubit {
@@ -149,15 +151,15 @@ namespace ubit {
     virtual void  paint(Graph&, UpdateContext&, const Rectangle&, int offset, int cellen) const;
     
   private:
-    unique_ptr<UCall>  calls;        // callback object
-    unique_ptr<UCall>  calls2;        // callback object
-    unique_ptr<Color> caret_color;  // specific color for displaying the caret (if any)
-    unique_ptr<String>   caret_str;    // the string that contains the caret (if any)
+    std::unique_ptr<UCall>  calls;        // callback object
+    std::unique_ptr<UCall>  calls2;        // callback object
+    std::unique_ptr<Color> caret_color;  // specific color for displaying the caret (if any)
+    std::unique_ptr<String>   caret_str;    // the string that contains the caret (if any)
     long caret_pos;             // the position of the caret in 'caret_str'
     bool is_editable, is_visible;
     mutable bool repainted;
     virtual void inputCB(InputEvent&);
-    virtual void kpressed(UKeyEvent&);
+    virtual void kpressed(KeyEvent&);
     virtual void mpressed(MouseEvent&);
     virtual void mreleased(MouseEvent&);
     virtual void callbacks2(MouseEvent&);

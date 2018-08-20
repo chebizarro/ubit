@@ -25,7 +25,9 @@
 #define UBIT_DRAW_STYLEPARSER_H_
 
 #include <vector> 
+#include <memory> 
 #include <fstream>
+
 #include <ubit/core/node.h>
 #include <ubit/core/string.h>
 
@@ -62,10 +64,10 @@ namespace ubit {
     int getStatus() {return stat;}
     ///< returns the parsing status.
     
-    UErrorHandler* getErrorHandler() {return perrhandler;}
+    ErrorHandler* getErrorHandler() {return perrhandler;}
     ///< returns the current error handler.
     
-    void setErrorHandler(UErrorHandler* eh) {perrhandler = eh;}
+    void setErrorHandler(ErrorHandler* eh) {perrhandler = eh;}
     ///< changes the error handler (Application default handler used if argument is null).
     
   protected:
@@ -91,7 +93,7 @@ namespace ubit {
     bool permissive;
     int stat;
     const Char *text_buffer, *p;
-    unique_ptr<UErrorHandler> perrhandler;
+    std::unique_ptr<ErrorHandler> perrhandler;
   };
   
 }

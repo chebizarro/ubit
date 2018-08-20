@@ -52,8 +52,8 @@ Style::Style() {
   viewStyle = &View::style;
   textSeparator = null;    // text separator between two children when printing
   orient = Orientation::INHERIT;
-  halign = Halign::LEFT;
-  valign = Valign::TOP;
+  halign = HAlign::LEFT;
+  valign = VAlign::TOP;
   hspacing = HSpacing::INHERIT;
   vspacing = VSpacing::INHERIT;
   font = null;

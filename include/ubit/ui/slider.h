@@ -24,6 +24,8 @@
 #ifndef _uslider_hpp_
 #define	_uslider_hpp_ 1
 
+#include <memory>
+
 #include <ubit/core/number.h>
 #include <ubit/ui/box.h>
 #include <ubit/draw/style.h>
@@ -50,37 +52,37 @@ namespace ubit {
    *  - UOn::action (default callback) is fired when the value is changed
    *  - UOn::change is fired continuously while the knob is dragged
    */
-  class USlider: public Box {
+  class Slider: public Box {
   public:
-    UCLASS(USlider)
+    UCLASS(Slider)
     
-    USlider(const Args& = Args::none);
+    Slider(const Args& = Args::none);
     /**< creates a new slider (@see also shortcut uslider(Args&)).
-     * Default orientation is horizontal. new USlider(Orientation::vertical) creates
+     * Default orientation is horizontal. new Slider(Orientation::vertical) creates
      * a vertical slider. The slider's value is in the range [0., 100.]
      */
     
-    USlider(Float& value, const Args& = Args::none);
+    Slider(Float& value, const Args& = Args::none);
     /**< creates a new slider with a model value (@see also shortcut uslider(Float&, Args&)).
      * the slider is synchronized with this value. Several widgets (eg. sliders)
      * that share the same value are synchronized.
-     * Default orientation is horizontal. new USlider(value, Orientation::vertical) creates
+     * Default orientation is horizontal. new Slider(value, Orientation::vertical) creates
      * a vertical slider. The slider's value is in the range [0., 100.]
      */
   
     float getValue() const {return *pvalue;}
     ///< returns the current value (a float between 0 and 100).
     
-    USlider& setValue(float val) {*pvalue = val; return *this;}
+    Slider& setValue(float val) {*pvalue = val; return *this;}
     /**< changes the current value (a float between 0 and 100).
      * UOn::change and UOn::action callbacks are fired when
-     * the value is changed (see class USlider).
+     * the value is changed (see class Slider).
      */
     
     Float& value() {return *pvalue;}
     /**< return the internal value model.
      * UOn::change and UOn::action callbacks are fired when
-     * the value is changed (see class USlider).
+     * the value is changed (see class Slider).
      * this object can be shared but can't be deleted.
      */
     
@@ -96,10 +98,10 @@ namespace ubit {
     ///< [impl] creates the rail; may be redefined by subclasses.
     
   protected:
-    unique_ptr<Float> pvalue;        // corresponding value (percent)
-    unique_ptr<Box> prail, pknob;
-    unique_ptr<Position> pknob_pos;
-    unique_ptr<class PositionControl> pknob_ctrl;
+    std::unique_ptr<Float> pvalue;        // corresponding value (percent)
+    std::unique_ptr<Box> prail, pknob;
+    std::unique_ptr<Position> pknob_pos;
+    std::unique_ptr<class PositionControl> pknob_ctrl;
     
     void constructs();
     virtual void gotoPosCB(MouseEvent&);
@@ -108,16 +110,16 @@ namespace ubit {
   };
   
   
-  USlider& uslider(const Args& a = Args::none);
+  Slider& uslider(const Args& a = Args::none);
   ///< shortcut that creates a new slider (that is horizontal by default).
   
-  USlider& uslider(Float& value, const Args& a = Args::none);
+  Slider& uslider(Float& value, const Args& a = Args::none);
   ///< shortcut that creates a new slider (that is horizontal by default) with a model value.
   
-  USlider& uhslider(const Args& a = Args::none);
+  Slider& uhslider(const Args& a = Args::none);
   ///< shortcut that creates a new horizontal slider.
   
-  USlider& uvslider(const Args& a = Args::none);
+  Slider& uvslider(const Args& a = Args::none);
   ///< shortcut that creates a new vertical slider.
   
 }

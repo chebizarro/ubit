@@ -140,7 +140,7 @@ Position& Position::set(const Length& newx, const Length& newy) {
   // updateAutoParents() fait ensuite la mise a jour (via View::updatePos())
     
   bool is_floating = isFloating();
-  for (UParentIter p = pbegin(); p != pend(); ++p) {
+  for (ParentIter p = pbegin(); p != pend(); ++p) {
     Box* box = *p ? (*p)->toBox() : null;
     if (box) {
       box->emodes.IS_FLOATING = is_floating;
@@ -299,16 +299,16 @@ void Orientation::putProp(UpdateContext* props, Element& par) {
 }
 
 
-Valign Valign::top(TOP, UCONST);
-Valign Valign::bottom(BOTTOM, UCONST);
-Valign Valign::center(CENTER, UCONST);
-Valign Valign::flex(FLEX, UCONST);
+VAlign VAlign::top(TOP, UCONST);
+VAlign VAlign::bottom(BOTTOM, UCONST);
+VAlign VAlign::center(CENTER, UCONST);
+VAlign VAlign::flex(FLEX, UCONST);
 
-Valign::Valign() : value(TOP) {}
-Valign::Valign(const Valign& v) : value(v.value) {}
-Valign::Valign(char v, UConst c) : Attribute(c), value(v) {}
+VAlign::VAlign() : value(TOP) {}
+VAlign::VAlign(const VAlign& v) : value(v.value) {}
+VAlign::VAlign(char v, UConst c) : Attribute(c), value(v) {}
 
-Valign& Valign::operator=(const Valign& obj) {
+VAlign& VAlign::operator=(const VAlign& obj) {
   if (checkConst()) return *this;
   if (value == obj.value) return *this;
   value = obj.value;
@@ -316,26 +316,26 @@ Valign& Valign::operator=(const Valign& obj) {
   return *this;
 }
 
-void Valign::update() {
+void VAlign::update() {
   // box size won't change but children layout must be updated
   updateAutoParents(Update::LAYOUT_PAINT);
 }
 
-void Valign::putProp(UpdateContext *props, Element&) {
+void VAlign::putProp(UpdateContext *props, Element&) {
   props->valign = value;
 }
 
 
-Halign Halign::left(LEFT, UCONST);
-Halign Halign::right(RIGHT, UCONST);
-Halign Halign::center(CENTER, UCONST);
-Halign Halign::flex(FLEX, UCONST);
+HAlign HAlign::left(LEFT, UCONST);
+HAlign HAlign::right(RIGHT, UCONST);
+HAlign HAlign::center(CENTER, UCONST);
+HAlign HAlign::flex(FLEX, UCONST);
 
-Halign::Halign() : value(LEFT) {}
-Halign::Halign(const Halign& v) : value(v.value) {}
-Halign::Halign(char v, UConst c) : Attribute(c), value(v) {}
+HAlign::HAlign() : value(LEFT) {}
+HAlign::HAlign(const HAlign& v) : value(v.value) {}
+HAlign::HAlign(char v, UConst c) : Attribute(c), value(v) {}
 
-Halign& Halign::operator=(const Halign& o) {
+HAlign& HAlign::operator=(const HAlign& o) {
   if (checkConst()) return *this;
   if (value == o.value) return *this;
   value = o.value;
@@ -343,12 +343,12 @@ Halign& Halign::operator=(const Halign& o) {
   return *this;
 }
 
-void Halign::update() {
+void HAlign::update() {
   // box size won't change but children layout must be updated
   updateAutoParents(Update::LAYOUT_PAINT);
 }
 
-void Halign::putProp(UpdateContext *props, Element&) {
+void HAlign::putProp(UpdateContext *props, Element&) {
   props->halign = value;
 }
 
@@ -533,13 +533,13 @@ void PositionControl::dragCB(MouseEvent& e) {
 }
 
 
-//MagicLensControl::MagicLensControl(Position& _pos, Scrollpane& _pane) 
+//MagicLensControl::MagicLensControl(Position& _pos, ScrollPane& _pane) 
 //: PositionControl(_pos), pane(_pane) {}
 
-MagicLensControl::MagicLensControl(Position* p, Scrollpane* spane) 
+MagicLensControl::MagicLensControl(Position* p, ScrollPane* spane) 
 : PositionControl(p), pane(spane) {}
 
-MagicLensControl& MagicLensControl::setModel(Position* p, Scrollpane* spane) 
+MagicLensControl& MagicLensControl::setModel(Position* p, ScrollPane* spane) 
 {posAttr = p; pane = spane; return *this;}
 
 void MagicLensControl::dragCB(MouseEvent& e) {
@@ -684,7 +684,7 @@ public:
   void addingTo(Child&, Element& parent);
   void removingFrom(Child&, Element& parent);
 protected:
-  unique_ptr<Box> phandle;
+  std::unique_ptr<Box> phandle;
   float curpos;
   virtual void press(MouseEvent&);
   virtual void drag(MouseEvent&);
@@ -704,7 +704,7 @@ public:
   void addingTo(Child&, Element& parent);
   void removingFrom(Child&, Element& parent);
 protected:
-  unique_ptr<Box> phandle;
+  std::unique_ptr<Box> phandle;
   float curpos;
   virtual void press(MouseEvent&);
   virtual void drag(MouseEvent&);

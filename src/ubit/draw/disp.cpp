@@ -28,7 +28,7 @@
 #include <ubit/ui/window.h>
 #include <ubit/ui/eventflow.h>
 #include <ubit/ui/scrollbar.h>
-#include <ubit/Selection.hpp>
+#include <ubit/ui/selection.h>
 #include <ubit/core/config.h>
 #include <ubit/core/application.h>
 #include <ubit/core/appimpl.h>
@@ -232,7 +232,7 @@ void Display::pasteSelection(MouseEvent& e, String* _paste_str, int _paste_pos) 
   }
   
   // NB: pour interdire un improbable delete de paste_str avant
-  // pasteSelectionCallback() paste_str est un unique_ptr<>
+  // pasteSelectionCallback() paste_str est un std::unique_ptr<>
   paste_str = _paste_str;
   paste_pos = _paste_pos;
   pasteSelectionRequest(e);

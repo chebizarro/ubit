@@ -25,6 +25,8 @@
 #ifndef _uboxes_hpp_
 #define	_uboxes_hpp_ 1
 
+#include <memory>
+
 #include <ubit/ui/box.h>
 
 namespace ubit {
@@ -32,18 +34,18 @@ namespace ubit {
     /** UFlowBox = Box with a Flow Layout (similar to an HTML page).
    *  Base class for creating text areas or hypermedia gadgets.
    *
-   *  Geometry: the width of a UFlowbox object does do not change when its content
+   *  Geometry: the width of a FlowBox object does do not change when its content
    *  is modified. This behavior differs from those of most other boxes.
    *  It is generally well suited for displaying/editing text (UTexfield and 
    *  TextArea enforce this behavior)
    *
-   *  Implementation note: a UFlowbox is an Box with UFlowview renderer.
+   *  Implementation note: a FlowBox is an Box with UFlowview renderer.
    */
-  class UFlowbox: public Box {
+  class FlowBox: public Box {
   public:
-    UCLASS(UFlowbox)
+    UCLASS(FlowBox)
 
-    UFlowbox(Args args = Args::none);
+    FlowBox(Args args = Args::none);
     /**< create a new flowbox; @see also shortcut: uflowbox().
      * a flowbox displays strings and other objects as a continous 2D flow
      */
@@ -51,7 +53,7 @@ namespace ubit {
     static Style* createStyle();
   };
   
-  inline UFlowbox& uflowbox(Args args = Args::none) {return *new UFlowbox(args);}
+  inline FlowBox& uflowbox(Args args = Args::none) {return *new FlowBox(args);}
   ///< shortcut that creates a new UFlowBox.
   
    
@@ -101,23 +103,23 @@ namespace ubit {
   
     /** Card box (or Tabbed Pane).
    */
-  class UCardbox : public Box {
+  class CardBox : public Box {
   public:
-    UCLASS(UCardbox)
+    UCLASS(CardBox)
 
-    UCardbox(Args args = Args::none);
+    CardBox(Args args = Args::none);
     ///< creates a new card box; @see also shortcut: ucardbox().
     
-    virtual ~UCardbox();
+    virtual ~CardBox();
     
     static  Style* createStyle();
     
-    virtual UCardbox& addCard(Box& card);
+    virtual CardBox& addCard(Box& card);
     /**< adds a superimposed card (without a tab).
      * @see also: addTab()
      */
     
-    virtual UCardbox& addTab(Args tab_content, Box& card);
+    virtual CardBox& addTab(Args tab_content, Box& card);
     /**< adds a superimposed card with an associated tab.
      * tab_content can be a string, an icon and a string, or any other valid +arglist.
      * @see also: addCard()
@@ -148,12 +150,12 @@ namespace ubit {
     ///< returns the tab list.
     
   protected:
-    unique_ptr<ListBox> ptabs;
+    std::unique_ptr<ListBox> ptabs;
     virtual void setSelectedImpl();
   };
   
-  inline UCardbox& ucardbox(Args args = Args::none) {return *new UCardbox(args);}
-  ///< shortcut that creates a new UCardbox.
+  inline CardBox& ucardbox(Args args = Args::none) {return *new CardBox(args);}
+  ///< shortcut that creates a new CardBox.
   
     
     /** document box gadget.
@@ -169,7 +171,7 @@ namespace ubit {
     virtual ~DocumentBox();
     
     virtual Box& titlebar()           {return *ptitlebar;}
-    virtual Scrollpane& scrollpane()  {return *pspane;}
+    virtual ScrollPane& scrollpane()  {return *pspane;}
     virtual Box& content()            {return *pcontent;}
     virtual Scale& scale()            {return *pscale;}
     virtual void iconify(bool);
@@ -180,9 +182,9 @@ namespace ubit {
     virtual void setZoomQuantum(float);
     
   protected:
-    unique_ptr<Box> ptitlebar, pcontent;
-    unique_ptr<Scrollpane> pspane;
-    unique_ptr<Scale> pscale;
+    std::unique_ptr<Box> ptitlebar, pcontent;
+    std::unique_ptr<ScrollPane> pspane;
+    std::unique_ptr<Scale> pscale;
     float zoom_quantum;
   };
   

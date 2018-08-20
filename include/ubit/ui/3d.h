@@ -16,6 +16,8 @@
 #ifndef UBIT_UI_3D_H_
 #define	UBIT_UI_3D_H_
 
+#include <memory>
+
 #include <ubit/core/attribute.h>
 #include <ubit/ui/box.h>
 #include <ubit/ui/control-menu.h>
@@ -90,7 +92,7 @@ namespace ubit {
     U3Dbox& rotate(float delta_x_rot, float delta_y_rot, float delta_z_rot);
     
   protected:
-    unique_ptr<U3Dpos> ppos;
+    std::unique_ptr<U3Dpos> ppos;
   };
   
   inline U3Dbox& u3dbox(Args a = Args::none) {return *new U3Dbox(a);}

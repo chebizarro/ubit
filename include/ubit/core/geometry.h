@@ -89,7 +89,7 @@ namespace ubit {
   
   /** Abstract Base class for geometrical shapes.
    */
-  class Shape : public UObject {
+  class Shape : public Object {
   public:
     UABSTRACT_CLASS(Shape)
     

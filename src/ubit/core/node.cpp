@@ -37,7 +37,7 @@ namespace ubit {
 
 
 
-Node::Node() {}  // tout est fait dans UObject
+Node::Node() {}  // tout est fait dans Object
 
 const String& Node::getNodeName() const {static String nn("#node"); return nn;}
 
@@ -122,7 +122,7 @@ Node& Node::removeAllAttrs(bool autodel) {  // @@@@ a revoir % Element::removeAl
 // (idealement il ne faudrait pas faire ces liens)
 
 bool Node::hasSceneGraphParent() const {
-  for (UParentIter p = pbegin(); p != pend(); ++p) {
+  for (ParentIter p = pbegin(); p != pend(); ++p) {
     // WINLIST elements must not be taken into account !
     if ((*p)->getDisplayType() != Element::WINLIST) return true;
   }
@@ -138,7 +138,7 @@ Element* Node::getParent(int pos) const {
   }
   else if (pos >= 0) {
     int count = 0;
-    for (UParentIter p = pbegin(); p != pend(); ++p) {
+    for (ParentIter p = pbegin(); p != pend(); ++p) {
       //if (count == pos) return l->getChild()->getParent();
       if (count == pos) return *p;
       count++;
@@ -152,7 +152,7 @@ int Node::getBoxParents(std::vector<Box*>& parvect) const {
   int count = 0;
   //parvect.clear(); //faux 7dec05 !!
   
-  for (UParentIter p = pbegin(); p != pend(); ++p) {
+  for (ParentIter p = pbegin(); p != pend(); ++p) {
     Element* parent = *p;
     if (parent->toBox()) {
       parvect.push_back(parent->toBox());
@@ -247,7 +247,7 @@ bool Node::isChildOf(const Element& possible_ancestor, bool indirect) const {
   // NB: bug avec scrollpanes car les scrollbars sont dans border ce qui fait
   // echouer isChildOf 
 
-  for (UParentIter p = pbegin(); p != pend(); ++p) {
+  for (ParentIter p = pbegin(); p != pend(); ++p) {
     Element* par = *p;
     // par == null or this if no other parent (Frame or similar)
     if (par && par != this) {
@@ -360,7 +360,7 @@ ChildIter Children::findBox(const String& str, bool ignore_case) {
 
 
 void Parents::removeFirst(Child* c) {
-  for (UParentIter p = begin(); p != end(); ++p) {
+  for (ParentIter p = begin(); p != end(); ++p) {
     if (&p.parent().getChild() == c) {
       erase(p);
       break;
@@ -369,7 +369,7 @@ void Parents::removeFirst(Child* c) {
 }
 
 void Parents::updateAutoParents(const Update& upmode) {
-  for (UParentIter p = begin(); p != end(); ++p) {
+  for (ParentIter p = begin(); p != end(); ++p) {
     Element* grp = *p;
     // box==null --> pas encore initialise
     if (grp && !grp->omodes.DONT_AUTO_UPDATE) grp->update(upmode);
@@ -377,7 +377,7 @@ void Parents::updateAutoParents(const Update& upmode) {
 }
 
 void Parents::fireParents(const Condition& cond, Node* child) {
-  for (UParentIter p = begin(); p != end(); ++p) {
+  for (ParentIter p = begin(); p != end(); ++p) {
     Element* grp = *p;                // ???TrueParent??
     // box==null --> pas encore passe par initContext()
     if (grp) {
@@ -391,7 +391,7 @@ void Parents::fireParents(const Condition& cond, Node* child) {
 
 /*
 void Parents::setParentsModes(long bmodes, long cmodes, bool state) {
-  for (UParentIter p = begin(); p != end(); ++p) {
+  for (ParentIter p = begin(); p != end(); ++p) {
     Element* g = *p;
     // g==null --> pas encore passe par initContext()
     if (g) {
@@ -403,7 +403,7 @@ void Parents::setParentsModes(long bmodes, long cmodes, bool state) {
 */
 
 void Parents::setParentsViewsModes(int vmodes, bool state) {
-  for (UParentIter p = begin(); p != end(); ++p) {
+  for (ParentIter p = begin(); p != end(); ++p) {
     Box* b = *p ? (*p)->toBox() : null;
     if (b) {
       for (View* v = b->getView(0); v != null; v = v->getNext()) {

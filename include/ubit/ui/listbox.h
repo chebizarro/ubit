@@ -25,6 +25,8 @@
 #ifndef _ulistbox_hpp_
 #define	_ulistbox_hpp_ 1
 
+#include <memory>
+
 #include <ubit/ui/interactors.h>
 #include <ubit/ui/choice.h>
 
@@ -70,7 +72,7 @@ namespace ubit {
     ///< returns the internal Choice object that controls the selection.
     
   protected:
-    unique_ptr<Choice> pchoice;
+    std::unique_ptr<Choice> pchoice;
   };
   
   inline RadioBox& uradiobox(Args args = Args::none) {return *new RadioBox(args);}
@@ -250,9 +252,9 @@ namespace ubit {
     virtual void syncText();
     
   private:
-    unique_ptr<ListBox> plist;
-    unique_ptr<Element> pentry;
-    unique_ptr<class Menu> pmenu;
+    std::unique_ptr<ListBox> plist;
+    std::unique_ptr<Element> pentry;
+    std::unique_ptr<class Menu> pmenu;
     bool text_only;
     
     //ComboBox(const Args& = Args::none);

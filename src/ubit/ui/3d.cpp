@@ -114,7 +114,7 @@ struct U3DposHandle : public Attribute {
   
 protected:
   Transform transform;
-  unique_ptr<U3Dpos> pos;
+  std::unique_ptr<U3Dpos> pos;
   UCall* callbacks;
   Point prev;
 
@@ -278,8 +278,8 @@ Box& U3Dwin::createTitleBar(const String& title) {
 Style* U3Dcanvas::createStyle() {
   Style* style = Box::createStyle();
   style->viewStyle = &U3DCanvasView::style;
-  style->halign = Halign::LEFT;
-  style->valign = Valign::TOP;
+  style->halign = HAlign::LEFT;
+  style->valign = VAlign::TOP;
   return style;
 }
 
@@ -415,7 +415,7 @@ View* U3DCanvasView::findInChildren(Element* grp, const Point& winpos,
   
   vector<MatchView> views;
   
-  for (UChildReverseIter ch = grp->crbegin(); ch != grp->crend(); ++ch) {
+  for (ChildReverseIter ch = grp->crbegin(); ch != grp->crend(); ++ch) {
     if (!ch.getCond() || ch.getCond()->verifies(ctx, *grp)) {
       Dimension dim(0,0);
       Element* chgrp = (*ch)->toElem();

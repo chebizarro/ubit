@@ -23,6 +23,9 @@
 
 #ifndef _ufinder_hpp_
 #define _ufinder_hpp_
+
+#include <memory>
+
 #include <ubit/draw/color.h>
 #include <ubit/ui/background.h>
 #include <ubit/ui/menu.h>
@@ -191,25 +194,25 @@ private:
   Options opts;
   UBar toolbar;
   Box mainbox, optbox, folderlist, hostlist, filelist;
-  unique_ptr<Box> optbox_btn, filelist_btn;
-  unique_ptr<Dialog> ask_dialog;
-  unique_ptr<String> ask_dialog_msg;
+  std::unique_ptr<Box> optbox_btn, filelist_btn;
+  std::unique_ptr<Dialog> ask_dialog;
+  std::unique_ptr<String> ask_dialog_msg;
   FinderListener* listener;
-  unique_ptr<AlertBox> alertbox;
-  unique_ptr<ControlMenu> ctlmenu;
+  std::unique_ptr<AlertBox> alertbox;
+  std::unique_ptr<ControlMenu> ctlmenu;
   MessageService *local_ums, *remote_ums;
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // current selection
-  unique_ptr<Document> pdocument;
-  unique_ptr<DocumentBox> pdocbox;
-  unique_ptr<IconBox> piconbox;
-  //unique_ptr<Box> docglass;
-  unique_ptr<UFinderDir>last_direntry;
+  std::unique_ptr<Document> pdocument;
+  std::unique_ptr<DocumentBox> pdocbox;
+  std::unique_ptr<IconBox> piconbox;
+  //std::unique_ptr<Box> docglass;
+  std::unique_ptr<UFinderDir>last_direntry;
   Icon* last_preview_request;
   Icon* last_preview;
   ChildIter previews_current, previews_end;
-  unique_ptr<Timer> preview_timer;
+  std::unique_ptr<Timer> preview_timer;
  };
 
 }

@@ -23,6 +23,9 @@
 
 #ifndef UBIT_UI_DIALOG_H_
 #define	UBIT_UI_DIALOG_H_
+
+#include <memory>
+
 #include <ubit/ui/window.h>
 
 namespace ubit {
@@ -163,7 +166,7 @@ namespace ubit {
     OptionDialog& setButtons(Args buttons);
 
   protected:
-    unique_ptr<Box> picon, pmessage, pbuttons;
+    std::unique_ptr<Box> picon, pmessage, pbuttons;
     void constructs(Args message);
   };
   

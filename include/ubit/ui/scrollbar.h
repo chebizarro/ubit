@@ -24,6 +24,8 @@
 #ifndef _uscrollbar_hpp_
 #define	_uscrollbar_hpp_ 1
 
+#include <memory>
+
 #include <ubit/ui/box.h>
 #include <ubit/draw/color.h>
 #include <ubit/draw/style.h>
@@ -44,32 +46,32 @@ namespace ubit {
    *  - UOn::change is fired continuously while the knob is dragged
    *  both callbacks are equivalent when isTracking() is true
    */
-  class UScrollbar: public Box {
+  class ScrollBar: public Box {
   public:
-    UCLASS(UScrollbar)
+    UCLASS(ScrollBar)
 
-    UScrollbar(const Args& = Args::none);
+    ScrollBar(const Args& = Args::none);
     /**< creates a new scrollbar (@see also shortcut uscrollbar()).
-     * Default orientation is vertical. new UScrollbar(Orientation::horizontal) creates
+     * Default orientation is vertical. new ScrollBar(Orientation::horizontal) creates
      * a horizontal slider. The scrollbar value is in the range [0., 100.]
      */
     
-    UScrollbar(Float& value, const Args& = Args::none);
+    ScrollBar(Float& value, const Args& = Args::none);
     /**< creates a new scrollbar with a model value.
      * the scrollbar is synchronized with this value. Several widgets 
      * (eg.scrollbar) that share the same value are synchronized.
-     * Default orientation is vertical. new USlider(value, Orientation::horizontal) 
+     * Default orientation is vertical. new Slider(value, Orientation::horizontal) 
      * creates a horizontal scrollbar. The value is in the range [0., 100.]
      */
     
-    virtual ~UScrollbar();
+    virtual ~ScrollBar();
         
     static Style* createStyle();
 
     virtual float getValue() const;
     ///< returns the current value (a float between 0 and 100).
     
-    virtual UScrollbar& setValue(float percent);
+    virtual ScrollBar& setValue(float percent);
     /**< changes the current value (a float between 0 and 100).
      * Note: UOn::change callbacks are activated when the value is changed.
      */
@@ -77,21 +79,21 @@ namespace ubit {
     virtual float getUnitIncrement() const;
     ///< returns the unit increment.
 
-    virtual UScrollbar& setUnitIncrement(float);
+    virtual ScrollBar& setUnitIncrement(float);
     ///< change the unit increment.
     
     virtual float getBlockIncrement() const;
     ///< returns the block increment.
 
-    virtual UScrollbar& setBlockIncrement(float);
+    virtual ScrollBar& setBlockIncrement(float);
     ///< change the block increment.
     
-    virtual UScrollbar& setTracking(bool);
+    virtual ScrollBar& setTracking(bool);
     ///< tracking mode updates the value while the scrollbar is being dragged (default is true).
 
     virtual bool isTracking() const;
     
-    virtual UScrollbar& setTransparent(bool state = true);
+    virtual ScrollBar& setTransparent(bool state = true);
     ///< transparent scrollbars are displayed above scrollpane viewports (default is false).
 
     virtual bool isTransparent() const;
@@ -113,8 +115,8 @@ namespace ubit {
      * can be redefined by subclasses to use other widgets
      */
     
-    virtual void setPane(Scrollpane*);
-    Scrollpane* getPane() {return ppane;}
+    virtual void setPane(ScrollPane*);
+    ScrollPane* getPane() {return ppane;}
     ///< [impl] attaches the scrollbar to a scrollpane.
     
     virtual void setValueImpl(float percent, bool update_pane);
@@ -125,11 +127,11 @@ namespace ubit {
     
   private:
     friend class UScrollbarView;
-    friend class Scrollpane;
-    unique_ptr<Float> pvalue;	        // scrollbar value (percentage)
-    unique_ptr<Scrollpane> ppane;	    // the pane controlled by this scrollbar
-    unique_ptr<Box> pless_btn, pmore_btn, pknob, prail;
-    unique_ptr<Position> pknob_pos;		      // current position of the knob
+    friend class ScrollPane;
+    std::unique_ptr<Float> pvalue;	        // scrollbar value (percentage)
+    std::unique_ptr<ScrollPane> ppane;	    // the pane controlled by this scrollbar
+    std::unique_ptr<Box> pless_btn, pmore_btn, pknob, prail;
+    std::unique_ptr<Position> pknob_pos;		      // current position of the knob
     float unit_increment, block_increment;
     float delta_mouse;
     bool press_rail_goto_pos;     // dont scroll but goes to pos is trus
@@ -147,22 +149,22 @@ namespace ubit {
     virtual float getIncrementPercent(MouseEvent&, float increment);
   };
   
-  inline UScrollbar& uscrollbar(const Args& args = Args::none) {return *new UScrollbar(args);}
+  inline ScrollBar& uscrollbar(const Args& args = Args::none) {return *new ScrollBar(args);}
   ///< shortcut that creates a new scrollbar (that is vertical by default).
   
-  UScrollbar& uhscrollbar(const Args& args = Args::none);
+  ScrollBar& uhscrollbar(const Args& args = Args::none);
   ///< shortcut that creates a new horizontal scrollbar
   
-  inline UScrollbar& uvscrollbar(const Args& args = Args::none) {return *new UScrollbar(args);}
+  inline ScrollBar& uvscrollbar(const Args& args = Args::none) {return *new ScrollBar(args);}
   ///< shortcut that creates a new vertical scrollbar
   
 
   /** Scrollbar View Renderer.
-   *  used by: UScrollbar
+   *  used by: ScrollBar
    *  - Implementation: clients usually don't need to use this class
    */
   class UScrollbarView : public View {
-    friend class UScrollbar;
+    friend class ScrollBar;
   public:
     static  ViewStyle style;  // renderer
     virtual ViewStyle* getViewStyle() {return &style;}

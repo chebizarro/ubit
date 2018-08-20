@@ -26,6 +26,8 @@
 
 #include <list>
 #include <map>
+#include <memory>
+
 #include <ubit/udefs.hpp>
 #include <ubit/core/string.h>
 #include <ubit/ui/boxes.h>
@@ -110,7 +112,7 @@ namespace ubit {
     Map rmap;
     DocumentCreator* default_creator;
     int stat;
-    unique_ptr<String> errors;
+    std::unique_ptr<String> errors;
   };
   
 
@@ -179,8 +181,8 @@ namespace ubit {
     ///< NB: the constr is protected: use read() or a subclass to create a Document.
     
   private:
-    unique_ptr<String> ppath;
-    unique_ptr<Element> call_list;
+    std::unique_ptr<String> ppath;
+    std::unique_ptr<Element> call_list;
     Document(const Document&);             // these operators are forbidden
     Document& operator=(const Document&);
   };
@@ -206,7 +208,7 @@ namespace ubit {
   
     int from;
     int stat;
-    unique_ptr<const String> path, fullpath;
+    std::unique_ptr<const String> path, fullpath;
     const String* buffer;
     String* errors;
   };
@@ -230,7 +232,7 @@ namespace ubit {
     FlatDocument(const String& _pathname);
     virtual bool isEditable() const;
     virtual void setEditable(bool state = true);
-    unique_ptr<class TextEdit> edit;
+    std::unique_ptr<class TextEdit> edit;
   };
   
   

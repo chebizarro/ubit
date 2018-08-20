@@ -40,7 +40,7 @@ namespace ubit {
    */
   class Event {
   public:
-    Event(const Condition& c, UObject* source, UObject* aux = null);
+    Event(const Condition& c, Object* source, Object* aux = null);
     
     virtual ~Event();
     
@@ -49,16 +49,16 @@ namespace ubit {
      * e.g.: returns 'UOn::change' if the expression was: UOn::change / ucall(...)
      */
     
-    virtual UObject* getSource() const {return source;}
+    virtual Object* getSource() const {return source;}
     ///< returns the object that received this event.
     
-    virtual UObject* getAux() const {return aux;}
+    virtual Object* getAux() const {return aux;}
     ///< returns auxilliary data.
     
     /// dynamic cast: returns 'this' converted to the requested class or null.
     virtual InputEvent*   toInputEvent()  {return null;}
     virtual MouseEvent*   toMouseEvent()  {return null;}
-    virtual UKeyEvent*     toKeyEvent()    {return null;}
+    virtual KeyEvent*     toKeyEvent()    {return null;}
     virtual UWheelEvent*   toWheelEvent()  {return null;}
     virtual UViewEvent*    toViewEvent()   {return null;}
     virtual PaintEvent*   toPaintEvent()  {return null;}
@@ -73,12 +73,12 @@ namespace ubit {
     
   protected:
     const Condition* cond;  // event condition
-    UObject* source;    // the object that produced this event
-    UObject* aux;       // auxilliary data
+    Object* source;    // the object that produced this event
+    Object* aux;       // auxilliary data
   };
   
 
-  /** Base class for MouseEvent and UKeyEvent
+  /** Base class for MouseEvent and KeyEvent
    * Note that this class inherits from class Modifier that defines modifier masks 
    * such as LeftButton, RightButton... 
    */
@@ -312,13 +312,13 @@ namespace ubit {
   /** keyboard events
    * @see UOn::kpress, UOn::krelease, UOn::ktype for explanations.
    */
-  class UKeyEvent : public InputEvent {
+  class KeyEvent : public InputEvent {
   public:
-    UKeyEvent(const Condition&, View* source, EventFlow*, 
+    KeyEvent(const Condition&, View* source, EventFlow*, 
               unsigned long time, int state, 
               int keycode, short keychar);
     
-    virtual UKeyEvent* toKeyEvent() {return this;}
+    virtual KeyEvent* toKeyEvent() {return this;}
     
     short getKeyChar() const {return keychar;}
     ///< returns the typed character (in ISO Latin).
@@ -456,7 +456,7 @@ namespace ubit {
     
     virtual MessageEvent* toMessageEvent() {return this;}
     
-    //virtual UObject* getSource() const {return (UObject*)port;}
+    //virtual Object* getSource() const {return (Object*)port;}
     
     const String* getMessage() const;
     ///< returns the message string.
@@ -478,7 +478,7 @@ namespace ubit {
     
     virtual TimerEvent* toTimerEvent() {return this;}
     
-    //virtual UObject* getSource() const {return (UObject*)timer;}
+    //virtual Object* getSource() const {return (Object*)timer;}
     Timer* getTimer() const {return (Timer*)source;}
     unsigned long getWhen() const {return when;}
     
@@ -492,16 +492,16 @@ namespace ubit {
    */
   class UserEvent : public Event {
   public:
-    UserEvent(const Condition&, UObject* source, int type, void* data);
+    UserEvent(const Condition&, Object* source, int type, void* data);
     
     virtual UserEvent* toUserEvent() {return this;}
     
-    //virtual UObject* getSource() const {return source;}
+    //virtual Object* getSource() const {return source;}
     int   getType() const {return type;}
     void* getData() const {return data;}
     
   private:
-    //UObject* source;
+    //Object* source;
     int type;
     void* data;  
   };

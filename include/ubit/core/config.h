@@ -186,7 +186,7 @@ public:
   ///< delay (in ms) before autoRepeat becomes active (see Element::setAutoRepeat()).
 
   unsigned long open_tip_delay;
-  ///< delay (in ms) before a UTip is opened.
+  ///< delay (in ms) before a Tip is opened.
 
   unsigned long open_submenu_delay; 
   ///< delay (in ms) before a cascaded Menu is opened.

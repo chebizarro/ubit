@@ -71,7 +71,7 @@ static const char *doc_xpm[] = {       // moins large que UPix::doc
   "  oooooooooo ",
   "             "
 };
-UPix& Finder::doc_pix = *new UPix(doc_xpm, UObject::UCONST);
+UPix& Finder::doc_pix = *new UPix(doc_xpm, Object::UCONST);
 
 
 Finder::Options::Options() :
@@ -429,7 +429,7 @@ namespace impl {
     Finder& browser;
     double base;
     int incr, last_incr;
-    unique_ptr<Scale> scale;
+    std::unique_ptr<Scale> scale;
     
     static const int QUANTUM;
     static const float ZOOM_QUANTUM;

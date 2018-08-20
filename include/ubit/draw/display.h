@@ -27,6 +27,8 @@
 #define	UBIT_DRAW_DISPLAY_H_
 
 #include <list>
+#include <memory>
+
 #include <ubit/udefs.hpp>
 #include <ubit/core/string.h>
 #include <ubit/core/element.h>
@@ -332,8 +334,8 @@ protected:
   String copy_buffer;
 
   // pasteSelection() specifies that the selection will be pasted in this String
-  // at this pos (unique_ptr<> to avoid deletion)
-  unique_ptr<String> paste_str;
+  // at this pos (std::unique_ptr<> to avoid deletion)
+  std::unique_ptr<String> paste_str;
   int paste_pos;
 
   // attention: winlist doit etre detruit en premier!

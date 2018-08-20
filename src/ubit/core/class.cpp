@@ -56,7 +56,7 @@ Class::~Class() {
 template <class CC>
 struct USubclass : public Class {
   USubclass(const char* name): Class(name) {}
-  virtual bool isInstance(UObject& obj) const {return dynamic_cast<CC*>(&obj);}
+  virtual bool isInstance(Object& obj) const {return dynamic_cast<CC*>(&obj);}
   virtual Style* newStyle() const {return CC::createStyle();}
 };
 

@@ -61,8 +61,8 @@ Style* MenuBar::createStyle() {
   Style* style = new Style();
   style->textSeparator = new String("\t");
   style->orient = Orientation::HORIZONTAL;
-  style->halign = Halign::LEFT;
-  style->valign = Valign::FLEX;
+  style->halign = HAlign::LEFT;
+  style->valign = VAlign::FLEX;
   style->hspacing = 4;
   style->vspacing = 5;
   style->font = &Font::bold;
@@ -95,8 +95,8 @@ Style* Menu::createStyle() {
   Style& s = *new Style();
   s.textSeparator = &ustr("\n");
   s.orient = Orientation::VERTICAL;
-  s.halign = Halign::FLEX;
-  s.valign = Valign::TOP;
+  s.halign = HAlign::FLEX;
+  s.valign = VAlign::TOP;
   s.hspacing = 1;
   s.vspacing = 1;
   s.setPadding(0, 0);
@@ -370,12 +370,12 @@ void Menu::openImpl(MenuManager& mc, View* opener,
     else if (auto_place) {	 // default rules
       WindowPlacement pl;
       if (is_cascaded) {
-        pl.halign = &Halign::right;
+        pl.halign = &HAlign::right;
         pl.hoppositeBorder = true;
         pl.hdist = 1;
       }  
       else {
-        pl.valign = &Valign::bottom;
+        pl.valign = &VAlign::bottom;
         pl.voppositeBorder = true;
         pl.vdist = 1;
       }

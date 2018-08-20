@@ -26,6 +26,7 @@
 
 #include <cstdio>
 #include <cstdarg>
+#include <memory>
 
 #include <ubit/draw/display.h>
 #include <ubit/core/config.h>
@@ -42,7 +43,8 @@ namespace ubit {
    */
   typedef std::vector<Display*> DisplayList;
   
-      
+  class AppImpl;
+    
   /**
    * The Application Context. 
    * A Ubit application must create one (and only one) Application object.
@@ -90,7 +92,7 @@ namespace ubit {
    */
   class Application {
   public:
-    static Config config;
+    static UConf config;
     /**< configuration of the application, must be set BEFORE the Application is created.
      * 'conf' is an object that is created when the program is launched. Its fields:
      * - are initialized to default values by Config::Config()
@@ -138,13 +140,13 @@ namespace ubit {
      * same as Application::application() except that no exception is thrown.
      */
     
-    static Config& getConfig() {return conf;}
+    static UConf& getConfig() {return config;}
     ///< returns the configuration of the application, @see Config.
     
     static const char* getVersion();
     ///< returns the version of the Ubit toolkit (for instance "6.0.0").
     
-    static bool isUsingGL() {return conf.is_using_gl;}
+    static bool isUsingGL() {return config.is_using_gl;}
     ///< returns true if OpenGL is used for rendering graphics.
     
     static bool isRunning();
@@ -283,7 +285,7 @@ namespace ubit {
      *   after the specified 'delay'). The timer will be fired repeatedly
      *   until the completion of the application if ntimes is -1.
      * - 'callback' is a ucall<> expression (see UCall). It is destroyed after
-     *    completion, except if referenced by a unique_ptr<> or another node (see Node).
+     *    completion, except if referenced by a std::unique_ptr<> or another node (see Node).
      * See also: postpone() and class Timer.
      */
     
@@ -293,7 +295,7 @@ namespace ubit {
      * - to postpone the execution of callbacks that take some time
      * - to request the execution of callbacks in the main thread from another thread
      * 'callback' is a ucall<> expression (see UCall). It is destroyed after
-     *  completion, except if referenced by a unique_ptr<> or another node (see Node).
+     *  completion, except if referenced by a std::unique_ptr<> or another node (see Node).
      * See also: onTimeout() and Timer.
      */
     

@@ -58,11 +58,11 @@ struct _ParentIter : public _I {
  * forward iterator in a parent list.
  * @see: Node::pbegin(), Parents.
  */
-typedef _ParentIter<std::list<Parent>::iterator> UParentIter;
+typedef _ParentIter<std::list<Parent>::iterator> ParentIter;
 
 /**
  * Parent list.
- * see also: UParentIter and Element::parents().
+ * see also: ParentIter and Element::parents().
  */
 class Parents : public std::list<Parent> {
 public:

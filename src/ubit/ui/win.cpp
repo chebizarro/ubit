@@ -46,9 +46,9 @@ Style* Window::createStyle() {
   Style* style = new Style;
   style->textSeparator = new String("\n");
   style->orient = Orientation::VERTICAL;
-  style->halign = Halign::FLEX;
+  style->halign = HAlign::FLEX;
   //NB: dialogs a la fois hflex et vflex
-  style->valign = Valign::FLEX;
+  style->valign = VAlign::FLEX;
   style->hspacing = 1;
   style->vspacing = 1;
   style->local.padding.set(0, 0);
@@ -199,8 +199,8 @@ USoftwinImpl::USoftwinImpl(Window& win) {
                      + Color::white
                      );
 
-    win.setAttr(*new UCompositeBorder(Valign::top + Halign::flex + titlebar
-                                      //+ Valign::bottom + Halign::right + ubutton("resize")
+    win.setAttr(*new UCompositeBorder(VAlign::top + HAlign::flex + titlebar
+                                      //+ VAlign::bottom + HAlign::right + ubutton("resize")
                                       ));
   }
 }
@@ -594,7 +594,7 @@ void Window::doUpdate(const Update& upd, Display* disp) {
     View* parview = null;
     //Child* ch = null;
 
-    for (UParentIter p = pbegin(); p != pend(); ++p) {
+    for (ParentIter p = pbegin(); p != pend(); ++p) {
       // do not take into account WINLIST parents (either modalwins or softwin_list)
       if ((*p)->getDisplayType() != Element::WINLIST) {
         std::vector<View*> parviews;
@@ -991,7 +991,7 @@ void Window::setPos(const View& view, const WindowPlacement& pl) {
   float _x = 0, _y = 0;  // ext int
   
   if (pl.halign) {
-    if (*pl.halign == Halign::left) {
+    if (*pl.halign == HAlign::left) {
       if (pl.hoppositeBorder) {	  // a gauche de view
         // updates layout to get correct size when necessay
         checkUpdate(this, disp);
@@ -1000,7 +1000,7 @@ void Window::setPos(const View& view, const WindowPlacement& pl) {
       else _x += pl.hdist;  //alignes a dist pres
     }
     
-    else if (*pl.halign == Halign::right) {
+    else if (*pl.halign == HAlign::right) {
       if (pl.hoppositeBorder)	  // a droite de view
         _x += view.getWidth() + pl.hdist;
       else {
@@ -1014,7 +1014,7 @@ void Window::setPos(const View& view, const WindowPlacement& pl) {
   }
   
   if (pl.valign) {
-    if (*pl.valign == Valign::top) {
+    if (*pl.valign == VAlign::top) {
       if (pl.voppositeBorder) {	      // au dessus de view
         checkUpdate(this, disp);
         _y -= this->getHeight(disp) + pl.vdist;
@@ -1022,7 +1022,7 @@ void Window::setPos(const View& view, const WindowPlacement& pl) {
       else _y += pl.vdist;  //alignes a dist pres
     }
     
-    else if (*pl.valign == Valign::bottom) {
+    else if (*pl.valign == VAlign::bottom) {
       if (pl.voppositeBorder)	          // en dessous de view
         _y += view.getHeight() + pl.vdist;
       else {

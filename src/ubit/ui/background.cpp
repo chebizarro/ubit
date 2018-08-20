@@ -35,20 +35,20 @@ namespace ubit {
 
 
 
-UAlpha::UAlpha(float v) : Attribute() {val = v;}
+Alpha::Alpha(float v) : Attribute() {val = v;}
 
-UAlpha& UAlpha::set(float v) {
+Alpha& Alpha::set(float v) {
   if (checkConst() || v == val) return *this;
   val = v;
   changed();
   return *this;
 }
 
-void UAlpha::update() {
+void Alpha::update() {
   updateAutoParents(Update::paint);
 }
 
-void UAlpha::putProp(UpdateContext *props, Element&) {
+void Alpha::putProp(UpdateContext *props, Element&) {
   props->local.alpha = val;
 }
 

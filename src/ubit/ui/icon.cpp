@@ -199,7 +199,7 @@ Icon::Icon(const String& name, Args content) {
   add(uhflex() 
       + uvflex() + *ima_box
       + ubottom() + *text_box
-      + new UTip(*pname)  // tant pis on copie nme: a revoir..
+      + new Tip(*pname)  // tant pis on copie nme: a revoir..
       );
 }
 
@@ -224,7 +224,7 @@ int Icon::loadImage(const String& ima_path) {
       || fext.equals("jpeg",true)
       || fext.equals("xpm",true)
       ) {
-    unique_ptr<Image> ima = new Image;
+    std::unique_ptr<Image> ima = new Image;
     stat = ima->read(ima_path, CONTENT_WIDTH, CONTENT_HEIGHT);
 
     //delete full_ima; automatic deletion

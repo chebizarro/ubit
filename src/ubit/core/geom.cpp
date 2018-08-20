@@ -473,15 +473,15 @@ bool Ellipse::intersects(const Rectangle& r) const {
 
 #if 0  // REVOIR contains() et intersects()
 
-struct UArc : public Shape {
+struct Arc : public Shape {
   float x, y, width, height, start, extent;
   
-  UCLASS("uarc", UArc, new UArc)
+  UCLASS("uarc", Arc, new Arc)
   int getShapeType() const {return ARC;}  
   
-  UArc();
-  UArc(const Rectangle&, float start, float extent, int type = 0);
-  UArc(float _x, float _y, float _w, float _h, float _s, float _e, int _t);
+  Arc();
+  Arc(const Rectangle&, float start, float extent, int type = 0);
+  Arc(float _x, float _y, float _w, float _h, float _s, float _e, int _t);
   
   Rectangle getBounds() const;
   bool isEmpty() const {return width <= 0.0f || height <= 0.0;}
@@ -504,54 +504,54 @@ struct UArc : public Shape {
 };
 
 
-UArc::UArc() 
+Arc::Arc() 
 : x(0), y(0), width(0), height(0), start(0), extent(0) {}
 
-UArc::UArc(const Rectangle& r, float _s, float _e, int _t) 
+Arc::Arc(const Rectangle& r, float _s, float _e, int _t) 
 : x(r.x), y(r.y), width(r.width), height(r.height), start(_s), extent(_e) {}
 
-UArc::UArc(float _x, float _y, float _w, float _h, float _s, float _e, int _t) 
+Arc::Arc(float _x, float _y, float _w, float _h, float _s, float _e, int _t) 
 : x(_x), y(_y), width(_w), height(_h), start(_s), extent(_e) {}
 
-Rectangle UArc::getBounds() const {
+Rectangle Arc::getBounds() const {
   return Rectangle(x,y,width,height);
 }
 
 /*
-void UArc::set(const Point& p1, const Point& p2, float _s, float _e, int _t) {
+void Arc::set(const Point& p1, const Point& p2, float _s, float _e, int _t) {
   Rectangle r(p1, p2);
   x = r.x, y = r.y, width = r.width, height = r.height;
   start = _s, extent = _e;
 }
 */
 
-void UArc::setFrame(const Rectangle& r) {
+void Arc::setFrame(const Rectangle& r) {
   x = r.x, y = r.y, width = r.width, height = r.height;
 }
 
-void UArc::setArc(const Rectangle& r, float _s, float _e, int closure) {
+void Arc::setArc(const Rectangle& r, float _s, float _e, int closure) {
   x = r.x, y = r.y, width = r.width, height = r.height , start = _s, extent = _e;
 }
 
-void UArc::setArc(float _x, float _y, float _w, float _h, float _s, float _e, int _t) {
+void Arc::setArc(float _x, float _y, float _w, float _h, float _s, float _e, int _t) {
   x = _x, y = _y, width = _w, height = _h; start = _s, extent = _e;
 }
   
 // FAUX !!!!
-bool UArc::contains(const Point& p) const {
+bool Arc::contains(const Point& p) const {
   return (p.x >= x && p.y >= y && p.x < x+width && p.y < y+height); 
 }
 
-bool UArc::contains(const Rectangle& r) const {
+bool Arc::contains(const Rectangle& r) const {
   return (r.x >= x && r.y >= y 
           && r.x+r.width-1 < x+width && r.y+r.height-1 < y+height); 
 }
 
-void UArc::draw(const Graph& g) const {
+void Arc::draw(const Graph& g) const {
   g.drawArc(x, y, width, height, start, extent);
 }
 
-void UArc::fill(const Graph& g) const {
+void Arc::fill(const Graph& g) const {
   g.fillArc(x, y, width, height, start, extent);
 }
 

@@ -24,6 +24,7 @@
 #ifndef UBIT_CORE_ERRORHANDLER_H_
 #define	UBIT_CORE_ERRORHANDLER_H_
 
+#include <memory>
 
 namespace ubit {
   
@@ -86,8 +87,8 @@ namespace ubit {
     virtual void printOnBuffer(const Error&) const;
     
   protected:
-    unique_ptr<String> plabel;
-    unique_ptr<String> pbuffer;
+    std::unique_ptr<String> plabel;
+    std::unique_ptr<String> pbuffer;
     std::ostream* fout;
   };
   

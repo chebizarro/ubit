@@ -57,7 +57,7 @@ public:
 };
 
 
-ViewStyle FlowView::style(&FlowView::createView, UObject::UCONST);
+ViewStyle FlowView::style(&FlowView::createView, Object::UCONST);
 
 FlowView::FlowView(Box* box, View* par_view, UHardwinImpl* wgraph) 
 : View(box, par_view, wgraph) {
@@ -225,7 +225,7 @@ void UFlowLayoutImpl::addCell(UpdateContext*ctx, Child* _link,
   cell[c].line = l;  
 
   // number of horizontally "flex"ible child objects
-  if (ctx->halign == Halign::FLEX) line[l].hflexChildCount++;
+  if (ctx->halign == HAlign::FLEX) line[l].hflexChildCount++;
 
   // line height is the max of all cell heights
   if (cell[c].h > line[l].h)  line[l].h = cell[c].h;
@@ -694,18 +694,18 @@ void FlowView::flowDoUpdate(UFlowUpdateImpl& vd, UpdateContext& ctx,
               vd.hflex_space = 0; // HALIGN
               
               switch (ctx.halign) {
-                case Halign::LEFT:
+                case HAlign::LEFT:
                   vd.chr.x = r.x + vd.pad.left.val;
                   break;
                   
-                case Halign::CENTER:
+                case HAlign::CENTER:
                   vd.chr.x = (r.width - vd.line[vd.l].w) / 2;
                   // box smaller than child ==> impose left pad
                   if (vd.chr.x < vd.pad.left.val)  vd.chr.x = vd.pad.left.val;
                     vd.chr.x += r.x;
                   break;
                   
-                case Halign::RIGHT: 
+                case HAlign::RIGHT: 
                   vd.chr.x = r.width - vd.line[vd.l].w - vd.pad.right.val;
                   // box smaller than child ==> impose left pad
                   if (vd.chr.x < vd.pad.left.val)  vd.chr.x = vd.pad.left.val;
@@ -730,7 +730,7 @@ void FlowView::flowDoUpdate(UFlowUpdateImpl& vd, UpdateContext& ctx,
             
             // !NOTE: pour les Datas FLEX == CENTER
             // Cas BOX et FLEX
-            if (!data && ctx.valign == Valign::FLEX) {
+            if (!data && ctx.valign == VAlign::FLEX) {
               vd.chr.height = vd.line[vd.l].h;
               vd.chr.y = vd.line_y;
             }
@@ -740,7 +740,7 @@ void FlowView::flowDoUpdate(UFlowUpdateImpl& vd, UpdateContext& ctx,
             }
             
             // flexible horizontal object => add flexible width space
-            if (ctx.halign == Halign::FLEX)
+            if (ctx.halign == HAlign::FLEX)
               vd.chr.width = vd.cell[vd.c].w + vd.hflex_space;
             else vd.chr.width = vd.cell[vd.c].w;
             

@@ -39,12 +39,12 @@ HtmlParser::HtmlParser() {
   setCollapseSpaces(true);
 }
 
-void HtmlAttribute::setValueImpl(unique_ptr<String>& pvalue, const String& s) {
+void HtmlAttribute::setValueImpl(std::unique_ptr<String>& pvalue, const String& s) {
   if (pvalue) *pvalue = s; else pvalue = new String(s);
   pvalue->trim();  // !! attention: ce  n'est pas la norme XML !!
 }
 
-bool HtmlAttribute::getValueImpl(const unique_ptr<String>& pvalue, String& s) {
+bool HtmlAttribute::getValueImpl(const std::unique_ptr<String>& pvalue, String& s) {
   if (pvalue) {s = *pvalue; return true;}
   else {s.clear(); return false;}
 }
@@ -56,7 +56,7 @@ bool HtmlAttribute::getValueImpl(const unique_ptr<String>& pvalue, String& s) {
 struct Subclass : public Class { \
 Subclass() : Class(CLASSNAME) {} \
 virtual int getParseModes() const {return MODES;} \
-virtual bool isInstance(UObject& obj) const {return dynamic_cast<CLASS*>(&obj);} \
+virtual bool isInstance(Object& obj) const {return dynamic_cast<CLASS*>(&obj);} \
 virtual CLASS* newInstance() const {return NEWCLASS;} \
 virtual Style* newStyle() const {return NEWSTYLE;} \
 };\
@@ -89,21 +89,21 @@ HEAD_ELEMENT_CLASS(link, Element, Class::EMPTY_ELEMENT)
 HEAD_ELEMENT_CLASS(script, Element, Class::DONT_PARSE_CONTENT)
 HEAD_ELEMENT_CLASS(style, Element, Class::DONT_PARSE_CONTENT)
 
-ELEMENT_CLASS(body, UFlowbox, 0)
-ELEMENT_CLASS(div, UFlowbox, 0)
-ELEMENT_CLASS(p, UFlowbox, 0)
-ELEMENT_CLASS(ul, UFlowbox, 0)
-ELEMENT_CLASS(ol, UFlowbox, 0)
-ELEMENT_CLASS(li, UFlowbox, 0)
-ELEMENT_CLASS(pre, UFlowbox, Class::PRESERVE_SPACES)
-ELEMENT_CLASS(blockquote, UFlowbox, 0)
-ELEMENT_CLASS(center, UFlowbox, 0)
-ELEMENT_CLASS(h1,UFlowbox, 0)
-ELEMENT_CLASS(h2,UFlowbox, 0)
-ELEMENT_CLASS(h3,UFlowbox, 0)
-ELEMENT_CLASS(h4,UFlowbox, 0)
-ELEMENT_CLASS(h5,UFlowbox, 0)
-ELEMENT_CLASS(h6,UFlowbox, 0)
+ELEMENT_CLASS(body, FlowBox, 0)
+ELEMENT_CLASS(div, FlowBox, 0)
+ELEMENT_CLASS(p, FlowBox, 0)
+ELEMENT_CLASS(ul, FlowBox, 0)
+ELEMENT_CLASS(ol, FlowBox, 0)
+ELEMENT_CLASS(li, FlowBox, 0)
+ELEMENT_CLASS(pre, FlowBox, Class::PRESERVE_SPACES)
+ELEMENT_CLASS(blockquote, FlowBox, 0)
+ELEMENT_CLASS(center, FlowBox, 0)
+ELEMENT_CLASS(h1,FlowBox, 0)
+ELEMENT_CLASS(h2,FlowBox, 0)
+ELEMENT_CLASS(h3,FlowBox, 0)
+ELEMENT_CLASS(h4,FlowBox, 0)
+ELEMENT_CLASS(h5,FlowBox, 0)
+ELEMENT_CLASS(h6,FlowBox, 0)
 ELEMENT_CLASS(table, Table, 0)
 ELEMENT_CLASS(tr, UTrow, 0)
 ELEMENT_CLASS(td, UTcell, 0)
@@ -326,16 +326,16 @@ void HtmlHeight::initNode(Document*, Element* parent) {
 
 void HtmlAlign::setValue(const String& v) {
     HtmlAttribute::setValueImpl(pvalue, v);     // ! fait trim() !
-    if (pvalue->equals("left",true)) *(Halign*)this = Halign::left;
-    else if (pvalue->equals("center",true)) *(Halign*)this = Halign::center;
-    else if (pvalue->equals("right",true)) *(Halign*)this = Halign::right;
+    if (pvalue->equals("left",true)) *(HAlign*)this = HAlign::left;
+    else if (pvalue->equals("center",true)) *(HAlign*)this = HAlign::center;
+    else if (pvalue->equals("right",true)) *(HAlign*)this = HAlign::right;
   }
 
 void HtmlValign::setValue(const String& v) {
   HtmlAttribute::setValueImpl(pvalue, v);     // ! fait trim() !
-  if (pvalue->equals("top",true)) *(Valign*)this = Valign::top;
-  else if (pvalue->equals("middle",true)) *(Valign*)this = Valign::center;
-  else if (pvalue->equals("bottom",true)) *(Valign*)this = Valign::bottom;
+  if (pvalue->equals("top",true)) *(VAlign*)this = VAlign::top;
+  else if (pvalue->equals("middle",true)) *(VAlign*)this = VAlign::center;
+  else if (pvalue->equals("bottom",true)) *(VAlign*)this = VAlign::bottom;
 }
 
 void HtmlColspan::initNode(Document* doc, Element* parent) {

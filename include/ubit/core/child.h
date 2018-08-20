@@ -16,8 +16,6 @@
 #ifndef UBIT_CORE_CHILD_H_
 #define	UBIT_CORE_CHILD_H_
 
-#include <ubit/ubit.h>
-
 namespace ubit {
 
 /**
@@ -70,7 +68,7 @@ typedef _ChildIter<std::list<Child>::iterator> ChildIter;
 /** reverse iterator in a child or attribute list.
 * @see: Element::crbegin(), Children.
 */
-typedef _ChildIter<std::list<Child>::reverse_iterator> UChildReverseIter;
+typedef _ChildIter<std::list<Child>::reverse_iterator> ChildReverseIter;
 
 /** Child (or attribute) list.
  * @see: ChildIter, Element::children(), Element::attributes(), Attribute::attributes().

@@ -138,7 +138,7 @@ namespace ubit {
      * these are low-level conditions that do not compose characters. For instance,
      * typing SHIFT 'A' produces 2 kpress and 2 krelease events. UOn::ktype, that 
      * composes characters, should be used in most cases. Callbacks can have an
-     * optional UKeyEvent parameter. Their getKeyCode() method returns a code that 
+     * optional KeyEvent parameter. Their getKeyCode() method returns a code that 
      * identifies the key.
      *
      * The box that gets these events is the one that has the input focus (which is
@@ -152,7 +152,7 @@ namespace ubit {
     /**< fire callbacks when a text is entered by pressing a key.
      * in constrast with kpress, ktype composes characters and it is only fired
      * when printable characters are typed. For instance, typing SHIFT 'A'
-     * produce only one ktype event. Callbacks can have an optional UKeyEvent
+     * produce only one ktype event. Callbacks can have an optional KeyEvent
      * parameter. Their getChar() method returns the composed character (for instance,
      * if SHIFT was pressed, it will return 'uppercase A' rather than 'lowercase A')
      *
@@ -224,7 +224,7 @@ namespace ubit {
     change,
     /**< fires callbacks when the value of an object is changed.
      * this condition detects when:
-     * - the value of UScrollbar, USlider objects is changed
+     * - the value of ScrollBar, Slider objects is changed
      * - the selection is changed in Choice, ListBox, ComboBox objects
      *   (= when a item, that was previously unselected, becomes selected)
      *

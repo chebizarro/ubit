@@ -24,9 +24,10 @@
 #ifndef uboxgeom_hpp
 #define	uboxgeom_hpp 1
 
+#include <memory>
+
 #include <ubit/core/attribute.h>
 #include <ubit/core/length.h>
-
 #include <ubit/core/geometry.h>
 
 namespace ubit {
@@ -83,7 +84,7 @@ namespace ubit {
    * to its parent widget (note that, currently, Position don't work with Window widgets)
    *
    * Most widgets do not need to have a Position attribute: their position is then 
-   * calculated automatically by their parent widgets (see Halign, Valign).
+   * calculated automatically by their parent widgets (see HAlign, VAlign).
    * 
    * Depending of its x and y Length parameters, a Position attribute works as follows:
    * - it is ignored if either 'x' or 'y' is set to UAUTO or UIGNORE
@@ -187,8 +188,8 @@ namespace ubit {
     Point box_pos0, pt_in_pane0;
     bool change_cursor, freeze_x, freeze_y;
     View* moved_view;
-    unique_ptr<UCall> callbacks;
-    unique_ptr<Position> posAttr;
+    std::unique_ptr<UCall> callbacks;
+    std::unique_ptr<Position> posAttr;
     
     virtual void putProp(UpdateContext*, Element&) {}
     virtual void addingTo(Child&, Element& parent);
@@ -208,10 +209,10 @@ namespace ubit {
   class MagicLensControl : public PositionControl {
   public:
     UCLASS(MagicLensControl)
-    MagicLensControl(Position* = null, Scrollpane* = null);
-    MagicLensControl& setModel(Position*, Scrollpane*);
+    MagicLensControl(Position* = null, ScrollPane* = null);
+    MagicLensControl& setModel(Position*, ScrollPane*);
   private:
-    unique_ptr<Scrollpane> pane;
+    std::unique_ptr<ScrollPane> pane;
     virtual void dragCB(MouseEvent&);
   };
   
@@ -312,8 +313,8 @@ namespace ubit {
     float w0, h0;
     float xev0, yev0;
     bool freeze_w, freeze_h;
-    unique_ptr<UCall> callbacks;
-    unique_ptr<Size> psize;
+    std::unique_ptr<UCall> callbacks;
+    std::unique_ptr<Size> psize;
     virtual void mouseCB(MouseEvent&);
     virtual void pressCB(MouseEvent&);
     virtual void releaseCB(MouseEvent&);
@@ -400,7 +401,7 @@ namespace ubit {
   
   /** Box horizontal layout.
    * specify the horizontal layout of the children that *follow* this brick.
-   * Possible values: Halign::left, ::right, ::center, ::flex.
+   * Possible values: HAlign::left, ::right, ::center, ::flex.
    * Shortcut functions uleft(), uright(), uhcenter(), uhflex() can be used
    * to improve source code readability.
    *
@@ -411,20 +412,20 @@ namespace ubit {
    * uleft() specifies the layout of ch1 and ch2, uhflex() the layout of
    * ch3 and ch4 and uright() the layout of ch5.
    */
-  class Halign : public Attribute {
+  class HAlign : public Attribute {
   public:
-    UCLASS(Halign)
+    UCLASS(HAlign)
 
-    static Halign left, right, flex, center;
+    static HAlign left, right, flex, center;
     
-    Halign();
-    ///< creates a new Halign; @see also shortcuts: uhalign(), uleft(), uright(), uhcenter(), uhflex(). 
+    HAlign();
+    ///< creates a new HAlign; @see also shortcuts: uhalign(), uleft(), uright(), uhcenter(), uhflex(). 
     
-    Halign(const Halign&);
-    ///< creates a new Halign; @see also shortcuts: uhalign(), uleft(), uright(), uhcenter(), uhflex(). 
+    HAlign(const HAlign&);
+    ///< creates a new HAlign; @see also shortcuts: uhalign(), uleft(), uright(), uhcenter(), uhflex(). 
     
-    Halign& operator=(const Halign&);
-    bool operator==(const Halign& v) const {return value == v.value;}
+    HAlign& operator=(const HAlign&);
+    bool operator==(const HAlign& v) const {return value == v.value;}
     
     virtual void update();
     virtual void putProp(UpdateContext*, Element&);
@@ -432,65 +433,65 @@ namespace ubit {
     enum {INHERIT, LEFT, RIGHT, FLEX, CENTER};
   private:
     char value;
-    Halign(char value, UConst);
+    HAlign(char value, UConst);
   };
   
   
-  inline Halign& uhalign(const Halign& val) {return *new Halign(val);}
-  ///< shortcut function that creates a new Halign object.
+  inline HAlign& uhalign(const HAlign& val) {return *new HAlign(val);}
+  ///< shortcut function that creates a new HAlign object.
   
-  inline Halign& uleft() {return Halign::left;}
+  inline HAlign& uleft() {return HAlign::left;}
   /**< child widgets following uleft() are laid out sequentially from the left side of their parent.
    * uleft have no effect on children width (in contrast with uhflex()).
    * uleft and uright have the same effect if uhflex() appears in the same child list
-   * @see Halign.
+   * @see HAlign.
    */
   
-  inline Halign& uright() {return Halign::right;}
+  inline HAlign& uright() {return HAlign::right;}
   /**< child widgets following uright() are laid out sequentially so that the last child reaches the right side of their parent.
    * uright have no effect on children width (in contrast with uhflex()).
    * uleft and uright have the same effect if uhflex() appears in the same child list
-   * @see Halign.
+   * @see HAlign.
    */
   
-  inline Halign& uhcenter() {return Halign::center;}
+  inline HAlign& uhcenter() {return HAlign::center;}
   /**< child widgets following uhcenter() are horizontally centered in their parent.
    * uhcenter has no effect on children width (in contrast with uhflex()).
    * uhcenter has the same effect as uleft if uhflex() appears in the same child list
-   * @see Halign.
+   * @see HAlign.
    */
   
-  inline Halign& uhflex() {return Halign::flex;}
+  inline HAlign& uhflex() {return HAlign::flex;}
   /**< child widgets following uhflex() have a "flexible" horizontal layout.
    * these children will occupy the remaining space and will be resized
    * (in the horizontal direction) when their parents are resized.
    * These rules dont apply for children that are NOT resizable.
-   * @see Halign.
+   * @see HAlign.
    */
   
   
   /** Box vertical layout.
    * specify the vertical layout of the children that follow this brick.
-   * Possible values: Halign::top, ::bottom, ::center, ::flex.
+   * Possible values: HAlign::top, ::bottom, ::center, ::flex.
    * Shortcut functions utop(), ubottom(), uvcenter(), uvflex() can be used
    * to improve readability (they return the corresponding value).
    *
-   * Behaviors: same behaviors as Halign (but in the vertical direction).
+   * Behaviors: same behaviors as HAlign (but in the vertical direction).
    */
-  class Valign : public Attribute {
+  class VAlign : public Attribute {
   public:
-    UCLASS(Valign)
+    UCLASS(VAlign)
 
-    static Valign top, bottom, flex, center;
+    static VAlign top, bottom, flex, center;
     
-    Valign();
-    ///< creates a new Valign; @see also shortcuts: uvalign(), utop(), ubottom(), uvcenter(), uvflex(). 
+    VAlign();
+    ///< creates a new VAlign; @see also shortcuts: uvalign(), utop(), ubottom(), uvcenter(), uvflex(). 
     
-    Valign(const Valign&);
-    ///< creates a new Valign; @see also shortcuts: uvalign(), utop(), ubottom(), uvcenter(), uvflex(). 
+    VAlign(const VAlign&);
+    ///< creates a new VAlign; @see also shortcuts: uvalign(), utop(), ubottom(), uvcenter(), uvflex(). 
     
-    Valign& operator=(const Valign& v);
-    bool operator==(const Valign& v) const {return value == v.value;}
+    VAlign& operator=(const VAlign& v);
+    bool operator==(const VAlign& v) const {return value == v.value;}
     
     virtual void update();
     virtual void putProp(UpdateContext*, Element&);
@@ -498,39 +499,39 @@ namespace ubit {
     enum {INHERIT, TOP, BOTTOM, FLEX, CENTER};
   private:
     char value;
-    Valign(char value, UConst);
+    VAlign(char value, UConst);
   };
   
-  inline Valign& uvalign(const Valign& val) {return *new Valign(val);}
-  ///< shortcut function that creates a new Valign object.
+  inline VAlign& uvalign(const VAlign& val) {return *new VAlign(val);}
+  ///< shortcut function that creates a new VAlign object.
   
-  inline Valign& utop() {return Valign::top;}
+  inline VAlign& utop() {return VAlign::top;}
   /**< child widgets following utop() are laid out sequentially from the top of their parent.
    * uleft have no effect on children width (in contrast with uhflex()).
    * uleft and uright have the same effect if uhflex() appears in the same child list
-   * @see Valign.
+   * @see VAlign.
    */
   
-  inline Valign& ubottom() {return Valign::bottom;}
+  inline VAlign& ubottom() {return VAlign::bottom;}
   /**< child widgets following ubottom() are laid out sequentially so that the last child reaches the bottom of their parent.
    * uright have no effect on children width (in contrast with uhflex()).
    * uleft and uright have the same effect if uhflex() appears in the same child list
-   * @see Valign.
+   * @see VAlign.
    */
   
-  inline Valign& uvcenter() {return Valign::center;}
+  inline VAlign& uvcenter() {return VAlign::center;}
   /**< child widgets following uvcenter() are vertically centered in their parent.
    * uhcenter has no effect on children width (in contrast with uhflex()).
    * uhcenter has the same effect as uleft if uhflex() appears in the same child list
-   * @see Valign.
+   * @see VAlign.
    */
   
-  inline Valign& uvflex() {return Valign::flex;}
+  inline VAlign& uvflex() {return VAlign::flex;}
   /**< child widgets following uvflex() have a "flexible" vertical layout.
    * these children will occupy the remaining space and will be resized
    * (in the horizontal direction) when their parents are resized.
    * These rules dont apply for children that are NOT resizable.
-   * @see Valign.
+   * @see VAlign.
    */
   
   

@@ -25,7 +25,6 @@
 #define	UBIT_CORE_LENGTH_H_
 
 #include <ubit/core/object.h>
-#include <ubit/core/string.h>
 
 namespace ubit {
   

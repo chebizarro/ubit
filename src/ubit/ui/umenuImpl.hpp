@@ -26,6 +26,8 @@
 #define	_umenuImpl_hpp_ 1
 
 #include <vector>
+#include <memory>
+
 
 namespace ubit {
 
@@ -67,7 +69,7 @@ protected:
   EventFlow& eflow; 
   View *active_opener, *possible_opener, *possible_closer;
   Menu *active_menu, *possible_opener_menu, *possible_closer_menu;
-  unique_ptr<Timer> kk_open_timer, kk_close_timer;  // unique_ptr: dont destroy Timers  $$$
+  std::unique_ptr<Timer> kk_open_timer, kk_close_timer;  // std::unique_ptr: dont destroy Timers  $$$
   Box* top_menu;
 };
 

@@ -31,51 +31,51 @@
 
 namespace ubit {
 
-  typedef char UChar;
+  typedef char Char;
 
-  class UObject;     // base class of all objects
-  class UNode;       // base class of all objects that can be added to the scene graph
+  class Object;     // base class of all objects
+  class Node;       // base class of all objects that can be added to the scene graph
   
   // elements (groups, boxes and widgets)
   
-  class UElem;    // base class of element nodes (derives from UNode)
-  class UBox;
-  class ULabel;
-  class UButton;
-  class UItem;
-  class UTextfield;
-  class UTextarea;
-  class UFlowbox;
-  class UCardbox;
-  class UCombobox;
-  class UListbox;
-  class UAlertbox;
-  class UFilebox;
-  class UDocbox;
-  class UTreebox;
-  class UTreenode;
-  class UPalette;
-  class USlider;
-  class UScrollbar;
-  class UScrollpane;
-  class UZoompane;
-  class UTable;
-  class UDoc;
-  class UGlcanvas;
+  class Element;    // base class of element nodes (derives from Node)
+  class Box;
+  class Label;
+  class Button;
+  class Item;
+  class TextField;
+  class TextArea;
+  class FlowBox;
+  class CardBox;
+  class ComboBox;
+  class ListBox;
+  class AlertBox;
+  class FileChooser;
+  class DocumentBox;
+  class TreeBox;
+  class TreeNode;
+  class Palette;
+  class Slider;
+  class ScrollBar;
+  class ScrollPane;
+  class ZoomPane;
+  class Table;
+  class Document;
+  class GLCanvas;
   
-  // windows and menus (derive from UBox)
+  // windows and menus (derive from Box)
   
-  class UWin;
-  class UFrame;
-  class UDialog;
-  class UMenubar;
-  class UMenu;
-  class UPopmenu;
-  class UPiemenu;
-  class UCtlmenu;
-  class USubwin;
+  class Window;
+  class Frame;
+  class Dialog;
+  class MenuBar;
+  class Menu;
+  class PopupMenu;
+  class PieMenu;
+  class ControlMenu;
+  class SubWindow;
   
-  // 3D widgets (derive from UBox)
+  // 3D widgets (derive from Box)
   
   class U3Dcanvas;
   class U3Dbox;
@@ -83,141 +83,141 @@ namespace ubit {
   
   // data (strings, images, pixmaps, symbols)
   
-  class UData;     // base class of data nodes (derives from UNode)
-  class UStr;
-  class UIma;
+  class Data;     // base class of data nodes (derives from Node)
+  class String;
+  class Image;
   class UPix;
-  class USymbol;
+  class Symbol;
   
   // attributes
   
-  class UAttr;  // base class of attributes nodes (derives from UNode)
-  class UAttrList;
+  class Attribute;  // base class of attributes nodes (derives from Node)
+  class AttributeList;
   class UCall;       // callback objects
-  class UColor;
-  class UAlpha;
-  class UBackground;
-  class UBorder;
-  class UFont;
-  class UFontFamily;
-  class UFontMetrics;
-  class UFontDesc;
-  class UPos;
+  class Color;
+  class Alpha;
+  class Background;
+  class Border;
+  class Font;
+  class FontFamily;
+  class FontMetrics;
+  class FontDescription;
+  class Position;
   class U3Dpos;
-  class UScale;
-  class USize;
-  class UPadding;
-  class UOrient;
-  class UHalign;
-  class UValign;
-  class UHspacing;
-  class UVspacing;
-  class UCursor;
-  class UChoice;
-  class UEdit;
+  class Scale;
+  class Size;
+  class Padding;
+  class Orientation;
+  class HAlign;
+  class VAlign;
+  class HSpacing;
+  class VSpacing;
+  class Cursor;
+  class Choice;
+  class TextEdit;
 
   // application, display and global configuration
   
-  class UAppli;
-  class UDisp;
+  class Application;
+  class Display;
   class UConf;
-  class UOption;
-  class USelection;
+  class Option;
+  class Selection;
 
   // event conditions
   
-  class UCond;
+  class Condition;
   class UOn;
-  class UFlag;
+  class Flag;
   class UFlagdef;
   class UPropdef;
   
   // events
 
-  class UEvent;
-  class UInputEvent;
-  class UMouseEvent;
-  class UKeyEvent;
+  class Event;
+  class InputEvent;
+  class MouseEvent;
+  class KeyEvent;
   class UWheelEvent;
   class UViewEvent;
-  class UPaintEvent;
+  class PaintEvent;
   class UResizeEvent;
   class UWinEvent;
-  class UUserEvent;
-  class UMessageEvent;
-  class UTimerEvent;  
+  class UserEvent;
+  class MessageEvent;
+  class TimerEvent;  
   class USysWMEvent;
 
-  class UEventFlow;
+  class EventFlow;
   
-  class UKey;  // key codes
-  class UMod;  // modifier masks
+  class Key;  // key codes
+  class Modifier;  // modifier masks
    
   // geometry
   
-  class UUnit;
-  class ULength;
-  class UPoint;
-  class UDimension;
-  class UShape;
-  class ULine;
-  class URect;
-  class UEllipse;
-  class UArc;
-  class UPolygon;
+  class Unit;
+  class Length;
+  class Point;
+  class Dimension;
+  class Shape;
+  class Line;
+  class Rectangle;
+  class Ellipse;
+  class Arc;
+  class Polygon;
   
   // graphics & rendering
   
-  class UGraph;
-  class URgba;
-  class UUpdate;
-  class URenderContext;
-  class UGlcontext;
+  class Graph;
+  class Rgba;
+  class Update;
+  class RenderContext;
+  class GLContext;
   
   // errors
   
-  class UError;
-  class UErrorHandler;
+  class Error;
+  class ErrorHandler;
   
   // numbers
   
-  class UInt;
-  class UFloat;
-  class UDouble;
+  class Int;
+  class Float;
+  class Double;
   
   // metaclasses
   
-  class UClass;
+  class Class;
   
   // view and styles
   
-  class UView;
-  class UViewStyle;
-  class UStyle;
-  class UStyleSheet;
+  class View;
+  class ViewStyle;
+  class Style;
+  class StyleSheet;
 
   // arglists
   
-  class UArgs;
-  class UChild;
-  class UParent;
+  class Args;
+  class Child;
+  class Parent;
   
   // file and network
   
-  class UFileInfo;
+  class FileInfo;
   class UFileDir;
-  class USocket;
-  class USource;
-  class UTimer;
-  class UMessage;
-  class UMessagePort;
-  class UMessagePortMap;
-  class UMService;
+  class Socket;
+  class Source;
+  class Timer;
+  class Message;
+  class MessagePort;
+  class MessagePortMap;
+  class MessageService;
   
   // implementation
   
-  class UUpdateContext;
-  class UWinUpdateContext;
+  class UpdateContext;
+  class WindowUpdateContext;
   class UBehavior;
   class UWinImpl;
   class USoftwinImpl;

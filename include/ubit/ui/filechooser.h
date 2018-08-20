@@ -24,6 +24,8 @@
 #ifndef _ufilebox_hpp_
 #define	_ufilebox_hpp_ 1
 
+#include <memory>
+
 #include <ubit/ui/box.h>
 #include <ubit/ui/choice.h>
 
@@ -101,8 +103,8 @@ public:
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 protected:
   String fspec;
-  unique_ptr<String> fname, fdir2, ffilter, fpath;
-  //Scrollpane* scrollpane;
+  std::unique_ptr<String> fname, fdir2, ffilter, fpath;
+  //ScrollPane* scrollpane;
   Box *mainbox;
   Box *show_list, *show_hidden_files;
   RadioSelect new_sel;

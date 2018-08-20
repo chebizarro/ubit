@@ -21,8 +21,10 @@
  * 
  */
 
-#ifndef _uctlmenu_hpp_
-#define _uctlmenu_hpp_ 1
+#ifndef UBIT_UI_CONTROLMENU_H_
+#define UBIT_UI_CONTROLMENU_H_
+
+#include <memory>
 
 #include <ubit/ui/piemenu.h>
 #include <ubit/core/call.h>
@@ -129,9 +131,9 @@ namespace ubit {
   public:
     ZoomAction(Box& zoomed_box, float gain = 0.5);
   protected:
-    unique_ptr<Box> zbox;     // zoomed box
-    unique_ptr<Position> posAttr; // box pos attribute (NB: its value is scale independent)
-    unique_ptr<Scale> scaleAttr; // box scale attribute
+    std::unique_ptr<Box> zbox;     // zoomed box
+    std::unique_ptr<Position> posAttr; // box pos attribute (NB: its value is scale independent)
+    std::unique_ptr<Scale> scaleAttr; // box scale attribute
     float  zbox_scale0;    // initial scale of box 
     Point zbox_pos0;     // initial (scale indep) pos of box in its container
     Point mouse_in_zbox0;
@@ -146,8 +148,8 @@ namespace ubit {
   public:
     PanAction(Box& panned_box, float gain = 1.);
   protected:
-    unique_ptr<Box> box;     // panned box
-    unique_ptr<Position> posAttr; // box pos attribute (NB: its value is scale independent)
+    std::unique_ptr<Box> box;     // panned box
+    std::unique_ptr<Position> posAttr; // box pos attribute (NB: its value is scale independent)
     Point pos0;        // initial (scale indep) pos of box in its container
     //float container_scale;
     virtual void mdrag(MouseEvent&, ControlMenu&);
@@ -158,17 +160,17 @@ namespace ubit {
    */
   class ScrollAction : public ControlAction {
   public:
-    ScrollAction(Scrollpane&, float gain = 0.33);
+    ScrollAction(ScrollPane&, float gain = 0.33);
     ScrollAction(float gain = 0.3);
 
-    void setPane(Scrollpane&);
-    Scrollpane* getPane() const {return pane;}
+    void setPane(ScrollPane&);
+    ScrollPane* getPane() const {return pane;}
     
   protected:
     virtual void mdrag(MouseEvent&, ControlMenu&);
-    Scrollpane* pane;
+    ScrollPane* pane;
     float arm_xpos, arm_ypos, xpos, ypos;
   };
   
 }
-#endif
+#endif // UBIT_UI_CONTROLMENU_H_

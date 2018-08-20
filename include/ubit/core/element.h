@@ -178,7 +178,7 @@ namespace ubit {
      *
      * Objects added to the CHILD list should derive from Element (typically, widgets
      * deriving from Box, Window), Data (viewable objects such as String, Image) or UCall
-     * (callback objects). Certain attributes such as Color, Font, Halign, Valign
+     * (callback objects). Certain attributes such as Color, Font, HAlign, VAlign
      * can also be added to the child list.
      *
      * Character strings (e.g. "abcd") are implicitely converted to String objects, so 
@@ -527,7 +527,7 @@ namespace ubit {
     bool isBrowsingGroup() {return emodes.IS_BROWSABLE;}       // !!!
     //virtual Element* getBrowsingGroup() {return emodes.IS_BROWSABLE ? this : null;} 
     
-    //Element& setConst() {UObject::setConst(); return *this;} // redefined from UObject.
+    //Element& setConst() {Object::setConst(); return *this;} // redefined from Object.
     
     virtual Children& children() const {return _children;}
     /*[impl] return the child list.
@@ -548,10 +548,10 @@ namespace ubit {
     ChildIter aend() const {return attributes().end();}
     //[impl] returns an iterator to the end of the attribute list (@see abegin()).
     
-    UObject::State getInterState() const {return ostate;}
+    Object::State getInterState() const {return ostate;}
     //[impl] returns the internal interactive state.
     
-    void setInterState(UObject::State);
+    void setInterState(Object::State);
     //[impl] changes the internal interactive state.
     
     virtual const String* getTextSeparator() const;

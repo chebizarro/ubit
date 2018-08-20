@@ -164,13 +164,13 @@ void PanAction::mdrag(MouseEvent& e, ControlMenu& m) {
 }
 
 
-ScrollAction::ScrollAction(Scrollpane& _pane, float _gain)
+ScrollAction::ScrollAction(ScrollPane& _pane, float _gain)
 : ControlAction(_gain), pane(&_pane) {}
 
 ScrollAction::ScrollAction(float _gain)
 : ControlAction(_gain), pane(null) {}
 
-void ScrollAction::setPane(Scrollpane& p) {pane = &p;}
+void ScrollAction::setPane(ScrollPane& p) {pane = &p;}
 
 void ScrollAction::mdrag(MouseEvent& e, ControlMenu& m) {
   if (!pane) return;

@@ -243,7 +243,7 @@ void View::doLayout2(UViewLayoutImpl& vd, Element& grp, UpdateContext& curp, Vie
   if (curp.xyscale != 1.) curp.rescale();
   scale = curp.xyscale;
   
-  bool is_pane  = dynamic_cast<Scrollpane*>(&grp);  // !!!@@@ A REVOIR !!!
+  bool is_pane  = dynamic_cast<ScrollPane*>(&grp);  // !!!@@@ A REVOIR !!!
   bool is_border = grp.getDisplayType() == Element::BORDER; // !!!@@@ A REVOIR !!!
   Node* b = null;
   Element* chgrp = null;
@@ -371,7 +371,7 @@ void hintElemHoriz(UViewLayoutImpl& vd, const UpdateContext& curp,
   if (chbox) {
     // number of horizontally flexible child objects
     // ATT: jamais flexible si CANT_RESIZE_WIDTH
-    if (curp.halign==Halign::FLEX && chbox->isWidthResizable())
+    if (curp.halign==HAlign::FLEX && chbox->isWidthResizable())
       vd.view->incrHFlexCount(); 
     // fait avant: vd.mustLayoutAgain |= chboxview->doLayout(curp, chvl);
   }
@@ -395,7 +395,7 @@ void hintElemVert(UViewLayoutImpl& vd, const UpdateContext& curp,
   if (chbox) {
     // number of vertically flexible child objects
     // ATT: jamais flexible si CANT_RESIZE_HEIGHT
-    if (curp.valign==Valign::FLEX && chbox->isHeightResizable())
+    if (curp.valign==VAlign::FLEX && chbox->isHeightResizable())
       vd.view->incrVFlexCount();
     // fait avant: vd.mustLayoutAgain |= chboxview->doLayout(curp, chvl);
   }
@@ -442,14 +442,14 @@ void hintElemBorder(UViewLayoutImpl& vd, const UpdateContext& curp,
   //NB: top et bottom s'adaptent a la zone centrale en largeur
   //ils ne controlent donc que la hauteur de leurs zones respectives
   switch (curp.valign) {
-  case Valign::TOP:
+  case VAlign::TOP:
     if (chvl.dim.height > frame.top.val) frame.top.val = chvl.dim.height;
     break;
-  case Valign::BOTTOM:
+  case VAlign::BOTTOM:
     if (chvl.dim.height > frame.bottom.val) frame.bottom.val = chvl.dim.height;
     break;
-  case Valign::CENTER:
-  case Valign::FLEX:
+  case VAlign::CENTER:
+  case VAlign::FLEX:
     if (chvl.dim.height > vd.chheight) vd.chheight = chvl.dim.height;
     break;
   }
@@ -457,14 +457,14 @@ void hintElemBorder(UViewLayoutImpl& vd, const UpdateContext& curp,
   //NB: left et right s'adaptent a la zone centrale en hauteur
   //ils ne controlent donc que la largeur de leurs zones respectives
   switch (curp.halign) {
-  case Halign::LEFT:
+  case HAlign::LEFT:
     if (chvl.dim.width > frame.left.val) frame.left.val = chvl.dim.width;
     break;
-  case Halign::RIGHT:
+  case HAlign::RIGHT:
     if (chvl.dim.width > frame.right.val) frame.right.val = chvl.dim.width;
     break;
-  case Halign::CENTER:
-  case Halign::FLEX:
+  case HAlign::CENTER:
+  case HAlign::FLEX:
     if (chvl.dim.width > vd.chwidth) vd.chwidth = chvl.dim.width;
     break;
   }

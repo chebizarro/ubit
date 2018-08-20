@@ -24,6 +24,8 @@
 #ifndef UBIT_CORE_HTML_H_
 #define UBIT_CORE_HTML_H_
 
+#include <memory>
+
 #include <ubit/udefs.hpp>
 #include <ubit/core/xmlgrammar.h>
 #include <ubit/core/xmlparser.h>
@@ -57,10 +59,10 @@ namespace ubit {
     virtual void setValue(const String& val) {setValueImpl(pvalue, val);}
     virtual bool getValue(String& val) const {return getValueImpl(pvalue, val);}
     
-    static void setValueImpl(unique_ptr<String>& pvalue, const String& value);
-    static bool getValueImpl(const unique_ptr<String>& pvalue, String& value);
+    static void setValueImpl(std::unique_ptr<String>& pvalue, const String& value);
+    static bool getValueImpl(const std::unique_ptr<String>& pvalue, String& value);
 
-    unique_ptr<String> pvalue;
+    std::unique_ptr<String> pvalue;
   };
   
 
@@ -70,7 +72,7 @@ namespace ubit {
     void setValue(const String& val) {HtmlAttribute::setValueImpl(pvalue, val);}
     bool getValue(String& val) const {return HtmlAttribute::getValueImpl(pvalue, val);}
   private:
-    unique_ptr<String> pvalue;  
+    std::unique_ptr<String> pvalue;  
   };
   
   struct HtmlClass : public HtmlAttribute {
@@ -112,7 +114,7 @@ namespace ubit {
     void setValue(const String& value);    
     bool getValue(String& val) const {return HtmlAttribute::getValueImpl(pvalue, val);}
   private:
-    unique_ptr<String> pvalue;
+    std::unique_ptr<String> pvalue;
   };
   
   struct HtmlBgcolor : public Background {
@@ -120,7 +122,7 @@ namespace ubit {
     void setValue(const String&);
     bool getValue(String& val) const {return HtmlAttribute::getValueImpl(pvalue, val);}
   private:
-    unique_ptr<String> pvalue;
+    std::unique_ptr<String> pvalue;
   }; 
   
   struct HtmlBorder : public Border {
@@ -128,7 +130,7 @@ namespace ubit {
     void setValue(const String& v);
     bool getValue(String& val) const {return HtmlAttribute::getValueImpl(pvalue, val);}
   private:
-    unique_ptr<String> pvalue;
+    std::unique_ptr<String> pvalue;
   };
   
   struct HtmlFontFace : public Font {
@@ -136,7 +138,7 @@ namespace ubit {
     void setValue(const String&);    
     bool getValue(String& val) const {return HtmlAttribute::getValueImpl(pvalue, val);}
   private:
-    unique_ptr<String> pvalue;
+    std::unique_ptr<String> pvalue;
   };
   
   struct HtmlFontSize : public Font {
@@ -144,7 +146,7 @@ namespace ubit {
     void setValue(const String&);
     bool getValue(String& val) const {return HtmlAttribute::getValueImpl(pvalue, val);}
   private:
-    unique_ptr<String> pvalue;
+    std::unique_ptr<String> pvalue;
   };
   
   
@@ -164,20 +166,20 @@ namespace ubit {
     void initNode(Document*, Element* parent);
   };
   
-  struct HtmlAlign : public Halign {
+  struct HtmlAlign : public HAlign {
     UCLASSDEF("align", HtmlAlign, new HtmlAlign)
     void setValue(const String&);
     bool getValue(String& val) const {return HtmlAttribute::getValueImpl(pvalue, val);}
   private:    
-    unique_ptr<String> pvalue;
+    std::unique_ptr<String> pvalue;
   };
   
-  struct HtmlValign : public Valign {
+  struct HtmlValign : public VAlign {
     UCLASSDEF("valign", HtmlValign, new HtmlValign)
     void setValue(const String&);
     bool getValue(String& val) const {return HtmlAttribute::getValueImpl(pvalue, val);}
   private:    
-    unique_ptr<String> pvalue;
+    std::unique_ptr<String> pvalue;
   };
 
   struct HtmlColspan : public HtmlAttribute {

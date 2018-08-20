@@ -25,10 +25,12 @@
 #define UBIT_CORE_DOM_H_
 
 #include <map>
+#include <memory>
+#include <fstream>
+
 #include <ubit/core/doc.h>
 #include <ubit/core/uclassImpl.hpp>  //StyleSheet
 #include <ubit/core/string.h>
-#include <fstream>
 
 namespace ubit {
   
@@ -48,7 +50,7 @@ namespace ubit {
     virtual const String& getData() const {return *data;}
     
   private:
-    unique_ptr<String> data;
+    std::unique_ptr<String> data;
   };
   
     /** XML CDATASection.
@@ -64,7 +66,7 @@ namespace ubit {
     virtual const String& getData() const {return *data;}
     
   private:
-    unique_ptr<String> data;
+    std::unique_ptr<String> data;
   };
   
     /** XML ProcessingInstruction.
@@ -81,7 +83,7 @@ namespace ubit {
     virtual const String& getData() const {return *data;}
     
   private:
-    unique_ptr<String> target, data;
+    std::unique_ptr<String> target, data;
   };
   
     /** XML DocType.
@@ -100,7 +102,7 @@ namespace ubit {
     
   private:
     friend class XmlDocument;
-    unique_ptr<String> name, public_id, system_id;
+    std::unique_ptr<String> name, public_id, system_id;
     //XmlDocType();
   };
   
@@ -159,7 +161,7 @@ namespace ubit {
   protected:
     friend class XmlParser;
     static const String NodeName;
-    unique_ptr<String> xml_version, xml_encoding;
+    std::unique_ptr<String> xml_version, xml_encoding;
     bool xml_standalone;
     XmlDocType* doc_type;
     XmlGrammars* grammars;

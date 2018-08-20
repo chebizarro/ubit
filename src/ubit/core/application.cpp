@@ -311,7 +311,7 @@ void AppImpl::addDeleteRequest(View* v) {
 }
 
 
-void AppImpl::addDeleteRequest(UObject* b) {
+void AppImpl::addDeleteRequest(Object* b) {
   b->omodes.IS_DESTRUCTED = true;  // securite: normalement c'est deja le cas
   
   // si b est dans updatelist il faut l'enlever
@@ -467,7 +467,7 @@ void Application::deleteNotify(Element* deleted_group) {
 }
 
 
-const UDispList& Application::getDispList() {
+const DisplayList& Application::getDispList() {
   return impl.displist;
 }
 
@@ -612,7 +612,7 @@ void Application::internalError(const char* fun, const char* format, ...){
 }
 
 
-void Application::raiseError(int errnum, const UObject* obj, const char* funcname, 
+void Application::raiseError(int errnum, const Object* obj, const char* funcname, 
                         const char* format, ...){
   va_list ap;
   va_start(ap, format);
@@ -620,16 +620,16 @@ void Application::raiseError(int errnum, const UObject* obj, const char* funcnam
   va_end(ap);
 }
 
-void Application::raiseError(int errnum, const UObject* obj, const char* funcname, 
+void Application::raiseError(int errnum, const Object* obj, const char* funcname, 
                         const char* format, va_list ap){
   getErrorHandler().raiseError(errnum, obj, funcname, format, ap);
 }
 
-UErrorHandler& Application::getErrorHandler() {
+ErrorHandler& Application::getErrorHandler() {
   // this variable should be null even if this AppImpl constr was not called
   if (!appli_impl.error_handler) {
     appli_impl.error_handler = 
-    new UErrorHandler((appli_impl.app_name ? *appli_impl.app_name : ""), &std::cerr);
+    new ErrorHandler((appli_impl.app_name ? *appli_impl.app_name : ""), &std::cerr);
   }
   
   if (appli_impl.error_handler->label().empty() && appli_impl.app_name)
@@ -638,43 +638,43 @@ UErrorHandler& Application::getErrorHandler() {
   return *appli_impl.error_handler;
 }
 
-void Application::setErrorHandler(UErrorHandler& eh) {
+void Application::setErrorHandler(ErrorHandler& eh) {
   appli_impl.error_handler = eh;
 }
 
 
-UErrorHandler::UErrorHandler(const String& _label, std::ostream* _fout) : 
+ErrorHandler::ErrorHandler(const String& _label, std::ostream* _fout) : 
 plabel(ustr(_label)),
 pbuffer(null),
 fout(_fout) {
 }
 
-UErrorHandler::~UErrorHandler() {}
+ErrorHandler::~ErrorHandler() {}
 
-void UErrorHandler::setOutputStream(std::ostream* f) {
+void ErrorHandler::setOutputStream(std::ostream* f) {
   fout = f;
 }
 
-void UErrorHandler::setOutputBuffer(String* s) {
+void ErrorHandler::setOutputBuffer(String* s) {
   pbuffer = s;
 }
 
 
-void UErrorHandler::warning(const char* fun, const char* format, ...) const {
+void ErrorHandler::warning(const char* fun, const char* format, ...) const {
   va_list ap;
   va_start(ap, format);
   raiseError(Error::WARNING, null, fun, format, ap);
   va_end(ap);
 }
 
-void UErrorHandler::error(const char* fun, const char* format, ...) const {
+void ErrorHandler::error(const char* fun, const char* format, ...) const {
   va_list ap;
   va_start(ap, format);
   raiseError(Error::ERROR, null, fun, format, ap);
   va_end(ap);
 }
 
-void UErrorHandler::error(int errnum, const UObject *obj, const char* fun, 
+void ErrorHandler::error(int errnum, const Object *obj, const char* fun, 
                           const char* format, ...) const {
   va_list ap;
   va_start(ap, format);
@@ -682,7 +682,7 @@ void UErrorHandler::error(int errnum, const UObject *obj, const char* fun,
   va_end(ap);
 }
 
-void UErrorHandler::parserError(int errnum, const Char* tbuffer,
+void ErrorHandler::parserError(int errnum, const Char* tbuffer,
                                 const char* msg1, const String& name,
                                 const char* msg2, const Char* line) const {
   // eviter erreurs de positionnement en debut de buffer
@@ -715,7 +715,7 @@ void UErrorHandler::parserError(int errnum, const Char* tbuffer,
   raiseError(errnum, &err);
 }
 
-void UErrorHandler::raiseError(int errnum, const UObject* obj, const char* funcname, 
+void ErrorHandler::raiseError(int errnum, const Object* obj, const char* funcname, 
                                const char* format, va_list ap) const {
   Error e(errnum, obj, funcname);
   formatMessage(e, format, ap);
@@ -724,7 +724,7 @@ void UErrorHandler::raiseError(int errnum, const UObject* obj, const char* funcn
   if (e.errnum < 0) throw e;
 }
 
-void UErrorHandler::raiseError(int errnum, String* msg) const {
+void ErrorHandler::raiseError(int errnum, String* msg) const {
   Error e(errnum, null, null);
     if (msg) {
       strncpy(e.message, msg->c_str(), sizeof(e.message));
@@ -736,7 +736,7 @@ void UErrorHandler::raiseError(int errnum, String* msg) const {
 }
 
 
-void UErrorHandler::formatMessage(Error& e, const char* format, va_list ap) const {
+void ErrorHandler::formatMessage(Error& e, const char* format, va_list ap) const {
   // ICI traiter les translations !
   //char buf[2000] = "";
   char* p = e.message;
@@ -783,7 +783,7 @@ void UErrorHandler::formatMessage(Error& e, const char* format, va_list ap) cons
   e.message[sizeof(e.message)-1] = 0;
 }
 
-const char* UErrorHandler::getErrorName(int errnum) const {
+const char* ErrorHandler::getErrorName(int errnum) const {
   switch (errnum) {
     case Error::WARNING: 
       return "Warning";
@@ -804,18 +804,18 @@ const char* UErrorHandler::getErrorName(int errnum) const {
   }
 }
 
-void UErrorHandler::printOnStream(const Error& e) const {
+void ErrorHandler::printOnStream(const Error& e) const {
   if (!fout) {
-    cerr <<  "UErrorHandler::printOnStream: can't print error because output stream is null! " << endl;
+    cerr <<  "ErrorHandler::printOnStream: can't print error because output stream is null! " << endl;
   }
   else {
     *fout << e.what() << endl << endl;
   } 
 }
 
-void UErrorHandler::printOnBuffer(const Error& e) const {
+void ErrorHandler::printOnBuffer(const Error& e) const {
   if (!pbuffer) {
-    cerr <<  "UErrorHandler::printOnBuffer: can't print error because output buffer is null! " << endl;
+    cerr <<  "ErrorHandler::printOnBuffer: can't print error because output buffer is null! " << endl;
   }
   else {
     pbuffer->append(e.what());

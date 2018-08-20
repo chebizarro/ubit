@@ -24,6 +24,8 @@
 #ifndef UBIT_UI_TITLE_H_
 #define	UBIT_UI_TITLE_H_
 
+#include <memory>
+
 namespace ubit {
   /**
    * Window Title.
@@ -50,7 +52,7 @@ namespace ubit {
     virtual void update();
     
   private:
-    unique_ptr<String> pstring;
+    std::unique_ptr<String> pstring;
   };
   
   

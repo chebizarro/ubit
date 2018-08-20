@@ -17,60 +17,62 @@
 #ifndef _utreebox_hpp_
 #define	_utreebox_hpp_  1
 
+#include <memory>
+
 #include <ubit/ui/listbox.h>
 
 namespace ubit {
 
 /** Tree widget.
-  * @see also: Treenode.
+  * @see also: TreeNode.
 */
-class Treebox : public ListBox {
+class TreeBox : public ListBox {
 public:
-  UCLASS(Treebox)
+  UCLASS(TreeBox)
   
-  Treebox(const Args& = Args::none);
+  TreeBox(const Args& = Args::none);
   ///< creates a new tree widget (@see also shortcut utreebox()).
 
-  virtual ~Treebox();
+  virtual ~TreeBox();
   
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  virtual Treenode* getSelectedNode() const;
+  virtual TreeNode* getSelectedNode() const;
   ///< returns the selected node; null if there is no selected node.
   
-  virtual void setSelectedNode(Treenode&);
+  virtual void setSelectedNode(TreeNode&);
   ///< selects this node.
   
   virtual int getSelectedIndex() const;
   ///< returns the index of the selected node; -1 if there is no selected node.
   
-  virtual Treebox& setSelectedIndex(int n);
+  virtual TreeBox& setSelectedIndex(int n);
   ///< selects the Nth node; selects the last node if n = -1.
   
 private:
-    friend class Treenode;
+    friend class TreeNode;
 };
 
-Treebox& utreebox(const Args& = Args::none);
-///< shortcut that returns *new Treebox().
+TreeBox& utreebox(const Args& = Args::none);
+///< shortcut that returns *new TreeBox().
 
 /** Node in a Tree widget.
-* @see also: Treebox.
+* @see also: TreeBox.
 */
-class Treenode : public Box {
+class TreeNode : public Box {
 public:
-  UCLASS(Treenode)
+  UCLASS(TreeNode)
 
-  Treenode(const Args& label = Args::none);
-  ///< creates a new node in a Treebox (@see also shortcut utreenode()).
+  TreeNode(const Args& label = Args::none);
+  ///< creates a new node in a TreeBox (@see also shortcut utreenode()).
 
-  Treenode(const Args& label, const Args& subnode_list);
-  ///< creates a new node in a Treebox (@see also shortcut utreenode()).
+  TreeNode(const Args& label, const Args& subnode_list);
+  ///< creates a new node in a TreeBox (@see also shortcut utreenode()).
  
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     
-  virtual void addNode(Treenode&);
-  virtual void removeNode(Treenode&);
+  virtual void addNode(TreeNode&);
+  virtual void removeNode(TreeNode&);
 
   virtual void expand(bool = true);
   virtual void collapse() {expand(false);}
@@ -87,17 +89,17 @@ public:
   ///< the box that contains the subnodes of the treenode.
   
 private:
-  friend class Treebox;
-  unique_ptr<Box> plabel, psubnodes;
-  unique_ptr<Box> pexpander;
+  friend class TreeBox;
+  std::unique_ptr<Box> plabel, psubnodes;
+  std::unique_ptr<Box> pexpander;
   void constructs(const Args& label, const Args& subnode_list);
 };
 
-Treenode& utreenode(const Args& label = Args::none);
-///< shortcut that returns *new Treenode().
+TreeNode& utreenode(const Args& label = Args::none);
+///< shortcut that returns *new TreeNode().
 
-Treenode& utreenode(const Args& label, const Args& subnode_list);
-///< shortcut that returns *new Treenode().
+TreeNode& utreenode(const Args& label, const Args& subnode_list);
+///< shortcut that returns *new TreeNode().
 
 } 
 #endif

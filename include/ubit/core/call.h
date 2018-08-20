@@ -24,6 +24,8 @@
 #ifndef _ucall_hpp_
 #define	_ucall_hpp_ 1
 
+#include <memory>
+
 #include <ubit/core/node.h>
 #include <ubit/core/event.h>
 #include <typeinfo>
@@ -136,7 +138,7 @@ namespace ubit {
    * - ucloseWin()      closes the first parent window that contains this expression
    * 
    * <pre>
-   *   unique_ptr<Dialog> dial = 
+   *   std::unique_ptr<Dialog> dial = 
    *     udialog(...whatever... 
    *             + ubutton( "Close" + ucloseWin() )
    *             );

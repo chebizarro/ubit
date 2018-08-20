@@ -210,7 +210,7 @@ const ArgsImpl& operator+(const ArgsImpl& a, const Args& a2) {
 }
 
 const ArgsImpl& operator+(const _UAttrArgs& attrs, const ArgsImpl& a) {   // !!!!!!
-  for (UChildReverseIter i = attrs.children->rbegin(); i != attrs.children->rend(); ++i)
+  for (ChildReverseIter i = attrs.children->rbegin(); i != attrs.children->rend(); ++i)
     a.children->push_front(i.child());
   return a;
 }

@@ -59,8 +59,8 @@ Style* Box::createStyle() {
   style->textSeparator = new String(" ");
   style->orient = Orientation::INHERIT;
   // abndonne: marche pas: a la fois hflex et vflex
-  style->halign = Halign::FLEX;
-  style->valign = Valign::FLEX;
+  style->halign = HAlign::FLEX;
+  style->valign = VAlign::FLEX;
   style->hspacing = 1;
   style->vspacing = 1;
   style->local.padding.set(0,0);
@@ -83,7 +83,7 @@ virtual Box* getChildAtImpl(const Point&, View* box_view) const;
 
  Box* Box::getChildAtImpl(const Point& p, View* view) const {
   //if (!view) return null;
-  for (UChildReverseIter ch = crbegin(); ch != crend(); ++ch) {
+  for (ChildReverseIter ch = crbegin(); ch != crend(); ++ch) {
     // pas possible: context inconnu
     // if (!ch.getCond() || ch.getCond()->verifies(curp, grp))     
     Box* chbox = (*ch)->toBox();

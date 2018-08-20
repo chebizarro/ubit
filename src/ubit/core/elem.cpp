@@ -65,8 +65,8 @@ const Style& Element::getStyle(UpdateContext* ctx) const {
 Style* Element::createStyle() {
   Style* s = new Style();
   //valign, halign;  // rendu heritable
-  s->halign = Halign::INHERIT;
-  s->valign = Valign::INHERIT;
+  s->halign = HAlign::INHERIT;
+  s->valign = VAlign::INHERIT;
   // vspacing, hspacing; // rendu heritable
   s->hspacing = HSpacing::INHERIT;
   s->vspacing = VSpacing::INHERIT;
@@ -423,7 +423,7 @@ Element& Element::removeAllAttrs(bool autodel) {
  //virtual bool hasAttributes() const;
  
  void Element::closeWin(int status) {
-   for (UParentIter p = pbegin(); p != pend(); ++p) {
+   for (ParentIter p = pbegin(); p != pend(); ++p) {
     Element* par = *p;
     if (par) {    // par == null if no other parent (Frame or similar)
       Window* win = par->toWin();
@@ -454,12 +454,12 @@ void Element::closeWin(InputEvent& e, int status) {
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void Element::update(const Update& upd, Display* d) {
-  for (UParentIter p = pbegin(); p != pend(); ++p)
+  for (ParentIter p = pbegin(); p != pend(); ++p)
     if (*p) (*p)->update(upd, d);
 }
 
 void Element::doUpdate(const Update& upd, Display* d) {
-  for (UParentIter p = pbegin(); p != pend(); ++p)
+  for (ParentIter p = pbegin(); p != pend(); ++p)
     if (*p) (*p)->doUpdate(upd, d);
 }
 
@@ -491,7 +491,7 @@ void Element::show(bool state) {
 bool Element::isShown() const {
   if (!isShowable()) return false;
   
-  for (UParentIter p = pbegin(); p != pend(); ++p) {
+  for (ParentIter p = pbegin(); p != pend(); ++p) {
     Element* parent = *p;
     if (!parent || parent == this) {  // cas toplevel (Frame or similar)
       if (isShowable()) return true;
@@ -529,7 +529,7 @@ void Element::initView(View* parview) {
 void Element::initChildViews(Element* child) {
   // il faut remonter dans l'arborescence pour retrouver les Views
   // (c'est fait par appel recursif de cette fct)
-  for (UParentIter p = pbegin(); p != pend(); p++) {
+  for (ParentIter p = pbegin(); p != pend(); p++) {
     Element* grp = *p;
     //if (grp) grp->initChildViews(child, childlink);
     if (grp) grp->initChildViews(child);
@@ -541,7 +541,7 @@ void Element::initChildViews(Element* child) {
 int Element::retrieveRelatedViews(vector<View*>& tab) const {
   int count = 0;
   // tab is not emptied: the views are added to the end of what it already contains
-  for (UParentIter p = pbegin(); p != pend(); p++) 
+  for (ParentIter p = pbegin(); p != pend(); p++) 
     count += (*p)->retrieveRelatedViews(tab);
   
   // returns the number of views that were added, which may thus differ from tab size
@@ -556,7 +556,7 @@ int Element::retrieveRelatedViews(vector<View*>& tab) const {
 // NOTE:
 // - ne pas oublier que les Element peuvent avoir des enfants de type Box
 //   et qu'il faut donc aussi detruire ces vues
-// - les Box peuvent avoir des Active UBorders (typiquement les Scrollpane)
+// - les Box peuvent avoir des Active UBorders (typiquement les ScrollPane)
 //   et il faut egalement detruire les vues des elements contenus dedans
 //   (cas du getSubGroup()). De plus ces UBorders peuvent etre dans l'ATTR_LIST
 
@@ -669,7 +669,7 @@ bool Element::isDragged() const  {return ostate == UOn::DRAGGED;}
 //bool Element::isEntered() const  {return ostate == UOn::ENTERED;}
 //bool Element::isActionPerformed() const  {return ostate == UOn::ACTIONED;}
 
-void Element::setInterState(UObject::State s) {
+void Element::setInterState(Object::State s) {
   ostate = s;
 }
 
@@ -1260,7 +1260,7 @@ void Element::actionBehavior(InputEvent& e) {
 }
 
 
-void Element::keyPressBehavior(UKeyEvent& e) {
+void Element::keyPressBehavior(KeyEvent& e) {
   if (ostate == UOn::DISABLED) return;    // jamais execute si disabled
     
   // moved to unatevent.cpp: int count = ke->decodeKey();
@@ -1283,7 +1283,7 @@ void Element::keyPressBehavior(UKeyEvent& e) {
 // NB: certaines implementation pourraient etre nettement plus compliquees,
 // le UOn::type pouvant eventuellement etre appele apres le keyReleaseBehavior
 
-void Element::keyReleaseBehavior(UKeyEvent& e) {
+void Element::keyReleaseBehavior(KeyEvent& e) {
   if (ostate == UOn::DISABLED) return;
     
   e.setCond(UOn::krelease);

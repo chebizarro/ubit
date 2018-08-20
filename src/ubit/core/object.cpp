@@ -32,7 +32,7 @@ using namespace std;
 namespace ubit {
 
 
-Error::Error(int _errnum, const UObject* obj, const char* funcname) :
+Error::Error(int _errnum, const Object* obj, const char* funcname) :
 errnum(_errnum),
 object(obj),
 function_name(funcname) {
@@ -49,24 +49,24 @@ const char* Error::what() const throw() {
 }
 
 
-UObject::UConst UObject::UCONST;
+Object::UConst Object::UCONST;
 
-const char* UObject::getVersion() {
+const char* Object::getVersion() {
   return UBIT_VERSION;
 }
 
-const String& UObject::getClassName() const {
+const String& Object::getClassName() const {
   return getClass().getName();
 }
 
-void UObject::error(const char* funcname, const char* format, ...) const {
+void Object::error(const char* funcname, const char* format, ...) const {
   va_list ap;
   va_start(ap, format);
   Application::raiseError(Error::ERROR, this, funcname, format, ap);
   va_end(ap);
 }
 
-void UObject::warning(const char* funcname, const char* format, ...) const {
+void Object::warning(const char* funcname, const char* format, ...) const {
   va_list ap;
   va_start(ap, format);
   Application::raiseError(Error::WARNING, this, funcname, format, ap);
@@ -87,30 +87,30 @@ void uwarning(const char* funcname, const char* format, ...) {
   va_end(ap);
 }
 
-UObject& UObject::setAutoUpdate(bool state) {
+Object& Object::setAutoUpdate(bool state) {
   omodes.DONT_AUTO_UPDATE = !state;
   return *this;
 }
 
-UObject& UObject::ignoreChangeCallbacks(bool state) {
+Object& Object::ignoreChangeCallbacks(bool state) {
   omodes.IGNORE_CHANGE_CALLBACKS = state;
   return *this;
 }
 
 
-void* UObject::operator new(size_t sz) {
-  UObject* obj = (UObject*) ::operator new(sz);
+void* Object::operator new(size_t sz) {
+  Object* obj = (Object*) ::operator new(sz);
   // trick to detect whether this object is created by 'new' (see constructor)
   obj->ptr_count = (PtrCount)(long((obj)));
   return obj;
 }
 
-void UObject::operator delete(void* p) {
+void Object::operator delete(void* p) {
   if (!p) return;
-  UObject* obj = static_cast<UObject*>(p);
+  Object* obj = static_cast<Object*>(p);
   
   if (!obj->omodes.IS_DYNAMIC) {
-    Application::error("delete UObject",
+    Application::error("delete Object",
                   "%p: attempt to delete an object that was not created by new", p);
     return;
   }
@@ -122,8 +122,8 @@ void UObject::operator delete(void* p) {
   
   // NB: ptr_count<0 means that the object has already been destructed
   if (obj->ptr_count > 0) {
-    Application::error("delete UObject",
-                  "%p: attempt to delete an object that is pointed by a 'unique_ptr' (Ubit smart pointer)", p);
+    Application::error("delete Object",
+                  "%p: attempt to delete an object that is pointed by a 'std::unique_ptr' (Ubit smart pointer)", p);
     // peut etre rellement detruit plus tard
     obj->omodes.IS_DESTRUCTING = false;
     obj->omodes.IS_DESTRUCTED = false;
@@ -135,7 +135,7 @@ void UObject::operator delete(void* p) {
 }
 
 
-UObject::UObject() {
+Object::Object() {
   memset(&omodes, 0, sizeof(omodes));
   // object created by 'new' that can be destroyed by 'delete'
   if (ptr_count == (PtrCount)(long((this)))) omodes.IS_DYNAMIC = true; 
@@ -143,29 +143,29 @@ UObject::UObject() {
   ostate = 0;
 }
 
-UObject::UObject(const UObject& obj) {
+Object::Object(const Object& obj) {
   memset(&omodes, 0, sizeof(omodes));
   // object created by 'new' that can be destroyed by 'delete'
   if (ptr_count == (PtrCount)(long((this)))) omodes.IS_DYNAMIC = true; 
   ptr_count = 0;
 }
 
-UObject& UObject::operator=(const UObject& obj) {
+Object& Object::operator=(const Object& obj) {
   // ptr_count et omodes ne doivent pas changer!
   return *this;
 } 
 
-UObject::~UObject() {
+Object::~Object() {
   ptr_count = -1;  // ptr_count<0 means that this object has been destructed
 } 
 
 
-UObject& UObject::setConst() {
+Object& Object::setConst() {
   omodes.IS_CONST = true;
   return *this;
 }
 
-bool UObject::checkConst() const {
+bool Object::checkConst() const {
   if (omodes.IS_CONST) {
     error("Node::checkConst","attempt to change the value of this constant object");
     return true;
@@ -178,11 +178,11 @@ bool UObject::checkConst() const {
 // importance car ces vars ne sont jamais detruitre en cours d'exec (le ptr_count 
 // sera faux mais on n'en a cure)
 
-void UObject::addPtr() const {
+void Object::addPtr() const {
   ++ptr_count;                           // @@@ !!!! MUST CHECK LIMIT !!!
 } 
 
-void UObject::removePtr() const {
+void Object::removePtr() const {
   --ptr_count;
   
   // ptr_count < 0 means that the object has already been destructed
@@ -193,8 +193,8 @@ void UObject::removePtr() const {
 }
 
 void UPtr::deferenceError() const {
-  Application::fatalError("unique_ptr::operator * or ->",
-                     "can't derefence a unique_ptr that points to null; unique_ptr address= %p",
+  Application::fatalError("std::unique_ptr::operator * or ->",
+                     "can't derefence a std::unique_ptr that points to null; std::unique_ptr address= %p",
                      this);
 }
 

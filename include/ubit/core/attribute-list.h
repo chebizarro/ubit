@@ -24,6 +24,8 @@
 #ifndef UBIT_CORE_ATTRIBUTE_LIST_H_
 #define	UBIT_CORE_ATTRIBUTE_LIST_H_
 
+#include <memory>
+
 namespace ubit {
   /**
    * Attribute list.
@@ -79,7 +81,7 @@ namespace ubit {
     virtual void update();
     
   private:
-    unique_ptr<String> pstring;
+    std::unique_ptr<String> pstring;
   };
   
   
