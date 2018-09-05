@@ -56,7 +56,8 @@ namespace ubit {
   };
 
 
-  /** Window Title.
+  /**
+   * Window Title.
    */
   class Title: public Attribute {
   public:

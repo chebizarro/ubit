@@ -22,6 +22,7 @@
  */
 
 #include <ubit/ubit_features.h>
+
 #include <algorithm>
 #include <iostream>
 #include <cstdio>
@@ -33,6 +34,7 @@
 
 #include <ubit/core/on.h>
 #include <ubit/core/call.h>
+#include <ubit/core/errorhandler.h>
 #include <ubit/ui/dialog.h>
 #include <ubit/ui/umenuImpl.hpp>
 #include <ubit/ui/uwinImpl.hpp>
@@ -53,7 +55,7 @@ namespace ubit {
 
 // the (unique) implementation of the application context
 static AppImpl appli_impl;
-AppImpl& Application::impl = appli_impl;
+//std::unique_ptr<AppImpl> Application::impl_ = std::make_unique(appli_impl);
 
 
 AppImpl::AppImpl() : 
@@ -79,82 +81,82 @@ is_processing_layout_update_requests(false) {
 
 
 String& Application::initConf(int& argc, char** argv, Option* opts, const char* cfile) {
-  conf.readAttributes(cfile);
+  config.readAttributes(cfile);
   // parseOptions(opts) first because they superseede Ubit options
-  if (opts) conf.parseOptions(argc, argv, opts);
-  conf.parseUbitOptions(argc, argv);
-  conf.freeze_options = true;
+  if (opts) config.parseOptions(argc, argv, opts);
+  config.parseUbitOptions(argc, argv);
+  config.freeze_options = true;
 
-  return conf.display;
+  return config.display;
 }
 
 
 Application::Application(int& argc, char** argv, Option* opts, const char* confile) {
   String s = argv[0];
-  impl.app_name = new String(s.basename());
-  impl.disp = Display::create(initConf(argc, argv, opts, confile));
+  impl_->app_name = new String(s.basename());
+  impl_->disp = Display::create(initConf(argc, argv, opts, confile));
 
-  if (!impl.disp->isOpened()) {   // throws an exception
+  if (!impl_->disp->isOpened()) {   // throws an exception
     Application::fatalError("Application","The Application display can't be opened (is the X11 Server running?)");
   }
 
-  if (impl.appli) {
+  if (impl_->application) {
     Application::fatalError("Application","The Application is already created (an application must have only one Application)");
     return;
   }
-  impl.appli = this;
-  impl.sources = new Element();
+  impl_->application = this;
+  impl_->sources = new Element();
   // UWinList elements are not counted has parents when auto deleting children
-  impl.modalwins = new UWinList();
+  impl_->modalwins = new UWinList();
   
   // creates the default flow (action required by certain toolkits)
-  impl.disp->obtainChannelFlow(0);
+  impl_->disp->obtainChannelFlow(0);
   
-  impl.mainloop_running = impl.subloop_running = false; 
-  impl.disp->startAppli(); 
+  impl_->mainloop_running = impl_->subloop_running = false; 
+  impl_->disp->startAppli(); 
 }
 
 
 Application::~Application() {
-  impl.is_terminated = true;
+  impl_->is_terminated = true;
   //pose probleme: des destructeurs peuvent etre appeles juste apres
   //-> ne pas faire d'exception dans un tel cas!  
-  // impl.appli = null;
-  impl.disp->quitAppli();
+  // impl_->application = null;
+  impl_->disp->quitAppli();
 }
 
 /*  APPELE OU ?
 void Application::realize() {
   Display::realize();
-  //if (conf.locale) setlocale(LC_CTYPE, conf.locale);
-  if (!conf.locale.empty()) setlocale(LC_ALL, conf.locale.c_str());
-  //impl.natappli->setProperties(conf);
+  //if (config.locale) setlocale(LC_CTYPE, config.locale);
+  if (!config.locale.empty()) setlocale(LC_ALL, config.locale.c_str());
+  //impl_->natappli->setProperties(conf);
   const String& name = getAppName();
   static const String res_class = "Ubit";
   natdisp->getMainFrame().setNames(res_class, name, name, name);
 } 
 */
   //bool Application::isRealized() const {return natdisp->isRealized();}
-  //const char* Application::getCommandName() const {return conf.app_name;}
-  //const char* Application::getCommandPath() const {return (conf.app_argc>0 ? conf.app_argv[0] : null);}
+  //const char* Application::getCommandName() const {return config.app_name;}
+  //const char* Application::getCommandPath() const {return (config.app_argc>0 ? config.app_argv[0] : null);}
   
 Application& Application::application() {
-  if (!impl.appli)    // throws an exception
+  if (!impl_->application)    // throws an exception
     Application::fatalError("Application::application()","no Application instance (not created yet?, already destroyed?)");
-  return *impl.appli;
+  return *impl_->application;
 }
 
-Application* Application::getApplication() {return impl.appli;}
+Application* Application::getApplication() {return impl_->application;}
 
-bool Application::isExiting() {return impl.is_terminated;}
+bool Application::isExiting() {return impl_->is_terminated;}
 
 const char* Application::getVersion() {return UBIT_VERSION;}
 
-//const char* Application::getWindowingToolkit() {return conf.windowing_toolkit;}
+//const char* Application::getWindowingToolkit() {return config.windowing_toolkit;}
 
-bool Application::isRunning() {return impl.mainloop_running;}
+bool Application::isRunning() {return impl_->mainloop_running;}
 
-Frame* Application::getMainFrame() {return impl.main_frame;}
+Frame* Application::getMainFrame() {return impl_->main_frame;}
 
 const String& Application::getName() {
   if (!appli_impl.app_name) appli_impl.app_name = new String();
@@ -162,7 +164,7 @@ const String& Application::getName() {
 }
 
 StyleSheet& Application::getStyleSheet() {
-  return impl.stylesheet;
+  return impl_->stylesheet;
 }
 
 const Style& Application::getDefaultStyle() {
@@ -172,12 +174,12 @@ const Style& Application::getDefaultStyle() {
 
 
 String Application::getTitle() {
-  if (impl.main_frame) return impl.main_frame->getTitle();
+  if (impl_->main_frame) return impl_->main_frame->getTitle();
   else return "";
 }
 
 void Application::setTitle(const String& title) {
-  if (impl.main_frame) impl.main_frame->setTitle(title);
+  if (impl_->main_frame) impl_->main_frame->setTitle(title);
 }
 
 void Application::setFocus(View* v) {
@@ -188,11 +190,11 @@ void Application::setFocus(View* v) {
 // En arg: n'importe quelle Window; mais seul le MainFrame (= le 1er Frame 
 // ajoute a Application) est automatiquement affichee par defaut
 void Application::add(Window& win) {
-  impl.disp->add(win);
+  impl_->disp->add(win);
   Frame* frame = dynamic_cast<Frame*>(&win);
-  if (frame && !impl.main_frame) {    // makes the first Frame be the 'Main Frame'
-    impl.main_frame = frame; 
-    impl.main_frame->wmodes.IS_MAINFRAME = true;
+  if (frame && !impl_->main_frame) {    // makes the first Frame be the 'Main Frame'
+    impl_->main_frame = frame; 
+    impl_->main_frame->wmodes.IS_MAINFRAME = true;
   }
 }
 
@@ -202,8 +204,8 @@ void Application::add(Window* win) {
 }
 
 void Application::remove(Window& win, bool remove_mode) {
-  if (&win == impl.main_frame) impl.main_frame = null;
-  impl.disp->remove(win, remove_mode);
+  if (&win == impl_->main_frame) impl_->main_frame = null;
+  impl_->disp->remove(win, remove_mode);
 }
 
 void Application::remove(Window* win, bool remove_mode) {
@@ -216,18 +218,20 @@ static void updateAll2(Element* grp, const Update& mode) {
   // NB: du fait des parents multiples, il est possible de remettre
   // a jour plusieurs fois la meme window
   // ==> il faudrait tenir compte du flag must-update
-  if (grp->toWin()) grp->toWin()->update(mode);
+  
+  // TODO
+  // if (grp->toWin()) grp->toWin()->update(mode);
   
   for (ChildIter c = grp->cbegin(); c != grp->cend(); ++c) {
-    Element* g = (*c)->toElem();
+    Element* g = reinterpret_cast<Element*> (*c);
     if (g) updateAll2(g, mode);    // in any case
   }
 }
 
 //  updates all visible windows recursively
 void Application::updateAll(const Update& mode) {
-  for (ChildIter c = impl.disp->winlist.cbegin(); c != impl.disp->winlist.cend(); ++c) {
-    Element* g = (*c)->toElem();
+  for (ChildIter c = impl_->disp->winlist.cbegin(); c != impl_->disp->winlist.cend(); ++c) {
+    Element* g = reinterpret_cast<Element*> (*c);
     if (g) updateAll2(g, mode);
   }
 }
@@ -236,26 +240,26 @@ void Application::updateAll(const Update& mode) {
 int Application::start() {
   // updateAll() remet l'affichage a jour avant d'entrer dans la mainloop
   // pour eviter des pbms d'initialisation du layout, en part. avec le texte
-  impl.appli->updateAll();
+  impl_->application->updateAll();
 
-  //if (impl.app_title.empty()) setTitle(*impl.app_name);
-  //else setTitle(impl.app_title);
+  //if (impl_->app_title.empty()) setTitle(*impl_->app_name);
+  //else setTitle(impl_->app_title);
   String t = getTitle();
-  if (t.empty()) setTitle(*impl.app_name);
+  if (t.empty()) setTitle(*impl_->app_name);
 
-  impl.main_status = 0;
-  impl.disp->startLoop(true);  // main loop
+  impl_->main_status = 0;
+  impl_->disp->startLoop(true);  // main loop
 
   // detruire ce qui doit l'etre mais ne pas appeler les requetes d'affichage
-  impl.processDeleteRequests();
-  return impl.main_status;
+  impl_->processDeleteRequests();
+  return impl_->main_status;
 }
 
 
 void Application::quit(int status) {
-  impl.main_status = status;
-  impl.is_terminated = true;
-  impl.disp->quitLoop(true);  // main loop
+  impl_->main_status = status;
+  impl_->is_terminated = true;
+  impl_->disp->quitLoop(true);  // main loop
 }
 
 
@@ -315,7 +319,7 @@ void AppImpl::addDeleteRequest(Object* b) {
   b->omodes.IS_DESTRUCTED = true;  // securite: normalement c'est deja le cas
   
   // si b est dans updatelist il faut l'enlever
-  if (b->omodes.IS_UPDATING) removeUpdateRequests(b->toBox());
+  if (b->omodes.IS_UPDATING) removeUpdateRequests(reinterpret_cast<Box*>(b));
   /*
    if (b->omodes.IS_UPDATING) {  // si b est dans updatelist il faut l'enlever
      UpdateRequest* req = null;
@@ -326,7 +330,7 @@ void AppImpl::addDeleteRequest(Object* b) {
      }
    }
    */  
-  if (Application::conf.postpone_delete) {
+  if (Application::config.postpone_delete) {
     del_obj_list.push_back(b);    
     request_mask |= DELETE_REQUEST;    
   }
@@ -344,7 +348,7 @@ void AppImpl::processUpdateRequests()
     
   // this will prevent View::updateWinPaint() to draw anything as the final
   // refresh is performed for the entire windows a few lines below
-  if (Application::conf.is_using_gl) is_processing_layout_update_requests = true;
+  if (Application::config.is_using_gl) is_processing_layout_update_requests = true;
   
   // incorrect: voir plus bas
   //UpdateRequests::iterator p = update_list.begin();
@@ -368,7 +372,7 @@ void AppImpl::processUpdateRequests()
 
   update_list.clear();
 
-  if (Application::conf.is_using_gl) {  // refresh des windows modifiees !!!A METTRE DANS Display
+  if (Application::config.is_using_gl) {  // refresh des windows modifiees !!!A METTRE DANS Display
     // !!!! IL FAUDRAIT considere TOUS les Display  !!!@@@
     Display::HardwinList::iterator c = disp->hardwin_list.begin();
     Display::HardwinList::iterator c_end = disp->hardwin_list.end();
@@ -403,7 +407,7 @@ void AppImpl::addUpdateRequest(Box* obj, const Update& upd) {
   
   bool remove_paint = false;
   
-  if (Application::conf.is_using_gl) { 
+  if (Application::config.is_using_gl) { 
     if (upd.modes == Update::PAINT) {
       for (View* v = obj->views; v != null; v = v->next) {
         if (v->hardwin) v->hardwin->must_update = true;
@@ -443,24 +447,24 @@ UpdateRequest* AppImpl::findUpdateRequest(Box* obj, unsigned int& k) {
 */
 
 void Application::deleteNotify(Display* d) {
-  for (unsigned int k = 0; k < impl.displist.size(); ++k) {
-    if (impl.displist[k] == d) {
+  for (unsigned int k = 0; k < impl_->displist.size(); ++k) {
+    if (impl_->displist[k] == d) {
       // va tout decaler si on enleve de la liste !
-      impl.displist[k] = null;
+      impl_->displist[k] = null;
       break;
     }
   }
 }
 
 void Application::deleteNotify(View* deleted_view) {
-  UFlowList& flist = impl.flowlist; 
+  FlowList& flist = impl_->flowlist; 
   for (unsigned int k = 0; k < flist.size(); k++) {
     if (flist[k]) flist[k]->deleteNotify(deleted_view);
   }
 }
 
 void Application::deleteNotify(Element* deleted_group) {
-  UFlowList& flist = impl.flowlist; 
+  FlowList& flist = impl_->flowlist; 
   for (unsigned int k = 0; k < flist.size(); k++) {
     if (flist[k]) flist[k]->deleteNotify(deleted_group);
   }
@@ -468,15 +472,15 @@ void Application::deleteNotify(Element* deleted_group) {
 
 
 const DisplayList& Application::getDispList() {
-  return impl.displist;
+  return impl_->displist;
 }
 
-Display* Application::getDisp() {return impl.disp;}
+Display* Application::getDisp() {return impl_->disp;}
 
 // NB: un acces direct par [] serait possible
 Display* Application::getDisp(int _id)  {
-  for (unsigned int k = 0; k < impl.displist.size(); ++k) {
-    if (impl.displist[k]->getID() == _id) return impl.displist[k];
+  for (unsigned int k = 0; k < impl_->displist.size(); ++k) {
+    if (impl_->displist[k]->getID() == _id) return impl_->displist[k];
   }
   return null;
 }
@@ -496,18 +500,18 @@ void Application::closeDisp(Display* d) {
 }
 
 bool Application::hasTelePointers() {
-  return (conf.tele_pointers && impl.displist.size() > 1);
+  return (config.tele_pointers && impl_->displist.size() > 1);
 }
 
 
-const UFlowList& Application::getFlowList() {
-  return impl.flowlist;
+const FlowList& Application::getFlowList() {
+  return impl_->flowlist;
 }
 
 // NB: un acces direct par [] serait possible
 EventFlow* Application::getFlow(int _id)  {
-  for (unsigned int k = 0; k < impl.flowlist.size(); ++k) {
-    if (impl.flowlist[k]->getID() == _id) return impl.flowlist[k];
+  for (unsigned int k = 0; k < impl_->flowlist.size(); ++k) {
+    if (impl_->flowlist[k]->getID() == _id) return impl_->flowlist[k];
   }
   return null;
 }
@@ -520,17 +524,17 @@ Selection* Application::getSelection(int _id) {
 
 
 Menu* Application::getOpenedMenu() {
-  EventFlow* fl = impl.disp->obtainChannelFlow(0);  // DEFAULT IFLOW : A REVOIR
+  EventFlow* fl = impl_->disp->obtainChannelFlow(0);  // DEFAULT IFLOW : A REVOIR
   return fl ? fl->menu_man.getDeepestMenu() : null; 
 }
 
 const String& Application::getImaPath() {
-  return impl.imapath;
+  return impl_->imapath;
 }
 
 void Application::setImaPath(const String& value) {
-  impl.imapath = value;
-  String& path = impl.imapath;
+  impl_->imapath = value;
+  String& path = impl_->imapath;
   
   if (path[0] == '~' && (path[1] == '/' || path[1] == 0)) {
     //NB: ne PAS faire de free() sur un getenv!
@@ -544,8 +548,8 @@ void Application::setImaPath(const String& value) {
 
 
 void Application::setMotionLag(unsigned long app_lag, unsigned long nat_lag) {
-  impl.app_motion_lag = app_lag;
-  impl.nat_motion_lag = nat_lag;
+  impl_->app_motion_lag = app_lag;
+  impl_->nat_motion_lag = nat_lag;
 }
 
 unsigned long Application::getTime() {return UTimerImpl::getTime();}
@@ -553,7 +557,7 @@ unsigned long Application::getTime() {return UTimerImpl::getTime();}
 void Application::postpone(UCall& c) {  // pas tout a fait correct si mthreads!
   addTimeout(0, 1, c);
   //if (pthread_self() != main_thread) {
-  // Message::send(*impl.disp->getMainFrame(), "wakeup");    !!!@@@@!!!!
+  // Message::send(*impl_->disp->getMainFrame(), "wakeup");    !!!@@@@!!!!
   // }
 }
 
@@ -564,16 +568,16 @@ void Application::addTimeout(unsigned long _delay, int _ntimes, UCall& c) {
 }
 
 
-MessagePortMap* Application::getMessagePortMap() {return impl.messmap;}
+MessagePortMap* Application::getMessagePortMap() {return impl_->messmap;}
 
 MessagePort* Application::findMessagePort(const String& name) {
-  if (impl.messmap) return impl.messmap->findMessagePort(name);
+  if (impl_->messmap) return impl_->messmap->findMessagePort(name);
   else return null;
 }
 
 MessagePort& Application::getMessagePort(const String& name) {
-  if (!impl.messmap) impl.messmap = new MessagePortMap();
-  return impl.messmap->getMessagePort(name);
+  if (!impl_->messmap) impl_->messmap = new MessagePortMap();
+  return impl_->messmap->getMessagePort(name);
 }
 
 void Application::onMessage(const String& name, UCall& c) {
@@ -628,8 +632,7 @@ void Application::raiseError(int errnum, const Object* obj, const char* funcname
 ErrorHandler& Application::getErrorHandler() {
   // this variable should be null even if this AppImpl constr was not called
   if (!appli_impl.error_handler) {
-    appli_impl.error_handler = 
-    new ErrorHandler((appli_impl.app_name ? *appli_impl.app_name : ""), &std::cerr);
+    appli_impl.error_handler = std::make_unique<ErrorHandler>((appli_impl.app_name ? *appli_impl.app_name : ""), &std::cerr);
   }
   
   if (appli_impl.error_handler->label().empty() && appli_impl.app_name)
@@ -639,187 +642,7 @@ ErrorHandler& Application::getErrorHandler() {
 }
 
 void Application::setErrorHandler(ErrorHandler& eh) {
-  appli_impl.error_handler = eh;
-}
-
-
-ErrorHandler::ErrorHandler(const String& _label, std::ostream* _fout) : 
-plabel(ustr(_label)),
-pbuffer(null),
-fout(_fout) {
-}
-
-ErrorHandler::~ErrorHandler() {}
-
-void ErrorHandler::setOutputStream(std::ostream* f) {
-  fout = f;
-}
-
-void ErrorHandler::setOutputBuffer(String* s) {
-  pbuffer = s;
-}
-
-
-void ErrorHandler::warning(const char* fun, const char* format, ...) const {
-  va_list ap;
-  va_start(ap, format);
-  raiseError(Error::WARNING, null, fun, format, ap);
-  va_end(ap);
-}
-
-void ErrorHandler::error(const char* fun, const char* format, ...) const {
-  va_list ap;
-  va_start(ap, format);
-  raiseError(Error::ERROR, null, fun, format, ap);
-  va_end(ap);
-}
-
-void ErrorHandler::error(int errnum, const Object *obj, const char* fun, 
-                          const char* format, ...) const {
-  va_list ap;
-  va_start(ap, format);
-  raiseError(errnum, obj, fun, format, ap);
-  va_end(ap);
-}
-
-void ErrorHandler::parserError(int errnum, const Char* tbuffer,
-                                const char* msg1, const String& name,
-                                const char* msg2, const Char* line) const {
-  // eviter erreurs de positionnement en debut de buffer
-  if (line < tbuffer) line = tbuffer;
-  
-  // calculer la position de line dans text
-  int l = 1;
-  for (const Char* t = tbuffer; t <= line; t++ ) {
-    if (*t == '\n') l++;
-  }
-  
-  // n'afficher que le debut de line et remplacer les \n par des \ suivis de n
-  String line_beg;
-  if (line) {
-    line_beg.append(line, 60);
-    for ( int k = 0; k < line_beg.length(); k++) {
-      if (line_beg.at(k) == '\n') line_beg.replace(k, 1, "\\n");
-    }
-  }
-  
-  String& err = ustr("At line ");
-  err &= l;
-  err &= ":\n";
-  err &= line_beg;
-  err &= "\n";
-  if (msg1) err.append(msg1);
-  if (!name.empty()) err.append(name);
-  if (msg2) err.append(msg2);
-  
-  raiseError(errnum, &err);
-}
-
-void ErrorHandler::raiseError(int errnum, const Object* obj, const char* funcname, 
-                               const char* format, va_list ap) const {
-  Error e(errnum, obj, funcname);
-  formatMessage(e, format, ap);
-  if (fout && *fout) printOnStream(e);
-  if (pbuffer) printOnBuffer(e);
-  if (e.errnum < 0) throw e;
-}
-
-void ErrorHandler::raiseError(int errnum, String* msg) const {
-  Error e(errnum, null, null);
-    if (msg) {
-      strncpy(e.message, msg->c_str(), sizeof(e.message));
-      e.message[sizeof(e.message)-1] = 0;
-  }
-  if (fout && *fout) printOnStream(e);
-  if (pbuffer) printOnBuffer(e);
-  if (e.errnum < 0) throw e;
-}
-
-
-void ErrorHandler::formatMessage(Error& e, const char* format, va_list ap) const {
-  // ICI traiter les translations !
-  //char buf[2000] = "";
-  char* p = e.message;
-  int n = 0, len = 0;
-  
-  n = 0;
-  if (plabel->empty()) sprintf(p, "(uninitialized) %n", &n);
-  else sprintf(p, "(%s) %n", plabel->c_str(), &n);  
-  len += n;
-  p += n;
-  
-  n = 0;
-  const char* errname = getErrorName(e.errnum);
-  if (errname) sprintf(p, "%s %n", errname, &n); 
-  else sprintf(p, "Custom Error #%d %n", e.errnum, &n); 
-  len += n;
-  p += n;
-  
-  if (e.function_name) {
-    n = 0;
-    if (e.object) sprintf(p, "in %s::%s()%n", 
-                          e.object->getClassName().c_str(), e.function_name, &n);
-    else sprintf(p, "in %s()%n", e.function_name, &n);
-    len += n;
-    p += n;
-  }
-  
-  if (e.object) {
-    n = 0;
-    sprintf(p, " on object %p%n", e.object, &n);
-    len += n;
-    p += n;
-  }
-  
-  n = 0;
-  sprintf(p, "\n%n", &n);
-  len += n;
-  p += n;
-  
-  if (format) {
-    vsnprintf(p, sizeof(e.message) - len, format, ap);
-    //vsprintf(p, format, ap);
-  }
-  e.message[sizeof(e.message)-1] = 0;
-}
-
-const char* ErrorHandler::getErrorName(int errnum) const {
-  switch (errnum) {
-    case Error::WARNING: 
-      return "Warning";
-    case Error::ERROR: 
-      return "Error"; 
-    case Error::FATAL_ERROR: 
-      return "Fatal Error";
-    case Error::INTERNAL_ERROR: 
-      return "Internal Error"; 
-    case Error::STYLE_ERROR: 
-      return "Style Error"; 
-    case Error::CSS_ERROR: 
-      return "CSS Error"; 
-    case Error::XML_ERROR: 
-      return "XML Error"; 
-    default:
-      return null;
-  }
-}
-
-void ErrorHandler::printOnStream(const Error& e) const {
-  if (!fout) {
-    cerr <<  "ErrorHandler::printOnStream: can't print error because output stream is null! " << endl;
-  }
-  else {
-    *fout << e.what() << endl << endl;
-  } 
-}
-
-void ErrorHandler::printOnBuffer(const Error& e) const {
-  if (!pbuffer) {
-    cerr <<  "ErrorHandler::printOnBuffer: can't print error because output buffer is null! " << endl;
-  }
-  else {
-    pbuffer->append(e.what());
-  }
+  appli_impl.error_handler = std::unique_ptr<ErrorHandler>(&eh);
 }
 
 }

@@ -35,7 +35,7 @@
 #include <ubit/core/file.h>
 #include <ubit/ui/updatecontext.h>
 #include <ubit/draw/graph.h>
-#include <ubit/ui/fontmetrics.h>
+#include <ubit/draw/fontmetrics.h>
 #include <ubit/ui/view.h>
 #include <ubit/core/string.h>
 #include <ubit/ui/textedit.h>
@@ -119,7 +119,7 @@ void String::addingTo(Child& c, Element& parent) {
   Data::addingTo(c, parent);
 
   // dans ce mode les Str de n'importe quel object peuvent etre selectees
-  if (Application::conf.generic_textsel) {
+  if (Application::config.generic_textsel) {
     parent.emodes.IS_TEXT_SELECTABLE = true;
   }
   

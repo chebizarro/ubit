@@ -27,7 +27,7 @@
 
 #define UBIT5 (UBIT_VERSION_MAJOR >= 5)
 #define UBIT6 (UBIT_VERSION_MINOR >= 6)
-#define null NULL
+#define null nullptr
 
 namespace ubit {
 

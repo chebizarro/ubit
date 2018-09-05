@@ -1,20 +1,20 @@
 enable_testing()
 
-add_executable(uappli_tests
-	tests/test_uappli.cpp
+add_executable(apptests
+	tests/test_application.cpp
 )
 
-target_link_libraries(uappli_tests
+target_link_libraries(apptests
 	PUBLIC gtest_main
 	PUBLIC gmock_main
 	PUBLIC gmock
 )
 
-ubit_add_include_dir(uappli_tests)
+ubit_add_include_dir(apptests)
 
-ubit_add_libraries(uappli_tests)
+ubit_add_libraries(apptests)
 
-add_test(NAME appli_test COMMAND uappli_tests)
+add_test(NAME app_test COMMAND apptests)
 
 
 add_executable(ubittests

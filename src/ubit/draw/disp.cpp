@@ -225,8 +225,8 @@ void Display::copySelection(MouseEvent& e, Selection& textsel) {
 void Display::pasteSelection(MouseEvent& e, String* _paste_str, int _paste_pos) {
   // il faut effacer toutes les selections avant de faire un paste (sinon tout
   // va se melanger n'importe comment)  
-  const UFlowList& flist = Application::getFlowList();
-  for (UFlowList::const_iterator it = flist.begin(); it != flist.end(); ++it) {
+  const FlowList& flist = Application::getFlowList();
+  for (FlowList::const_iterator it = flist.begin(); it != flist.end(); ++it) {
     if (&(*it)->getDisp() == this && (*it)->getSelection()) 
       (*it)->getSelection()->clear();
   }
@@ -246,7 +246,7 @@ Selection* Display::getChannelSelection(int _channel) {
 }
 
 EventFlow* Display::getChannelFlow(int _channel) const {
-  UFlowList& flist = Application::impl.flowlist; 
+  FlowList& flist = Application::impl.flowlist; 
   for (unsigned int k = 0; k < flist.size(); ++k) {
     if (&flist[k]->getDisp() == this && flist[k]->getChannel() == _channel)
       return flist[k];

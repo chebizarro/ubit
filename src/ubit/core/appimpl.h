@@ -21,8 +21,8 @@
  * 
  */
 
-#ifndef _uappliImpl_hpp_
-#define	_uappliImpl_hpp_ 1
+#ifndef UBIT_CORE_APPIMPL_H_
+#define	UBIT_CORE_APPIMPL_H_
 
 #include <vector>
 #include <sys/time.h>
@@ -91,7 +91,7 @@ namespace ubit {
     typedef std::vector<Object*> DeletedObjects;
     typedef std::vector<View*> DeletedViews;
     
-    Application* appli;        // only ONE Application object should be created
+    Application* application;        // only ONE Application object should be created
     Display* disp;
     String *app_name;
     bool is_terminated;   // true if the Application has been terminated
@@ -122,6 +122,6 @@ namespace ubit {
   };
   
 }
-#endif
+#endif // UBIT_CORE_APPIMPL_H_
 
 

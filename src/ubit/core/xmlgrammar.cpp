@@ -99,13 +99,13 @@ XmlGrammar& XmlGrammar::getSharedUndefGrammar() { // !!! A REVOIR !!!
 }
 
 Class* XmlGrammar::addUndefElementClass(const String& cname) {
-  Class* c = new UDefaultInlineElement::MetaClass(cname);  // !!! A REVOIR !!!
+  Class* c = new DefaultInlineElement::MetaClass(cname);  // !!! A REVOIR !!!
   getSharedUndefGrammar().addElementClass(*c); 
   return c;
 }
 
 Class* XmlGrammar::addUndefAttrClass(const String& cname) {
-  Class* c = new UDefaultAttribute::MetaClass(cname);  // !!! A REVOIR !!!
+  Class* c = new DefaultAttribute::MetaClass(cname);  // !!! A REVOIR !!!
   getSharedUndefGrammar().addAttrClass(*c); 
   return c;
 }

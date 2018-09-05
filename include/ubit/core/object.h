@@ -27,6 +27,7 @@
 
 #include <stdlib.h>    // for size_t, new(), delete()
 #include <exception>
+
 #include <ubit/udefs.hpp>
 #include <ubit/core/class.h>
 #include <ubit/core/error.h>
@@ -37,9 +38,9 @@ namespace ubit {
    * Base class of most Ubit objects
    *
    * Object is the base class for (almost) all Ubit objects. Its main subclasses are
-   * UNode, UAttr, UElem that play the same role as Node, Attribute and Element in a
-   * XML/DOM model and UBox and UWin that are the base classes for widgets and windows.
-   *
+   * ubit::Node, ubit::Attribute, ubit::Element that play the same role as Node, Attribute
+   * and Element in a XML/DOM model and ubit::Box and ubit::Window that are the base classes
+   * for widgets and windows.
    *
    * 1. SUBCLASSING: Object subclasses MUST invoke the UCLASS macro in the public section
    * of their declaration:
@@ -199,11 +200,10 @@ namespace ubit {
     void removePtr() const;    ///< [Impl] a uptr is removed from this object.
 
   protected:
-    friend class UNode;
-    friend class UUpdateContext;
-    friend class UAppliImpl;
-    friend class USelection;
-    friend class UPtr;
+    //friend class Node;
+    //friend class UpdateContext;
+    friend class AppImpl;
+    //friend class Selection;
     
     mutable PtrCount ptr_count;  // uptr<> reference count
     Modes omodes;

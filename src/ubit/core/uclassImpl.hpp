@@ -35,80 +35,21 @@
 namespace ubit {
   
     
-  class UDefaultAttribute : public Attribute {
+  class DefaultAttribute : public Attribute {
   public:
-    struct MetaClass : public Class {
-      MetaClass(const String& classname) : Class(classname) {}
-      
-      virtual bool isInstance(Object& obj) const {
-        return dynamic_cast<UDefaultAttribute*>(&obj);  // && test name ?
-      }
-      virtual UDefaultAttribute* newInstance() const {
-        return new UDefaultAttribute(*this);
-      }
-    };
-    
-    UDefaultAttribute(const UDefaultAttribute::MetaClass& c) : cid(c) {}
-    
-    static const Class& Class() {
-      static MetaClass* c = new MetaClass("#attribute"); return *c;
-    }
-    virtual const Class& getClass() const {return cid;} 
-    
-  private:
-    const Class& cid;  // !!ATT aux destructions, un std::unique_ptr<> serait preferable !!
+    UCLASS(DefaultAttribute)
   };
   
     
-  class UDefaultInlineElement : public Element {
+  class DefaultInlineElement : public Element {
   public:
-    struct MetaClass : public Class {
-      MetaClass(const String& classname) : Class(classname) {}
-      
-      virtual bool isInstance(Object& obj) const {
-        return dynamic_cast<UDefaultInlineElement*>(&obj);  // && test name ?
-      }
-      virtual UDefaultInlineElement* newInstance() const {
-        return new UDefaultInlineElement(*this);
-      }
-      virtual Style* newStyle() const {return UDefaultInlineElement::createStyle();}
-    };
-    
-    UDefaultInlineElement(const UDefaultInlineElement::MetaClass& c) : cid(c) {}  
-    
-    static  const Class& Class() {
-      static MetaClass* c = new MetaClass("#element"); return *c;
-    }
-    virtual const Class& getClass() const {return cid;} 
-    
-  private:
-    const Class& cid;  // !!ATT aux destructions, un std::unique_ptr<> serait preferable !!
+	UCLASS(DefaultInlineElement)
   };
   
     
-  class UDefaultBlockElement : public Element {
+  class DefaultBlockElement : public Element {
   public:
-    struct MetaClass : public Class {
-      MetaClass(const String& classname) : Class(classname) {}
-      
-      virtual bool isInstance(Object& obj) const {
-        return dynamic_cast<UDefaultBlockElement*>(&obj);  // && test name ?
-      }
-      virtual UDefaultBlockElement* newInstance() const {
-        return new UDefaultBlockElement(*this);
-      }
-      virtual Style* newStyle() const {return UDefaultBlockElement::createStyle();}
-    };
-    
-    UDefaultBlockElement(const UDefaultBlockElement::MetaClass& c) : cid(c) {}  
-    
-    static const Class& Class() {
-      static MetaClass* c = new MetaClass("#element"); return *c;
-    }
-    virtual const Class& getClass() const {return cid;}
-    
-  private:
-    const Class& cid;  // !!ATT aux destructions, un std::unique_ptr<> serait preferable !!
+	UCLASS(DefaultBlockElement)
   };
   
     

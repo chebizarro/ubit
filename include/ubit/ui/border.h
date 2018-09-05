@@ -147,7 +147,7 @@ class UCompositeBorder : public Border {
     UCompositeBorder(const Args& children);
     ///< creates a border that contains widgets.
     
-    virtual Element* getSubGroup() const {return pchildren;}
+    virtual Element* getSubGroup() const {return pchildren.get();}
     ///< [Impl] returns the children.
     
     virtual void putProp(UpdateContext*, Element&);

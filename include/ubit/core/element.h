@@ -597,6 +597,8 @@ namespace ubit {
     virtual void actionBehavior(InputEvent&);
     
   protected:
+	friend class String;
+  
     mutable Modes emodes;
     long callback_mask;
     mutable Children _children;

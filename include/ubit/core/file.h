@@ -82,7 +82,7 @@ namespace ubit {
     void setPath(const String& path);
     ///< resets fileinfo data for this path.
     
-    const String* getFileName() const {return pname;}
+    const String* getFileName() const {return pname.get();}
     ///< returns the file name (without the path).
     
     unsigned long getSize() const {return size;}

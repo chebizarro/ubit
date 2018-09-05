@@ -39,7 +39,7 @@ namespace ubit {
 
 
 
-ULocalProps::ULocalProps() :
+LocalProperties::LocalProperties() :
 size(UAUTO, UAUTO),
 padding(0, 0),
 border(null), 

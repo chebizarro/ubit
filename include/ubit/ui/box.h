@@ -183,6 +183,7 @@ namespace ubit {
     friend class Element;
     friend class Window;
     friend class View;
+    friend class AppImpl;
     View* views;
 
     virtual void addViewImpl(View*);

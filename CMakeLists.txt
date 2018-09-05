@@ -56,7 +56,7 @@ endif()
 include(cmake/gtest.cmake)
 
 include(cmake/config.cmake)
-include(cmake/core-files.cmake)
+include(cmake/files.cmake)
 include(cmake/core.cmake)
 include(cmake/ums.cmake)
 include(cmake/demos.cmake)

@@ -20,15 +20,14 @@
  * MA 02110-1301, USA.
  * 
  */
-#include <ubit/ubit_features.h>
 #include <iostream>
 #include <typeinfo>
 #include <cstdarg>
-#include <ubit/core/node.h>
-#include <ubit/core/string.h>
+
+
+// This is some pretty serious coupling
 #include <ubit/core/application.h>
-#include <ubit/core/appimpl.h>
-using namespace std;
+
 namespace ubit {
 
 
@@ -115,10 +114,11 @@ void Object::operator delete(void* p) {
     return;
   }
   
+  /*
   if (Application::impl.isTerminated()) {
     ::operator delete(p);
     return;
-  }
+  }*/
   
   // NB: ptr_count<0 means that the object has already been destructed
   if (obj->ptr_count > 0) {
@@ -131,7 +131,7 @@ void Object::operator delete(void* p) {
   }
   
   // this object will be deleted when this is safe to do so
-  Application::impl.addDeleteRequest(obj);
+  //Application::impl.addDeleteRequest(obj);
 }
 
 
@@ -192,12 +192,13 @@ void Object::removePtr() const {
     delete this;     // detacher du graphe, detruire l'objet et ses enfants
 }
 
+/*
 void UPtr::deferenceError() const {
   Application::fatalError("std::unique_ptr::operator * or ->",
                      "can't derefence a std::unique_ptr that points to null; std::unique_ptr address= %p",
                      this);
 }
-
+*/
 
 }
 

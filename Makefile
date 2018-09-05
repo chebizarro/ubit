@@ -82,9 +82,9 @@ examples: $(LINUX_BUILD)
 	example1 example2 example3 sedit4 events tables layout lists \
 	tree text1 text2 glcanvas
 
-.PHONY: ubittests
+.PHONY: tests
 tests: $(LINUX_BUILD)
-	$(NINJA) $(NINJA_ARGS) -j$(JOBS) -C $(LINUX_OUTPUT_PATH) uappli_tests ubittests
+	$(NINJA) $(NINJA_ARGS) -j$(JOBS) -C $(LINUX_OUTPUT_PATH) apptests #ubittests
 
 endif
 

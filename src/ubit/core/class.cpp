@@ -90,7 +90,7 @@ const Class* ElementClassMap::obtainClass(const String& classname) {
   const Class* c = findClass(classname);
   if (c) return c;
   else {
-    c = new UDefaultInlineElement::MetaClass(classname);   // !!! A REVOIR !!!
+    c = new DefaultInlineElement::MetaClass(classname);   // !!! A REVOIR !!!
     map[&c->getName()] = c;
     return c;
   }
@@ -120,7 +120,7 @@ const Class* AttributeClassMap::obtainClass(const String& classname) {
   const Class* c = findClass(classname);
   if (c) return c;
   else {
-    c = new UDefaultAttribute::MetaClass(classname);   // !!! A REVOIR !!!
+    c = new DefaultAttribute::MetaClass(classname);   // !!! A REVOIR !!!
     map[&c->getName()] = c;
     return c;
   }

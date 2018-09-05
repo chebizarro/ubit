@@ -39,7 +39,8 @@ namespace ubit {
   typedef std::vector<EventFlow*> FlowList;
   
   
-  /** Display lists (@see Display and Application)
+  /**
+   * Display lists (@see Display and Application)
    */
   typedef std::vector<Display*> DisplayList;
   
@@ -51,7 +52,7 @@ namespace ubit {
    * This Application must be created as soon as the program is started by main()
    * No Ubit function should be called before its creation nor after its deletion.
    *
-   * A Application can be parameterized:
+   * An Application can be parameterized:
    * - through command line options: see Application(argc, arv)
    * - by means of a Config object: see Application(Config&)
    *
@@ -92,8 +93,8 @@ namespace ubit {
    */
   class Application {
   public:
-    static UConf config;
-    /**< configuration of the application, must be set BEFORE the Application is created.
+	/**
+	 * configuration of the application, must be set BEFORE the Application is created.
      * 'conf' is an object that is created when the program is launched. Its fields:
      * - are initialized to default values by Config::Config()
      * - can be changed BEFORE the Application is created, typically in the main() function
@@ -101,6 +102,7 @@ namespace ubit {
      * @see: Config, Application::Application().
      * @see also: Config::parseOptions(), Config::readConfFile().
      */
+    static UConf config;    
     
     Application(int& argc, char** argv,
            Option* command_line_options = null, 
@@ -408,13 +410,14 @@ namespace ubit {
     ///< [impl] notifies that a view is being destroyed.
 
 private:
+	friend class AppImpl;
     //static class AppImpl& impl;
     ///< [impl] reference to the object that stores the application data.
 
 	const AppImpl* impl() const { return impl_.get(); }
     AppImpl* impl() { return impl_.get(); }
 	
-	std::unique_ptr<AppImpl> impl_;
+	static std::unique_ptr<AppImpl> impl_;
 
 
   };

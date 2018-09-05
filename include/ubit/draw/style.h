@@ -32,8 +32,8 @@
 
 namespace ubit {
   
-  struct ULocalProps {
-    ULocalProps();
+  struct LocalProperties {
+    LocalProperties();
     
     SizeSpec size;                // object size
     PaddingSpec padding;          // space beween content and border (if any)
@@ -77,7 +77,7 @@ namespace ubit {
     void setBgcolor(int action, Color&);
     
     // champs locaux a l'object, pas heritables
-    ULocalProps local;
+    LocalProperties local;
     
     // champs heritables
     char orient;

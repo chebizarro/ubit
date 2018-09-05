@@ -1,12 +1,12 @@
-#include <ubit/uappli.hpp>
+#include <ubit/core/application.h>
 #include <gtest/gtest.h>
 
 using namespace ubit;
 
-TEST(UAppliTest, NewAppli) {
+TEST(ApplicationTest, NewApplication) {
 	auto argc = 1;
 	char *argv = (char*)"testapp";
-	UAppli appli(argc, &argv);
+	Application app(argc, &argv);
 }
 
 int main(int argc, char **argv) {
