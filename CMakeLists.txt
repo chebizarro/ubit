@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.4)
 project(ubit LANGUAGES CXX C)
 #set(CMAKE_CXX_STANDARD 14)
+add_definitions("-std=c++17")
 
 #if(WITH_CXX11ABI)
 #    add_definitions(-D_GLIBCXX_USE_CXX11_ABI=1)
@@ -54,8 +55,13 @@ else()
 endif()
 
 include(cmake/gtest.cmake)
-
 include(cmake/config.cmake)
+
+include(cmake/conanbuildinfo.cmake)
+conan_basic_setup()
+
+include(cmake/udm.cmake)
+
 include(cmake/files.cmake)
 include(cmake/core.cmake)
 include(cmake/ums.cmake)

@@ -1,0 +1,7 @@
+[requires]
+rxcpp/4.0.0@bincrafters/stable
+args/6.2.0@arsen-studio/stable
+Catch/1.12.1@bincrafters/stable
+
+[generators]
+cmake

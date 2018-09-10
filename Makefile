@@ -36,6 +36,9 @@ endif
 .PHONY: default
 default: ubit
 
+.PHONY: udm
+udm: udm
+
 .PHONY: demo
 demo: demos examples
 
@@ -66,6 +69,10 @@ $(LINUX_BUILD): $(BUILD_DEPS)
 .PHONY: ubit
 ubit: $(LINUX_BUILD)
 	$(NINJA) $(NINJA_ARGS) -j$(JOBS) -C $(LINUX_OUTPUT_PATH) ubit
+
+.PHONY: udm
+udm: $(LINUX_BUILD)
+	$(NINJA) $(NINJA_ARGS) -j$(JOBS) -C $(LINUX_OUTPUT_PATH) udm
 
 .PHONY: ums
 ums: $(LINUX_BUILD)
