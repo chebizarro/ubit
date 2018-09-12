@@ -1,7 +1,7 @@
 enable_testing()
 
 add_executable(apptests
-	tests/test_application.cpp
+	tests/ubit/test_application.cpp
 )
 
 target_link_libraries(apptests
@@ -18,8 +18,8 @@ add_test(NAME app_test COMMAND apptests)
 
 
 add_executable(ubittests
-	tests/test_uon.cpp
-	tests/test_uzoom.cpp
+	tests/ubit/test_uon.cpp
+	tests/ubit/test_uzoom.cpp
 )
 
 target_link_libraries(ubittests
