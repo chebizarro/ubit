@@ -34,16 +34,17 @@ static bool is_active = false;
 static bool has_active_vt_ = false;
 
 static bool run_command(std::string command, int* exit_status) {
-	std::string command_line = "pymouth " + command;
-
-	*exit_status = system(command.c_str());
-
+	std::string command_line = "plymouth " + command;
+	*exit_status = system(command_line.c_str());
 	return (*exit_status > 0);
 }
 
 static bool command_returns_true(std::string command) {
-	
-	return true;
+	int exit_status;
+	if (!run_command(command, &exit_status)) {
+		return false;
+	}
+	return WIFEXITED (exit_status) && WEXITSTATUS (exit_status) == 0;
 }
 
 bool get_is_running() {

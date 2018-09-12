@@ -1,5 +1,5 @@
 /*
- *  display-manager.cpp: Display Manager for UDM 
+ *  login1.h 
  *  Ubit GUI Toolkit - Version 8
  *  (C) 2018 Chris Daley
  * 
@@ -19,33 +19,58 @@
  * MA 02110-1301, USA.
  * 
  */
-#include <memory>
+ 
+#ifndef UDM_LOGIN1_H_
+#define UDM_LOGIN1_H_
 
-#include <udm/display-manager.h>
-#include <udm/plymouth.h>
+#include <sdbus-c++/sdbus-c++.h>
 
 namespace ubit {
 
-	DisplayManager::DisplayManager():
-	subscriber_(stopped_subject_.get_subscriber()),
-	seat_subscriber_(seat_removed_subject_.get_subscriber()) {
-		stopped = stopped_subject_.get_observable();
-		seat_removed = seat_removed_subject_.get_observable();
-	}
+class Login1Seat {
 
-	DisplayManager::~DisplayManager() {
-		subscriber_.on_completed();
-		seat_subscriber_.on_completed();
-	}
+public:
+	Login1Seat(std::shared_ptr<sdbus::IObjectProxy> connection, std::string id, std::string path):
+		connection_(connection),
+		id_(id),
+		path_(path) { }
 
-	void DisplayManager::start() {
-		if(plymouth::get_is_active()) {
-			plymouth::quit(false);
-		}
-	}
+private:
 
-	void DisplayManager::stop() {
-		subscriber_.on_next(std::make_shared<DisplayManager>(*this));
-	}
+	std::string id_;
 
+	std::string path_;
+	
+	int signal_id_;
+	
+	bool can_graphical_;
+	bool can_multi_session_;
+	
+	std::shared_ptr<sdbus::IObjectProxy> connection_;
+
+
+};
+
+class Login1Service {
+
+public:
+	
+	Login1Service();
+	
+	bool connect();
+
+
+private:
+	
+	void add_seat(const std::string id, const std::string path);
+	
+	std::shared_ptr<sdbus::IObjectProxy> connection_;
+	
+	std::vector<Login1Seat> seats_;
+	
+	bool connected_;
+	
+};
 }
+
+#endif // UDM_LOGIN1_H_

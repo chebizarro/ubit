@@ -25,12 +25,20 @@
 
 #include <list>
 #include <udm/seat.h>
+#include <rxcpp/rx.hpp>
+using namespace rxcpp;
+using namespace rxcpp::subjects;
 
 namespace ubit {
 
 class DisplayManager {
 
 public:
+
+	DisplayManager();
+
+	~DisplayManager();
+
 	bool add_seat(Seat* seat);
 
 	std::list<Seat> get_seats() { return seats; }
@@ -40,13 +48,25 @@ public:
 	void start();
 
 	void stop();
+	
+	observable<std::shared_ptr<DisplayManager>> stopped; 
+
+	observable<std::shared_ptr<Seat>> seat_removed; 
+	
 
 private:
+
+	subject<std::shared_ptr<DisplayManager>> stopped_subject_; 
+	subscriber<std::shared_ptr<DisplayManager>> subscriber_;
+
+	subject<std::shared_ptr<Seat>> seat_removed_subject_; 
+	subscriber<std::shared_ptr<Seat>> seat_subscriber_;
+
 	std::list<Seat> seats;
 	
-	bool stopping;
+	bool stopping_;
 	
-	bool stopped;
+	bool stopped_;
 
 };
 

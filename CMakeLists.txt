@@ -1,12 +1,12 @@
 cmake_minimum_required(VERSION 3.4)
 project(ubit LANGUAGES CXX C)
-#set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 add_definitions("-std=c++17")
 
 #if(WITH_CXX11ABI)
 #    add_definitions(-D_GLIBCXX_USE_CXX11_ABI=1)
 #else()
-add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0)
+add_definitions(-D_GLIBCXX_USE_CXX11_ABI=1)
 #endif()
 
 set(CMAKE_CONFIGURATION_TYPES Debug Release RelWithDebugInfo Sanitize)
