@@ -24,16 +24,22 @@
 #define UDM_LOGIN1_H_
 
 #include <sdbus-c++/sdbus-c++.h>
+#include <rxcpp/rx.hpp>
+using namespace rxcpp;
+using namespace rxcpp::subjects;
 
 namespace ubit {
 
 class Login1Seat {
 
 public:
-	Login1Seat(std::shared_ptr<sdbus::IObjectProxy> connection, std::string id, std::string path):
-		connection_(connection),
-		id_(id),
-		path_(path) { }
+	Login1Seat(std::shared_ptr<sdbus::IObjectProxy> connection, std::string id, std::string path);
+	
+	~Login1Seat();
+
+	observable<std::shared_ptr<Login1Seat>> can_graphical_changed; 
+	observable<std::shared_ptr<Login1Seat>> active_session_changed; 
+
 
 private:
 
@@ -47,6 +53,12 @@ private:
 	bool can_multi_session_;
 	
 	std::shared_ptr<sdbus::IObjectProxy> connection_;
+
+	subject<std::shared_ptr<Login1Seat>> can_graphical_subject_; 
+	subscriber<std::shared_ptr<Login1Seat>> can_graphical_subscriber_;
+
+	subject<std::shared_ptr<Login1Seat>> session_changed_subject_; 
+	subscriber<std::shared_ptr<Login1Seat>> session_changed_subscriber_;
 
 
 };

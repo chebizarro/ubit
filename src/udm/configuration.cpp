@@ -1,7 +1,7 @@
 /*
- *  display-manager.cpp: Display Manager for UDM 
- *  Ubit GUI Toolkit - Version 8
- *  (C) 2018 Chris Daley
+ * configuration.cpp
+ * 
+ * Copyright 2018 Chris Daley <chebizarro@gmail.com>
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,34 +18,30 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA.
  * 
+ * 
  */
-#include <memory>
-
-#include <udm/display-manager.h>
-#include <udm/plymouth.h>
+#include <udm/configuration.h>
+#include <cpptoml.h>
 
 namespace ubit {
+	
+Configuration::Configuration(std::string config_path) {
+	
+	if (config_path.empty()) {
 
-DisplayManager::DisplayManager():
-stopped_subscriber_(stopped_subject_.get_subscriber()),
-seat_subscriber_(seat_removed_subject_.get_subscriber()) {
-	stopped = stopped_subject_.get_observable();
-	seat_removed = seat_removed_subject_.get_observable();
-}
-
-DisplayManager::~DisplayManager() {
-	stopped_subscriber_.on_completed();
-	seat_subscriber_.on_completed();
-}
-
-void DisplayManager::start() {
-	if(plymouth::get_is_active()) {
-		plymouth::quit(false);
+		//directory_ = fs::path(config_path).remove_filename();
+		
+	} else {
+		
 	}
+	
+	config = cpptoml::parse_file(config_path);
 }
 
-void DisplayManager::stop() {
-	stopped_subscriber_.on_next(std::make_shared<DisplayManager>(*this));
+template <class T>
+T Configuration::get(const std::string section, const std::string key) {
+	auto section_ = config->get_table(section);
+	return section_->get_as<T>(key);	
 }
 
 }

@@ -25,6 +25,8 @@
 #include <unistd.h>
 #include <vector>
 #include <regex>
+#include <fstream>
+#include <csignal>
 
 #include <args.hxx>
 #include <rxcpp/rx.hpp>
@@ -73,13 +75,18 @@ static std::string find_program_in_path(std::string pname) {
 }
 
 int main(int argc, char *argv[]) {
+
+	std::signal(SIGPIPE, SIG_IGN);
+	std::signal(SIGHUP, SIG_IGN);
+
 	
 	args::ArgumentParser argumentParser("Ubit Display Manager");
-	args::Flag configFlag(argumentParser, "config", "Use configuration file", {'c'});
+	args::ValueFlag<std::string> configValue(argumentParser, "file", "Use configuration file", {'c', "config"});
 	args::Flag debugFlag(argumentParser, "debug", "Print debugging messages", {"debug"});
 	args::HelpFlag helpFlag(argumentParser, "help", "Display this help menu", {'h', "help"});
-	args::Flag testFlag(argumentParser, "version", "Test mode", {"test"});
-	args::Flag versionFlag(argumentParser, "version", "Print version", {'v'});
+	args::ValueFlag<std::string> pidValue(argumentParser, "file", "PID file", {"pid-file"});
+	args::Flag testFlag(argumentParser, "test_mode", "Run UDM in Test mode", {"test"});
+	args::Flag versionFlag(argumentParser, "version", "Print UDM version", {'v'});
 
 	try {
 		argumentParser.ParseCLI(argc, argv);
@@ -114,20 +121,40 @@ int main(int argc, char *argv[]) {
 		}
 	}
 
-	Configuration config;
+	std::string pid_path = pidValue ? args::get(pidValue) : "/var/run/udm.pid";
+	std::ofstream pid_file(pid_path);
+	if (pid_file) {
+		pid_file << getpid() << std::endl;
+		pid_file.close();
+	}
+
+	std::shared_ptr<Configuration> config = std::make_shared<Configuration>(args::get(configValue));
+	
+	
+	
 	DisplayManager displayManager;
+
+	if (config.get<bool>("UDM", "dbus-service") {
+		
+		
+	} else {
+		
+	}
+
 
 	displayManager.start();
 
 	displayManager.stopped.subscribe(
 		[](std::shared_ptr<DisplayManager> dm) {
 			std::cout << "Display Manager stopped" << std::endl;
+			// exit the run loop
 		}
 	);
 
 	displayManager.seat_removed.subscribe(
-		[](std::shared_ptr<Seat> seat) {
+		[&displayManager](std::shared_ptr<Seat> seat) {
 			std::cout << "Seat removed" << std::endl;
+			displayManager.stop();
 		}
 	);
 		

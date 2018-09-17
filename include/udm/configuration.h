@@ -24,12 +24,24 @@
 #define UBIT_CONFIGURATION_H_
 
 #include <list>
+#include <string>
 
 namespace ubit {
 
 class Configuration {
 
 public:
+
+	Configuration(std::string config_path);
+
+	template <class T>
+	void set(const std::string section, const std::string key, const T value);
+
+	template <class T>
+	T get(const std::string section, const std::string key);
+
+
+
 	//bool load_from_file(const std::string path, GList* *messages, GError* *error);
 
 	//bool load_from_standard_locations(const std::string path, GList* *messages);
@@ -46,21 +58,16 @@ public:
 
 	const std::string get_source(const std::string section, const std::string key);
 
-	void set_string(const std::string section, const std::string key, const std::string value);
 
-	std::string get_string(const std::string section, const std::string key);
 
 	void set_string_list(const std::string section, const std::string key, const std::list<std::string> value, size_t length);
 
 	std::list<std::string> get_string_list(const std::string section, const std::string key);
 
-	void set_integer(const std::string section, const std::string key, int value);
 
-	int get_integer(const std::string section, const std::string key);
-
-	void set_boolean(const std::string section, const std::string key, bool value);
-
-	bool get_boolean(const std::string section, const std::string key);
+private:
+	
+	std::string directory_;
 
 };
 

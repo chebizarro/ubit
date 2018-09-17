@@ -25,6 +25,21 @@
 namespace ubit {
 
 
+Login1Seat::Login1Seat(std::shared_ptr<sdbus::IObjectProxy> connection, std::string id, std::string path):
+connection_(connection),
+id_(id),
+path_(path),
+can_graphical_subscriber_(can_graphical_subject_.get_subscriber()),
+session_changed_subscriber_(session_changed_subject_.get_subscriber()) {
+	can_graphical_changed = can_graphical_subject_.get_observable();	
+	active_session_changed = session_changed_subject_.get_observable();	
+}
+
+Login1Seat::~Login1Seat() {
+	can_graphical_subscriber_.on_completed();
+	session_changed_subscriber_.on_completed();
+}
+
 Login1Service::Login1Service(): connected_(false) { }
 
 void on_connected(sdbus::Signal& signal) {
@@ -33,9 +48,6 @@ void on_connected(sdbus::Signal& signal) {
 
 void Login1Service::add_seat(const std::string id, const std::string path) {
 	Login1Seat seat(connection_, id, path);
-	
-	
-	
 	
 	seats_.push_back(seat);
 }

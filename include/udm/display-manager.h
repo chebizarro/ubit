@@ -51,13 +51,13 @@ public:
 	
 	observable<std::shared_ptr<DisplayManager>> stopped; 
 
-	observable<std::shared_ptr<Seat>> seat_removed; 
+	observable<std::shared_ptr<Seat>> seat_removed;
 	
 
 private:
 
 	subject<std::shared_ptr<DisplayManager>> stopped_subject_; 
-	subscriber<std::shared_ptr<DisplayManager>> subscriber_;
+	subscriber<std::shared_ptr<DisplayManager>> stopped_subscriber_;
 
 	subject<std::shared_ptr<Seat>> seat_removed_subject_; 
 	subscriber<std::shared_ptr<Seat>> seat_subscriber_;
